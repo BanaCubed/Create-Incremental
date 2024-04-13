@@ -199,7 +199,7 @@ addLayer("SR", {
             name: "A Low Income Family<br>in the Midst of<br>Inflation",
             challengeDescription: "$ gain ^0.5 and Rebirth requirement x10",
             canComplete() { return player.R.points.gte("1e15") },
-            unlocked() { return hasMilestone(this.layer, 3) },
+            unlocked() { return hasMilestone(this.layer, 5) },
             rewardDescription: "Rebirth Requirement /10",
             goalDescription: "Reach 1e15 RP"
         },
@@ -329,6 +329,9 @@ addLayer("SR", {
             player.SR.milestones.push(2, 6, 7)
             if(hasUpgrade('HC', 12)) player.SR.milestones.push(8)
             if(hasUpgrade('HC', 31)) player.SR.points.add(12)
+        }
+        if(resetlayer === 'SR') {
+            completeChallenge('SR')
         }
     },
     automate() {

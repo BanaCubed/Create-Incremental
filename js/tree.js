@@ -3,11 +3,19 @@ var layoutInfo = {
     startNavTab: "tree-tab",
 	showTree: true,
 
-    treeLayout: "",
+    treeLayout: [
+        ["U"],
+        ["R"],
+        ["SR", "P"],
+        ["HC"]
+    ],
 
     
 }
 
+addNode("blank", {
+    layerShown: "ghost"
+})
 
 addLayer("tree-tab", {
     tabFormat: [["tree", function() {return (layoutInfo.treeLayout ? layoutInfo.treeLayout : TREE_LAYERS)}]],

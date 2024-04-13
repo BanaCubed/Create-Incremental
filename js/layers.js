@@ -381,3 +381,37 @@ addLayer("SA", {
         },
     },
 })
+
+addLayer("Sft", {
+    name: "softcaps",
+    symbol: "📈",
+    row: "side",
+    type: "none",
+    resource: "(softcapped)",
+    color: "#cccccc",
+    tooltip: "Softcaps",
+    startData() { return {
+        unlocked: true,
+    }},
+    infoboxes: {
+        general: {
+            title: "Overall Information",
+            body: "Softcaps have a start value and a power.<br>The power of a softcap is basically a divisor on the amount of OoM's (Order's of Magnitude) beyond the start value.<br>Some softcaps are also logarithmic, meaning that the amount of extra OoM's past the starting value is based on the log of OoM's past the start amount."
+        },
+        rebirth: {
+            title: "Rebirth Layer",
+            body: "Rebirth Point Gain<br>Beyond 1e17 Rebirth Points, gain is softcapped with a power of 4<br>Beyond 1e2000 Rebirth Points, gain is softcapped again with a power of 5, multiplying to 20",
+            unlocked() { return player.R.unlocked }
+        },
+        hyper: {
+            title: "Hyper Rebirth Layer",
+            body: "Hyper Cash First Effect<br>Beyond 100, the effect is logarithmically reduced with a base of 10",
+            unlocked() { return player.HC.unlocked }
+        },
+    },
+    tabFormat: [
+        ["infobox", "general"],
+        ["infobox", "rebirth"],
+        ["infobox", "hyper"],
+    ]
+})

@@ -3,26 +3,23 @@ let modInfo = {
 	id: "nhug dkjldgsgrcinhgrv",
 	author: "BanaCubed (Coding), and many people (Concepts)",
 	pointsName: "$",
-	modFiles: ["layers.js", "tree.js", "layers/cash.js", "layers/rebirth.js", "layers/rebirth2.js", "layers/rebirth3.js"],
+	modFiles: ["layers.js", "tree.js", "layers/cash.js", "layers/rebirth.js", "layers/rebirth2.js", "layers/rebirth3.js", "layers/matter.js"],
 
 	discordName: "",
 	discordLink: "",
 	initialStartPoints: new Decimal(0), // Used for hard resets and new players
-	offlineLimit: 16,  // In hours
+	offlineLimit: 48,  // In hours
 }
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.3.0.2",
+	num: "0.3.0.3",
 	name: "Hyper Rebirth",
 }
 
 let changelog = `<h1>""""""Changelog""""""</h1><br><br>
 	Check the forum thread the game is based on at <a href=https://galaxy.click/forum/thread/255>galaxy.click/forum/thread/255</a> to see what is coming next<br><br>
-	Changelog is available at <a href=https://galaxy.click/updates/344>galaxy.click/updates/344</a>
-	
-	<br><br><h2>v0.3</h2>
-	<br>`
+	Changelog is available at <a href=https://galaxy.click/updates/344>galaxy.click/updates/344</a>`
 
 let winText = `You are win! Congratulations on wasting your time! (Keep save for future updates)`
 
@@ -162,16 +159,23 @@ function pPylon(pylon, pylons, pylobs) {
 
 // Display extra things at the top of the page
 var displayThings = [
-	
+	function() {
+		if(inChallenge('SR', 31)) {
+			return "You have " + format(player.SR.tax) + " tax"
+		}
+	}
 ]
 
-function taxDisplay() {
-	if(inChallenge('SR', 31)) return "You have " + format(player.SR.tax) + " tax"; else return ""
-}
 
 // Determines when the game "ends"
 function isEndgame() {
 	return hasUpgrade('HC', 41)
+}
+
+function hCashB1() {
+	let boost = player.C.points.times(0.005).add(1).pow(0.15)
+	if(boost.gte(100)) boost = new Decimal(100).times(new Decimal(10).pow(boost.div(100).log(10).add(1).log(10)))
+	return boost
 }
 
 function machineBonuses() {

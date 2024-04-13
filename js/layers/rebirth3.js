@@ -21,7 +21,11 @@ addLayer('HC', {
         },
         // "Matter": {
         //     content: [
-        //         ["display-text", "You got the 'You Win!' display, what did you expect?"]
+        //         ["tree", [
+        //             ["M", "blank", "AM"],
+        //             [],
+        //             ["DM", "blank", "EM"]
+        //         ]]
         //     ],
         //     unlocked() { return hasAchievement('A', 101) }
         // }
@@ -286,7 +290,7 @@ addLayer('C', {
     },
     effect() {
         return [
-            player.C.points.times(0.005).add(1).pow(0.15),
+            hCashB1(),
             player.C.points.add(1),
             player.C.points.add(10).log(10).add(10).log(10),
             player.C.points.pow(0.1).div(3).add(1)
