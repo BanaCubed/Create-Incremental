@@ -15,20 +15,11 @@ addLayer('HC', {
         "Paths": {
             content: [
                 ["display-text", "Starting a path doubles the cost of all unstarted paths"],
+                "clickables",
                 "blank",
 				["upgrade-tree", [[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34], [41]]]
             ]
         },
-        // "Matter": {
-        //     content: [
-        //         ["tree", [
-        //             ["M", "blank", "AM"],
-        //             [],
-        //             ["DM", "blank", "EM"]
-        //         ]]
-        //     ],
-        //     unlocked() { return hasAchievement('A', 101) }
-        // }
     },
     symbol: "HR",
     row: "3",
@@ -39,6 +30,7 @@ addLayer('HC', {
         let hypEss = new Decimal(1)
         hypEss = hypEss.times(player.points.add(10).log(10).pow(0.6).times(player.SR.points.add(1).pow(0.4)).times(player.P.points.add(10).log(10)).pow(0.25))
         if(hasUpgrade('HC', 33)) hypEss = hypEss.times(layers.C.effect()[3])
+        if(hypEss === null || hypEss === undefined) hypEss = new Decimal(1)
         player.HC.hyperNumber = hypEss
     },
     effect() {
@@ -269,8 +261,45 @@ addLayer('HC', {
             onPress() { if (player.HC.unlocked) doReset("HC") },
             unlocked() {return player.HC.unlocked} // Determines if you can use the hotkey, optional
         }
-    ]
+    ],
+    onPrestige() {
+        player.SR.points = new Decimal(0)
+        player.SR.milestones = []
+        player.SR.upgrades = []
+        if(!hasMilestone('HC', 2)) player.SR.challenges = {11: 0, 12: 0, 21: 0, 22: 0, 31: 0}
+        player.SR.milestones.push(2, 6, 7)
+        if(hasUpgrade('HC', 12)) player.SR.milestones.push(8)
+        if(hasUpgrade('HC', 31)) player.SR.points.add(12)
+    },
+    clickables: {
+        11: {
+            title: "Respec Paths",
+            canClick() {
+                return hasUpgrade('HC', 11) || hasUpgrade('HC', 12) || hasUpgrade('HC', 13) || hasUpgrade('HC', 14)
+            },
+            onClick() {
+                player.HC.points = player.HC.total
+                player.HC.upgrades = []
+                player.HC.paths = []
+            }
+        }
+    }
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 addLayer('C', {
     name: "hyper-cash",
@@ -307,5 +336,5 @@ addLayer('C', {
         + ", multiplying Hyper Essence gain by  " + format(layers.C.effect()[3])
         + "<br>Producing " + format(hyperCashGain()) + "/sec"
     },
-    color: "#34eb67"
+    color: "#34eb67",
 })

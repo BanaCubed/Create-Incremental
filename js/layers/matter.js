@@ -22,6 +22,21 @@ addLayer('M', {
     branches: [["DM", 1], ["EM", 1]]
 })
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 addLayer('AM', {
     name: "antimatter",
     resource: "Antimatter",
@@ -45,6 +60,21 @@ addLayer('AM', {
     branches: [["DM", 1], ["EM", 1]]
 })
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 addLayer('DM', {
     name: "dark-matter",
     resource: "Dark Matter",
@@ -67,6 +97,21 @@ addLayer('DM', {
     color: "#303030",
     branches: []
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 addLayer('EM', {
     name: "exotic-matter",

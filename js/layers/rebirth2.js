@@ -302,7 +302,7 @@ addLayer("SR", {
         },
         14: {
             unlocked() { return hasMilestone('P', 10) },
-            cost: new Decimal("1e200"),
+            cost: new Decimal("1e160"),
             currencyDisplayName: "Power",
             currencyInternalName: "points",
             currencyLayer() { return 'P' },
@@ -317,21 +317,7 @@ addLayer("SR", {
             unlocked() { return hasUpgrade('SR', 14) },
             title: "Ω - Omega",
             description: "Start calculating Hyper Essence<br>Hyper Essence is calculated based on log($), SRP, and log(Power)<br>Unlock another prestige layer...",
-            cost: new Decimal(6000),
-        }
-    },
-    doReset(resetlayer) {
-        if(resetlayer === 'HC') {
-            player.SR.points = new Decimal(0)
-            player.SR.milestones = []
-            player.SR.upgrades = []
-            if(!hasMilestone('HC', 2)) player.SR.challenges = {}
-            player.SR.milestones.push(2, 6, 7)
-            if(hasUpgrade('HC', 12)) player.SR.milestones.push(8)
-            if(hasUpgrade('HC', 31)) player.SR.points.add(12)
-        }
-        if(resetlayer === 'SR') {
-            completeChallenge('SR')
+            cost: new Decimal(5000),
         }
     },
     automate() {
@@ -352,8 +338,23 @@ addLayer("SR", {
             onPress() { if (player.SR.unlocked) doReset("SR") },
             unlocked() {return player.SR.unlocked} // Determines if you can use the hotkey, optional
         }
-    ]
+    ],
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 addLayer("P", {
     name: "power",
