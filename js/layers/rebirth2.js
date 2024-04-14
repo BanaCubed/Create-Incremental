@@ -339,6 +339,18 @@ addLayer("SR", {
             unlocked() {return player.SR.unlocked} // Determines if you can use the hotkey, optional
         }
     ],
+    doReset(resetlayer) {
+        completeChallenge('SR')
+        if(resetlayer === 'HC') {
+            player.SR.points = new Decimal(0)
+            player.SR.milestones = []
+            player.SR.upgrades = []
+            if(!hasMilestone('HC', 2)) player.SR.challenges = {11: 0, 12: 0, 21: 0, 22: 0, 31: 0}
+            player.SR.milestones.push(2, 6, 7)
+            if(hasUpgrade('HC', 12)) player.SR.milestones.push(8)
+            if(hasUpgrade('HC', 31)) player.SR.points.add(12)
+        }
+    },
 })
 
 
