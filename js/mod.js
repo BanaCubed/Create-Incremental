@@ -5,7 +5,7 @@ let modInfo = {
 	pointsName: "$",
 	modFiles: ["layers.js", "tree.js", "layers/cash.js", "layers/rebirth.js", "layers/rebirth2.js", "layers/rebirth3.js", "layers/matter.js"],
 
-	discordName: "Create Incrementers",
+	discordName: "Create Incremental Server",
 	discordLink: "https://discord.gg/wt5XyPRtte",
 	initialStartPoints: new Decimal(0), // Used for hard resets and new players
 	offlineLimit: 48,  // In hours
