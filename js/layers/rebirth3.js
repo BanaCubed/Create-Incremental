@@ -15,6 +15,7 @@ addLayer('HC', {
         "Paths": {
             content: [
                 ["display-text", "Starting a path doubles the cost of all unstarted paths"],
+                "blank",
                 "clickables",
                 "blank",
 				["upgrade-tree", [[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34], [41]]]
@@ -273,6 +274,9 @@ addLayer('HC', {
     },
     clickables: {
         11: {
+            style: {
+                width: "130px",
+            },
             title: "Respec Paths",
             canClick() {
                 return hasUpgrade('HC', 11) || hasUpgrade('HC', 12) || hasUpgrade('HC', 13) || hasUpgrade('HC', 14)
@@ -281,7 +285,7 @@ addLayer('HC', {
                 player.HC.points = player.HC.total
                 player.HC.upgrades = []
                 player.HC.paths = []
-            }
+            },
         }
     }
 })
