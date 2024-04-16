@@ -201,7 +201,7 @@ async function load() {
 		slot: 0,
 	}, "https://galaxy.click");
 
-	await sleep(15000)
+	await sleep(5000)
 
 	if(console.logs[0] !== undefined) if(console.logs[0].type === "save_content") { get = console.logs[0].content }
 
