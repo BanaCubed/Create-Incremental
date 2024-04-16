@@ -193,15 +193,14 @@ function fixData(defaultData, newData) {
 	}
 }
 function load() {
-	let get = ""
+	let get = localStorage.getItem(modInfo.id)
 
 	window.top.postMessage({
 		action: "load",
 		slot: 0,
 	}, "https://galaxy.click");
 
-	if(console.logs[0].content !== null) { get = console.logs[0].content }
-	else { get = localStorage.getItem(modInfo.id) };
+	if(console.logs[0] !== undefined) if(console.logs[0].type === "save_content") { get = console.logs[0].content }
 
 	if (get === null || get === undefined) {
 		player = getStartPlayer();
