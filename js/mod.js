@@ -1,3 +1,7 @@
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 console.logs = [];
 
 // I just copied this from the galaxy docs so hopefully it works because I can't test this locally
