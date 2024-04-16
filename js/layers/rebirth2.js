@@ -268,6 +268,7 @@ addLayer("SR", {
         let mult = new Decimal(1)
         mult = mult.times(layers.HC.effect()[1])
         if(hasUpgrade('HC', 33)) mult = mult.times(layers.C.effect()[2])
+        mult = mult.times(layers.M.effect2())
         return mult
     },
     update(diff) {

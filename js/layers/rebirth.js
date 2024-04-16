@@ -68,6 +68,7 @@ addLayer("R", {
         if(hasUpgrade('HC', 21)) remult = remult.times(10000)
         if(hasUpgrade('HC', 14)) remult = remult.times(100)
         if(hasUpgrade('HC', 33)) remult = remult.times(layers.C.effect()[1])
+        remult = remult.times(layers.M.effect2())
         return remult
     },
     exponent() {

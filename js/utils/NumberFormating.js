@@ -1,5 +1,6 @@
 function coolDynamicFormat(num, precision) {
-    return format(num)
+    if(precision !== 0) return format(num)
+    if(precision == 0) return formatWhole(num)
 }
 
 function exponentialFormat(num, precision, mantissa = true) {
