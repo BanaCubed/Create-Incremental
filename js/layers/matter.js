@@ -80,7 +80,7 @@ addLayer('M', {
         return effect
     },
     effect2() {
-        let effect = player.M.points.div(10000).add(1).pow(0.5)
+        let effect = player.M.points.div(10000).add(1).pow(0.15)
         if(hasUpgrade('M', 13)) effect = effect.times(1.2)
         return effect
     },
@@ -115,29 +115,29 @@ addLayer('M', {
         },
         14: {
             title: "Proton",
-            cost: new Decimal(400),
+            cost: new Decimal(60),
             description: "Increase Quarks effect",
             tooltip: "x/10 -> x/4"
         },
         21: {
             title: "Nuclear Fission",
-            cost: new Decimal(2500),
+            cost: new Decimal(500),
             description: "Milestones now also multiply Matter gain at a reduced rate",
             tooltip: "Mult = Div^0.7<br>Milestone 2 is ^0.2 instead and is based on Matter"
         },
         22: {
             title: "Neutron",
-            cost: new Decimal(15000),
+            cost: new Decimal(3000),
             description: "Quadruple Matter gain",
         },
         23: {
             title: "Up and Down",
-            cost: new Decimal(80000),
+            cost: new Decimal(15000),
             description: "Square Quark effect",
         },
         24: {
             title: "Efficient Compression",
-            cost: new Decimal(25000000),
+            cost: new Decimal(100000000000),
             description: "Reduce both Quark and Atom cost scalings",
             tooltip: "1.1^x -> 1.05^x"
         },
@@ -176,10 +176,10 @@ addLayer('M', {
             cost(x) {
                 let expo = new Decimal(1.1)
                 if(hasUpgrade('M', 24)) expo = expo.sub(0.05)
-                return new Decimal(5000000).times(new Decimal(expo).pow(x))
+                return new Decimal(1000000).times(new Decimal(expo).pow(x))
             },
             title: "Create an Atom",
-            tooltip: "Base effect: x + 1<br>Base cost: 5,000,000*1.1^x",
+            tooltip: "Base effect: (x + 1)^1.6<br>Base cost: 5,000,000*1.1^x",
             display() {
                 return "Atoms multiply matter and divide antimatter gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
                 + "<br>You have " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
@@ -195,7 +195,7 @@ addLayer('M', {
             },
             effect(x) {
                 let divisor = new Decimal(1)
-                let base = new Decimal(x).div(divisor).add(1)
+                let base = new Decimal(x).div(divisor).add(1).pow(1.6)
                 return base
             },
         },
@@ -257,8 +257,12 @@ addLayer('AM', {
         if(hasUpgrade('M', 12)) effect = effect.div(3)
         return effect
     },
+    effect2() {
+        let effect = player.AM.points.div(10000).add(1).pow(0.5)
+        return effect
+    },
     effectDescription() {
-        return "dividing Matter gain by " + format(this.effect()) + "<br>(" + format(matterGain(2)) + "/sec)"
+        return "dividing Matter gain by " + format(this.effect()) + ", and multiplying $, RP, SRP, Power and HE gain by " + format(this.effect2()) + "<br>(" + format(matterGain(2)) + "/sec)"
     },
     tabFormat: [
         "main-display"
@@ -302,8 +306,12 @@ addLayer('DM', {
     effect() {
         return player.DM.points.add(1).pow(0.5)
     },
+    effect2() {
+        let effect = player.DM.points.div(10000).add(1).pow(0.5)
+        return effect
+    },
     effectDescription() {
-        return "dividing Exotic Matter gain by " + format(this.effect()) + "<br>(" + format(matterGain(3)) + "/sec)"
+        return "dividing Exotic Matter gain by " + format(this.effect()) + ", and multiplying $, RP, SRP, Power and HE gain by " + format(this.effect2()) + "<br>(" + format(matterGain(3)) + "/sec)"
     },
     tabFormat: [
         "main-display"
@@ -347,8 +355,12 @@ addLayer('EM', {
     effect() {
         return player.EM.points.add(1).pow(0.5)
     },
+    effect2() {
+        let effect = player.DM.points.div(10000).add(1).pow(0.5)
+        return effect
+    },
     effectDescription() {
-        return "dividing Dark Matter gain by " + format(this.effect()) + "<br>(" + format(matterGain(4)) + "/sec)"
+        return "dividing Dark Matter gain by " + format(this.effect()) + ", and multiplying $, RP, SRP, Power and HE gain by " + format(this.effect2()) + "<br>(" + format(matterGain(4)) + "/sec)"
     },
     tabFormat: [
         "main-display"
@@ -387,10 +399,13 @@ addLayer('UMF', {
     row: 3,
     symbol: "UMF",
     effect() {
-        return new Decimal(2).pow(player.UMF.points).div(10).add(1).pow(0.5)
+        return new Decimal(5).pow(player.UMF.points).div(10).add(1).pow(0.5).sub(0.05)
+    },
+    effect2() {
+        return layers.M.effect2().times(layers.AM.effect2()).times(layers.DM.effect2()).times(layers.EM.effect2())
     },
     effectDescription() {
-        return "multiplying all matters gain by " + format(this.effect())
+        return "multiplying all matters gain by " + format(this.effect()) + "<br>Your matters are multiplying $, RP, SRP, Power and HE gain by " + format(this.effect2())
     },
     tabFormat: [
         "main-display"

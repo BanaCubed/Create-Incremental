@@ -114,7 +114,7 @@ function getPointGen() {
 	if(hasUpgrade('HC', 24)) gain = gain.times(200)
 
 	// Matters
-	gain = gain.times(layers.M.effect2())
+	gain = gain.times(layers.UMF.effect2())
 
 	gain = gain.pow(layers.C.effect()[0])
 
@@ -139,7 +139,7 @@ function pPylon(pylon, pylons, pylobs) {
 	// Super Layer
 	if(hasMilestone('P', 4) && pylon == 'A') effect = effect.times(5)
 	if(hasUpgrade('HC', 14) && pylon == 'A') effect = effect.times(100)
-	if(hasUpgrade('HC', 41) && pylon == 'A') effect = effect.times(layers.M.effect2())
+	if(hasUpgrade('HC', 41) && pylon == 'A') effect = effect.times(layers.UMF.effect2())
 	if(hasUpgrade('U', 54 && (pylon =='A' || pylon == 'B' || pylon == 'C'))) effect = effect.times(2)
 
 	if(hasChallenge('SR', 31) && pylon == 'A') effect = effect.times(player.P.points.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))

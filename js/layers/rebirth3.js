@@ -43,6 +43,7 @@ addLayer('HC', {
         hypEss = hypEss.times(player.points.add(10).log(10).pow(0.6).times(player.SR.points.add(1).pow(0.4)).times(player.P.points.add(10).log(10)).pow(0.25))
         if(hasUpgrade('HC', 33)) hypEss = hypEss.times(layers.C.effect()[3])
         if(hypEss === null || hypEss === undefined) hypEss = new Decimal(1)
+        hypEss = hypEss.times(layers.UMF.effect2())
         player.HC.hyperNumber = hypEss
     },
     effect() {
@@ -267,7 +268,7 @@ addLayer('HC', {
         },
 
         51: {
-            cost: new Decimal("5e8"),
+            cost: new Decimal("2.5e13"),
             currencyDisplayName: "Matter",
             currencyInternalName: "points",
             currencyLayer() { return 'M' },
