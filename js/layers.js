@@ -19,9 +19,12 @@ addLayer("A", {
             content: [
                 ["layer-proxy", ["SA", [
                     ["display-text", "Secret Achievements only say what to do to get them after obtaining them<br>Most Secret Achievements will become impossible if too much progression is made before unlocking them<br>Each Secret Achievement will also eventually have its own exclusive visual theme (available in options) once I figure out how to do that<br>There will be a surprise for getting all of them once there are enough of them for it to be interesting"],
-                    ["display-text", "<br>There are currently 2 Secret Achievements<br>Every Secret Achievement has a hint when hovering over them to make them possible to obtain without searching up the answers (you'll do it anyways)"],
+                    ["display-text", "<br>Every Secret Achievement has a hint when hovering over them to make them theoretically possible to obtain without searching up the answers (you'll do it anyways)<br>Here's another hint: they are in the order of when they are first possible"],
                     "h-line",
-                    "achievements"]]]
+                    ["achievement", 13],
+                    ["achievement", 11],
+                    ["achievement", 12],
+                    ["achievement", 14]]]]
             ]
         }
     },
@@ -352,7 +355,7 @@ addLayer("A", {
             name: "Nothing Matters",
             tooltip: "Anihilate Matter",
             done() {
-                if (false) return true
+                if (hasUpgrade('HC', 51)) return true
             },
         },
         103: {
@@ -403,9 +406,21 @@ addLayer("SA", {
         },
         12: {
             name: "Minimum Wage",
-            tooltip() { if(!hasAchievement(this.layer, this.id)) return "Infinite Tax"; else return "Get 1e308 tax<br>Infinite Tax"},
+            tooltip() { if(!hasAchievement(this.layer, this.id)) return "Infinite tax"; else return "Get 1e308 tax<br>Infinite Tax"},
             unlocked() { return true },
             done() { return player.SR.tax.gte("1e308") }
+        },
+        13: {
+            name: "Ultimate Haxxor",
+            tooltip() { if(!hasAchievement(this.layer, this.id)) return "Filthy cheater"; else return "Cheat in this achievement<br>Filthy Cheater"},
+            unlocked() { return true },
+            done() { return false }
+        },
+        14: {
+            name: "Existence is Futile",
+            tooltip() { if(!hasAchievement(this.layer, this.id)) return "Waste of time to be honest"; else return "Reach 1,000 of two matters that nerf each other, without upgrading either of them<br>Waste of time to be honest"},
+            unlocked() { return true },
+            done() { return secretAch14() }
         },
     },
 })

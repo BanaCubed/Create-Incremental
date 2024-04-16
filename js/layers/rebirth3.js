@@ -21,6 +21,17 @@ addLayer('HC', {
 				["upgrade-tree", [[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34], [41]]]
             ]
         },
+        "Matter": {
+            content: [
+                ["layer-proxy", ['M', ["main-display"]]],
+                ["layer-proxy", ['AM', ["main-display"]]],
+                ["layer-proxy", ['DM', ["main-display"]]],
+                ["layer-proxy", ['EM', ["main-display"]]],
+                "blank",
+                ["layer-proxy", ['UMF', ["main-display"]]],
+                ["upgrade-tree", [[51, 52, 53, 54]]]
+            ]
+        }
     },
     symbol: "HR",
     row: "3",
@@ -253,7 +264,44 @@ addLayer('HC', {
             description: "Unlock the Matter Paths",
             canAfford() { return hasUpgrade('HC', 31) && hasUpgrade('HC', 32) && hasUpgrade('HC', 33) && hasUpgrade('HC', 34) },
             branches: [31, 32, 33, 34]
-        }
+        },
+
+        51: {
+            cost: new Decimal("5e8"),
+            currencyDisplayName: "Matter",
+            currencyInternalName: "points",
+            currencyLayer() { return 'M' },
+            title: "Matter Annihilation",
+            onPurchase() { player.UMF.points = player.UMF.points.add(1) },
+            description: "Disable Matter's nerf to Antimatter, and gain an Ultimate Matter Fragment"
+        },
+        52: {
+            cost: new Decimal("5e8"),
+            currencyDisplayName: "Antimatter",
+            currencyInternalName: "points",
+            currencyLayer() { return 'AM' },
+            title: "Antimatter Annihilation",
+            onPurchase() { player.UMF.points = player.UMF.points.add(1) },
+            description: "Disable Antimatter's nerf to Matter, and gain an Ultimate Matter Fragment"
+        },
+        53: {
+            cost: new Decimal("5e8"),
+            currencyDisplayName: "Dark Matter",
+            currencyInternalName: "points",
+            currencyLayer() { return 'DM' },
+            title: "Dark Matter Annihilation",
+            onPurchase() { player.UMF.points = player.UMF.points.add(1) },
+            description: "Disable Dark Matter's nerf to Exotic Matter, and gain an Ultimate Matter Fragment"
+        },
+        54: {
+            cost: new Decimal("5e8"),
+            currencyDisplayName: "Exotic Matter",
+            currencyInternalName: "points",
+            currencyLayer() { return 'EM' },
+            title: "Exotic Matter Annihilation",
+            onPurchase() { player.UMF.points = player.UMF.points.add(1) },
+            description: "Disable Exotic Matter's nerf to Dark Matter, and gain an Ultimate Matter Fragment"
+        },
     },
     hotkeys: [
         {
