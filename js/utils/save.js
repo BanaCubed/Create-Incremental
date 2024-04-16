@@ -2,8 +2,16 @@
 function save(force) {
 	NaNcheck(player)
 	if (NaNalert && !force) return
-	localStorage.setItem(modInfo.id, btoa(unescape(encodeURIComponent(JSON.stringify(player)))));
+	let savedata = btoa(unescape(encodeURIComponent(JSON.stringify(player))))
+	localStorage.setItem(modInfo.id, savedata);
 	localStorage.setItem(modInfo.id+"_options", btoa(unescape(encodeURIComponent(JSON.stringify(options)))));
+
+	window.top.postMessage({
+		action: "save",
+		slot: 0,
+		label: "Game autosave",
+		data: savedata,
+	}, "https://galaxy.click");
 
 }
 function startPlayerBase() {
