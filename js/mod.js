@@ -1,11 +1,14 @@
+console.stdlog = console.log.bind(console);
 console.logs = [];
+console.log = function(){
+    console.logs.push(Array.from(arguments));
+    console.stdlog.apply(console, arguments);
+}
 
-// I just copied this from the galaxy docs so hopefully it works because I can't test this locally
 window.addEventListener("message", e => {
 	if (e.origin === "https://galaxy.click") {
 		// It's a message from Galaxy!
 		console.log(e.data);
-		console.logs.push(e.data)
 	} else {
 		// It may be an impostor! Probably best to ignore it.
 	}
@@ -30,7 +33,7 @@ let VERSION = {
 	name: "Hyper Rebirth",
 }
 
-let changelog = `<h1>Changelog</h1><br><br>
+let changelog = `<h1>""""""Changelog""""""</h1><br><br>
 	Check the forum thread the game is based on at <a href=https://galaxy.click/forum/thread/255>galaxy.click/forum/thread/255</a> to see what is coming next<br><br>
 	Changelog is available at <a href=https://galaxy.click/updates/344>galaxy.click/updates/344</a>`
 
