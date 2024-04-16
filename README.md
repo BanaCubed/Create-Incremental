@@ -22,7 +22,7 @@ The game currently has a total of 3 prestige layers:
 
 Below is a list of features that aren't currently in the game, but are planned to be worked on
 
-## v0.3.1
+## v0.3.2
 
 Matter Paths:
 - Matter
