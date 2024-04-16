@@ -1,19 +1,3 @@
-function sleep(ms) {
-	return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-console.logs = [];
-
-// I just copied this from the galaxy docs so hopefully it works because I can't test this locally
-window.addEventListener("message", e => {
-	if (e.origin === "https://galaxy.click") {
-		// It's a message from Galaxy!
-		console.logs.push(e.data)
-	} else {
-		// It may be an impostor! Probably best to ignore it.
-	}
-});
-
 let modInfo = {
 	name: "Create Incremental",
 	id: "nhug dkjldgsgrcinhgrv",
@@ -29,11 +13,11 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.3.1",
-	name: "Cloud Saving, Hopefully",
+	num: "0.3.0.5",
+	name: "Hyper Rebirth",
 }
 
-let changelog = `<h1>Changelog</h1><br><br>
+let changelog = `<h1>""""""Changelog""""""</h1><br><br>
 	Check the forum thread the game is based on at <a href=https://galaxy.click/forum/thread/255>galaxy.click/forum/thread/255</a> to see what is coming next<br><br>
 	Changelog is available at <a href=https://galaxy.click/updates/344>galaxy.click/updates/344</a>`
 
@@ -66,31 +50,31 @@ function getPointGen() {
 		if (hasUpgrade('U', 11) || inChallenge('SR', 22)) gain = gain.add(1)
 
 		if (hasUpgrade('U', 12)) gain = gain.times(4)
-		if (hasUpgrade('U', 13) && !hasUpgrade('U', 23)) gain = gain.times(Decimal.add(player.points, 5).log(5))
-		if (hasUpgrade('U', 13) && hasUpgrade('U', 23)) gain = gain.times(Decimal.add(player.points, 3).log(3))
+		if (hasUpgrade('U', 13) && !hasUpgrade('U', 23)) gain = gain.times(player.points.add(5).log(5))
+		if (hasUpgrade('U', 13) && hasUpgrade('U', 23)) gain = gain.times(player.points.add(3).log(3))
 		if (hasUpgrade('U', 14)) gain = gain.times(2)
-		if (hasUpgrade('U', 22)) gain = gain.times(Decimal.pow(player.points, 1.5).add(8).log(8).pow(0.5))
+		if (hasUpgrade('U', 22)) gain = gain.times(player.points.pow(1.5).add(8).log(8).pow(0.5))
 		if (hasUpgrade('U', 24)) gain = gain.times(1.5)
-		if (hasUpgrade('U', 31)) gain = gain.times(Decimal.add(player.points, 10).log(10).pow(0.5))
+		if (hasUpgrade('U', 31)) gain = gain.times(player.points.add(10).log(10).pow(0.5))
 		if (hasUpgrade('U', 41)) gain = gain.times(10)
-		if (hasUpgrade('U', 43)) gain = gain.times(Decimal.add(player.R.points, 10).log(10))
+		if (hasUpgrade('U', 43)) gain = gain.times(player.R.points.add(10).log(10))
 	}
 
 	if(hasMilestone('P', 8)) {
 		if (hasUpgrade('U', 11) || inChallenge('SR', 22)) gain = gain.add(100)
 
 		if (hasUpgrade('U', 12)) gain = gain.times(5)
-		if (hasUpgrade('U', 13) && !hasUpgrade('U', 23)) gain = gain.times(Decimal.add(player.points, 4.5).log(3.5))
-		if (hasUpgrade('U', 13) && hasUpgrade('U', 23)) gain = gain.times(Decimal.add(player.points, 2.5).log(2.5))
+		if (hasUpgrade('U', 13) && !hasUpgrade('U', 23)) gain = gain.times(player.points.add(4.5).log(3.5))
+		if (hasUpgrade('U', 13) && hasUpgrade('U', 23)) gain = gain.times(player.points.add(2.5).log(2.5))
 		if (hasUpgrade('U', 14)) gain = gain.times(3)
-		if (hasUpgrade('U', 22)) gain = gain.times(Decimal.pow(player.points, 1.55).add(7).log(7).pow(0.5))
+		if (hasUpgrade('U', 22)) gain = gain.times(player.points.pow(1.55).add(7).log(7).pow(0.5))
 		if (hasUpgrade('U', 24)) gain = gain.times(2)
-		if (hasUpgrade('U', 31)) gain = gain.times(Decimal.add(player.points, 8).log(8).pow(0.5))
+		if (hasUpgrade('U', 31)) gain = gain.times(player.points.add(8).log(8).pow(0.5))
 		if (hasUpgrade('U', 41)) gain = gain.times(1000)
-		if (hasUpgrade('U', 43)) gain = gain.times(Decimal.add(player.R.points, 8).log(8))
+		if (hasUpgrade('U', 43)) gain = gain.times(player.R.points.add(8).log(8))
 	}
 
-	if (hasUpgrade('U', 51)) gain = gain.times(Decimal.add(player.P.points, 1))
+	if (hasUpgrade('U', 51)) gain = gain.times(player.P.points.add(1))
 
 	// The Machine
 	if(!inChallenge('SR', 22)) {

@@ -1,17 +1,9 @@
 // ************ Save stuff ************
-async function save(force) {
+function save(force) {
 	NaNcheck(player)
 	if (NaNalert && !force) return
-	let savedata = btoa(unescape(encodeURIComponent(JSON.stringify(player))))
-	localStorage.setItem(modInfo.id, savedata);
+	localStorage.setItem(modInfo.id, btoa(unescape(encodeURIComponent(JSON.stringify(player)))));
 	localStorage.setItem(modInfo.id+"_options", btoa(unescape(encodeURIComponent(JSON.stringify(options)))));
-
-	window.top.postMessage({
-		action: "save",
-		slot: 0,
-		label: "Game autosave",
-		data: savedata,
-	}, "https://galaxy.click");
 
 }
 function startPlayerBase() {
@@ -192,18 +184,8 @@ function fixData(defaultData, newData) {
 		}
 	}
 }
-
-async function load() {
-	let get = localStorage.getItem(modInfo.id)
-
-	window.top.postMessage({
-		action: "load",
-		slot: 0,
-	}, "https://galaxy.click");
-
-	await sleep(15000)
-
-	if(console.logs[0] !== undefined) if(console.logs[0].type === "save_content") { get = console.logs[0].content }
+function load() {
+	let get = localStorage.getItem(modInfo.id);
 
 	if (get === null || get === undefined) {
 		player = getStartPlayer();
