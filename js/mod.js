@@ -178,7 +178,6 @@ function isEndgame() {
 
 function hCashB1() {
 	let boost = player.C.points.times(0.005).add(1).pow(0.15)
-	if(boost.gte(100)) boost = new Decimal(100).times(new Decimal(10).pow(boost.div(100).log(10).add(1).log(10)))
 	return boost
 }
 
@@ -204,6 +203,7 @@ function hyperCashGain() {
 	if(hasMilestone('HC', 0)) HCgain = HCgain.add(0.1)
 	if(hasUpgrade('HC', 13)) HCgain = HCgain.times(player.points.add(10).log(10).pow(0.4))
 	if(hasUpgrade('HC', 23)) HCgain = HCgain.times(10)
+	if(HCgain.gte(1000000)) HCgain = new Decimal(1000000).times(new Decimal(10).pow(HCgain.div(1000000).log(10).add(1).log(10)))
 	return HCgain
 }
 

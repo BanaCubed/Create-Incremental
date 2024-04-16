@@ -448,7 +448,7 @@ addLayer("Sft", {
         },
         hyper: {
             title: "Hyper Rebirth Layer",
-            body: "Hyper Cash First Effect<br>Beyond 100, the effect is logarithmically reduced with a base of 10",
+            body: "Hyper Cash Gain<br>Beyond 1,000,000, the effect is logarithmically reduced with a base of 10",
             unlocked() { return player.HC.unlocked }
         },
     },

@@ -221,7 +221,7 @@ addLayer("SR", {
         22: {
             name: "Sold Out",
             challengeDescription: "All $ Upgrades and The Machine are disabled, but, you passively gain 1 $ per second",
-            canComplete() { return player.R.points.gte("4e36") },
+            canComplete() { return player.R.points.gte("1e30") },
             unlocked() { return hasMilestone('SR', 10) },
             rewardDescription: "Unlock Power Pylon D, and $ boosts SRP gain slightly",
             goalDescription: "Reach 4e36 RP",
