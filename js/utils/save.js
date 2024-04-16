@@ -1,5 +1,5 @@
 // ************ Save stuff ************
-async function save(force) {
+function save(force) {
 	NaNcheck(player)
 	if (NaNalert && !force) return
 	let savedata = btoa(unescape(encodeURIComponent(JSON.stringify(player))))
@@ -192,16 +192,13 @@ function fixData(defaultData, newData) {
 		}
 	}
 }
-
-async function load() {
+function load() {
 	let get = localStorage.getItem(modInfo.id)
 
 	window.top.postMessage({
 		action: "load",
 		slot: 0,
 	}, "https://galaxy.click");
-
-	await sleep(5000)
 
 	if(console.logs[0] !== undefined) if(console.logs[0].type === "save_content") { get = console.logs[0].content }
 
