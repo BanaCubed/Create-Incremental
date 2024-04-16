@@ -1,10 +1,13 @@
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 console.logs = [];
 
 // I just copied this from the galaxy docs so hopefully it works because I can't test this locally
 window.addEventListener("message", e => {
 	if (e.origin === "https://galaxy.click") {
 		// It's a message from Galaxy!
-		console.log(e.data);
 		console.logs.push(e.data)
 	} else {
 		// It may be an impostor! Probably best to ignore it.
