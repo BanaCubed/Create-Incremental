@@ -139,18 +139,18 @@ addLayer('M', {
             title: "Efficient Compression",
             cost: new Decimal(100000000000),
             description: "Reduce both Quark and Atom cost scalings",
-            tooltip: "1.1^x -> 1.05^x"
+            tooltip: "1.2^x -> 1.1^x"
         },
     },
     buyables: {
         11: {
             cost(x) {
-                let expo = new Decimal(1.1)
-                if(hasUpgrade('M', 24)) expo = expo.sub(0.05)
+                let expo = new Decimal(1.2)
+                if(hasUpgrade('M', 24)) expo = expo.sub(0.1)
                 return new Decimal(5).times(new Decimal(expo).pow(x))
             },
             title: "Create a Quark",
-            tooltip: "Base effect: x/10 + 1<br>Base cost: 5*1.1^x",
+            tooltip: "Base effect: x/10 + 1<br>Base cost: 5*1.2^x",
             display() {
                 return "Quarks multiply matter and divide antimatter gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
                 + "<br>You have " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
@@ -174,12 +174,12 @@ addLayer('M', {
         },
         12: {
             cost(x) {
-                let expo = new Decimal(1.1)
-                if(hasUpgrade('M', 24)) expo = expo.sub(0.05)
+                let expo = new Decimal(1.2)
+                if(hasUpgrade('M', 24)) expo = expo.sub(0.1)
                 return new Decimal(1000000).times(new Decimal(expo).pow(x))
             },
             title: "Create an Atom",
-            tooltip: "Base effect: (x + 1)^1.6<br>Base cost: 5,000,000*1.1^x",
+            tooltip: "Base effect: (x + 1)^1.6<br>Base cost: 5,000,000*1.2^x",
             display() {
                 return "Atoms multiply matter and divide antimatter gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
                 + "<br>You have " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
