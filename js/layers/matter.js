@@ -272,10 +272,11 @@ addLayer('AM', {
     effect() {
         let effect = player.AM.points.add(1).pow(0.5)
         if(hasUpgrade('M', 12)) effect = effect.div(3)
+        if(hasUpgrade('HC', 52)) effect = effect.pow(0)
         return effect
     },
     effect2() {
-        let effect = player.AM.points.div(10000).add(1).pow(0.2)
+        let effect = player.AM.points.div(10000).add(1).pow(0.17)
         if(hasUpgrade('AM', 13)) effect = effect.pow(1.2)
         return effect
     },
