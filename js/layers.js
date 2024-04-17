@@ -21,10 +21,7 @@ addLayer("A", {
                     ["display-text", "Secret Achievements only say what to do to get them after obtaining them<br>Most Secret Achievements will become impossible if too much progression is made before unlocking them<br>Each Secret Achievement will also eventually have its own exclusive visual theme (available in options) once I figure out how to do that<br>There will be a surprise for getting all of them once there are enough of them for it to be interesting"],
                     ["display-text", "<br>Every Secret Achievement has a hint when hovering over them to make them theoretically possible to obtain without searching up the answers (you'll do it anyways)<br>Here's another hint: they are in the order of when they are first possible"],
                     "h-line",
-                    ["achievement", 13],
-                    ["achievement", 11],
-                    ["achievement", 12],
-                    ["achievement", 14]]]]
+                    "achievements"]]]
             ]
         }
     },
@@ -233,7 +230,7 @@ addLayer("A", {
             },
         },
         65: {
-            name: "To Inifinity, and Beyond!",
+            name: "To Infinity, and Beyond!",
             tooltip: "Reach Infinity",
             done() {
                 if (player.points.gte(new Decimal(2).pow(1024))) return true
@@ -345,7 +342,7 @@ addLayer("A", {
             },
         },
         101: {
-            name: "Material Possesions",
+            name: "Material Possessions",
             tooltip: "Unlock the Matter Combustor",
             done() {
                 if (hasUpgrade('HC', 41)) return true
@@ -362,21 +359,21 @@ addLayer("A", {
             name: "Antimatter Dimensions",
             tooltip: "Anihilate Antimatter",
             done() {
-                if (false) return true
+                if (hasUpgrade('HC', 52)) return true
             },
         },
         104: {
             name: "Born from Void",
             tooltip: "Anihilate Dark Matter",
             done() {
-                if (false) return true
+                if (hasUpgrade('HC', 53)) return true
             },
         },
         105: {
             name: "Dying Stars",
             tooltip: "Anihilate Exotic Matter",
             done() {
-                if (false) return true
+                if (hasUpgrade('HC', 54)) return true
             },
         },
     }
@@ -405,22 +402,26 @@ addLayer("SA", {
             done() { return !hasUpgrade('U', 13) && hasUpgrade('U', 23) }
         },
         12: {
-            name: "Minimum Wage",
+            name: "America be like",
             tooltip() { if(!hasAchievement(this.layer, this.id)) return "Infinite tax"; else return "Get 1e308 tax<br>Infinite Tax"},
             unlocked() { return true },
             done() { return player.SR.tax.gte("1e308") }
         },
         13: {
             name: "Ultimate Haxxor",
-            tooltip() { if(!hasAchievement(this.layer, this.id)) return "Filthy cheater"; else return "Cheat in this achievement<br>Filthy Cheater"},
+            tooltip() { if(!hasAchievement(this.layer, this.id)) return "Literally Impossible"; else return "Cheat in this achievement<br>Filthy Cheater"},
             unlocked() { return true },
             done() { return false }
         },
         14: {
             name: "Existence is Futile",
-            tooltip() { if(!hasAchievement(this.layer, this.id)) return "Waste of time to be honest"; else return "Reach 1,000 of two matters that nerf each other, without upgrading either of them<br>Waste of time to be honest"},
+            tooltip() { if(!hasAchievement(this.layer, this.id)) return "Waste of time to be honest"; else return "Reach 1,000 of two matters that nerf each other, without gaining any Ultimate Matter Fragments<br>Waste of time to be honest"},
             unlocked() { return true },
-            done() { return secretAch14() }
+            done() {
+                if(player.M.points.gte(1000) && player.AM.points.gte(1000) && player.UMF.points.eq(0)) return true
+                if(player.DM.points.gte(1000) && player.EM.points.gte(1000) && player.UMF.points.eq(0)) return true
+                return false
+            }
         },
     },
 })

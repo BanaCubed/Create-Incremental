@@ -277,7 +277,7 @@ addLayer('HC', {
             description: "Disable Matter's nerf to Antimatter, and gain an Ultimate Matter Fragment"
         },
         52: {
-            cost: new Decimal("5e8"),
+            cost: new Decimal("5e11"),
             currencyDisplayName: "Antimatter",
             currencyInternalName: "points",
             currencyLayer() { return 'AM' },

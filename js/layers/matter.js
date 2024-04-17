@@ -4,7 +4,10 @@ function matterGain(matterType) {
 
     if(matterType === 1) {
         // Matter
-        mGain = mGain.div(layers.AM.effect())
+        if(!hasUpgrade('HC', 52)) {
+            mGain = mGain.div(layers.AM.buyables[13].effect())
+            mGain = mGain.div(layers.AM.effect())
+        }
         if(hasUpgrade('M', 11)) mGain = mGain.times(2)
         mGain = mGain.times(layers.M.buyables[11].effect())
         if(hasUpgrade('M', 21)) {
@@ -26,7 +29,11 @@ function matterGain(matterType) {
             if(hasMilestone('M', 1)) mGain = mGain.div(player.AM.points.div(5).add(1))
             if(hasMilestone('M', 2)) mGain = mGain.div(2)
         }
-    if(hasUpgrade('AM', 11)) mGain = mGain.times(player.DM.points.add(player.EM.points.add(3)).log(3))
+        if(hasUpgrade('AM', 11)) mGain = mGain.times(layers.AM.upgrades[11].effect())
+        mGain = mGain.times(layers.AM.buyables[11].effect())
+        mGain = mGain.times(layers.AM.buyables[12].effect())
+        if(hasUpgrade('AM', 24)) mGain = mGain.times(10)
+        if(hasUpgrade('AM', 14)) mGain = mGain.pow(1.2)
     }
 
     if(matterType === 3) {
@@ -268,7 +275,8 @@ addLayer('AM', {
         return effect
     },
     effect2() {
-        let effect = player.AM.points.div(10000).add(1).pow(0.5)
+        let effect = player.AM.points.div(10000).add(1).pow(0.2)
+        if(hasUpgrade('AM', 13)) effect = effect.pow(1.2)
         return effect
     },
     effectDescription() {
@@ -276,6 +284,7 @@ addLayer('AM', {
     },
     tabFormat: [
         "main-display",
+        "buyables",
         "upgrades"
     ],
     color: "#d6442d",
@@ -288,9 +297,9 @@ addLayer('AM', {
             title: "X Dimension",
             cost: new Decimal(6),
             description: "Multiply Antimatter gain based on Dark Matter and Exotic Matter",
-            tooltip: "log3(DM + EM + 3)",
+            tooltip: "log1.5(DM + EM + 1.5)",
             effect() {
-                return player.DM.points.add(player.EM.points.add(3)).log(3)
+                return player.DM.points.add(player.EM.points.add(1.5)).log(1.5)
             },
             effectDisplay() { return "x" + format(this.effect()) }
         },
@@ -312,16 +321,105 @@ addLayer('AM', {
             description: "Raise Antimatter gain by 1.2"
         },
         21: {
-            title: "Infinity?"
+            title: "Infinity?",
+            cost: new Decimal(100),
+            description: "Unlock some Antimatter buyables"
         },
         22: {
-            title: "Discount"
+            title: "Discount",
+            cost: new Decimal(10000),
+            description: "Lower the cost scaling of Antimatter buyables",
+            tooltip: "-0.05 to exponent"
         },
         23: {
-            title: "T Dimension?"
+            title: "T Dimension?",
+            cost: new Decimal(1000000),
+            description: "Boost the effect of Antimatter Galaxy",
+            tooltip: "+0.1 to base"
         },
         24: {
-            title: "S Dimension?"
+            title: "S Dimension?",
+            cost: new Decimal(100000000),
+            description: "Multiply Antimatter gain by 10"
+        },
+    },
+    buyables: {
+        11: {
+            cost(x) {
+                let expo = new Decimal(1.1)
+                if(hasUpgrade('AM', 22)) expo = expo.sub(0.05)
+                return new Decimal(100).pow(new Decimal(expo).pow(x))
+            },
+            title: "Antimatter Galaxy",
+            tooltip: "Base effect: 1.25^x<br>Base cost: 100^(1.1^x)",
+            display() {
+                return "Multiply Antimatter gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
+                + "<br>You have " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
+                + " quarks<br>Currently: x" + coolDynamicFormat(this.effect(), 2)
+            },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            unlocked() {
+                return hasUpgrade('AM', 21)
+            },
+            effect(x) {
+                let base = new Decimal(1.25)
+                if(hasUpgrade('AM', 23)) base = base.add(0.1)
+                return new Decimal(base).pow(x)
+            },
+        },
+        12: {
+            cost(x) {
+                let expo = new Decimal(1.15)
+                if(hasUpgrade('AM', 22)) expo = expo.sub(0.05)
+                return new Decimal(200).pow(new Decimal(expo).pow(x))
+            },
+            title: "Replicanti Galaxy?",
+            tooltip: "Base effect: 1.15^x<br>Base cost: 200^(1.15^x)",
+            display() {
+                return "Multiply Antimatter gain, again<br>Cost: " + coolDynamicFormat(this.cost(), 3)
+                + "<br>You have " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
+                + " quarks<br>Currently: x" + coolDynamicFormat(this.effect(), 2)
+            },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            unlocked() {
+                return hasUpgrade('AM', 21)
+            },
+            effect(x) {
+                return new Decimal(1.15).pow(x)
+            },
+        },
+        13: {
+            cost(x) {
+                let expo = new Decimal(1.2)
+                if(hasUpgrade('AM', 22)) expo = expo.sub(0.05)
+                return new Decimal(500).pow(new Decimal(expo).pow(x))
+            },
+            title: "Some other Antimatter Dimensions reference",
+            tooltip: "Base effect: 1.2^x<br>Base cost: 500^(1.2^x)",
+            display() {
+                return "Divide Matter gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
+                + "<br>You have " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
+                + " quarks<br>Currently: /" + coolDynamicFormat(this.effect(), 2)
+            },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            unlocked() {
+                return hasUpgrade('AM', 21)
+            },
+            effect(x) {
+                return new Decimal(1.2).pow(x)
+            },
         },
     }
 })

@@ -236,9 +236,3 @@ function achievement33() {
 	// >= 2 return true
 	if (machinemodes >= 2) return true; else return false
 }
-
-function secretAch14() {
-	if(player.M.points.gte(1000) && player.AM.points.gte(1000) && player.M.upgrades == [] && player.AM.upgrades == []) return true
-	if(player.DM.points.gte(1000) && player.EM.points.gte(1000) && player.DM.upgrades == [] && player.EM.upgrades == []) return true
-	return false
-}
