@@ -794,6 +794,7 @@ addLayer("P", {
             unlocked() { return true },
             onClick() { buyMax('Power') },
             title: "Buy Max Power Pylons",
+            display: "Warning: Not very optimised",
             canClick() { return true }
         }
     },

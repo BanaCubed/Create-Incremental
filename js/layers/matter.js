@@ -117,7 +117,7 @@ addLayer('M', {
             title: "Proton",
             cost: new Decimal(60),
             description: "Increase Quarks effect",
-            tooltip: "x/10 -> x/4"
+            tooltip: "x/10 -> x/3"
         },
         21: {
             title: "Nuclear Fission",
@@ -139,18 +139,18 @@ addLayer('M', {
             title: "Efficient Compression",
             cost: new Decimal(100000000000),
             description: "Reduce both Quark and Atom cost scalings",
-            tooltip: "1.2^x -> 1.1^x"
+            tooltip: "-0.1 to exponent"
         },
     },
     buyables: {
         11: {
             cost(x) {
-                let expo = new Decimal(1.2)
+                let expo = new Decimal(1.16)
                 if(hasUpgrade('M', 24)) expo = expo.sub(0.1)
                 return new Decimal(5).times(new Decimal(expo).pow(x))
             },
             title: "Create a Quark",
-            tooltip: "Base effect: x/10 + 1<br>Base cost: 5*1.2^x",
+            tooltip: "Base effect: x/10 + 1<br>Base cost: 5*1.16^x",
             display() {
                 return "Quarks multiply matter and divide antimatter gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
                 + "<br>You have " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
@@ -166,7 +166,7 @@ addLayer('M', {
             },
             effect(x) {
                 let divisor = new Decimal(10)
-                if(hasUpgrade('M', 14)) divisor = divisor.div(2.5)
+                if(hasUpgrade('M', 14)) divisor = divisor.div(3.3333)
                 let base = new Decimal(x).div(divisor).add(1)
                 if(hasUpgrade('M', 23)) base = base.pow(2)
                 return base

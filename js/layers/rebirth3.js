@@ -268,7 +268,7 @@ addLayer('HC', {
         },
 
         51: {
-            cost: new Decimal("2.5e13"),
+            cost: new Decimal("1.5e12"),
             currencyDisplayName: "Matter",
             currencyInternalName: "points",
             currencyLayer() { return 'M' },
