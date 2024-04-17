@@ -790,6 +790,12 @@ addLayer("P", {
                 return expo.pow(player.P.pylobF).div(divi)
             }
         },
+        21: {
+            unlocked() { return true },
+            onClick() { buyMax('Power') },
+            title: "Buy Max Power Pylons",
+            canClick() { return true }
+        }
     },
     doReset(resetlayer) {
         if(resetlayer == 'HC') {
