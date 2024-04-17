@@ -26,6 +26,7 @@ function matterGain(matterType) {
             if(hasMilestone('M', 1)) mGain = mGain.div(player.AM.points.div(5).add(1))
             if(hasMilestone('M', 2)) mGain = mGain.div(2)
         }
+    if(hasUpgrade('AM', 11)) mGain = mGain.times(player.DM.points.add(player.EM.points.add(3)).log(3))
     }
 
     if(matterType === 3) {
@@ -75,6 +76,7 @@ addLayer('M', {
     },
     effect() {
         let effect = player.M.points.add(1).pow(0.5)
+        if(hasUpgrade('AM', 12)) effect = effect.pow(0.6)
         if(hasUpgrade('M', 13)) effect = effect.times(1.2)
         if(hasUpgrade('HC', 51)) effect = effect.pow(0)
         return effect
@@ -123,7 +125,15 @@ addLayer('M', {
             title: "Nuclear Fission",
             cost: new Decimal(500),
             description: "Milestones now also multiply Matter gain at a reduced rate",
-            tooltip: "Mult = Div^0.7<br>Milestone 2 is ^0.2 instead and is based on Matter"
+            tooltip: "Mult = Div^0.7<br>Milestone 2 is ^0.2 instead and is based on Matter",
+            effect() {
+                let mGain = new Decimal(1)
+                if(hasMilestone('M', 0)) mGain = mGain.times(new Decimal(4).pow(0.7))
+                if(hasMilestone('M', 1)) mGain = mGain.times(player.M.points.div(5).add(1).pow(0.2))
+                if(hasMilestone('M', 2)) mGain = mGain.times(new Decimal(2).pow(0.7))
+                return mGain
+            },
+            effectDisplay() { return "x" + format(this.effect()) }
         },
         22: {
             title: "Neutron",
@@ -265,12 +275,54 @@ addLayer('AM', {
         return "dividing Matter gain by " + format(this.effect()) + ", and multiplying $, RP, SRP, Power and HE gain by " + format(this.effect2()) + "<br>(" + format(matterGain(2)) + "/sec)"
     },
     tabFormat: [
-        "main-display"
+        "main-display",
+        "upgrades"
     ],
     color: "#d6442d",
     branches: ["HC"],
     layerShown() {
         return hasAchievement('A', 101)
+    },
+    upgrades: {
+        11: {
+            title: "X Dimension",
+            cost: new Decimal(6),
+            description: "Multiply Antimatter gain based on Dark Matter and Exotic Matter",
+            tooltip: "log3(DM + EM + 3)",
+            effect() {
+                return player.DM.points.add(player.EM.points.add(3)).log(3)
+            },
+            effectDisplay() { return "x" + format(this.effect()) }
+        },
+        12: {
+            title: "Y Dimension",
+            cost: new Decimal(20),
+            description: "Reduce Matter's division to Antimatter",
+            tooltip: "^0.5 -> ^0.3"
+        },
+        13: {
+            title: "Z Dimension",
+            cost: new Decimal(35),
+            description: "Increase Antimatter's second effect",
+            tooltip: "Effect ^1.2"
+        },
+        14: {
+            title: "W Dimension",
+            cost: new Decimal(50),
+            description: "Raise Antimatter gain by 1.2"
+        },
+        21: {
+            title: "Infinity?"
+        },
+        22: {
+            title: "Discount"
+        },
+        23: {
+            title: "T Dimension?"
+        },
+        24: {
+            title: "S Dimension?"
+        },
     }
 })
 
