@@ -130,37 +130,6 @@ function getPointGen() {
 function addedPlayerData() { return {
 }}
 
-function pPylon(pylon, pylons, pylobs) {
-	let effect = pylons.div(10)
-
-	// Pylob Innate Bonus
-	if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(pylobs))
-
-	// Super Layer
-	if(hasMilestone('P', 4) && pylon == 'A') effect = effect.times(5)
-	if(hasUpgrade('HC', 14) && pylon == 'A') effect = effect.times(100)
-	if(hasUpgrade('HC', 41) && pylon == 'A') effect = effect.times(layers.UMF.effect2())
-	if(hasUpgrade('U', 54 && (pylon =='A' || pylon == 'B' || pylon == 'C'))) effect = effect.times(2)
-
-	if(hasChallenge('SR', 31) && pylon == 'A') effect = effect.times(player.P.points.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-	if(hasChallenge('SR', 31) && pylon == 'B') effect = effect.times(player.P.pylonA.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-	if(hasChallenge('SR', 31) && pylon == 'C') effect = effect.times(player.P.pylonB.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-	if(hasChallenge('SR', 31) && pylon == 'D') effect = effect.times(player.P.pylonC.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-	if(hasChallenge('SR', 31) && pylon == 'E') effect = effect.times(player.P.pylonD.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-	if(hasChallenge('SR', 31) && pylon == 'F') effect = effect.times(player.P.pylonE.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-
-	effect = effect.times(layers.U.buyables[12].effect())
-	if(hasUpgrade('SR', 13)) effect = effect.pow(1.2)
-
-	// Hyper Layer
-	effect = effect.times(layers.HC.effect()[2])
-	if(hasUpgrade('HC', 12)) effect = effect.times(2)
-	if(hasUpgrade('HC', 22)) effect = effect.times(5)
-	if(hasUpgrade('HC', 24)) effect = effect.times(200)
-
-	return effect
-}
-
 // Display extra things at the top of the page
 var displayThings = [
 	function() {
