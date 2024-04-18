@@ -563,5 +563,36 @@ addLayer('UMF', {
     ],
     color: "#472961",
     branches: ["M", "AM", "DM", "EM"],
-    layerShown: false
+    layerShown: false,
+    milestones: {
+        0: {
+            requirementDescription: "1 Ultimate Matter Fragment",
+            effectDescription: "Passively gain 0.05% of HRP gained on reset, also automate Omega",
+            done() {
+                return player.UMF.points.gte(1)
+            }
+        },
+        1: {
+            requirementDescription: "2 Ultimate Matter Fragments",
+            effectDescription: "All buyables and pylon automation is 5 times as efficient",
+            done() {
+                return player.UMF.points.gte(2)
+            }
+        },
+        2: {
+            requirementDescription: "3 Ultimate Matter Fragments",
+            effectDescription: "Matters now also multiply HRP",
+            done() {
+                return player.UMF.points.gte(3)
+            },
+            tooltip: "Boost to HRP is based on log(x)"
+        },
+        3: {
+            requirementDescription: "4 Ultimate Matter Fragments",
+            effectDescription: "Unlock a new layer...",
+            done() {
+                return player.UMF.points.gte(4)
+            }
+        },
+    }
 })

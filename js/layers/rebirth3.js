@@ -29,7 +29,8 @@ addLayer('HC', {
                 ["layer-proxy", ['EM', ["main-display"]]],
                 "blank",
                 ["layer-proxy", ['UMF', ["main-display"]]],
-                ["upgrade-tree", [[51, 52, 53, 54]]]
+                ["upgrade-tree", [[51, 52, 53, 54]]],
+                ["layer-proxy", ['UMF', ["milestones"]]]
             ]
         }
     },
@@ -46,10 +47,13 @@ addLayer('HC', {
         hypEss = hypEss.times(layers.UMF.effect2())
         if(hypEss.gte(2500)) hypEss = hypEss.div(2500).pow(0.2).times(2500)
         player.HC.hyperNumber = hypEss
+        if(hasMilestone('UMF', 0)) player.HC.points = player.HC.points.add(this.getResetGain().times(0.0005).times(diff))
+        if(hasMilestone('UMF', 0)) player.HC.total = player.HC.total.add(this.getResetGain().times(0.0005).times(diff))
     },
     effect() {
         let totalitism = player.HC.total
         if(totalitism.gte(50000)) totalitism = totalitism.div(50000).pow(0.25).times(50000)
+        if(totalitism.gte(500000)) totalitism = totalitism.div(50000).pow(0.25).times(500000)
         return [
             new Decimal(3).pow(totalitism.add(1)).div(3),
             totalitism.add(25).div(25).pow(0.5),
@@ -74,7 +78,9 @@ addLayer('HC', {
         }
     },
     getResetGain() {
-        return player.HC.hyperNumber.add(1).div(25).pow(1.6).floor()
+        let base = player.HC.hyperNumber.add(1).div(25).pow(1.6).floor()
+        if(hasMilestone('UMF', 2)) base = base.times(layers.UMF.effect2().log(4))
+        return base
     },
     getNextAt() {
         return this.getResetGain().add(1).pow(0.625).times(25).floor()
@@ -83,7 +89,7 @@ addLayer('HC', {
     canReset() {
         return player.HC.hyperNumber.gte(25) && hasUpgrade('SR', 21)
     },
-    prestigeNotify() { return this.canReset() },
+    prestigeNotify() { return this.canReset() && !hasMilestone('UMF', 0) },
     prestigeButtonText() {
         if(!this.getResetGain().gte(1024)) return "Go Hyper for " + formatWhole(this.getResetGain(), 0) + " Hyper Rebirth Points"
         + "<br><br>Next at " + formatWhole(this.getNextAt(), 0) + " Hyper Essence"

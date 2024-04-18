@@ -328,6 +328,9 @@ addLayer("SR", {
             buyUpgrade('SR', 13)
             buyUpgrade('SR', 14)
         }
+        if(hasMilestone('UMF', 0)) {
+            buyUpgrade('SR', 21)
+        }
     },
     milestonePopups() { return !hasMilestone('HC', 1) },
     resetsNothing() { return hasMilestone('HC', 4) },
@@ -541,6 +544,10 @@ addLayer("P", {
                     player.P.pylonA = player.P.pylonA.add(9)
                     player.P.pylobA = player.P.pylobA.add(9)
                 }
+                if(hasMilestone('UMF', 1)) {
+                    player.P.pylonA = player.P.pylonA.add(40)
+                    player.P.pylobA = player.P.pylobA.add(40)
+                }
             }
             if(player.P.pylonA.gte(layers.P.clickables[12].cost()) && (hasMilestone('P', 2) || hasUpgrade('HC', 32))) {
                 player.P.pylonB = player.P.pylonB.add(1)
@@ -549,6 +556,10 @@ addLayer("P", {
                     player.P.pylonB = player.P.pylonB.add(9)
                     player.P.pylobB = player.P.pylobB.add(9)
                 }
+                if(hasMilestone('UMF', 1)) {
+                    player.P.pylonB = player.P.pylonB.add(40)
+                    player.P.pylobB = player.P.pylobB.add(40)
+                }
             }
             if(player.P.pylonB.gte(layers.P.clickables[13].cost()) && (hasMilestone('P', 5) || hasUpgrade('HC', 32))) {
                 player.P.pylonC = player.P.pylonC.add(1)
@@ -556,6 +567,10 @@ addLayer("P", {
                 if(hasMilestone('HC', 1)) {
                     player.P.pylonC = player.P.pylonC.add(9)
                     player.P.pylobC = player.P.pylobC.add(9)
+                }
+                if(hasMilestone('UMF', 1)) {
+                    player.P.pylonC = player.P.pylonC.add(40)
+                    player.P.pylobC = player.P.pylobC.add(40)
                 }
             }
         }
@@ -567,6 +582,10 @@ addLayer("P", {
                     player.P.pylonD = player.P.pylonD.add(9)
                     player.P.pylobD = player.P.pylobD.add(9)
                 }
+                if(hasMilestone('UMF', 1)) {
+                    player.P.pylonD = player.P.pylonD.add(40)
+                    player.P.pylobD = player.P.pylobD.add(40)
+                }
             }
             if(player.P.pylonD.gte(layers.P.clickables[15].cost()) && (hasChallenge('SR', 31) || hasUpgrade('HC', 32))) {
                 player.P.pylonE = player.P.pylonE.add(1)
@@ -575,12 +594,20 @@ addLayer("P", {
                     player.P.pylonE = player.P.pylonE.add(9)
                     player.P.pylobE = player.P.pylobE.add(9)
                 }
+                if(hasMilestone('UMF', 1)) {
+                    player.P.pylonE = player.P.pylonE.add(40)
+                    player.P.pylobE = player.P.pylobE.add(40)
+                }
             }
         }
         if(hasUpgrade('HC', 32)) {
             if(player.P.pylonE.gte(layers.P.clickables[16].cost())) {
                 player.P.pylonF = player.P.pylonF.add(10)
                 player.P.pylobF = player.P.pylobF.add(10)
+            }
+            if(hasMilestone('UMF', 1)) {
+                player.P.pylonF = player.P.pylonF.add(40)
+                player.P.pylobF = player.P.pylobF.add(40)
             }
 
         }
