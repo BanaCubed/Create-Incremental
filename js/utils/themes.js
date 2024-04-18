@@ -1,5 +1,5 @@
 // ************ Themes ************
-var themes = ["default", "aqua", "verdant", "pyro", "arcane", "light", "void", "quality"]
+var themes = ["default", "aqua", "verdant", "electro", "pyro", "arcane", "steel", "wooden", "light", "void", "quality"]
 
 var colors = {
 	default: {
@@ -11,6 +11,16 @@ var colors = {
 		locked: "#bf8f8f",
 		background: "#0f0f0f",
 		background_tooltip: "rgba(0, 0, 0, 0.75)",
+	},
+	steel: {
+		1: "#eeeeee",//Branch color 1
+		2: "#afafaf",//Branch color 2
+		3: "#6f6f6f",//Branch color 3
+		color: "#cfcfcf",
+		points: "#efefef",
+		locked: "#af9f9f",
+		background: "#2f2f2f",
+		background_tooltip: "rgba(32, 32, 32, 0.75)",
 	},
 	aqua: {
 		1: "#bfdfff",
@@ -31,6 +41,26 @@ var colors = {
 		locked: "#c4a7a7",
 		background: "#3f0000",
 		background_tooltip: "rgba(31, 0, 0, 0.75)",
+	},
+	wooden: {
+		1: "#ffdfbf",
+		2: "#bf9f8f",
+		3: "#7f6f5f",
+		color: "#ffdfbf",
+		points: "#ffefdf",
+		locked: "#c4b5a7",
+		background: "#3f1700",
+		background_tooltip: "rgba(31, 15, 0, 0.75)",
+	},
+	electro: {
+		1: "#ffffbf",
+		2: "#bfbf8f",
+		3: "#7f7f5f",
+		color: "#ffffbf",
+		points: "#ffffdf",
+		locked: "#c4c4a7",
+		background: "#4f4f00",
+		background_tooltip: "rgba(31, 31, 0, 0.75)",
 	},
 	arcane: {
 		1: "#dfbfff",
