@@ -28,6 +28,8 @@ addLayer('HC', {
                 ["layer-proxy", ['DM', ["main-display"]]],
                 ["layer-proxy", ['EM', ["main-display"]]],
                 "blank",
+                "h-line",
+                "blank",
                 ["layer-proxy", ['UMF', ["main-display"]]],
                 ["upgrade-tree", [[51, 52, 53, 54]]],
                 ["layer-proxy", ['UMF', ["milestones"]]]
@@ -399,3 +401,19 @@ addLayer('C', {
     },
     color: "#34eb67",
 })
+
+function hCashB1() {
+	let boost = player.C.points.times(0.005).add(1).pow(0.15)
+    if(boost.gte(2)) boost = boost.div(2).pow(0.1).times(2)
+	return boost
+}
+
+function hyperCashGain() {
+	let HCgain = new Decimal(0)
+	if (hasMilestone('HC', 0)) HCgain = HCgain.add(0.1)
+	if (hasUpgrade('HC', 13)) HCgain = HCgain.times(player.points.add(10).log(10).pow(0.4))
+	if (hasUpgrade('HC', 23)) HCgain = HCgain.times(10)
+	if (HCgain.gte(100)) HCgain = new Decimal(100).times(new Decimal(10).pow(HCgain.div(100).log(10).add(1).log(10)))
+	return HCgain
+}
+
