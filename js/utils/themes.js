@@ -1,5 +1,5 @@
 // ************ Themes ************
-var themes = ["default", "aqua", "verdant", "electro", "pyro", "arcane", "steel", "wooden", "light", "void", "quality"]
+var themes = ["default", "aqua", "verdant", "electro", "pyro", "arcane", "steel"]
 
 var colors = {
 	default: {
