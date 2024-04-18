@@ -44,6 +44,7 @@ addLayer('HC', {
         if(hasUpgrade('HC', 33)) hypEss = hypEss.times(layers.C.effect()[3])
         if(hypEss === null || hypEss === undefined) hypEss = new Decimal(1)
         hypEss = hypEss.times(layers.UMF.effect2())
+        if(hypEss.gte(2500)) hypEss = hypEss.div(2500).pow(0.2).times(2500)
         player.HC.hyperNumber = hypEss
     },
     effect() {
