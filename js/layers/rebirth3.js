@@ -48,9 +48,13 @@ addLayer('HC', {
         player.HC.hyperNumber = hypEss
     },
     effect() {
-        return [new Decimal(3).pow(player['HC'].total.add(1)).div(3),
-            player['HC'].total.add(25).div(25).pow(0.5),
-            new Decimal(2).pow(player['HC'].total.add(2).div(2)).div(2)]
+        let totalitism = player.HC.total
+        if(totalitism.gte(50000)) totalitism = totalitism.div(50000).pow(0.25).times(50000)
+        return [
+            new Decimal(3).pow(totalitism.add(1)).div(3),
+            totalitism.add(25).div(25).pow(0.5),
+            new Decimal(2).pow(totalitism.add(2).div(2)).div(2)
+        ]
     },
     effectDescription() {
         return "multiplying $ gain by " + formatWhole(this.effect()[0]) + ", SRP gain by " + format(this.effect()[1]) + ", and Power Pylon effectiveness by " + format(this.effect()[2]) + "<br>Based on total HRP"
