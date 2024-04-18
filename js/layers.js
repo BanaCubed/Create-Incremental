@@ -415,11 +415,11 @@ addLayer("SA", {
         },
         14: {
             name: "Existence is Futile",
-            tooltip() { if(!hasAchievement(this.layer, this.id)) return "Waste of time to be honest"; else return "Reach 1,000 of two matters that nerf each other, without gaining any Ultimate Matter Fragments<br>Waste of time to be honest"},
+            tooltip() { if(!hasAchievement(this.layer, this.id)) return "Waste of time to be honest"; else return "Reach 1,000,000 of two matters that nerf each other, without gaining any Ultimate Matter Fragments<br>Waste of time to be honest"},
             unlocked() { return true },
             done() {
-                if(player.M.points.gte(1000) && player.AM.points.gte(1000) && player.UMF.points.eq(0)) return true
-                if(player.DM.points.gte(1000) && player.EM.points.gte(1000) && player.UMF.points.eq(0)) return true
+                if(player.M.points.gte(1000000) && player.AM.points.gte(1000000) && player.UMF.points.eq(0)) return true
+                if(player.DM.points.gte(1000000) && player.EM.points.gte(1000000) && player.UMF.points.eq(0)) return true
                 return false
             }
         },

@@ -39,6 +39,16 @@ function matterGain(matterType) {
     if(matterType === 3) {
         // Dark Matter
         mGain = mGain.div(layers.EM.effect())
+        mGain = mGain.times(layers.BH.effect())
+        mGain = mGain.times(layers.BH.buyables[12].effect())
+        if(hasUpgrade('DM', 11)) mGain = mGain.times(1.5)
+        if(hasUpgrade('DM', 12)) mGain = mGain.times(layers.DM.upgrades[12].effect())
+        if(hasUpgrade('DM', 21)) mGain = mGain.times(layers.DM.upgrades[21].effect())
+        if(hasUpgrade('DM', 11)) mGain = mGain.pow(1.1)
+        if(hasMilestone('BH', 1)) {
+            if(hasUpgrade('DM', 11)) mGain = mGain.times(1.5)
+            if(hasUpgrade('DM', 11)) mGain = mGain.pow(1.1)
+        }
     }
 
     if(matterType === 4) {
@@ -79,7 +89,7 @@ addLayer('M', {
     symbol: "M",
     row: 3,
     update(diff) {
-        player.M.points = player.M.points.add(matterGain(1).times(diff))
+        if(hasUpgrade('HC', 41)) player.M.points = player.M.points.add(matterGain(1).times(diff))
     },
     effect() {
         let effect = player.M.points.add(1).pow(0.5)
@@ -89,7 +99,7 @@ addLayer('M', {
         return effect
     },
     effect2() {
-        let effect = player.M.points.div(10000).add(1).pow(0.15)
+        let effect = player.M.points.div(10000).add(1).pow(0.17)
         if(hasUpgrade('M', 13)) effect = effect.times(1.2)
         return effect
     },
@@ -267,16 +277,16 @@ addLayer('AM', {
     row: 3,
     symbol: "AM",
     update(diff) {
-        player.AM.points = player.AM.points.add(matterGain(2).times(diff))
+        if(hasUpgrade('HC', 41)) player.AM.points = player.AM.points.add(matterGain(2).times(diff))
     },
     effect() {
-        let effect = player.AM.points.add(1).pow(0.5)
+        let effect = player.AM.points.add(1).pow(0.)
         if(hasUpgrade('M', 12)) effect = effect.div(3)
         if(hasUpgrade('HC', 52)) effect = effect.pow(0)
         return effect
     },
     effect2() {
-        let effect = player.AM.points.div(10000).add(1).pow(0.17)
+        let effect = player.AM.points.div(10000).add(1).pow(0.14)
         if(hasUpgrade('AM', 13)) effect = effect.pow(1.2)
         return effect
     },
@@ -355,8 +365,8 @@ addLayer('AM', {
             tooltip: "Base effect: 1.25^x<br>Base cost: 100^(1.1^x)",
             display() {
                 return "Multiply Antimatter gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
-                + "<br>You have " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
-                + " quarks<br>Currently: x" + coolDynamicFormat(this.effect(), 2)
+                + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
+                + "<br>Currently: x" + coolDynamicFormat(this.effect(), 2)
             },
             canAfford() { return player[this.layer].points.gte(this.cost()) },
             buy() {
@@ -382,8 +392,8 @@ addLayer('AM', {
             tooltip: "Base effect: 1.15^x<br>Base cost: 200^(1.15^x)",
             display() {
                 return "Multiply Antimatter gain, again<br>Cost: " + coolDynamicFormat(this.cost(), 3)
-                + "<br>You have " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
-                + " quarks<br>Currently: x" + coolDynamicFormat(this.effect(), 2)
+                + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
+                + "<br>Currently: x" + coolDynamicFormat(this.effect(), 2)
             },
             canAfford() { return player[this.layer].points.gte(this.cost()) },
             buy() {
@@ -407,8 +417,8 @@ addLayer('AM', {
             tooltip: "Base effect: 1.2^x<br>Base cost: 500^(1.2^x)",
             display() {
                 return "Divide Matter gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
-                + "<br>You have " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
-                + " quarks<br>Currently: /" + coolDynamicFormat(this.effect(), 2)
+                + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
+                + "<br>Currently: /" + coolDynamicFormat(this.effect(), 2)
             },
             canAfford() { return player[this.layer].points.gte(this.cost()) },
             buy() {
@@ -452,25 +462,298 @@ addLayer('DM', {
     row: 3,
     symbol: "DM",
     update(diff) {
-        player.DM.points = player.DM.points.add(matterGain(3).times(diff))
+        if(hasUpgrade('HC', 41)) player.DM.points = player.DM.points.add(matterGain(3).times(diff))
     },
     effect() {
-        return player.DM.points.add(1).pow(0.5)
+        let base = player.DM.points.add(1).pow(0.5)
+        if(hasUpgrade('DM', 13)) base = base.pow(2)
+        if(hasMilestone('BH', 1) && hasUpgrade('DM', 13)) base = base.pow(2)
+        if(hasUpgrade('HC', 53)) base = base.pow(0)
+        return base
     },
     effect2() {
-        let effect = player.DM.points.div(10000).add(1).pow(0.5)
+        let effect = player.DM.points.div(100).add(1).pow(0.003)
+        if(hasUpgrade('DM', 13)) effect = effect.pow(2)
+        if(hasMilestone('BH', 1) && hasUpgrade('DM', 13)) effect = effect.pow(2)
         return effect
     },
     effectDescription() {
         return "dividing Exotic Matter gain by " + format(this.effect()) + ", and multiplying $, RP, SRP, Power and HE gain by " + format(this.effect2()) + "<br>(" + format(matterGain(3)) + "/sec)"
     },
-    tabFormat: [
-        "main-display"
-    ],
+    tabFormat: {
+        "Dark Matter": {
+            content: [
+                "main-display",
+                "buyables",
+                "upgrades",
+            ]
+        },
+        "Black Hole": {
+            content: [
+                ["layer-proxy", ['BH', [
+                    "main-display",
+                    "buyables",
+                    "milestones"
+                ]]]
+            ],
+            unlocked() { return hasUpgrade('DM', 22) }
+        }
+    },
     color: "#303030",
     branches: ["HC"],
     layerShown() {
         return hasAchievement('A', 101)
+    },
+    upgrades: {
+        11: {
+            title: "Void Matter",
+            description: "Multiply Dark Matter gain by 1.5 and raise it ^1.1",
+            cost: new Decimal(8)
+        },
+        12: {
+            title: "Growing Void",
+            description: "Dark Matter boosts it's own gain",
+            cost: new Decimal(20),
+            tooltip: "log5(DM*2 + 5)",
+            effect() {
+                let base = player.DM.points.times(2).add(5).log(5)
+                if(hasMilestone('BH', 1)) base = base.pow(2)
+                return base
+            },
+            effectDisplay() { return "x" + format(this.effect()) }
+        },
+        13: {
+            title: "Abyssal Gifts",
+            description: "Square both of Dark Matter's effects",
+            cost: new Decimal(35),
+        },
+        21: {
+            title: "Inflation in Hell",
+            description: "Boost Dark Matter gain based on $",
+            cost: new Decimal(50),
+            tooltip: "log($)^0.1",
+            effect() {
+                let base = player.points.add(10).log(10).pow(0.1)
+                if(hasMilestone('BH', 1)) base = base.pow(2)
+                return base
+            },
+            effectDisplay() { return "x" + format(this.effect()) }
+        },
+        22: {
+            title: "Black Hole",
+            description: "Unlock the Black Hole",
+            cost: new Decimal(100),
+        },
+        23: {
+            title: "Death Goals",
+            description: "Unlock Black Hole milestones",
+            cost: new Decimal(1e12),
+        },
+    },
+    buyables: {
+        11: {
+            cost(x) {
+                let y = x
+                if(hasMilestone('BH', 0)) y = y.div(2)
+                let expo = new Decimal(2)
+                return new Decimal(100).times(new Decimal(expo).pow(y))
+            },
+            title: "Anti Hawking Radiation",
+            tooltip: "Base effect: 1.5^x<br>Base cost: 100*(2^x)",
+            display() {
+                return "Multiply Black Hole's gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
+                + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
+                + "<br>Currently: x" + coolDynamicFormat(this.effect(), 2)
+            },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            unlocked() {
+                return hasUpgrade('DM', 22)
+            },
+            effect(x) {
+                let base = new Decimal(1.5)
+                return new Decimal(base).pow(x)
+            },
+        },
+        12: {
+            cost(x) {
+                let y = x
+                if(hasMilestone('BH', 0)) y = y.div(2)
+                let expo = new Decimal(2)
+                expo = expo.add(y.div(7))
+                return new Decimal(400).times(new Decimal(expo).pow(y))
+            },
+            title: "Sacrifice",
+            tooltip: "Base effect: 1.1^x<br>Base cost: 400*(2^x), exponent increases with count",
+            display() {
+                return "Multiply Black Hole's gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
+                + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
+                + "<br>Currently: x" + coolDynamicFormat(this.effect(), 2)
+            },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            unlocked() {
+                return hasUpgrade('DM', 22)
+            },
+            effect(x) {
+                let y = x
+                let base = new Decimal(1.1)
+                return new Decimal(base).pow(y)
+            },
+        },
+    },
+    automate() {
+        if(layers.DM.buyables[11].canAfford() && hasMilestone('BH', 3)) {
+            player.DM.points = player.DM.points.sub(layers.DM.buyables[11].cost())
+            setBuyableAmount('DM', 11, getBuyableAmount('DM', 11).add(1))
+        }
+        if(layers.DM.buyables[12].canAfford() && hasMilestone('BH', 3)) {
+            player.DM.points = player.DM.points.sub(layers.DM.buyables[12].cost())
+            setBuyableAmount('DM', 12, getBuyableAmount('DM', 12).add(1))
+        }
+    }
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+addLayer('BH', {
+    name: "black-hole",
+    resource: "plank lengths^3 of Black Hole volume",
+    startData() {
+        return {
+            unlocked: true,
+            points: new Decimal(0),
+        }
+    },
+    row: 3,
+    update(diff) {
+        if(diff >= 0.3) diff = 0.3
+        if(hasUpgrade('DM', 22)) {
+            player.BH.points = player.BH.points.add(this.gain().times(diff))
+        }
+    },
+    effect() {
+        return player.BH.points.pow(0.8)
+    },
+    effectDescription() {
+        return "multiplying Dark Matter gain by " + format(this.effect()) + ", but divide themselves each second by " + format(this.nerf()) + "<br>(+" + format(this.gain()) + "/sec)"
+    },
+    color: "#4b0f75",
+    gain() {
+        let base = new Decimal(2)
+        base = base.times(layers.DM.buyables[11].effect())
+        base = base.times(layers.BH.buyables[11].effect())
+        base = base.times(layers.DM.buyables[12].effect())
+        if(hasMilestone('BH', 2)) base = base.pow(1.15)
+        base = base.div(this.nerf())
+        return base
+    },
+    nerf() {
+        let base = player.BH.points.pow(0.5)
+        return base
+    },
+    buyables: {
+        11: {
+            cost(x) {
+                let y = x
+                if(hasMilestone('BH', 0)) y = y.div(2)
+                let expo = new Decimal(1.25)
+                return new Decimal(10000).pow(new Decimal(expo).pow(y))
+            },
+            title: "Big Black Hole",
+            tooltip: "Base effect: 1.5^x<br>Base cost: 10,000^(1.25^x)",
+            display() {
+                return "Multiply Black Hole's gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
+                + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
+                + "<br>Currently: x" + coolDynamicFormat(this.effect(), 2)
+            },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            unlocked() {
+                return hasUpgrade('DM', 22)
+            },
+            effect(x) {
+                let y = x
+                let base = new Decimal(1.5)
+                return new Decimal(base).pow(y)
+            },
+        },
+        12: {
+            cost(x) {
+                let y = x
+                if(hasMilestone('BH', 0)) y = y.div(2)
+                let expo = new Decimal(1.4)
+                return new Decimal(100000000).pow(new Decimal(expo).pow(y))
+            },
+            title: "Gift from the Abyss",
+            tooltip: "Base effect: 1.5^x<br>Base cost: 100,000,000^(1.4^x)",
+            display() {
+                return "Multiply Dark Matter gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
+                + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
+                + "<br>Currently: x" + coolDynamicFormat(this.effect(), 2)
+            },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            unlocked() {
+                return hasUpgrade('DM', 22)
+            },
+            effect(x) {
+                let y = x
+                let base = new Decimal(1.5)
+                return new Decimal(base).pow(y)
+            },
+        },
+    },
+    milestones: {
+        0: {
+            unlocked() { return hasUpgrade('DM', 23) },
+            done() { return hasUpgrade('DM', 23) && player.BH.points.gte("1e10") },
+            requirementDescription: "1e10 Black Hole Volume (BHV)",
+            effectDescription: "Half the scaling of all Dark Matter and Black Hole buyables",
+        },
+        1: {
+            unlocked() { return hasUpgrade('DM', 23) },
+            done() { return hasUpgrade('DM', 23) && player.BH.points.gte("1e20") },
+            requirementDescription: "1e20 BHV",
+            effectDescription: "The first four Dark Matter upgrades are applied twice",
+        },
+        2: {
+            unlocked() { return hasUpgrade('DM', 23) },
+            done() { return hasUpgrade('DM', 23) && player.BH.points.gte("1e45") },
+            requirementDescription: "1e45 BHV",
+            effectDescription: "Raise BHV gain by ^1.15",
+        },
+        3: {
+            unlocked() { return hasUpgrade('DM', 23) },
+            done() { return hasUpgrade('DM', 23) && player.BH.points.gte("1e140") },
+            requirementDescription: "1e140 BHV",
+            effectDescription: "Automate Dark Matter buyables",
+        },
     }
 })
 
@@ -501,13 +784,13 @@ addLayer('EM', {
     row: 3,
     symbol: "EM",
     update(diff) {
-        player.EM.points = player.EM.points.add(matterGain(4).times(diff))
+        if(hasUpgrade('HC', 41)) player.EM.points = player.EM.points.add(matterGain(4).times(diff))
     },
     effect() {
         return player.EM.points.add(1).pow(0.5)
     },
     effect2() {
-        let effect = player.DM.points.div(10000).add(1).pow(0.5)
+        let effect = player.EM.points.div(10000).add(1).pow(0.5)
         return effect
     },
     effectDescription() {
