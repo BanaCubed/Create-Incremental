@@ -344,7 +344,6 @@ addLayer('HC', {
                 layers.P.doReset('HC')
                 layers.C.doReset('HC')
             },
-            unlocked() { return !hasMilestone('HC', 5) }
         }
     }
 })

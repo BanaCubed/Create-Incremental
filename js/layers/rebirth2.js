@@ -627,8 +627,10 @@ addLayer("P", {
             canClick() { return player[this.layer].points.gte(this.cost()) },
             onClick() {
                 player[this.layer].points = player[this.layer].points.sub(this.cost());
-                player.P.pylonA = player.P.pylonA.add(1)
-                player.P.pylobA = player.P.pylobA.add(1)
+                let amt = new Decimal(1)
+                amt = amt.times(layers.HC.effect()[1]).floor()
+                player.P.pylonA = player.P.pylonA.add(amt)
+                player.P.pylobA = player.P.pylobA.add(amt)
             },
             unlocked() {
                 return (hasMilestone('P', 0) || hasUpgrade('HC', 33))
@@ -642,8 +644,8 @@ addLayer("P", {
                 if(hasMilestone('P', 6)) expo = expo.sub(0.05)
                 if(hasMilestone('P', 9)) divi = divi.times(player.SR.points.add(1).pow(6))
                 if(hasUpgrade('HC', 33)) expo = expo.sub(0.2)
-                if(player.P.pylobA.gte(1001)) expo = expo.add(player.P.pylobA.sub(1000).div(100).pow(2))
                 if(hasUpgrade('HC', 34)) divi = divi.times(100000)
+                if(player.P.pylobA.gte(1001)) expo = expo.add(player.P.pylobA.sub(1000).div(100).pow(2))
                 return expo.pow(player.P.pylobA).div(divi)
             }
         },
@@ -661,8 +663,10 @@ addLayer("P", {
             canClick() { return player[this.layer].pylonA.gte(this.cost()) },
             onClick() {
                 player[this.layer].pylonA = player[this.layer].pylonA.sub(this.cost());
-                player.P.pylonB = player.P.pylonB.add(1)
-                player.P.pylobB = player.P.pylobB.add(1)
+                let amt = new Decimal(1)
+                amt = amt.times(layers.HC.effect()[1]).floor()
+                player.P.pylonB = player.P.pylonB.add(amt)
+                player.P.pylobB = player.P.pylobB.add(amt)
             },
             unlocked() {
                 return (hasMilestone('P', 2) || hasUpgrade('HC', 33))
@@ -695,8 +699,10 @@ addLayer("P", {
             canClick() { return player[this.layer].pylonB.gte(this.cost()) },
             onClick() {
                 player[this.layer].pylonB = player[this.layer].pylonB.sub(this.cost());
-                player.P.pylonC = player.P.pylonC.add(1)
-                player.P.pylobC = player.P.pylobC.add(1)
+                let amt = new Decimal(1)
+                amt = amt.times(layers.HC.effect()[1]).floor()
+                player.P.pylonC = player.P.pylonC.add(amt)
+                player.P.pylobC = player.P.pylobC.add(amt)
             },
             unlocked() {
                 return (hasMilestone('P', 5) || hasUpgrade('HC', 33))
@@ -729,8 +735,10 @@ addLayer("P", {
             canClick() { return player[this.layer].pylonC.gte(this.cost()) },
             onClick() {
                 player[this.layer].pylonC = player[this.layer].pylonC.sub(this.cost());
-                player.P.pylonD = player.P.pylonD.add(1)
-                player.P.pylobD = player.P.pylobD.add(1)
+                let amt = new Decimal(1)
+                amt = amt.times(layers.HC.effect()[1]).floor()
+                player.P.pylonD = player.P.pylonD.add(amt)
+                player.P.pylobD = player.P.pylobD.add(amt)
             },
             unlocked() {
                 return (hasChallenge('SR', 22) || hasUpgrade('HC', 33))
@@ -763,8 +771,10 @@ addLayer("P", {
             canClick() { return player[this.layer].pylonD.gte(this.cost()) },
             onClick() {
                 player[this.layer].pylonD = player[this.layer].pylonD.sub(this.cost());
-                player.P.pylonE = player.P.pylonE.add(1)
-                player.P.pylobE = player.P.pylobE.add(1)
+                let amt = new Decimal(1)
+                amt = amt.times(layers.HC.effect()[1]).floor()
+                player.P.pylonE = player.P.pylonE.add(amt)
+                player.P.pylobE = player.P.pylobE.add(amt)
             },
             unlocked() {
                 return (hasChallenge('SR', 31) || hasUpgrade('HC', 33))
@@ -797,8 +807,10 @@ addLayer("P", {
             canClick() { return player[this.layer].pylonE.gte(this.cost()) },
             onClick() {
                 player[this.layer].pylonE = player[this.layer].pylonE.sub(this.cost());
-                player.P.pylonF = player.P.pylonF.add(1)
-                player.P.pylobF = player.P.pylobF.add(1)
+                let amt = new Decimal(1)
+                amt = amt.times(layers.HC.effect()[1]).floor()
+                player.P.pylonF = player.P.pylonF.add(amt)
+                player.P.pylobF = player.P.pylobF.add(amt)
             },
             unlocked() {
                 return (maxedChallenge('SR', 31) || hasUpgrade('HC', 33))
@@ -821,7 +833,7 @@ addLayer("P", {
             unlocked() { return true },
             onClick() { buyMax('Power') },
             title: "Buy Max Power Pylons",
-            display: "Warning: Not very optimised",
+            display: "Warning: can lag game",
             canClick() { return true }
         }
     },

@@ -99,7 +99,7 @@ addLayer('M', {
         return effect
     },
     effect2() {
-        let effect = player.M.points.div(10000).add(1).pow(0.17)
+        let effect = player.M.points.div(10000).add(1).pow(0.085)
         if(hasUpgrade('M', 13)) effect = effect.times(1.2)
         return effect
     },
@@ -286,7 +286,7 @@ addLayer('AM', {
         return effect
     },
     effect2() {
-        let effect = player.AM.points.div(10000).add(1).pow(0.14)
+        let effect = player.AM.points.div(10000).add(1).pow(0.07)
         if(hasUpgrade('AM', 13)) effect = effect.pow(1.2)
         return effect
     },
@@ -472,7 +472,7 @@ addLayer('DM', {
         return base
     },
     effect2() {
-        let effect = player.DM.points.div(100).add(1).pow(0.003)
+        let effect = player.DM.points.div(100).add(1).pow(0.0015)
         if(hasUpgrade('DM', 13)) effect = effect.pow(2)
         if(hasMilestone('BH', 1) && hasUpgrade('DM', 13)) effect = effect.pow(2)
         return effect
@@ -655,7 +655,7 @@ addLayer('BH', {
         return player.BH.points.pow(0.8)
     },
     effectDescription() {
-        return "multiplying Dark Matter gain by " + format(this.effect()) + ", but divide themselves each second by " + format(this.nerf()) + "<br>(+" + format(this.gain()) + "/sec)"
+        return "multiplying Dark Matter gain by " + format(this.effect()) + ", but divide their own gain by " + format(this.nerf()) + "<br>(+" + format(this.gain()) + "/sec)"
     },
     color: "#4b0f75",
     gain() {
