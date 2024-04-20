@@ -478,7 +478,7 @@ addLayer('DM', {
         return base
     },
     effect2() {
-        let effect = player.DM.points.div(100).add(1).pow(0.0015)
+        let effect = player.DM.points.div(100).add(1).pow(0.0005)
         if(hasUpgrade('DM', 13)) effect = effect.pow(2)
         if(hasMilestone('BH', 1) && hasUpgrade('DM', 13)) effect = effect.pow(2)
         return effect
