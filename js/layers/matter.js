@@ -285,7 +285,7 @@ addLayer('AM', {
         if(hasUpgrade('HC', 41)) player.AM.points = player.AM.points.add(matterGain(2).times(diff))
     },
     effect() {
-        let effect = player.AM.points.add(1).pow(0.)
+        let effect = player.AM.points.add(1).pow(0.5)
         if(hasUpgrade('M', 12)) effect = effect.div(3)
         if(hasUpgrade('HC', 52)) effect = effect.pow(0)
         return effect
@@ -562,10 +562,11 @@ addLayer('DM', {
                 let y = x
                 if(hasMilestone('BH', 0)) y = y.div(2)
                 let expo = new Decimal(2)
+                if(y.gte(400)) y = y.div(400).pow(2).times(400)
                 return new Decimal(100).times(new Decimal(expo).pow(y))
             },
             title: "Anti Hawking Radiation",
-            tooltip: "Base effect: 1.5^x<br>Base cost: 100*(2^x)",
+            tooltip: "Base effect: 1.65^x<br>Base cost: 100*(2^x)",
             display() {
                 return "Multiply Black Hole's gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
                 + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
@@ -580,7 +581,7 @@ addLayer('DM', {
                 return hasUpgrade('DM', 22)
             },
             effect(x) {
-                let base = new Decimal(1.5)
+                let base = new Decimal(1.65)
                 return new Decimal(base).pow(x)
             },
         },
@@ -593,7 +594,7 @@ addLayer('DM', {
                 return new Decimal(400).times(new Decimal(expo).pow(y))
             },
             title: "Sacrifice",
-            tooltip: "Base effect: 1.1^x<br>Base cost: 400*(2^x), exponent increases with count",
+            tooltip: "Base effect: 1.2^x<br>Base cost: 400*(2^x), exponent increases with count",
             display() {
                 return "Multiply Black Hole's gain, again<br>Cost: " + coolDynamicFormat(this.cost(), 3)
                 + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
@@ -609,7 +610,7 @@ addLayer('DM', {
             },
             effect(x) {
                 let y = x
-                let base = new Decimal(1.1)
+                let base = new Decimal(1.2)
                 return new Decimal(base).pow(y)
             },
         },
@@ -667,11 +668,11 @@ addLayer('BH', {
             cost(x) {
                 let y = x
                 if(hasMilestone('BH', 0)) y = y.div(2)
-                let expo = new Decimal(1.25)
+                let expo = new Decimal(1.2)
                 return new Decimal(10000).pow(new Decimal(expo).pow(y))
             },
             title: "Big Black Hole",
-            tooltip: "Base effect: 1.5^x<br>Base cost: 10,000^(1.25^x)",
+            tooltip: "Base effect: 3^x<br>Base cost: 10,000^(1.2^x)",
             display() {
                 return "Multiply Black Hole's gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
                 + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
@@ -687,7 +688,7 @@ addLayer('BH', {
             },
             effect(x) {
                 let y = x
-                let base = new Decimal(1.5)
+                let base = new Decimal(3)
                 return new Decimal(base).pow(y)
             },
         },
@@ -696,10 +697,10 @@ addLayer('BH', {
                 let y = x
                 if(hasMilestone('BH', 0)) y = y.div(2)
                 let expo = new Decimal(1.4)
-                return new Decimal(100000000).pow(new Decimal(expo).pow(y))
+                return new Decimal(1000000).pow(new Decimal(expo).pow(y))
             },
             title: "Gift from the Abyss",
-            tooltip: "Base effect: 1.5^x<br>Base cost: 100,000,000^(1.4^x)",
+            tooltip: "Base effect: 5^x<br>Base cost: 1,000,000^(1.4^x)",
             display() {
                 return "Multiply Dark Matter gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
                 + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
@@ -715,7 +716,7 @@ addLayer('BH', {
             },
             effect(x) {
                 let y = x
-                let base = new Decimal(1.5)
+                let base = new Decimal(5)
                 return new Decimal(base).pow(y)
             },
         },
@@ -735,8 +736,8 @@ addLayer('BH', {
         },
         2: {
             unlocked() { return hasUpgrade('DM', 23) },
-            done() { return hasUpgrade('DM', 23) && player.BH.points.gte("1e45") },
-            requirementDescription: "1e45 BHV",
+            done() { return hasUpgrade('DM', 23) && player.BH.points.gte("1e65") },
+            requirementDescription: "1e65 BHV",
             effectDescription: "Raise BHV gain by ^1.15",
         },
         3: {
@@ -857,7 +858,7 @@ addLayer('EM', {
         21: {
             title: "Conjecture",
             description: "Square Hypotheory's (buyable) base effect",
-            cost: new Decimal(1e10)
+            cost: new Decimal(1e7)
         },
         22: {
             title: "Untitled Upgrade",
@@ -867,7 +868,7 @@ addLayer('EM', {
         23: {
             title: "I'm running out of names",
             description: "Exotic Matter boosts it's own gain",
-            cost: new Decimal(7.32e91),
+            cost: new Decimal(1.32e81),
             tooltip: "log1e10(EM + 1e10)",
             effect() {
                 return player.EM.points.add(1e10).log(1e10)
@@ -877,7 +878,7 @@ addLayer('EM', {
         24: {
             title: "Frogbert",
             description: "$ boosts Unstable Matter's half-life",
-            cost: new Decimal(1e200),
+            cost: new Decimal(1e195),
             tooltip: "log(log($ + 10) + 10)",
             effect() {
                 return player.points.add(10).log(10).add(10).log(10)
@@ -999,7 +1000,7 @@ addLayer('EM', {
         },
         12: {
             name: "Theorem > Conjecture",
-            challengeDescription: "There is linearly increasing Real Particles that divide Hypothetical Particle gain<br>Entering this challenge also temporarily resets both Exotic Matter buyables",
+            challengeDescription: "There are linearly increasing Real Particles that divide Hypothetical Particle gain<br>Entering this challenge also temporarily resets both Exotic Matter buyables",
             onEnter() {
                 player.EM.buy1save = getBuyableAmount('EM', 11)
                 player.EM.buy2save = getBuyableAmount('EM', 12)
@@ -1014,9 +1015,9 @@ addLayer('EM', {
                 setBuyableAmount('EM', 11, player.EM.buy1save)
                 setBuyableAmount('EM', 12, player.EM.buy2save)
             },
-            goalDescription: "690 Unstable Matter",
+            goalDescription: "420 Unstable Matter",
             canComplete() {
-                return player.UnsM.points.gte("690")
+                return player.UnsM.points.gte("420")
             },
             rewardDescription() {
                 return "Raising Hypothetical Particles by ^1.4"
@@ -1131,12 +1132,12 @@ addLayer('UnsM', {
         12: {
             title: "Labcoats",
             description: "Triple Unstable Matter's half-life",
-            cost: new Decimal(6000),
+            cost: new Decimal(3000),
         },
         13: {
             title: "Timewarping",
             description: "Root Unstable Matter's half-life length in seconds, but multiply it's gain by the same amount",
-            cost: new Decimal(10000),
+            cost: new Decimal(5000),
             effect() {
                 if(!hasUpgrade('UnsM', 13)) return layers.UnsM.halfLife().pow(0.5)
                 if(hasUpgrade('UnsM', 13)) return layers.UnsM.halfLife()
@@ -1148,7 +1149,7 @@ addLayer('UnsM', {
         14: {
             title: "Insanity",
             description: "Exotic Matter now also boosts Unstable Matter's half-life",
-            cost: new Decimal(21000),
+            cost: new Decimal(10000),
             effect() {
                 return layers.EM.effect2().pow(1e10).add(10).log(10).add(10).log(10)
             },

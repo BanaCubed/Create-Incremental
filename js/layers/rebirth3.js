@@ -299,7 +299,7 @@ addLayer('HC', {
             description: "Disable Antimatter's nerf to Matter, and gain an Ultimate Matter Fragment"
         },
         53: {
-            cost: new Decimal("1e169"),
+            cost: new Decimal("1e500"),
             currencyDisplayName: "Black Hole Volume",
             currencyInternalName: "points",
             currencyLayer() { return 'BH' },
@@ -308,7 +308,7 @@ addLayer('HC', {
             description: "Disable Dark Matter's nerf to Exotic Matter, and gain an Ultimate Matter Fragment"
         },
         54: {
-            cost: new Decimal("250000"),
+            cost: new Decimal("50000"),
             currencyDisplayName: "Unstable Matter",
             currencyInternalName: "points",
             currencyLayer() { return 'UnsM' },
