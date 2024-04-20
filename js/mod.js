@@ -142,7 +142,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return false
+	return player.UMF.points.gte(4)
 }
 
 function machineBonuses() {
@@ -190,4 +190,77 @@ function achievement33() {
 
 	// >= 2 return true
 	if (machinemodes >= 2) return true; else return false
+}
+
+function timeDisplay(value) {
+
+	// Variable setup
+	let yrs = value.div(31536000).floor()
+	let weeks = value.div(604800).floor().sub(yrs.times(365).div(7))
+	let days = value.div(86400).floor().sub(weeks.times(7)).sub(yrs.times(365))
+	let hrs = value.div(3600).floor().sub(days.times(24)).sub(weeks.times(168)).sub(yrs.times(8760))
+	let mins = value.div(60).floor().sub(hrs.times(60)).sub(days.times(1440)).sub(weeks.times(10080)).sub(yrs.times(525600))
+	let secs = value.sub(mins.times(60)).sub(hrs.times(3600)).sub(days.times(86400)).sub(weeks.times(604800)).sub(yrs.times(31536000))
+
+	// Second
+	if(value.eq(1)) {
+		return "1.00 second"
+	}
+
+	// Seconds
+	if(value.lt(60)) {
+		return format(secs) + " seconds"
+	}
+
+	// Minute
+	if(value.lt(120)) {
+		return formatWhole(mins) + " minute and "
+		+ format(secs) + " seconds"
+	}
+
+	// Minutes
+	if(value.lt(3600)) {
+		return formatWhole(mins) + " minutes and "
+		+ format(secs) + " seconds"
+	}
+
+	// Hours
+	if(value.lt(86400)) {
+		return formatWhole(hrs) + "hrs, "
+		+ formatWhole(mins) + "mins, "
+		+ format(secs) + "secs"
+	}
+
+	// Days
+	if(value.lt(604800)) {
+		return formatWhole(days) + "d "
+		+ formatWhole(hrs) + "h "
+		+ formatWhole(mins) + "m "
+		+ format(secs) + "s"
+	}
+
+	// Weeks
+	if(value.lt(31536000)) {
+		return formatWhole(weeks) + "w "
+		+ formatWhole(days) + "d "
+		+ formatWhole(hrs) + "h "
+	}
+
+	// Years
+	if(value.lt(3153600000)) {
+		return formatWhole(yrs) + "y "
+		+ formatWhole(weeks) + "w "
+		+ formatWhole(days) + "d "
+	}
+
+	// Centuries
+	if(value.lt(31536000000)) {
+		return formatWhole(yrs) + "y "
+		+ formatWhole(days) + "d "
+	}
+
+	// Eternities
+	if(value.lt(315360000000000)) {
+		return formatWhole(yrs) + "y "
+	}
 }

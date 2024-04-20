@@ -1,5 +1,5 @@
 // ************ Themes ************
-var themes = ["default", "aqua", "verdant", "electro", "pyro", "arcane", "steel"]
+var themes = ["default", "aqua", "verdant", "pyro", "arcane", "steel"]
 
 var colors = {
 	default: {
@@ -59,7 +59,7 @@ var colors = {
 		color: "#ffffbf",
 		points: "#ffffdf",
 		locked: "#c4c4a7",
-		background: "#4f4f00",
+		background: "#4f3a00",
 		background_tooltip: "rgba(31, 31, 0, 0.75)",
 	},
 	arcane: {

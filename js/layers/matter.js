@@ -49,10 +49,15 @@ function matterGain(matterType) {
             if(hasUpgrade('DM', 11)) mGain = mGain.times(1.5)
             if(hasUpgrade('DM', 11)) mGain = mGain.pow(1.1)
         }
+        mGain = mGain.div(layers.HP.effect())
     }
 
     if(matterType === 4) {
         // Exotic Matter
+        if(hasUpgrade('EM', 11)) mGain = mGain.times(3)
+        if(hasUpgrade('EM', 14)) mGain = mGain.times(layers.EM.upgrades[14].effect())
+        if(hasUpgrade('EM', 23)) mGain = mGain.times(layers.EM.upgrades[23].effect())
+        mGain = mGain.pow(layers.UnsM.effect())
         mGain = mGain.div(layers.DM.effect())
     }
 
@@ -468,6 +473,7 @@ addLayer('DM', {
         let base = player.DM.points.add(1).pow(0.5)
         if(hasUpgrade('DM', 13)) base = base.pow(2)
         if(hasMilestone('BH', 1) && hasUpgrade('DM', 13)) base = base.pow(2)
+        if(hasUpgrade('EM', 12)) base = base.pow(0.6)
         if(hasUpgrade('HC', 53)) base = base.pow(0)
         return base
     },
@@ -589,7 +595,7 @@ addLayer('DM', {
             title: "Sacrifice",
             tooltip: "Base effect: 1.1^x<br>Base cost: 400*(2^x), exponent increases with count",
             display() {
-                return "Multiply Black Hole's gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
+                return "Multiply Black Hole's gain, again<br>Cost: " + coolDynamicFormat(this.cost(), 3)
                 + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
                 + "<br>Currently: x" + coolDynamicFormat(this.effect(), 2)
             },
@@ -620,21 +626,6 @@ addLayer('DM', {
     }
 })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 addLayer('BH', {
     name: "black-hole",
     resource: "plank lengths^3 of Black Hole volume",
@@ -652,7 +643,7 @@ addLayer('BH', {
         }
     },
     effect() {
-        return player.BH.points.pow(0.8)
+        return player.BH.points.add(1).pow(0.8)
     },
     effectDescription() {
         return "multiplying Dark Matter gain by " + format(this.effect()) + ", but divide their own gain by " + format(this.nerf()) + "<br>(+" + format(this.gain()) + "/sec)"
@@ -668,7 +659,7 @@ addLayer('BH', {
         return base
     },
     nerf() {
-        let base = player.BH.points.pow(0.5)
+        let base = player.BH.points.add(1).pow(0.5)
         return base
     },
     buyables: {
@@ -779,30 +770,392 @@ addLayer('EM', {
         return {
             unlocked: true,
             points: new Decimal(0),
+            buy1save: new Decimal(0),
+            buy2save: new Decimal(0),
+            realParticle: new Decimal(0)
         }
     },
     row: 3,
     symbol: "EM",
     update(diff) {
         if(hasUpgrade('HC', 41)) player.EM.points = player.EM.points.add(matterGain(4).times(diff))
+        if(inChallenge('EM', 12)) player.EM.realParticle = player.EM.realParticle.add(diff)
     },
     effect() {
-        return player.EM.points.add(1).pow(0.5)
+        let effect = player.EM.points.add(1).pow(0.5)
+        if(hasUpgrade('HC', 54)) effect = effect.pow(0)
+        return effect
     },
     effect2() {
-        let effect = player.EM.points.div(10000).add(1).pow(0.5)
+        let effect = player.EM.points.div(10000).add(1).pow(0.0006)
         return effect
     },
     effectDescription() {
         return "dividing Dark Matter gain by " + format(this.effect()) + ", and multiplying $, RP, SRP, Power and HE gain by " + format(this.effect2()) + "<br>(" + format(matterGain(4)) + "/sec)"
     },
-    tabFormat: [
-        "main-display"
-    ],
+    tabFormat: {
+        "Exotic": {
+            content: [
+                "main-display",
+                "buyables",
+                "upgrades",
+            ],
+        },
+        "Hypotheory": {
+            content: [
+                ["layer-proxy", ['HP', [
+                    "main-display"
+                ]]],
+                ["layer-proxy", ['UnsM', [
+                    "main-display",
+                    "upgrades"
+                ]]],
+                "milestones"
+            ],
+        },
+        "Challenges": {
+            content: [
+                ["display-text", "Challenges will reset Exotic Matter, Hypothetical Particles and Unstable Matter, but will NOT reset any upgrades, milestones or buyables in this layer"],
+                "blank",
+                "challenges"
+            ]
+        }
+    },
     color: "#cc59de",
     branches: ["HC"],
     layerShown() {
         return hasAchievement('A', 101)
+    },
+    upgrades: {
+        11: {
+            title: "Exotica",
+            description: "Triple Exotic Matter gain",
+            cost: new Decimal(12)
+        },
+        12: {
+            title: "Light",
+            description: "Nerf Dark Matter's nerf to Exotic Matter gain",
+            cost: new Decimal(30),
+            tooltip: "Effect ^0.6"
+        },
+        13: {
+            title: "Stability",
+            description: "Boost Hypothetical Particles production of Unstable Matter",
+            cost: new Decimal(100),
+            tooltip: "log10k -> log2k"
+        },
+        14: {
+            title: "Neutrality",
+            description: "Matter and Antimatter boost Exotic Matter gain",
+            cost: new Decimal(500),
+            tooltip: "log1,00,000(M*AM)",
+            effect() {
+                return player.M.points.times(player.AM.points).log(1000000)
+            },
+            effectDisplay() { return "x" + format(this.effect()) }
+        },
+        21: {
+            title: "Conjecture",
+            description: "Square Hypotheory's (buyable) base effect",
+            cost: new Decimal(1e10)
+        },
+        22: {
+            title: "Untitled Upgrade",
+            description: "Half the scaling of both Exotic Matter buyables",
+            cost: new Decimal(1e30)
+        },
+        23: {
+            title: "I'm running out of names",
+            description: "Exotic Matter boosts it's own gain",
+            cost: new Decimal(7.32e91),
+            tooltip: "log1e10(EM + 1e10)",
+            effect() {
+                return player.EM.points.add(1e10).log(1e10)
+            },
+            effectDisplay() { return "x" + format(this.effect()) }
+        },
+        24: {
+            title: "Frogbert",
+            description: "$ boosts Unstable Matter's half-life",
+            cost: new Decimal(1e200),
+            tooltip: "log(log($ + 10) + 10)",
+            effect() {
+                return player.points.add(10).log(10).add(10).log(10)
+            },
+            effectDisplay() { return "+" + format(this.effect()) }
+        },
+    },
+    buyables: {
+        11: {
+            cost(x) {
+                let y = x
+                if(hasUpgrade('EM', 22)) y = y.div(2)
+                if(y.gte(250)) y = y.sub(250).pow(2).add(250)
+                let expo = new Decimal(1.5)
+                return new Decimal(10).times(new Decimal(expo).pow(y))
+            },
+            title: "Hypotheory",
+            tooltip: "Base effect: x<br>Base cost: 10*(1.5^x)",
+            display() {
+                return "Start producing Hypothetical Particles<br>Cost: " + coolDynamicFormat(this.cost(), 3)
+                + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
+                + "<br>Currently: +" + coolDynamicFormat(this.effect(), 2) + "/sec"
+            },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            unlocked() {
+                return hasUpgrade('DM', 22)
+            },
+            effect(x) {
+                let bob = x
+                if(hasUpgrade('EM', 21)) bob = bob.pow(2)
+                bob = bob.times(layers.EM.buyables[12].effect())
+                if(hasChallenge('EM', 11)) bob = bob.times(layers.EM.challenges[11].effect())
+                if(inChallenge('EM', 12)) bob = bob.div(player.EM.realParticle)
+                if(hasChallenge('EM', 12)) bob = bob.pow(1.4)
+                return bob
+            },
+        },
+        12: {
+            cost(x) {
+                let y = x
+                if(hasUpgrade('EM', 22)) y = y.div(2)
+                if(y.gte(150)) y = y.sub(150).pow(2).add(150)
+                let expo = new Decimal(5)
+                return new Decimal("1e25").times(new Decimal(expo).pow(y))
+            },
+            title: "Theoretical",
+            tooltip: "Base effect: 2^x<br>Base cost: 1e25*(5^x)",
+            display() {
+                return "Multiply the previous upgrades effect<br>Cost: " + coolDynamicFormat(this.cost(), 3)
+                + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
+                + "<br>Currently: x" + coolDynamicFormat(this.effect(), 2)
+            },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            unlocked() {
+                return hasUpgrade('DM', 22)
+            },
+            effect(x) {
+                let greg = new Decimal(2).pow(x)
+                return greg
+            },
+        },
+    },
+    milestones: {
+        0: {
+            requirementDescription: "500,000 Hypothetical Particles",
+            effectDescription: "Raise Unstable Matter gain by 1.05",
+            done() {
+                return player.HP.points.gte(500000)
+            },
+            unlocked() { return hasUpgrade('EM', 21) }
+        },
+        1: {
+            requirementDescription: "5,000,000 Hypothetical Particles",
+            effectDescription: "Raise Unstable Matter gain by 1.05, again",
+            done() {
+                return player.HP.points.gte(5000000)
+            },
+            unlocked() { return hasMilestone('EM', 0) }
+        },
+        2: {
+            requirementDescription: "1e24 Exotic Matter",
+            effectDescription: "Raise Unstable Matter gain by 1.05, again (I swear this is the last time)",
+            done() {
+                return player.EM.points.gte("1e24")
+            },
+            unlocked() { return hasMilestone('EM', 1) }
+        },
+    },
+    challenges: {
+        11: {
+            name: "Unnaproved Existence",
+            challengeDescription: "You cannot gain Hypothetical Particles or Unstable Matter",
+            onEnter() {
+                player.EM.points = new Decimal(0)
+                player.HP.points = new Decimal(0)
+                player.UnsM.points = new Decimal(0)
+            },
+            goalDescription: "1,000 EM",
+            canComplete() {
+                return player.EM.points.gte(1000)
+            },
+            rewardDescription() {
+                return "EM boosts Hypothetical Particle gain" + this.rewardEffect()
+            },
+            effect() {
+                return player.EM.points.add("69").log("69")
+            },
+            rewardEffect() {
+                return "<br>Currently: x" + format(this.effect())
+            }
+        },
+        12: {
+            name: "Theorem > Conjecture",
+            challengeDescription: "There is linearly increasing Real Particles that divide Hypothetical Particle gain<br>Entering this challenge also temporarily resets both Exotic Matter buyables",
+            onEnter() {
+                player.EM.buy1save = getBuyableAmount('EM', 11)
+                player.EM.buy2save = getBuyableAmount('EM', 12)
+                setBuyableAmount('EM', 11, new Decimal(0))
+                setBuyableAmount('EM', 12, new Decimal(0))
+                player.EM.points = new Decimal(0)
+                player.HP.points = new Decimal(0)
+                player.UnsM.points = new Decimal(0)
+                player.EM.realParticle = new Decimal(1)
+            },
+            onExit() {
+                setBuyableAmount('EM', 11, player.EM.buy1save)
+                setBuyableAmount('EM', 12, player.EM.buy2save)
+            },
+            goalDescription: "690 Unstable Matter",
+            canComplete() {
+                return player.UnsM.points.gte("690")
+            },
+            rewardDescription() {
+                return "Raising Hypothetical Particles by ^1.4"
+            },
+        },
+    },
+    resetsNothing() { return true }
+})
+
+addLayer('HP', {
+    name: "exotic-matter",
+    resource: "Hypothetical Particles",
+    startData() {
+        return {
+            unlocked: true,
+            points: new Decimal(0),
+        }
+    },
+    row: 3,
+    symbol: "EM",
+    update(diff) {
+        if(!inChallenge('EM', 11)) player.HP.points = player.HP.points.add(layers.EM.buyables[11].effect().times(diff))
+    },
+    effect() {
+        let base = player.HP.points.add(2).log(2)
+        if(hasUpgrade('HC', 54)) base = base.pow(0)
+        return base
+    },
+    effect2() {
+        let log = new Decimal(10000)
+        if(hasUpgrade('EM', 13)) log = log.sub(7000)
+        let base = player.HP.points.add(1).log(log)
+        if(hasMilestone('EM', 0)) base = base.pow(1.05)
+        if(hasMilestone('EM', 1)) base = base.pow(1.05)
+        if(hasMilestone('EM', 2)) base = base.pow(1.05)
+        return base
+    },
+    effectDescription() {
+        if(!inChallenge('EM', 12)) return "producing " + format(this.effect2()) + " Unstable Matter each second<br>They are also dividing Dark Matter gain by /" + format(this.effect()) + "<br>+" + format(layers.EM.buyables[11].effect()) + "/sec"
+        if(inChallenge('EM', 12)) return "producing " + format(this.effect2()) + " Unstable Matter each second<br>They are also dividing Dark Matter gain by /" + format(this.effect()) + "<br>+" + format(layers.EM.buyables[11].effect()) + "/sec<br><br>You currently have " + format(player.EM.realParticle) + " Real Particles"
+    },
+    color: "#8c617e",
+})
+
+function unstableGain() {
+    let baseGain = layers.HP.effect2()
+    if(hasUpgrade('UnsM', 13)) baseGain = baseGain.times(layers.UnsM.upgrades[13].effect())
+    return baseGain
+}
+
+addLayer('UnsM', {
+    name: "exotic-matter",
+    resource: "Unstable Matter",
+    startData() {
+        return {
+            unlocked: true,
+            points: new Decimal(0),
+        }
+    },
+    row: 3,
+    symbol: "EM",
+    update(diff) {
+        let prev
+        if(!inChallenge('EM', 11)) {
+            prev = player.UnsM.points
+            player.UnsM.points = player.UnsM.points.add(unstableGain().times(diff))
+            if(player.UnsM.points.gt(0)) player.UnsM.points = player.UnsM.points.sub(player.UnsM.points.div(this.halfLife()).div(2).times(diff))
+            if(player.UnsM.points.lt(0)) player.UnsM.points = new Decimal(0)
+            if(player.UnsM.points.lt(prev)) player.UnsM.points = prev
+        }
+    },
+    effect() {
+        let base = new Decimal(2).pow(player.UnsM.points)
+        if(base.gte(16)) base = base.div(16).pow(0.420).times(16)
+        if(base.gte(64)) base = base.div(64).pow(0.0069).times(64)
+        if(base.gte(128)) base = base.div(128).pow(0.069).times(128)
+        if(base.gte(256)) base = base.div(256).pow(0.069).times(256)
+        if(base.gte(512)) base = base.div(512).log(1e6).add(1).times(512)
+        return base
+    },
+    effectDescription() {
+        if(this.halfLife().lte(1)) return "raising Exotic Matter gain by ^" + format(this.effect()) + "<br>But they are unstable and decay with a half-life of " + timeDisplay(this.halfLife())
+        if(this.halfLife().lte(3600)) return "raising Exotic Matter gain by ^" + format(this.effect()) + "<br>But they decay with a half-life of " + timeDisplay(this.halfLife()) + "<br>The limit to Unstable Matter based on current production and it's half-life is " + format(this.halfLife().times(2).times(unstableGain()))
+        else return "raising Exotic Matter gain by ^" + format(this.effect()) + "<br>But they have a half-life of " + timeDisplay(this.halfLife()) + "<br>Their limit is " + format(this.halfLife().times(2).times(unstableGain()))
+    },
+    color: "#7bff00",
+    halfLife() {
+
+        let base = new Decimal(1)
+        if(hasUpgrade('EM', 24)) base = base.add(layers.EM.upgrades[24].effect())
+
+        if(hasUpgrade('UnsM', 11)) base = base.times(layers.UnsM.upgrades[11].effect())
+        if(hasUpgrade('UnsM', 12)) base = base.times(3)
+        if(hasUpgrade('UnsM', 14)) base = base.times(layers.UnsM.upgrades[14].effect())
+
+        if(hasUpgrade('UnsM', 13)) base = base.pow(0.5)
+
+        return base
+    },
+    upgrades: {
+        11: {
+            title: "Stability",
+            description: "Multiply Unstable Matter's half life based on Unstable Matter",
+            cost: new Decimal(1000),
+            effect() {
+                return player.UnsM.points.add(1).log(10).add(1)
+            },
+            effectDisplay() {
+                return "x" + format(this.effect())
+            }
+        },
+        12: {
+            title: "Labcoats",
+            description: "Triple Unstable Matter's half-life",
+            cost: new Decimal(6000),
+        },
+        13: {
+            title: "Timewarping",
+            description: "Root Unstable Matter's half-life length in seconds, but multiply it's gain by the same amount",
+            cost: new Decimal(10000),
+            effect() {
+                if(!hasUpgrade('UnsM', 13)) return layers.UnsM.halfLife().pow(0.5)
+                if(hasUpgrade('UnsM', 13)) return layers.UnsM.halfLife()
+            },
+            effectDisplay() {
+                return "x" + format(this.effect())
+            }
+        },
+        14: {
+            title: "Insanity",
+            description: "Exotic Matter now also boosts Unstable Matter's half-life",
+            cost: new Decimal(21000),
+            effect() {
+                return layers.EM.effect2().pow(1e10).add(10).log(10).add(10).log(10)
+            },
+            effectDisplay() {
+                return "x" + format(this.effect())
+            }
+        },
     }
 })
 
@@ -872,7 +1225,7 @@ addLayer('UMF', {
         },
         3: {
             requirementDescription: "4 Ultimate Matter Fragments",
-            effectDescription: "Unlock a new layer...",
+            effectDescription: "Annihilate all types of matter from the universe, preventing any more inflation from happening in this universe.<br>CURRENT ENDGAME",
             done() {
                 return player.UMF.points.gte(4)
             }

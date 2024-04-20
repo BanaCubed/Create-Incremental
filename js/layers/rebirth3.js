@@ -308,10 +308,10 @@ addLayer('HC', {
             description: "Disable Dark Matter's nerf to Exotic Matter, and gain an Ultimate Matter Fragment"
         },
         54: {
-            cost: new Decimal("1e169"),
-            currencyDisplayName: "Exotic Matter",
+            cost: new Decimal("250000"),
+            currencyDisplayName: "Unstable Matter",
             currencyInternalName: "points",
-            currencyLayer() { return 'EM' },
+            currencyLayer() { return 'UnsM' },
             title: "Exotic Matter Annihilation",
             onPurchase() { player.UMF.points = player.UMF.points.add(1) },
             description: "Disable Exotic Matter's nerf to Dark Matter, and gain an Ultimate Matter Fragment"
