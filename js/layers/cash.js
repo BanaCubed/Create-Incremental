@@ -467,13 +467,11 @@ addLayer("U", {
                 buyUpgrade('U', 34)
             };
             if(layers.U.buyables[11].canAfford() && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
-                player.U.points = player.U.points.sub(layers.U.buyables[11].cost())
                 setBuyableAmount('U', 11, getBuyableAmount('U', 11).add(1))
                 if(hasMilestone('HC', 1)) setBuyableAmount('U', 11, getBuyableAmount('U', 11).add(9))
                 if(hasMilestone('UMF', 1)) setBuyableAmount('U', 11, getBuyableAmount('U', 11).add(9990))
             }
             if(layers.U.buyables[12].canAfford() && (hasUpgrade('SR', 14) || hasAchievement('A', 81))) {
-                player.U.points = player.U.points.sub(layers.U.buyables[12].cost())
                 setBuyableAmount('U', 12, getBuyableAmount('U', 12).add(1))
                 if(hasMilestone('HC', 1)) setBuyableAmount('U', 12, getBuyableAmount('U', 12).add(9))
                 if(hasMilestone('UMF', 1)) setBuyableAmount('U', 12, getBuyableAmount('U', 12).add(40))

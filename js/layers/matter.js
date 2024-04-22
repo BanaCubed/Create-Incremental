@@ -616,11 +616,9 @@ addLayer('DM', {
     },
     automate() {
         if(layers.DM.buyables[11].canAfford() && hasMilestone('BH', 3)) {
-            player.DM.points = player.DM.points.sub(layers.DM.buyables[11].cost())
             setBuyableAmount('DM', 11, getBuyableAmount('DM', 11).add(1))
         }
         if(layers.DM.buyables[12].canAfford() && hasMilestone('BH', 3)) {
-            player.DM.points = player.DM.points.sub(layers.DM.buyables[12].cost())
             setBuyableAmount('DM', 12, getBuyableAmount('DM', 12).add(1))
         }
     }
