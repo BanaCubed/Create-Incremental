@@ -39,6 +39,7 @@ function matterGain(matterType) {
     if(matterType === 3) {
         // Dark Matter
         mGain = mGain.div(layers.EM.effect())
+        mGain = mGain.div(layers.HP.effect())
         mGain = mGain.times(layers.BH.effect())
         mGain = mGain.times(layers.BH.buyables[12].effect())
         if(hasUpgrade('DM', 11)) mGain = mGain.times(1.5)
@@ -49,7 +50,6 @@ function matterGain(matterType) {
             if(hasUpgrade('DM', 11)) mGain = mGain.times(1.5)
             if(hasUpgrade('DM', 11)) mGain = mGain.pow(1.1)
         }
-        mGain = mGain.div(layers.HP.effect())
     }
 
     if(matterType === 4) {
