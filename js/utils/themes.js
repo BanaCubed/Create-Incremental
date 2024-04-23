@@ -112,6 +112,16 @@ var colors = {
 		background: "#ffff00",
 		background_tooltip: "rgba(255, 255, 0, 0.75)",
 	},
+	golden: {
+		1: "#fca32d",
+		2: "#d6851a",
+		3: "#b56b09",
+		color: "#ffa640",
+		points: "#fc930a",
+		locked: "#f7401b",
+		background: "#de8004",
+		background_tooltip: "rgba(111, 64, 2, 0.75)",
+	},
 }
 function changeTheme() {
 
@@ -127,6 +137,7 @@ function getThemeName() {
 }
 
 function switchTheme() {
+	updateSecretThemes()
 	let index = themes.indexOf(options.theme)
 	if (options.theme === null || index >= themes.length-1 || index < 0) {
 		options.theme = themes[0];
@@ -137,4 +148,25 @@ function switchTheme() {
 	}
 	changeTheme();
 	resizeCanvas();
+}
+
+function updateSecretThemes() {
+	if(hasAchievement('SA', 11) && themes.indexOf("quality") == -1) {
+		themes.push("quality")
+	}
+	if(hasAchievement('SA', 12) && themes.indexOf("golden") == -1) {
+		themes.push("golden")
+	}
+	if(hasAchievement('SA', 13) && themes.indexOf("void") == -1) {
+		themes.push("void")
+	}
+	if(hasAchievement('SA', 14) && themes.indexOf("light") == -1) {
+		themes.push("light")
+	}
+	if(hasAchievement('SA', 11) && hasAchievement('SA', 12) && hasAchievement('SA', 13) && hasAchievement('SA', 14) && themes.indexOf("electro") == -1) {
+		themes.push("electro")
+	}
+	if(hasAchievement('SA', 11) && hasAchievement('SA', 12) && hasAchievement('SA', 13) && hasAchievement('SA', 14) && themes.indexOf("wooden") == -1) {
+		themes.push("wooden")
+	}
 }

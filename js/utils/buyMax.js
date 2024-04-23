@@ -1,6 +1,11 @@
 function buyMax(item) {
 
     // Power Pylons
+    // This is something that I would appreciate someone making more optimized since it currently just buys each pylon repeatedly
+
+    // If you want to help, start by looking at the cost formula for power pylons
+    // (the <1000 formula is quite simple, >1000 is too hard to reverse so I don't want to)
+
     if(item === 'Power') {
 
         // Power Pylon A

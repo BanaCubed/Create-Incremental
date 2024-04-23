@@ -338,11 +338,7 @@ addLayer('HC', {
                 player.HC.points = player.HC.total
                 player.HC.upgrades = []
                 player.HC.paths = []
-                layers.U.doReset('HC')
-                layers.R.doReset('HC')
-                layers.SR.doReset('HC')
-                layers.P.doReset('HC')
-                layers.C.doReset('HC')
+                doReset("HC")
             },
         }
     }
