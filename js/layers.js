@@ -18,7 +18,7 @@ addLayer("A", {
         "Secrets": {
             content: [
                 ["layer-proxy", ["SA", [
-                    ["display-text", "Secret Achievements only say what to do to get them after obtaining them<br>Most Secret Achievements will become impossible if too much progression is made before unlocking them<br>Each Secret Achievement has its own color theme<br>Getting all secret achievements unlocks unfinished / otherwise unimplemented themes"],
+                    ["display-text", "Secret Achievements only say what to do to get them after obtaining them<br>Most Secret Achievements will become impossible if too much progression is made before unlocking them<br>Each Secret Achievement has its own color theme<br>Getting all secret achievements unlocks more themes (ugly themes but whatever)"],
                     ["display-text", "<br>Every Secret Achievement has a hint when hovering over them to make them theoretically possible to obtain without searching up the answers (you'll do it anyways)"],
                     "h-line",
                     "achievements"]]]
@@ -408,10 +408,10 @@ addLayer("SA", {
             done() { return player.SR.tax.gte("1e308") }
         },
         13: {
-            name: "Ultimate Haxxor",
-            tooltip() { if(!hasAchievement(this.layer, this.id)) return "Literally Impossible"; else return "Cheat in this achievement<br>Reward: unlock the void theme<br>Filthy Cheater"},
+            name: "Wrong afterlife",
+            tooltip() { if(!hasAchievement(this.layer, this.id)) return "6.66e666"; else return "Get an amount of Rebirth Points close to 6.66e666<br>Reward: unlock the void theme<br>6.66e666"},
             unlocked() { return true },
-            done() { return false }
+            done() { return player.R.points.gte("6.65e666") && player.R.points.lte("6.67e666") }
         },
         14: {
             name: "Nothing Matters",

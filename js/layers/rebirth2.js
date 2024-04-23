@@ -506,7 +506,7 @@ addLayer("P", {
         },
         11: {
             requirementDescription: "1e60 Power",
-            effectDescription: "Automate Power Pylons A-C",
+            effectDescription: "Automate Power Pylons A, B, and C, and Power Pylons no longer decrease any values when purchased",
             done() {
                 return player.P.points.gte("1e60")
             }
@@ -545,8 +545,8 @@ addLayer("P", {
                     player.P.pylobA = player.P.pylobA.add(9)
                 }
                 if(hasMilestone('UMF', 1)) {
-                    player.P.pylonA = player.P.pylonA.add(40)
-                    player.P.pylobA = player.P.pylobA.add(40)
+                    player.P.pylonA = player.P.pylonA.add(49)
+                    player.P.pylobA = player.P.pylobA.add(49)
                 }
             }
             if(player.P.pylonA.gte(layers.P.clickables[12].cost()) && (hasMilestone('P', 2) || hasUpgrade('HC', 32))) {
@@ -557,8 +557,8 @@ addLayer("P", {
                     player.P.pylobB = player.P.pylobB.add(9)
                 }
                 if(hasMilestone('UMF', 1)) {
-                    player.P.pylonB = player.P.pylonB.add(40)
-                    player.P.pylobB = player.P.pylobB.add(40)
+                    player.P.pylonB = player.P.pylonB.add(43)
+                    player.P.pylobB = player.P.pylobB.add(43)
                 }
             }
             if(player.P.pylonB.gte(layers.P.clickables[13].cost()) && (hasMilestone('P', 5) || hasUpgrade('HC', 32))) {
@@ -569,8 +569,8 @@ addLayer("P", {
                     player.P.pylobC = player.P.pylobC.add(9)
                 }
                 if(hasMilestone('UMF', 1)) {
-                    player.P.pylonC = player.P.pylonC.add(40)
-                    player.P.pylobC = player.P.pylobC.add(40)
+                    player.P.pylonC = player.P.pylonC.add(41)
+                    player.P.pylobC = player.P.pylobC.add(41)
                 }
             }
         }
@@ -583,8 +583,8 @@ addLayer("P", {
                     player.P.pylobD = player.P.pylobD.add(9)
                 }
                 if(hasMilestone('UMF', 1)) {
-                    player.P.pylonD = player.P.pylonD.add(40)
-                    player.P.pylobD = player.P.pylobD.add(40)
+                    player.P.pylonD = player.P.pylonD.add(47)
+                    player.P.pylobD = player.P.pylobD.add(47)
                 }
             }
             if(player.P.pylonD.gte(layers.P.clickables[15].cost()) && (hasChallenge('SR', 31) || hasUpgrade('HC', 32))) {
@@ -595,8 +595,8 @@ addLayer("P", {
                     player.P.pylobE = player.P.pylobE.add(9)
                 }
                 if(hasMilestone('UMF', 1)) {
-                    player.P.pylonE = player.P.pylonE.add(40)
-                    player.P.pylobE = player.P.pylobE.add(40)
+                    player.P.pylonE = player.P.pylonE.add(39)
+                    player.P.pylobE = player.P.pylobE.add(39)
                 }
             }
         }
@@ -605,8 +605,8 @@ addLayer("P", {
                 player.P.pylonF = player.P.pylonF.add(10)
                 player.P.pylobF = player.P.pylobF.add(10)
                 if(hasMilestone('UMF', 1)) {
-                    player.P.pylonF = player.P.pylonF.add(40)
-                    player.P.pylobF = player.P.pylobF.add(40)
+                    player.P.pylonF = player.P.pylonF.add(37)
+                    player.P.pylobF = player.P.pylobF.add(37)
                 }
             }
 
@@ -626,7 +626,7 @@ addLayer("P", {
             },
             canClick() { return player[this.layer].points.gte(this.cost()) },
             onClick() {
-                player[this.layer].points = player[this.layer].points.sub(this.cost());
+                if(hasMilestone('P', 11)) player[this.layer].points = player[this.layer].points.sub(this.cost());
                 let amt = new Decimal(1)
                 amt = amt.times(layers.HC.effect()[1]).floor()
                 player.P.pylonA = player.P.pylonA.add(amt)
@@ -662,7 +662,7 @@ addLayer("P", {
             },
             canClick() { return player[this.layer].pylonA.gte(this.cost()) },
             onClick() {
-                player[this.layer].pylonA = player[this.layer].pylonA.sub(this.cost());
+                if(hasMilestone('P', 11)) player[this.layer].pylonA = player[this.layer].pylonA.sub(this.cost());
                 let amt = new Decimal(1)
                 amt = amt.times(layers.HC.effect()[1]).floor()
                 player.P.pylonB = player.P.pylonB.add(amt)
@@ -698,7 +698,7 @@ addLayer("P", {
             },
             canClick() { return player[this.layer].pylonB.gte(this.cost()) },
             onClick() {
-                player[this.layer].pylonB = player[this.layer].pylonB.sub(this.cost());
+                if(hasMilestone('P', 11)) player[this.layer].pylonB = player[this.layer].pylonB.sub(this.cost());
                 let amt = new Decimal(1)
                 amt = amt.times(layers.HC.effect()[1]).floor()
                 player.P.pylonC = player.P.pylonC.add(amt)
@@ -734,7 +734,7 @@ addLayer("P", {
             },
             canClick() { return player[this.layer].pylonC.gte(this.cost()) },
             onClick() {
-                player[this.layer].pylonC = player[this.layer].pylonC.sub(this.cost());
+                if(hasMilestone('P', 11)) player[this.layer].pylonC = player[this.layer].pylonC.sub(this.cost());
                 let amt = new Decimal(1)
                 amt = amt.times(layers.HC.effect()[1]).floor()
                 player.P.pylonD = player.P.pylonD.add(amt)
@@ -770,7 +770,7 @@ addLayer("P", {
             },
             canClick() { return player[this.layer].pylonD.gte(this.cost()) },
             onClick() {
-                player[this.layer].pylonD = player[this.layer].pylonD.sub(this.cost());
+                if(hasMilestone('P', 11)) player[this.layer].pylonD = player[this.layer].pylonD.sub(this.cost());
                 let amt = new Decimal(1)
                 amt = amt.times(layers.HC.effect()[1]).floor()
                 player.P.pylonE = player.P.pylonE.add(amt)
@@ -806,7 +806,7 @@ addLayer("P", {
             },
             canClick() { return player[this.layer].pylonE.gte(this.cost()) },
             onClick() {
-                player[this.layer].pylonE = player[this.layer].pylonE.sub(this.cost());
+                if(hasMilestone('P', 11)) player[this.layer].pylonE = player[this.layer].pylonE.sub(this.cost());
                 let amt = new Decimal(1)
                 amt = amt.times(layers.HC.effect()[1]).floor()
                 player.P.pylonF = player.P.pylonF.add(amt)
