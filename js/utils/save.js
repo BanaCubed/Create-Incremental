@@ -1,4 +1,6 @@
 // ************ Save stuff ************
+let lastTime
+
 function save(force) {
 	NaNcheck(player)
 	if (NaNalert && !force) return
@@ -259,6 +261,7 @@ function NaNcheck(data) {
 }
 function exportSave() {
 	//if (NaNalert) return
+	player.SA15 = true
 	let str = btoa(JSON.stringify(player));
 
 	const el = document.createElement("textarea");
@@ -272,6 +275,10 @@ function exportSave() {
 function importSave(imported = undefined, forced = false) {
 	if (imported === undefined)
 		imported = prompt("Paste your save here");
+	if (imported = "Save") {
+		player.SA14 = true
+		return
+	}
 	try {
 		tempPlr = Object.assign(getStartPlayer(), JSON.parse(atob(imported)));
 		if (tempPlr.versionType != modInfo.id && !forced && !confirm("This save appears to be for a different mod! Are you sure you want to import?")) // Wrong save (use "Forced" to force it to accept.)

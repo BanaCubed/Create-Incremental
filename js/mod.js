@@ -8,7 +8,7 @@ let modInfo = {
 	discordName: "Create Incremental Server",
 	discordLink: "https://discord.gg/wt5XyPRtte",
 	initialStartPoints: new Decimal(0), // Used for hard resets and new players
-	offlineLimit: 48,  // In hours
+	offlineLimit: 168,  // In hours
 }
 
 // Set your version in num and name

@@ -408,19 +408,25 @@ addLayer("SA", {
             done() { return player.SR.tax.gte("1e308") }
         },
         13: {
-            name: "Wrong afterlife",
-            tooltip() { if(!hasAchievement(this.layer, this.id)) return "6.66e666"; else return "Get an amount of Rebirth Points close to 6.66e666<br>Reward: unlock the void theme<br>6.66e666"},
+            name: "Blinded",
+            tooltip() { if(!hasAchievement(this.layer, this.id)) return "ARGH, MY EYES!!"; else return "Use a bright theme<br>Reward: unlock the void theme<br>ARGH, MY EYES!!"},
             unlocked() { return true },
-            done() { return player.R.points.gte("6.65e666") && player.R.points.lte("6.67e666") }
+            done() { return options.theme == "quality" || options.theme == "light" }
         },
         14: {
-            name: "Nothing Matters",
-            tooltip() { if(!hasAchievement(this.layer, this.id)) return "Waste of time to be honest"; else return "Reach 1,000,000 of two matters that nerf each other, without gaining any Ultimate Matter Fragments<br>Reward: unlock the light theme<br>Waste of time to be honest"},
+            name: "Not Asked For",
+            tooltip() { if(!hasAchievement(this.layer, this.id)) return "You didn't do what I asked"; else return "Import 'save'<br>Reward: unlock the light theme<br>You didn't do what I asked"},
             unlocked() { return true },
             done() {
-                if(player.M.points.gte(1000000) && player.AM.points.gte(1000000) && player.UMF.points.eq(0)) return true
-                if(player.DM.points.gte(1000000) && player.EM.points.gte(1000000) && player.UMF.points.eq(0)) return true
-                return false
+                return player.SA14 === true
+            }
+        },
+        15: {
+            name: "Backup",
+            tooltip() { if(!hasAchievement(this.layer, this.id)) return "No Hint"; else return "Export your save<br>Reward: unlock the auqa, oryp, tnadrev and enacra themes"},
+            unlocked() { return true },
+            done() {
+                return player.SA15 === true
             }
         },
     },
