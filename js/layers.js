@@ -411,7 +411,7 @@ addLayer("SA", {
             name: "Blinded",
             tooltip() { if(!hasAchievement(this.layer, this.id)) return "ARGH, MY EYES!!"; else return "Use a bright theme<br>Reward: unlock the void theme<br>ARGH, MY EYES!!"},
             unlocked() { return true },
-            done() { return options.theme == "quality" || options.theme == "light" }
+            done() { return options.theme == "quality" || options.theme == "light" || options.theme == "auqa" || options.theme == "tnadrev" || options.theme == "oryp" || options.theme == "enacra" }
         },
         14: {
             name: "Not Asked For",
