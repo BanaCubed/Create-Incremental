@@ -402,7 +402,7 @@ addLayer("SA", {
             done() { return !hasUpgrade('U', 13) && hasUpgrade('U', 23) }
         },
         12: {
-            name: "America be like",
+            name: "Can't Escape the IRS",
             tooltip() { if(!hasAchievement(this.layer, this.id)) return "Infinite tax"; else return "Get 1e308 tax<br>Reward: unlock the golden theme<br>Infinite Tax"},
             unlocked() { return true },
             done() { return player.SR.tax.gte("1e308") }
