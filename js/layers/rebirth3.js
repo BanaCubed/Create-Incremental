@@ -338,7 +338,12 @@ addLayer('HC', {
                 player.HC.points = player.HC.total
                 player.HC.upgrades = []
                 player.HC.paths = []
-                doReset("HC")
+                const layersa = ['U', 'R', 'SR', 'P', 'HC', 'C']
+                for (let index = 0; index < layers.length; index++) {
+                    const element = layers[index];
+                    layers[layersa].doReset("HC")
+                    
+                }
             },
         }
     }
