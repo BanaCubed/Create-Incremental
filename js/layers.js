@@ -442,8 +442,8 @@ addLayer("SA", {
             done() { return options.theme == "quality" || options.theme == "light" || options.theme == "auqa" || options.theme == "tnadrev" || options.theme == "oryp" || options.theme == "enacra" }
         },
         14: {
-            name: "Not Asked For",
-            tooltip() { if(!hasAchievement(this.layer, this.id)) return "You didn't do what I asked"; else return "Import 'save'<br>Reward: unlock the light theme<br>You didn't do what I asked"},
+            name: "Following Instructions",
+            tooltip() { if(!hasAchievement(this.layer, this.id)) return "Follow instructions"; else return "Import 'save'<br>Reward: unlock the light theme<br>Follow instructions"},
             unlocked() { return true },
             done() {
                 return player.SA14 === true
