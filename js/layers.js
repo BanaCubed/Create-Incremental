@@ -11,11 +11,30 @@ addLayer("A", {
     }},
     update() {
         let title = "Create Incremental"
-        if(hasAchievement('A', 21)) title = "Create Incremental, " + formatWhole(player.R.points) + " RP"
-        if(hasAchievement('A', 43)) title = "Create Incremental, " + formatWhole(player.SR.points) + " SRP"
-        if(hasAchievement('A', 52)) title = "Create Incremental, " + formatWhole(player.SR.points) + " SRP, " + formatWhole(player.P.points) + " Power"
-        if(hasAchievement('A', 83)) title = "Create Incremental, " + formatWhole(player.HC.points) + " HRP, " + formatWhole(player.C.points) + " Hyper Cash"
-        if(hasAchievement('A', 101)) title = "Create Incremental, " + formatWhole(player.HC.points) + " HRP"
+        if(hasAchievement('A', 11) && !hasUpgrade('A', 21)) {
+            title = "Create Incremental, " + formatWhole(player.points) + " $"
+            changeFavicon('favicon.ico')
+        }
+        if(hasAchievement('A', 21) && !hasUpgrade('A', 43)) {
+            title = "Create Incremental, " + formatWhole(player.R.points) + " RP"
+            changeFavicon('rebirthfavicon.ico')
+        }
+        if(hasAchievement('A', 43) && !hasAchievement('A', 52)) {
+            title = "Create Incremental, " + formatWhole(player.SR.points) + " SRP"
+            changeFavicon('superrebirthfavicon.ico')
+        }
+        if(hasAchievement('A', 52) && !hasAchievement('A', 83)) {
+            title = "Create Incremental, " + formatWhole(player.SR.points) + " SRP, " + formatWhole(player.P.points) + " Power"
+            changeFavicon('powerfavicon.ico')
+        }
+        if(hasAchievement('A', 83) && !hasAchievement('A', 101)) {
+            title = "Create Incremental, " + formatWhole(player.HC.points) + " HRP, " + formatWhole(player.C.points) + " Hyper Cash"
+            changeFavicon('hyperrebirthfavicon.ico')
+        }
+        if(hasAchievement('A', 101)) {
+            title = "Create Incremental, " + formatWhole(player.HC.points) + " HRP"
+            changeFavicon('hyperrebirthfavicon.ico')
+        }
         document.title = title
     },
     tabFormat: {

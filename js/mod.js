@@ -198,6 +198,7 @@ function achievement33() {
 }
 
 function timeDisplay(value) {
+	value = new Decimal(value)
 
 	// Variable setup
 	let yrs = value.div(31536000).floor()
@@ -206,33 +207,22 @@ function timeDisplay(value) {
 	let mins = value.div(60).floor().sub(hrs.times(60)).sub(days.times(1440)).sub(yrs.times(525600))
 	let secs = value.sub(mins.times(60)).sub(hrs.times(3600)).sub(days.times(86400)).sub(yrs.times(31536000))
 
-	// Second
-	if(value.eq(1)) {
-		return "1.00 second"
-	}
-
 	// Seconds
 	if(value.lt(60)) {
-		return format(secs) + " seconds"
-	}
-
-	// Minute
-	if(value.lt(120)) {
-		return formatWhole(mins) + " minute and "
-		+ format(secs) + " seconds"
+		return format(secs) + "s"
 	}
 
 	// Minutes
 	if(value.lt(3600)) {
-		return formatWhole(mins) + " minutes and "
-		+ format(secs) + " seconds"
+		return formatWhole(mins) + "m "
+		+ format(secs) + "s"
 	}
 
 	// Hours
 	if(value.lt(86400)) {
-		return formatWhole(hrs) + "hrs, "
-		+ formatWhole(mins) + "mins, "
-		+ format(secs) + "secs"
+		return formatWhole(hrs) + "h "
+		+ formatWhole(mins) + "m "
+		+ format(secs) + "s"
 	}
 
 	// Days
@@ -253,13 +243,13 @@ function timeDisplay(value) {
 	}
 
 	// Centuries
-	if(value.lt(31536000000)) {
+	if(value.lt(315360000000)) {
 		return formatWhole(yrs) + "y "
 		+ formatWhole(days) + "d "
 	}
 
 	// Eternities
-	if(value.lt(315360000000000)) {
+	if(value.lt(3153600000000000)) {
 		return formatWhole(yrs) + "y"
 	}
 }

@@ -200,6 +200,7 @@ ul {
 	align-items: flex-end;
 	color: white;
 	text-shadow: 0px 0px 30px black, 0px 0px 20px black, 0px 0px 10px black, 0px 0px 5px black;
+	background-color: black;
 }
 
 .treeOverlay {
