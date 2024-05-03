@@ -179,8 +179,8 @@ function maxTickLength() {
 // you can cap their current resources with this.
 function fixOldSave(oldVersion){
 	if(oldVersion == "0.3.2") {
-		player.DM = {}
-		player.EM = {}
+		player.DM.points = new Decimal(0)
+		player.EM.points = new Decimal(0)
 	}
 }
 
