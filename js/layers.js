@@ -9,6 +9,15 @@ addLayer("A", {
     startData() { return {
         unlocked: true,
     }},
+    update() {
+        let title = "Create Incremental"
+        if(hasAchievement('A', 21)) title = "Create Incremental, " + formatWhole(player.R.points) + " RP"
+        if(hasAchievement('A', 43)) title = "Create Incremental, " + formatWhole(player.SR.points) + " SRP"
+        if(hasAchievement('A', 52)) title = "Create Incremental, " + formatWhole(player.SR.points) + " SRP, " + formatWhole(player.P.points) + " Power"
+        if(hasAchievement('A', 83)) title = "Create Incremental, " + formatWhole(player.HC.points) + " HRP, " + formatWhole(player.C.points) + " Hyper Cash"
+        if(hasAchievement('A', 101)) title = "Create Incremental, " + formatWhole(player.HC.points) + " HRP"
+        document.title = title
+    },
     tabFormat: {
         "Achievements": {
             content: [
