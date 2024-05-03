@@ -771,7 +771,9 @@ addLayer('EM', {
             points: new Decimal(0),
             buy1save: new Decimal(0),
             buy2save: new Decimal(0),
-            realParticle: new Decimal(0)
+            realParticle: new Decimal(0),
+            darksave: new Decimal(0),
+            exosave: new Decimal(0)
         }
     },
     row: 3,
@@ -814,7 +816,7 @@ addLayer('EM', {
         },
         "Challenges": {
             content: [
-                ["display-text", "Challenges will reset Exotic Matter, Hypothetical Particles and Unstable Matter, but will NOT reset any upgrades, milestones or buyables in this layer"],
+                ["display-text", "Challenges will reset Exotic Matter, Dark Mater, Hypothetical Particles and Unstable Matter, but will NOT reset any upgrades or milestones (and buyables for challenge 1) in this layer. Entering a Challenge will save the current amount of Dark Matter and Exotic Matter which will be returned after exiting the challenge"],
                 "blank",
                 "challenges"
             ]
@@ -978,7 +980,10 @@ addLayer('EM', {
             name: "Unnaproved Existence",
             challengeDescription: "You cannot gain Hypothetical Particles or Unstable Matter",
             onEnter() {
+                player.EM.exosave = player.EM.points
+                player.EM.darksave = player.DM.points
                 player.EM.points = new Decimal(0)
+                player.DM.points = new Decimal(0)
                 player.HP.points = new Decimal(0)
                 player.UnsM.points = new Decimal(0)
             },
@@ -994,6 +999,10 @@ addLayer('EM', {
             },
             rewardEffect() {
                 return "<br>Currently: x" + format(this.effect())
+            },
+            onExit() {
+                player.DM.points = player.EM.darksave
+                player.EM.points = player.EM.points.add(player.EM.exosave)
             }
         },
         12: {
@@ -1002,9 +1011,12 @@ addLayer('EM', {
             onEnter() {
                 player.EM.buy1save = getBuyableAmount('EM', 11)
                 player.EM.buy2save = getBuyableAmount('EM', 12)
+                player.EM.exosave = player.EM.points
+                player.EM.darksave = player.DM.points
                 setBuyableAmount('EM', 11, new Decimal(0))
                 setBuyableAmount('EM', 12, new Decimal(0))
                 player.EM.points = new Decimal(0)
+                player.DM.points = new Decimal(0)
                 player.HP.points = new Decimal(0)
                 player.UnsM.points = new Decimal(0)
                 player.EM.realParticle = new Decimal(1)
@@ -1012,6 +1024,8 @@ addLayer('EM', {
             onExit() {
                 setBuyableAmount('EM', 11, player.EM.buy1save)
                 setBuyableAmount('EM', 12, player.EM.buy2save)
+                player.DM.points = player.EM.darksave
+                player.EM.points = player.EM.points.add(player.EM.exosave)
             },
             goalDescription: "420 Unstable Matter",
             canComplete() {
@@ -1097,9 +1111,9 @@ addLayer('UnsM', {
         return base
     },
     effectDescription() {
-        if(this.halfLife().lte(1)) return "raising Exotic Matter gain by ^" + format(this.effect()) + "<br>But they are unstable and decay with a half-life of " + timeDisplay(this.halfLife())
-        if(this.halfLife().lte(3600)) return "raising Exotic Matter gain by ^" + format(this.effect()) + "<br>But they decay with a half-life of " + timeDisplay(this.halfLife()) + "<br>The limit to Unstable Matter based on current production and it's half-life is " + format(this.halfLife().times(2).times(unstableGain()))
-        else return "raising Exotic Matter gain by ^" + format(this.effect()) + "<br>But they have a half-life of " + timeDisplay(this.halfLife()) + "<br>Their limit is " + format(this.halfLife().times(2).times(unstableGain()))
+        if(this.halfLife().lte(1)) return "raising Exotic Matter gain by ^" + format(this.effect()) + "<br>But they are unstable and decay with a half-life of " + formatTime(this.halfLife())
+        if(this.halfLife().lte(3600)) return "raising Exotic Matter gain by ^" + format(this.effect()) + "<br>But they decay with a half-life of " + formatTime(this.halfLife()) + "<br>The limit to Unstable Matter based on current production and it's half-life is " + format(this.halfLife().times(2).times(unstableGain()))
+        else return "raising Exotic Matter gain by ^" + format(this.effect()) + "<br>But they have a half-life of " + formatTime(this.halfLife()) + "<br>Their limit is " + format(this.halfLife().times(2).times(unstableGain()))
     },
     color: "#7bff00",
     halfLife() {

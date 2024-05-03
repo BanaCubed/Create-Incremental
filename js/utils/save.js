@@ -216,6 +216,9 @@ function load() {
 	updateTemp();
 	updateTabFormats()
 	loadVue();
+
+	const element = document.getElementById("loadingSection");
+	element.remove();
 }
 
 function loadOptions() {

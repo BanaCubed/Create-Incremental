@@ -20,7 +20,7 @@ The game currently has a total of 3 prestige layers:
 
 # Planned Content
 
-Below is a list of features that aren't currently in the game, but are planned to be worked on
+Below is a list of features that aren't currently in the game, but are planned to be worked on as they are already in the forum
 
 ## v0.4
 
@@ -33,6 +33,3 @@ Universes:
 - More Matter Paths
     - Heavenly Matter
     - Cursed Matter
-
-Secret Themes:
-- Definitely can do, would just be annoying

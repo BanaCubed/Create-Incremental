@@ -1,7 +1,8 @@
 let modInfo = {
 	name: "Create Incremental",
 	id: "nhug dkjldgsgrcinhgrv",
-	author: "BanaCubed (Coding), and many people (Concepts)",
+	oldid: "nhug dkjldgsgrcinhgrv",
+	author: "BanaCubed, with ideas from galaxy",
 	pointsName: "$",
 	modFiles: ["layers.js", "tree.js", "layers/cash.js", "layers/rebirth.js", "layers/rebirth2.js", "layers/rebirth3.js", "layers/matter.js"],
 
@@ -13,7 +14,7 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.3.2",
+	num: "0.3.2β",
 	name: "The Matter Combustor",
 }
 
@@ -86,7 +87,7 @@ function getPointGen() {
 		if (hasUpgrade('R', 32)) machineBoost = machineBoost.times(1.3)
 		machineBoost = machineBoost.times(layers.P.effect())
 		if(hasMilestone('P', 8) && hasUpgrade('U', 34)) machineBoost = machineBoost.pow(1.25)
-		gain = gain.times(machineBoost)
+		if(hasUpgrade('U', 34)) gain = gain.times(machineBoost)
 	}
 
 	if(!hasMilestone('P', 8)) { if (hasUpgrade('U', 21)) gain = gain.pow(1.25) }
