@@ -247,7 +247,7 @@ addLayer("U", {
             },
         },
         44: {
-            title: "Reincarnativism",
+            title: "Ankh",
             description: "Boost the second RP buyables effect slightly",
             cost: new Decimal("1e25"),
             currencyDisplayName: "$",
@@ -466,15 +466,19 @@ addLayer("U", {
                 buyUpgrade('U', 33)
                 buyUpgrade('U', 34)
             };
-            if(layers.U.buyables[11].canAfford() && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
-                setBuyableAmount('U', 11, getBuyableAmount('U', 11).add(1))
-                if(hasMilestone('HC', 1)) setBuyableAmount('U', 11, getBuyableAmount('U', 11).add(9))
-                if(hasMilestone('UMF', 1)) setBuyableAmount('U', 11, getBuyableAmount('U', 11).add(9990))
-            }
-            if(layers.U.buyables[12].canAfford() && (hasUpgrade('SR', 14) || hasAchievement('A', 81))) {
-                setBuyableAmount('U', 12, getBuyableAmount('U', 12).add(1))
-                if(hasMilestone('HC', 1)) setBuyableAmount('U', 12, getBuyableAmount('U', 12).add(9))
-                if(hasMilestone('UMF', 1)) setBuyableAmount('U', 12, getBuyableAmount('U', 12).add(40))
+            if (!hasMilestone('UMF', 1)) {
+                if(layers.U.buyables[11].canAfford() && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
+                    setBuyableAmount('U', 11, getBuyableAmount('U', 11).add(1))
+                    if(hasMilestone('HC', 1)) setBuyableAmount('U', 11, getBuyableAmount('U', 11).add(9))
+                    if(hasMilestone('UMF', 1)) setBuyableAmount('U', 11, getBuyableAmount('U', 11).add(9990))
+                }
+                if(layers.U.buyables[12].canAfford() && (hasUpgrade('SR', 14) || hasAchievement('A', 81))) {
+                    setBuyableAmount('U', 12, getBuyableAmount('U', 12).add(1))
+                    if(hasMilestone('HC', 1)) setBuyableAmount('U', 12, getBuyableAmount('U', 12).add(9))
+                    if(hasMilestone('UMF', 1)) setBuyableAmount('U', 12, getBuyableAmount('U', 12).add(40))
+                }
+            } else {
+                buyMax("Cash")
             }
             if(hasMilestone('HC', 3)) {
                 buyUpgrade('U', 41)

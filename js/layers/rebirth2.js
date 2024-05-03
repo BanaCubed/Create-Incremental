@@ -536,80 +536,60 @@ addLayer("P", {
         },
     },
     automate() {
-        if(hasMilestone('P', 11) || hasAchievement('A', 81)) {
-            if(player.P.points.gte(layers.P.clickables[11].cost()) && (hasMilestone('P', 0) || hasUpgrade('HC', 32))) {
-                player.P.pylonA = player.P.pylonA.add(1)
-                player.P.pylobA = player.P.pylobA.add(1)
-                if(hasMilestone('HC', 1)) {
-                    player.P.pylonA = player.P.pylonA.add(9)
-                    player.P.pylobA = player.P.pylobA.add(9)
+        if (!hasMilestone('UMF', 1)) {
+            if(hasMilestone('P', 11) || hasAchievement('A', 81)) {
+                if(player.P.points.gte(layers.P.clickables[11].cost()) && (hasMilestone('P', 0) || hasUpgrade('HC', 32))) {
+                    player.P.pylonA = player.P.pylonA.add(1)
+                    player.P.pylobA = player.P.pylobA.add(1)
+                    if(hasMilestone('HC', 1)) {
+                        player.P.pylonA = player.P.pylonA.add(9)
+                        player.P.pylobA = player.P.pylobA.add(9)
+                    }
                 }
-                if(hasMilestone('UMF', 1)) {
-                    player.P.pylonA = player.P.pylonA.add(49)
-                    player.P.pylobA = player.P.pylobA.add(49)
+                if(player.P.pylonA.gte(layers.P.clickables[12].cost()) && (hasMilestone('P', 2) || hasUpgrade('HC', 32))) {
+                    player.P.pylonB = player.P.pylonB.add(1)
+                    player.P.pylobB = player.P.pylobB.add(1)
+                    if(hasMilestone('HC', 1)) {
+                        player.P.pylonB = player.P.pylonB.add(9)
+                        player.P.pylobB = player.P.pylobB.add(9)
+                    }
                 }
-            }
-            if(player.P.pylonA.gte(layers.P.clickables[12].cost()) && (hasMilestone('P', 2) || hasUpgrade('HC', 32))) {
-                player.P.pylonB = player.P.pylonB.add(1)
-                player.P.pylobB = player.P.pylobB.add(1)
-                if(hasMilestone('HC', 1)) {
-                    player.P.pylonB = player.P.pylonB.add(9)
-                    player.P.pylobB = player.P.pylobB.add(9)
-                }
-                if(hasMilestone('UMF', 1)) {
-                    player.P.pylonB = player.P.pylonB.add(43)
-                    player.P.pylobB = player.P.pylobB.add(43)
-                }
-            }
-            if(player.P.pylonB.gte(layers.P.clickables[13].cost()) && (hasMilestone('P', 5) || hasUpgrade('HC', 32))) {
-                player.P.pylonC = player.P.pylonC.add(1)
-                player.P.pylobC = player.P.pylobC.add(1)
-                if(hasMilestone('HC', 1)) {
-                    player.P.pylonC = player.P.pylonC.add(9)
-                    player.P.pylobC = player.P.pylobC.add(9)
-                }
-                if(hasMilestone('UMF', 1)) {
-                    player.P.pylonC = player.P.pylonC.add(41)
-                    player.P.pylobC = player.P.pylobC.add(41)
+                if(player.P.pylonB.gte(layers.P.clickables[13].cost()) && (hasMilestone('P', 5) || hasUpgrade('HC', 32))) {
+                    player.P.pylonC = player.P.pylonC.add(1)
+                    player.P.pylobC = player.P.pylobC.add(1)
+                    if(hasMilestone('HC', 1)) {
+                        player.P.pylonC = player.P.pylonC.add(9)
+                        player.P.pylobC = player.P.pylobC.add(9)
+                    }
                 }
             }
-        }
-        if(hasMilestone('P', 12) || hasAchievement('A', 81)) {
-            if(player.P.pylonC.gte(layers.P.clickables[14].cost()) && (hasChallenge('SR', 22) || hasUpgrade('HC', 32))) {
-                player.P.pylonD = player.P.pylonD.add(1)
-                player.P.pylobD = player.P.pylobD.add(1)
-                if(hasMilestone('HC', 1)) {
-                    player.P.pylonD = player.P.pylonD.add(9)
-                    player.P.pylobD = player.P.pylobD.add(9)
+            if(hasMilestone('P', 12) || hasAchievement('A', 81)) {
+                if(player.P.pylonC.gte(layers.P.clickables[14].cost()) && (hasChallenge('SR', 22) || hasUpgrade('HC', 32))) {
+                    player.P.pylonD = player.P.pylonD.add(1)
+                    player.P.pylobD = player.P.pylobD.add(1)
+                    if(hasMilestone('HC', 1)) {
+                        player.P.pylonD = player.P.pylonD.add(9)
+                        player.P.pylobD = player.P.pylobD.add(9)
+                    }
                 }
-                if(hasMilestone('UMF', 1)) {
-                    player.P.pylonD = player.P.pylonD.add(47)
-                    player.P.pylobD = player.P.pylobD.add(47)
-                }
-            }
-            if(player.P.pylonD.gte(layers.P.clickables[15].cost()) && (hasChallenge('SR', 31) || hasUpgrade('HC', 32))) {
-                player.P.pylonE = player.P.pylonE.add(1)
-                player.P.pylobE = player.P.pylobE.add(1)
-                if(hasMilestone('HC', 1)) {
-                    player.P.pylonE = player.P.pylonE.add(9)
-                    player.P.pylobE = player.P.pylobE.add(9)
-                }
-                if(hasMilestone('UMF', 1)) {
-                    player.P.pylonE = player.P.pylonE.add(39)
-                    player.P.pylobE = player.P.pylobE.add(39)
+                if(player.P.pylonD.gte(layers.P.clickables[15].cost()) && (hasChallenge('SR', 31) || hasUpgrade('HC', 32))) {
+                    player.P.pylonE = player.P.pylonE.add(1)
+                    player.P.pylobE = player.P.pylobE.add(1)
+                    if(hasMilestone('HC', 1)) {
+                        player.P.pylonE = player.P.pylonE.add(9)
+                        player.P.pylobE = player.P.pylobE.add(9)
+                    }
                 }
             }
-        }
-        if(hasUpgrade('HC', 32)) {
-            if(player.P.pylonE.gte(layers.P.clickables[16].cost())) {
-                player.P.pylonF = player.P.pylonF.add(10)
-                player.P.pylobF = player.P.pylobF.add(10)
-                if(hasMilestone('UMF', 1)) {
-                    player.P.pylonF = player.P.pylonF.add(37)
-                    player.P.pylobF = player.P.pylobF.add(37)
+            if(hasUpgrade('HC', 32)) {
+                if(player.P.pylonE.gte(layers.P.clickables[16].cost())) {
+                    player.P.pylonF = player.P.pylonF.add(10)
+                    player.P.pylobF = player.P.pylobF.add(10)
                 }
+    
             }
-
+        } else {
+            buyMax("Power")
         }
     },
     clickables: {
@@ -628,7 +608,6 @@ addLayer("P", {
             onClick() {
                 if(hasMilestone('P', 11)) player[this.layer].points = player[this.layer].points.sub(this.cost());
                 let amt = new Decimal(1)
-                amt = amt.times(layers.HC.effect()[1]).floor()
                 player.P.pylonA = player.P.pylonA.add(amt)
                 player.P.pylobA = player.P.pylobA.add(amt)
             },
@@ -664,7 +643,6 @@ addLayer("P", {
             onClick() {
                 if(hasMilestone('P', 11)) player[this.layer].pylonA = player[this.layer].pylonA.sub(this.cost());
                 let amt = new Decimal(1)
-                amt = amt.times(layers.HC.effect()[1]).floor()
                 player.P.pylonB = player.P.pylonB.add(amt)
                 player.P.pylobB = player.P.pylobB.add(amt)
             },
@@ -700,7 +678,6 @@ addLayer("P", {
             onClick() {
                 if(hasMilestone('P', 11)) player[this.layer].pylonB = player[this.layer].pylonB.sub(this.cost());
                 let amt = new Decimal(1)
-                amt = amt.times(layers.HC.effect()[1]).floor()
                 player.P.pylonC = player.P.pylonC.add(amt)
                 player.P.pylobC = player.P.pylobC.add(amt)
             },
@@ -736,7 +713,6 @@ addLayer("P", {
             onClick() {
                 if(hasMilestone('P', 11)) player[this.layer].pylonC = player[this.layer].pylonC.sub(this.cost());
                 let amt = new Decimal(1)
-                amt = amt.times(layers.HC.effect()[1]).floor()
                 player.P.pylonD = player.P.pylonD.add(amt)
                 player.P.pylobD = player.P.pylobD.add(amt)
             },
@@ -772,7 +748,6 @@ addLayer("P", {
             onClick() {
                 if(hasMilestone('P', 11)) player[this.layer].pylonD = player[this.layer].pylonD.sub(this.cost());
                 let amt = new Decimal(1)
-                amt = amt.times(layers.HC.effect()[1]).floor()
                 player.P.pylonE = player.P.pylonE.add(amt)
                 player.P.pylobE = player.P.pylobE.add(amt)
             },
@@ -808,7 +783,6 @@ addLayer("P", {
             onClick() {
                 if(hasMilestone('P', 11)) player[this.layer].pylonE = player[this.layer].pylonE.sub(this.cost());
                 let amt = new Decimal(1)
-                amt = amt.times(layers.HC.effect()[1]).floor()
                 player.P.pylonF = player.P.pylonF.add(amt)
                 player.P.pylobF = player.P.pylobF.add(amt)
             },
@@ -819,7 +793,7 @@ addLayer("P", {
                 return pPylon('F', player.P.pylonF, player.P.pylobF)
             },
             cost() {
-                let expo = new Decimal(3.5)
+                let expo = new Decimal(4)
                 let divi = new Decimal(1)
                 if(hasMilestone('P', 6)) expo = expo.sub(0.05)
                 if(hasMilestone('P', 9)) divi = divi.times(player.SR.points.add(1))
@@ -833,7 +807,6 @@ addLayer("P", {
             unlocked() { return true },
             onClick() { buyMax('Power') },
             title: "Buy Max Power Pylons",
-            display: "Warning: can lag game",
             canClick() { return true }
         }
     },

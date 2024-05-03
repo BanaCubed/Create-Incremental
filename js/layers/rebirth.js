@@ -274,15 +274,19 @@ addLayer("R", {
     },
     automate() {
         if(!inChallenge('SR', 21)) {
-            if(layers.R.buyables[11].canAfford() && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
-                setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(1))
-                if(hasMilestone('HC', 1)) setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(9))
-                if(hasMilestone('UMF', 1)) setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(40))
-            }
-            if(layers.R.buyables[12].canAfford() && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
-                setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(1))
-                if(hasMilestone('HC', 1)) setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(9))
-                if(hasMilestone('UMF', 1)) setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(40))
+            if (!hasMilestone('UMF', 1)) {
+                if(layers.R.buyables[11].canAfford() && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
+                    setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(1))
+                    if(hasMilestone('HC', 1)) setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(9))
+                    if(hasMilestone('UMF', 1)) setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(40))
+                }
+                if(layers.R.buyables[12].canAfford() && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
+                    setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(1))
+                    if(hasMilestone('HC', 1)) setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(9))
+                    if(hasMilestone('UMF', 1)) setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(40))
+                }
+            } else {
+                buyMax("Rebirth")
             }
             if(hasMilestone('HC', 3)) {
                 buyUpgrade('R', 11)

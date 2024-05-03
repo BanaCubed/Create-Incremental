@@ -81,7 +81,7 @@ addLayer('HC', {
     },
     getResetGain() {
         let base = player.HC.hyperNumber.add(1).div(25).pow(1.6).floor()
-        if(hasMilestone('UMF', 2)) base = base.times(layers.UMF.effect2().log(4))
+        if(hasMilestone('UMF', 2)) base = base.times(layers.UMF.effect2().log(4).add(1))
         return base
     },
     getNextAt() {

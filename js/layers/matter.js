@@ -1202,10 +1202,10 @@ addLayer('UMF', {
         return new Decimal(5).pow(player.UMF.points).div(10).add(1).pow(0.5).sub(0.05)
     },
     effect2() {
-        return layers.M.effect2().times(layers.AM.effect2()).times(layers.DM.effect2()).times(layers.EM.effect2())
+        return tmp.M.effect2.times(tmp.AM.effect2).times(tmp.DM.effect2).times(tmp.EM.effect2)
     },
     effectDescription() {
-        return "multiplying all matters gain by " + format(this.effect()) + "<br>Your matters are multiplying $, RP, SRP, Power and HE gain by " + format(this.effect2())
+        return "multiplying all matters gain by " + format(tmp.UMF.effect) + "<br>Your matters are multiplying $, RP, SRP, Power and HE gain by " + format(tmp.UMF.effect2)
     },
     tabFormat: [
         "main-display"
@@ -1223,14 +1223,14 @@ addLayer('UMF', {
         },
         1: {
             requirementDescription: "2 Ultimate Matter Fragments",
-            effectDescription: "All buyables and pylon automation is 5 times as efficient",
+            effectDescription: "All (pre-Hyper) automation now buys max and no longer spends anything",
             done() {
                 return player.UMF.points.gte(2)
             }
         },
         2: {
             requirementDescription: "3 Ultimate Matter Fragments",
-            effectDescription: "Matters now also multiply HRP",
+            effectDescription() { return "Matters now also multiply HRP at a reduced rate<br>Currently: x" + format(tmp.UMF.effect2.log(4).add(1))},
             done() {
                 return player.UMF.points.gte(3)
             },
