@@ -162,7 +162,8 @@ addLayer('HC', {
             },
             description: "Multiply RP gain by 10,000",
 			branches: [11, 31],
-            canAfford() { return hasUpgrade('HC', 11) }
+            canAfford() { return hasUpgrade('HC', 11) },
+            title: "Cubic"
         },
         31: {
             cost() {
@@ -171,7 +172,8 @@ addLayer('HC', {
                 return base
             },
             description: "Start with 12 SRP, and reduce SRP base cost by 1e9",
-            canAfford() { return hasUpgrade('HC', 21) }
+            canAfford() { return hasUpgrade('HC', 21) },
+            title: "Permanance"
         },
 
         12: {
@@ -194,7 +196,8 @@ addLayer('HC', {
             },
             description: "Power Pylons become 5 times more effective",
 			branches: [12, 32],
-            canAfford() { return hasUpgrade('HC', 12) }
+            canAfford() { return hasUpgrade('HC', 12) },
+            title: "Power Core"
         },
         32: {
             cost() {
@@ -203,7 +206,8 @@ addLayer('HC', {
                 return base
             },
             description: "You start with all Power Pylons unlocked, keep all Power milestones on Hyper reset, and reduce Power Pylon scaling",
-            canAfford() { return hasUpgrade('HC', 22) }
+            canAfford() { return hasUpgrade('HC', 22) },
+            title: "Maintainment"
         },
 
         13: {
@@ -217,7 +221,10 @@ addLayer('HC', {
             },
             title: "The Hyper Path",
             description: "Multiply Hyper Cash gain based on $",
-			tooltip: "log10($ + 10)^0.4"
+			tooltip: "log10($ + 10)^0.4",
+            effectDisplay() {
+                return "x" + format(player.points.add(10).log(10).pow(0.4))
+            }
         },
         23: {
             cost() {
@@ -227,7 +234,8 @@ addLayer('HC', {
             },
             description: "Multiply Hyper Cash gain by 10",
 			branches: [13, 33],
-            canAfford() { return hasUpgrade('HC', 13) }
+            canAfford() { return hasUpgrade('HC', 13) },
+            title: "Hypercube"
         },
         33: {
             cost() {
@@ -237,7 +245,8 @@ addLayer('HC', {
             },
             description: "Hyper Cash also boosts RP, SRP and Hyper Essence",
 			tooltip: "RP: x(HC + 1)<br>SRP: x(log(log(HC + 10) + 10))<br>HE: x(HC^0.1/3 + 1)",
-            canAfford() { return hasUpgrade('HC', 23) }
+            canAfford() { return hasUpgrade('HC', 23) },
+            title: "Ultra Cash"
         },
 
         14: {
@@ -260,7 +269,8 @@ addLayer('HC', {
             },
             description: "Multiply $ gain and PPy effect by 200",
 			branches: [14, 34],
-            canAfford() { return hasUpgrade('HC', 14) }
+            canAfford() { return hasUpgrade('HC', 14) },
+            title: "Elemental"
         },
         34: {
             cost() {
@@ -269,7 +279,8 @@ addLayer('HC', {
                 return base
             },
             description: "Divide RP, SRP, and PPy cost by 100,000, and increase both of the $ buyables bases",
-            canAfford() { return hasUpgrade('HC', 24) }
+            canAfford() { return hasUpgrade('HC', 24) },
+            title: "Cheapening"
         },
 
         41: {
@@ -299,7 +310,7 @@ addLayer('HC', {
             description: "Disable Antimatter's nerf to Matter, and gain an Ultimate Matter Fragment"
         },
         53: {
-            cost: new Decimal("1e500"),
+            cost: new Decimal("1e260"),
             currencyDisplayName: "Black Hole Volume",
             currencyInternalName: "points",
             currencyLayer() { return 'BH' },

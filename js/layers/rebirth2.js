@@ -312,8 +312,8 @@ addLayer("SR", {
         },
         21: {
             style: {
-                width: "400px",
-                height: "200px"
+                width: "250px",
+                height: "150px"
             },
             unlocked() { return hasUpgrade('SR', 14) },
             title: "Ω - Omega",

@@ -378,28 +378,28 @@ addLayer("A", {
         },
         102: {
             name: "Nothing Matters",
-            tooltip: "Anihilate Matter",
+            tooltip: "Annihilate Matter",
             done() {
                 if (hasUpgrade('HC', 51)) return true
             },
         },
         103: {
             name: "Antimatter Dimensions",
-            tooltip: "Anihilate Antimatter",
+            tooltip: "Annihilate Antimatter",
             done() {
                 if (hasUpgrade('HC', 52)) return true
             },
         },
         104: {
             name: "Born from Void",
-            tooltip: "Anihilate Dark Matter",
+            tooltip: "Annihilate Dark Matter",
             done() {
                 if (hasUpgrade('HC', 53)) return true
             },
         },
         105: {
             name: "Dying Stars",
-            tooltip: "Anihilate Exotic Matter",
+            tooltip: "Annihilate Exotic Matter",
             done() {
                 if (hasUpgrade('HC', 54)) return true
             },

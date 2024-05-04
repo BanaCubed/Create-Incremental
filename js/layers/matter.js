@@ -169,7 +169,7 @@ addLayer('M', {
         },
         24: {
             title: "Efficient Compression",
-            cost: new Decimal(100000000000),
+            cost: new Decimal(5000000000),
             description: "Reduce both Quark and Atom cost scalings",
             tooltip: "-0.1 to exponent"
         },
@@ -478,7 +478,7 @@ addLayer('DM', {
         return base
     },
     effect2() {
-        let effect = player.DM.points.div(100).add(1).pow(0.0005)
+        let effect = player.DM.points.div(100).add(1).pow(0.001)
         if(hasUpgrade('DM', 13)) effect = effect.pow(2)
         if(hasMilestone('BH', 1) && hasUpgrade('DM', 13)) effect = effect.pow(2)
         return effect
@@ -666,11 +666,11 @@ addLayer('BH', {
             cost(x) {
                 let y = x
                 if(hasMilestone('BH', 0)) y = y.div(2)
-                let expo = new Decimal(1.2)
-                return new Decimal(10000).pow(new Decimal(expo).pow(y))
+                let expo = new Decimal(1.1)
+                return new Decimal(1000).pow(new Decimal(expo).pow(y))
             },
             title: "Big Black Hole",
-            tooltip: "Base effect: 3^x<br>Base cost: 10,000^(1.2^x)",
+            tooltip: "Base effect: 3^x<br>Base cost: 1,000^(1.1^x)",
             display() {
                 return "Multiply Black Hole's gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
                 + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
@@ -740,8 +740,8 @@ addLayer('BH', {
         },
         3: {
             unlocked() { return hasUpgrade('DM', 23) },
-            done() { return hasUpgrade('DM', 23) && player.BH.points.gte("1e140") },
-            requirementDescription: "1e140 BHV",
+            done() { return hasUpgrade('DM', 23) && player.BH.points.gte("1e80") },
+            requirementDescription: "1e80 BHV",
             effectDescription: "Automate Dark Matter buyables",
         },
     }
@@ -878,7 +878,7 @@ addLayer('EM', {
         24: {
             title: "Frogbert",
             description: "$ boosts Unstable Matter's half-life",
-            cost: new Decimal(1e195),
+            cost: new Decimal(1e193),
             tooltip: "log(log($ + 10) + 10)",
             effect() {
                 return player.points.add(10).log(10).add(10).log(10)
@@ -931,7 +931,7 @@ addLayer('EM', {
             title: "Theoretical",
             tooltip: "Base effect: 2^x<br>Base cost: 1e25*(5^x)",
             display() {
-                return "Multiply the previous upgrades effect<br>Cost: " + coolDynamicFormat(this.cost(), 3)
+                return "Multiply the previous buyables effect<br>Cost: " + coolDynamicFormat(this.cost(), 3)
                 + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
                 + "<br>Currently: x" + coolDynamicFormat(this.effect(), 2)
             },
@@ -1238,7 +1238,7 @@ addLayer('UMF', {
         },
         3: {
             requirementDescription: "4 Ultimate Matter Fragments",
-            effectDescription: "Annihilate all types of matter from the universe, preventing any more inflation from happening in this universe.<br>CURRENT ENDGAME",
+            effectDescription: "Annihilate all types of matter from the universe, preventing any more inflation from happening in this universe...<br>CURRENT ENDGAME",
             done() {
                 return player.UMF.points.gte(4)
             }
