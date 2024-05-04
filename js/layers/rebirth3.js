@@ -235,7 +235,7 @@ addLayer('HC', {
                 base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 3)))
                 return base
             },
-            description: "Hyper Cash also boosts RP, SRP and Hyper Essence at drastically reduced rates",
+            description: "Hyper Cash also boosts RP, SRP and Hyper Essence",
 			tooltip: "RP: x(HC + 1)<br>SRP: x(log(log(HC + 10) + 10))<br>HE: x(HC^0.1/3 + 1)",
             canAfford() { return hasUpgrade('HC', 23) }
         },
@@ -377,7 +377,7 @@ addLayer('C', {
     row: 2,
     update(diff) {
         if(hasMilestone('HC', 0)) {
-            player.C.points = player.C.points.add(new Decimal(hyperCashGain()).times(diff))
+            player.C.points = player.C.points.add(new Decimal(hyperCashGain()[0]).times(diff))
         }
     },
     effect() {
@@ -389,15 +389,20 @@ addLayer('C', {
         ]
     },
     effectDescription() {
-        if(!hasUpgrade('HC', 33)) return "raising $ gain by " + format(layers.C.effect()[0])
-        + "<br>Producing " + format(hyperCashGain()) + "/sec"
+        let text
+        if(!hasUpgrade('HC', 33)) text = "raising $ gain by " + format(layers.C.effect()[0])
+        + "<br>Producing " + format(hyperCashGain()[0]) + "/sec"
         + "<br>Hyper Cash is reset on Hyper Reset"
 
-        if(hasUpgrade('HC', 33)) return "raising $ gain by " + format(layers.C.effect()[0])
+        if(hasUpgrade('HC', 33)) text = "raising $ gain by " + format(layers.C.effect()[0])
         + ", multiplying RP gain by  " + format(layers.C.effect()[1])
         + ", multiplying SRP gain by  " + format(layers.C.effect()[2])
         + ", multiplying Hyper Essence gain by  " + format(layers.C.effect()[3])
-        + "<br>Producing " + format(hyperCashGain()) + "/sec"
+        + "<br>Producing " + format(hyperCashGain()[0]) + "/sec"
+
+        if(hyperCashGain()[0].gte(100)) text = text + "<br>Hyper Cash gain is softcapped past 100, dividing it by " + format(hyperCashGain()[1][0])
+
+        return text
     },
     color: "#34eb67",
 })
@@ -410,10 +415,14 @@ function hCashB1() {
 
 function hyperCashGain() {
 	let HCgain = new Decimal(0)
+    let softcaps = []
 	if (hasMilestone('HC', 0)) HCgain = HCgain.add(0.1)
 	if (hasUpgrade('HC', 13)) HCgain = HCgain.times(player.points.add(10).log(10).pow(0.4))
 	if (hasUpgrade('HC', 23)) HCgain = HCgain.times(10)
-	if (HCgain.gte(100)) HCgain = new Decimal(100).times(new Decimal(10).pow(HCgain.div(100).log(10).add(1).log(10)))
-	return HCgain
+	if (HCgain.gte(100)) {
+        softcaps.push(HCgain.div(new Decimal(100).times(new Decimal(10).pow(HCgain.div(100).log(10).add(1).log(10)))))
+        HCgain = new Decimal(100).times(new Decimal(10).pow(HCgain.div(100).log(10).add(1).log(10)))
+    }
+	return [HCgain, softcaps]
 }
 

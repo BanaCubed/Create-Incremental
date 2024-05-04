@@ -491,5 +491,6 @@ addLayer("Sft", {
         ["infobox", "general"],
         ["infobox", "rebirth"],
         ["infobox", "hyper"],
-    ]
+    ],
+    layerShown() { return false }
 })

@@ -24,6 +24,23 @@ addLayer("R", {
         baseGain = baseGain.times(this.directMult())
         return baseGain
     },
+    softcapEffects() {
+        let softcaps = []
+        let baseGain = this.baseAmount().times(this.gainMult()).div(this.requires()).pow(this.exponent())
+        let basedGain = baseGain
+        if(baseGain.gte(1e17)) {
+            softcaps.push(baseGain.div(1e17).pow(0.75))
+            baseGain = baseGain.div(1e17).pow(0.25).times(1e17)
+        }
+        if(baseGain.gte("1e2000")) {
+            softcaps.push(baseGain.div("1e2000").pow(0.8))
+            baseGain = baseGain.div("1e2000").pow(0.2).times("1e2000")
+        }
+        baseGain = baseGain.times(this.directMult())
+        basedGain = basedGain.times(this.directMult())
+        softcaps.push(basedGain)
+        return softcaps
+    },
     getNextAt() {
         let baseGain = this.getResetGain().add(1)
         baseGain = baseGain.div(this.directMult())
@@ -32,8 +49,13 @@ addLayer("R", {
         baseGain = baseGain.pow(new Decimal(1).div(this.exponent())).div(this.gainMult()).times(this.requires())
     },
     prestigeButtonText() {
-        if(!inChallenge('SR', 11)) return "Rebirth for " + formatWhole(this.getResetGain()) + " Rebirth Points"
-        if(inChallenge('SR', 11)) return "A Superior being is stopping you from Rebirthing"
+        let text
+        if(!inChallenge('SR', 11)) {
+            if(!this.getResetGain().gte(1e17)) text = "Rebirth for " + formatWhole(this.getResetGain()) + " Rebirth Points"
+            if(this.getResetGain().gte(1e17)) text = formatWhole(this.getResetGain()) + "<br>(" + format(this.softcapEffects()[2]) + " base) RP"
+        }
+        if(inChallenge('SR', 11)) text = "A Superior being is stopping you from Rebirthing"
+        return text
     },
     prestigeNotify() { return this.getResetGain().gte(player.R.points.div(5)) && this.passiveGen === 0 },
     baseResource: "$",
@@ -99,7 +121,10 @@ addLayer("R", {
 		points: new Decimal(0),
     }},
     effectDescription() {
-        return "multiplying $ gain by " + coolDynamicFormat(this.effect(), 2)
+        let text = "multiplying $ gain by " + coolDynamicFormat(this.effect(), 2)
+        if(this.getResetGain().gte(1e17)) text = text + "<br>RP gain past 1e17 is softcapped, diving it by " + format(this.softcapEffects()[0])
+        if(this.getResetGain().gte("1e2000")) text = text + "<br>RP gain past 1e2000 is softcapped again, further diving it by " + format(this.softcapEffects()[1])
+        return text
     },
     upgrades: {
         11: {
