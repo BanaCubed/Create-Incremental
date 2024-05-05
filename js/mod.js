@@ -38,7 +38,7 @@ function canGenPoints(){
 }
 
 // Calculate points/sec!
-function getPointGen() {
+function getPointGen(softcaps = true) {
 	if(!canGenPoints())
 		return new Decimal(0)
 
@@ -85,7 +85,7 @@ function getPointGen() {
 
 		let machineBoost = new Decimal(1)
 		if (hasUpgrade('R', 32)) machineBoost = machineBoost.times(1.3)
-		machineBoost = machineBoost.times(layers.P.effect())
+		machineBoost = machineBoost.times(tmp.P.effect)
 		if(hasMilestone('P', 8) && hasUpgrade('U', 34)) machineBoost = machineBoost.pow(1.25)
 		if(hasUpgrade('U', 34)) gain = gain.times(machineBoost)
 	}
@@ -95,14 +95,14 @@ function getPointGen() {
 
 
 	// Rebirth Layer
-	gain = gain.times(layers.R.effect())
+	gain = gain.times(tmp.R.effect)
 	if (hasUpgrade('R', 11)) gain = gain.times(5)
 	if (hasUpgrade('R', 14)) gain = gain.times(2)
 
 
 	// Super Rebrith Layer
-	gain = gain.times(layers.SR.effect()[0])
-	if (hasMilestone('SR', 9)) gain = gain.times(layers.SR.milestones[9].effect())
+	gain = gain.times(tmp.SR.effect[0])
+	if (hasMilestone('SR', 9)) gain = gain.times(tmp.SR.milestones[9].effect)
 	if (hasMilestone('SR', 4)) gain = gain.pow(1.1)
 	if (inChallenge('SR', 12)) gain = gain.pow(0.5)
 	if (inChallenge('SR', 31)) gain = gain.div(player.SR.tax)
@@ -124,6 +124,10 @@ function getPointGen() {
 
 	everyTick();
 
+	if(softcaps !== false) {
+        if(gain.gte("1e5000000")) gain = gain.div("1e5000000").pow(new Decimal(1).div(base.log(10).sub(49900000).pow(0.001))).times("1e5000000")
+	}
+
 	return gain
 }
 
@@ -136,6 +140,11 @@ var displayThings = [
 	function() {
 		if(inChallenge('SR', 31)) {
 			return "You have " + format(player.SR.tax) + " tax"
+		}
+	},
+	function() {
+		if(getPointGen().gte("1e5000000")) {
+			return "Inflation is dividing your income by " + format(player.U.softcapPower)
 		}
 	}
 ]
@@ -182,6 +191,23 @@ function fixOldSave(oldVersion){
 		player.DM.points = new Decimal(0)
 		player.EM.points = new Decimal(0)
 	}
+	if(oldVersion == "0.3.0.5") {
+		if(player.points.gte("1e100000")) {
+			player.points = new Decimal("1e100000")
+			doReset('HC')
+			player.HC.points = new Decimal(10000)
+		}
+		if(player.C.points.gte(1000000)) {
+			player.C.points = new Decimal(1000000)
+			doReset('HC')
+			player.HC.points = new Decimal(10000)
+		}
+		if(player.HC.points.gte(10000)) {
+			player.HC.points = new Decimal(10000)
+			doReset('HC')
+			player.HC.points = new Decimal(10000)
+		}
+	}
 }
 
 function achievement33() {
@@ -198,58 +224,5 @@ function achievement33() {
 }
 
 function timeDisplay(value) {
-	value = new Decimal(value)
-
-	// Variable setup
-	let yrs = value.div(31536000).floor()
-	let days = value.div(86400).floor().sub(yrs.times(365))
-	let hrs = value.div(3600).floor().sub(days.times(24)).sub(yrs.times(8760))
-	let mins = value.div(60).floor().sub(hrs.times(60)).sub(days.times(1440)).sub(yrs.times(525600))
-	let secs = value.sub(mins.times(60)).sub(hrs.times(3600)).sub(days.times(86400)).sub(yrs.times(31536000))
-
-	// Seconds
-	if(value.lt(60)) {
-		return format(secs) + "s"
-	}
-
-	// Minutes
-	if(value.lt(3600)) {
-		return formatWhole(mins) + "m "
-		+ format(secs) + "s"
-	}
-
-	// Hours
-	if(value.lt(86400)) {
-		return formatWhole(hrs) + "h "
-		+ formatWhole(mins) + "m "
-		+ format(secs) + "s"
-	}
-
-	// Days
-	if(value.lt(604800)) {
-		return formatWhole(days) + "d "
-		+ formatWhole(hrs) + "h "
-		+ formatWhole(mins) + "m "
-		+ format(secs) + "s"
-	}
-
-	// Years
-	if(value.lt(3153600000)) {
-		return formatWhole(yrs) + "y "
-		+ formatWhole(days) + "d "
-		+ formatWhole(hrs) + "h "
-		+ formatWhole(mins) + "m "
-		+ format(secs) + "s"
-	}
-
-	// Centuries
-	if(value.lt(315360000000)) {
-		return formatWhole(yrs) + "y "
-		+ formatWhole(days) + "d "
-	}
-
-	// Eternities
-	if(value.lt(3153600000000000)) {
-		return formatWhole(yrs) + "y"
-	}
+	formatTime(value)
 }

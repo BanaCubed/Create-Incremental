@@ -47,6 +47,7 @@ addLayer('HC', {
         if(hasUpgrade('HC', 33)) hypEss = hypEss.times(layers.C.effect()[3])
         if(hypEss === null || hypEss === undefined) hypEss = new Decimal(1)
         hypEss = hypEss.times(layers.UMF.effect2())
+        player.HC.hyperNumberBase = hypEss
         if(hypEss.gte(2500)) hypEss = hypEss.div(2500).pow(0.2).times(2500)
         player.HC.hyperNumber = hypEss
         if(hasMilestone('UMF', 0)) player.HC.points = player.HC.points.add(this.getResetGain().times(0.0005).times(diff))
@@ -65,7 +66,7 @@ addLayer('HC', {
     effectDescription() {
         return "multiplying $ gain by " + formatWhole(this.effect()[0]) + ", SRP gain by " + format(this.effect()[1]) + ", and Power Pylon effectiveness by " + format(this.effect()[2]) + "<br>Based on total HRP"
     },
-    baseAmount() { return player.HC.hyperNumber },
+    baseAmount() { return player.HC.hyperNumberBase },
     baseResource: "Hyper Essence",
     branches: ['SR', 'P'],
     layerShown() { return hasAchievement('A', 75) },
@@ -76,7 +77,8 @@ addLayer('HC', {
             hyperNumber: new Decimal(1),
             hyperCash: new Decimal(0),
 			total: new Decimal(0),
-            paths: []
+            paths: [],
+            hyperNumberBase: new Decimal(1)
         }
     },
     getResetGain() {
@@ -392,23 +394,25 @@ addLayer('C', {
         }
     },
     effect() {
-        return [
+        let base = [
             hCashB1(),
             player.C.points.add(1),
             player.C.points.add(10).log(10).add(10).log(10),
             player.C.points.pow(0.1).div(3).add(1)
         ]
+        if(hasMilestone('UMF', 3)) base = [base[0], base[1].pow(milestoneEffect('UMF', 2)), base[2].pow(milestoneEffect('UMF', 2)), base[3].pow(milestoneEffect('UMF', 2))]
+        return base
     },
     effectDescription() {
         let text
-        if(!hasUpgrade('HC', 33)) text = "raising $ gain by " + format(layers.C.effect()[0])
+        if(!hasUpgrade('HC', 33)) text = "raising $ gain by " + format(tmp.C.effect[0])
         + "<br>Producing " + format(hyperCashGain()[0]) + "/sec"
         + "<br>Hyper Cash is reset on Hyper Reset"
 
-        if(hasUpgrade('HC', 33)) text = "raising $ gain by " + format(layers.C.effect()[0])
-        + ", multiplying RP gain by  " + format(layers.C.effect()[1])
-        + ", multiplying SRP gain by  " + format(layers.C.effect()[2])
-        + ", multiplying Hyper Essence gain by  " + format(layers.C.effect()[3])
+        if(hasUpgrade('HC', 33)) text = "raising $ gain by " + format(tmp.C.effect[0])
+        + ", multiplying RP gain by  " + format(tmp.C.effect[1])
+        + ", multiplying SRP gain by  " + format(tmp.C.effect[2])
+        + ", multiplying Hyper Essence gain by  " + format(tmp.C.effect[3])
         + "<br>Producing " + format(hyperCashGain()[0]) + "/sec"
 
         if(hyperCashGain()[0].gte(100)) text = text + "<br>Hyper Cash gain is softcapped past 100, dividing it by " + format(hyperCashGain()[1][0])

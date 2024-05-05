@@ -5,6 +5,7 @@ addLayer("U", {
     startData() { return {
         unlocked: true,
 		points: new Decimal(0),
+        softcapPower: new Decimal(0)
     }},
     color: "#157307",
     tooltip() {
@@ -364,12 +365,29 @@ addLayer("U", {
     buyables: {
         11: {
             cost(x) {
-                return new Decimal(1000000).times(new Decimal(10).pow(x))
+                let y = x
+                if(hasMilestone('UMF', 2)) y = y.div(tmp.UMF.milestones[2].effect)
+                let base = new Decimal(1000000).times(new Decimal(10).pow(y))
+                return base
             },
             title: "Pay to Win Afterlife",
             effect(x) {
-                if(!hasMilestone('SR', 3)) return new Decimal(1.1).pow(x)
-                if(hasMilestone('SR', 3)) return new Decimal(1.3).pow(x)
+                let base
+                if(!hasMilestone('SR', 3)) base = new Decimal(1.1).pow(x)
+                if(hasMilestone('SR', 3)) base = new Decimal(1.3).pow(x)
+                if(base.gte("1e500000")) base = base.div("1e500000").pow(new Decimal(1).div(base.log(10).sub(499999).pow(0.2))).times("1e500000")
+                return base
+            },
+            softcap(x) {
+                let base
+                let softcaps
+                if(!hasMilestone('SR', 3)) base = new Decimal(1.1).pow(x)
+                if(hasMilestone('SR', 3)) base = new Decimal(1.3).pow(x)
+                if(base.gte("1e500000")) {
+                    softcaps = base.div(base.div("1e500000").pow(new Decimal(1).div(base.log(10).sub(499999).pow(0.2))).times("1e500000"))
+                    base = base.div("1e500000").pow(new Decimal(1).div(base.log(10).sub(499999).pow(0.2))).times("1e500000")
+                }
+                return softcaps
             },
             buy() {
                 player.points = player.points.sub(this.cost())
@@ -377,9 +395,13 @@ addLayer("U", {
             },
             canAfford() { return player.points.gte(this.cost()) },
             display() {
-                return "Boost RP gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
+                let text = "Boost RP gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
                 + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
                 + "<br>Effect: x" + coolDynamicFormat(this.effect(), 2)
+
+                if(this.softcap(getBuyableAmount('U', 11)) !== null) text = text + "<br>Effect past 1e500,000 is softcapped, dividing the effect by " + format(this.softcap(getBuyableAmount('U', 11)))
+
+                return text
             },
             tooltip: "Base effect: 1.1^x<br>Base cost: 1,000,000*(10^x)",
             unlocked() { return hasMilestone('SR', 2) }
@@ -502,5 +524,8 @@ addLayer("U", {
             setClickableState('U', 12, true)
             setClickableState('U', 13, true)
         };
+    },
+    update(diff) {
+        if(getPointGen().gte("1e5000000")) player.U.softcapPower = getPointGen(false).div(getPointGen(true))
     }
 })

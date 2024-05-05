@@ -490,6 +490,7 @@ addLayer('DM', {
         "Dark Matter": {
             content: [
                 "main-display",
+                "clickables",
                 "buyables",
                 "upgrades",
             ]
@@ -616,11 +617,16 @@ addLayer('DM', {
         },
     },
     automate() {
-        if(layers.DM.buyables[11].canAfford() && hasMilestone('BH', 3)) {
-            setBuyableAmount('DM', 11, getBuyableAmount('DM', 11).add(1))
+        if(hasMilestone('BH', 3)) {
+            buyMax("DMatter")
         }
-        if(layers.DM.buyables[12].canAfford() && hasMilestone('BH', 3)) {
-            setBuyableAmount('DM', 12, getBuyableAmount('DM', 12).add(1))
+    },
+    clickables: {
+        11: {
+            title: "Buy Max",
+            canClick() { return true },
+            onClick() { buyMax('DMatter') },
+            unlocked() { return hasMilestone('BH', 0) }
         }
     }
 })
@@ -645,7 +651,7 @@ addLayer('BH', {
         return player.BH.points.add(1).pow(0.8)
     },
     effectDescription() {
-        return "multiplying Dark Matter gain by " + format(this.effect()) + ", but divide their own gain by " + format(this.nerf()) + "<br>(+" + format(this.gain()) + "/sec)"
+        return "multiplying Dark Matter gain by " + format(this.effect()) + ", but divide their own gain by " + format(this.nerf()) + "<br>(" + format(this.gain()) + "/sec)"
     },
     color: "#4b0f75",
     gain() {
@@ -724,7 +730,7 @@ addLayer('BH', {
             unlocked() { return hasUpgrade('DM', 23) },
             done() { return hasUpgrade('DM', 23) && player.BH.points.gte("1e10") },
             requirementDescription: "1e10 Black Hole Volume (BHV)",
-            effectDescription: "Half the scaling of all Dark Matter and Black Hole buyables",
+            effectDescription: "Half the scaling of and unlock Buy Max for all Dark Matter and Black Hole buyables",
         },
         1: {
             unlocked() { return hasUpgrade('DM', 23) },
@@ -742,7 +748,7 @@ addLayer('BH', {
             unlocked() { return hasUpgrade('DM', 23) },
             done() { return hasUpgrade('DM', 23) && player.BH.points.gte("1e80") },
             requirementDescription: "1e80 BHV",
-            effectDescription: "Automate Dark Matter buyables",
+            effectDescription: "Automate Dark Matter and Black Hole buyables",
         },
     }
 })
@@ -1068,8 +1074,8 @@ addLayer('HP', {
         return base
     },
     effectDescription() {
-        if(!inChallenge('EM', 12)) return "producing " + format(this.effect2()) + " Unstable Matter each second<br>They are also dividing Dark Matter gain by /" + format(this.effect()) + "<br>+" + format(layers.EM.buyables[11].effect()) + "/sec"
-        if(inChallenge('EM', 12)) return "producing " + format(this.effect2()) + " Unstable Matter each second<br>They are also dividing Dark Matter gain by /" + format(this.effect()) + "<br>+" + format(layers.EM.buyables[11].effect()) + "/sec<br><br>You currently have " + format(player.EM.realParticle) + " Real Particles"
+        if(!inChallenge('EM', 12)) return "producing " + format(this.effect2()) + " Unstable Matter each second<br>They are also dividing Dark Matter gain by /" + format(this.effect()) + "<br>(" + format(layers.EM.buyables[11].effect()) + "/sec)"
+        if(inChallenge('EM', 12)) return "producing " + format(this.effect2()) + " Unstable Matter each second<br>They are also dividing Dark Matter gain by /" + format(this.effect()) + "<br>(" + format(layers.EM.buyables[11].effect()) + "/sec)<br><br>You currently have " + format(player.EM.realParticle) + " Real Particles"
     },
     color: "#8c617e",
 })
@@ -1230,15 +1236,18 @@ addLayer('UMF', {
         },
         2: {
             requirementDescription: "3 Ultimate Matter Fragments",
-            effectDescription() { return "Matters now also multiply HRP at a reduced rate<br>Currently: x" + format(tmp.UMF.effect2.log(4).add(1))},
+            effectDescription() { return "Matters now also multiply HRP and the first Cash Buyables amount at a reduced rate<br>Currently: x" + format(tmp.UMF.effect2.log(4).add(1))},
             done() {
                 return player.UMF.points.gte(3)
             },
-            tooltip: "Boost to HRP is based on log(x)"
+            tooltip: "Boosts are based on log(x)",
+            effect() {
+                return tmp.UMF.effect2.log(4).add(1)
+            }
         },
         3: {
             requirementDescription: "4 Ultimate Matter Fragments",
-            effectDescription: "Annihilate all types of matter from the universe, preventing any more inflation from happening in this universe...<br>CURRENT ENDGAME",
+            effectDescription: "The above milestone now also powers Hyper Cash's last three effects<br>Also annihilate all types of matter from the universe, preventing any more inflation from happening in this universe...<br>CURRENT ENDGAME",
             done() {
                 return player.UMF.points.gte(4)
             }

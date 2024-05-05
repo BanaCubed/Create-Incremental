@@ -1,4 +1,4 @@
-function buyMax(item) {
+function buyMax(item = "None") {
 
     // Optimisation levels:
     // Very Bad - bascially just spams the buy button
@@ -180,6 +180,7 @@ function buyMax(item) {
 
     if(item === "Cash") {
         let buy1 = player.points.add(1).log(10).sub(5).ceil()
+        if(hasMilestone('UMF', 2)) buy1 = buy1.times(tmp.UMF.milestones[2].effect)
         if(buy1.gte(getBuyableAmount('U', 11))) setBuyableAmount('U', 11, buy1)
 
         const buy2data = {
@@ -235,6 +236,60 @@ function buyMax(item) {
         let buy2 = player.R.points.div(1000000).add(1).log(10).div(new Decimal(3).log(10)).pow(new Decimal(1).div(buy2expo)).ceil()
 
         if(buy2.gte(getBuyableAmount('R', 12))) setBuyableAmount('R', 12, buy2)
+    }
+
+    // Matter Buyables
+    // Dark Matter Optimisation: Very Good
+    // Exotic Matter Optimisation: Very Good
+
+    if(item === "DMatter") {
+        let countmult = new Decimal(1)
+        let buy1
+        if(hasMilestone('BH', 0)) countmult = countmult.times(2)
+        if(player.DM.points.gte(Decimal.times(100, (Decimal.pow(2, 400))))) {
+            buy1 = player.DM.points.div(100).log(2).div(400).pow(0.5).times(401).ceil().times(countmult).add(1)
+        } else {
+            buy1 = player.DM.points.div(100).log(2).floor().times(countmult).add(1)
+        }
+        if(buy1.gte(getBuyableAmount('DM', 11))) setBuyableAmount('DM', 11, buy1)
+        
+        let tobuy = new Decimal(0)
+        if(layers.DM.buyables[12].cost(getBuyableAmount('DM', 12)).lte(player.DM.points)) {
+            tobuy = getBuyableAmount('DM', 12).div(32).add(1)
+            while (layers.DM.buyables[12].cost(tobuy.add(getBuyableAmount('DM', 12))).lte(player.DM.points)) {
+                tobuy = tobuy.times(2)
+            }
+
+            let lastamount = tobuy.div(2)
+            let previous = tobuy.div(2)
+            let lastchange = "increase"
+
+            for (let index = 0; index <= 20; index++) {
+                if(layers.DM.buyables[12].cost(tobuy.add(getBuyableAmount('DM', 12))).lte(player.DM.points) && lastchange == "increase") {
+                    lastchange = "decrease"
+                    lastamount = previous
+                }
+                if(layers.DM.buyables[12].cost(tobuy.add(getBuyableAmount('DM', 12))).gt(player.DM.points) && lastchange == "decrease") {
+                    lastchange = "increase"
+                    lastamount = previous
+                }
+                previous = tobuy
+                tobuy = tobuy.add(lastamount).div(2)
+            }
+        }
+        if (tobuy.gte(1)) {
+            addBuyables('DM', 12, tobuy.ceil())
+        }
+
+        let buyBH1
+        let buyBH2
+        if(player.BH.points.gt(0)) {
+            buyBH1 = player.DM.points.log(10).div(Decimal.log(1000, 10)).log(10).div(Decimal.log(1.1, 10))
+            buyBH2 = player.DM.points.log(10).div(Decimal.log(1000000, 10)).log(10).div(Decimal.log(1.4, 10))
+
+            if(buyBH1.gte(getBuyableAmount('BH', 11))) setBuyableAmount('BH', 11, buyBH1)
+            if(buyBH2.gte(getBuyableAmount('BH', 12))) setBuyableAmount('BH', 12, buyBH2)
+        }
     }
 }
 

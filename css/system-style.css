@@ -191,6 +191,9 @@ ul {
 	justify-content: center;
 	background-image: url("../loadingScreen.png");
 	background-size: cover;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: center;
 	position: absolute;
 	left: 0%;
 	height: 100%;
