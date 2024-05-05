@@ -82,11 +82,10 @@ addLayer("R", {
         if (getClickableState('U', 13)) remult = remult.times(4)
         if (hasUpgrade('U', 43) && !hasMilestone('P', 8)) remult = remult.times(player.points.add(10).log(10).add(10).log(10))
         if (hasUpgrade('U', 43) && hasMilestone('P', 8)) remult = remult.times(player.points.add(9).log(9).add(8).log(8))
-        remult = remult.times(layers.R.buyables[11].effect())
-        if (hasUpgrade('R', 32)) remult = remult.times(1.3)
-        remult = remult.times(layers.SR.effect()[0])
-        remult = remult.times(layers.U.buyables[11].effect())
-        remult = remult.times(layers.P.effect())
+        remult = remult.times(tmp.R.buyables[11].effect)
+        remult = remult.times(tmp.SR.effect[0])
+        remult = remult.times(tmp.U.buyables[11].effect)
+        remult = remult.times(machineBonuses())
         if (hasUpgrade('U', 52)) remult = remult.times(player.P.points.add(3).log(3))
         return remult
     },
@@ -94,8 +93,8 @@ addLayer("R", {
         let remult = new Decimal(1)
         if(hasUpgrade('HC', 21)) remult = remult.times(10000)
         if(hasUpgrade('HC', 14)) remult = remult.times(100)
-        if(hasUpgrade('HC', 33)) remult = remult.times(layers.C.effect()[1])
-        remult = remult.times(layers.UMF.effect2())
+        if(hasUpgrade('HC', 33)) remult = remult.times(tmp.C.effect[1])
+        remult = remult.times(tmp.UMF.effect2)
         return remult
     },
     exponent() {
@@ -243,7 +242,7 @@ addLayer("R", {
                 return hasUpgrade('R', 22)
             },
             effect(x) {
-                return new Decimal(1.5).add(layers.R.buyables[12].effect()).pow(x)
+                return new Decimal(1.5).add(tmp.R.buyables[12].effect).pow(x)
             },
         },
         12: {
@@ -306,12 +305,12 @@ addLayer("R", {
     automate() {
         if(!inChallenge('SR', 21)) {
             if (!hasMilestone('UMF', 1)) {
-                if(layers.R.buyables[11].canAfford() && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
+                if(tmp.R.buyables[11].canAfford && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
                     setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(1))
                     if(hasMilestone('HC', 1)) setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(9))
                     if(hasMilestone('UMF', 1)) setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(40))
                 }
-                if(layers.R.buyables[12].canAfford() && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
+                if(tmp.R.buyables[12].canAfford && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
                     setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(1))
                     if(hasMilestone('HC', 1)) setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(9))
                     if(hasMilestone('UMF', 1)) setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(40))

@@ -489,12 +489,12 @@ addLayer("U", {
                 buyUpgrade('U', 34)
             };
             if (!hasMilestone('UMF', 1)) {
-                if(layers.U.buyables[11].canAfford() && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
+                if(tmp.U.buyables[11].canAfford && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
                     setBuyableAmount('U', 11, getBuyableAmount('U', 11).add(1))
                     if(hasMilestone('HC', 1)) setBuyableAmount('U', 11, getBuyableAmount('U', 11).add(9))
                     if(hasMilestone('UMF', 1)) setBuyableAmount('U', 11, getBuyableAmount('U', 11).add(9990))
                 }
-                if(layers.U.buyables[12].canAfford() && (hasUpgrade('SR', 14) || hasAchievement('A', 81))) {
+                if(tmp.U.buyables[12].canAfford && (hasUpgrade('SR', 14) || hasAchievement('A', 81))) {
                     setBuyableAmount('U', 12, getBuyableAmount('U', 12).add(1))
                     if(hasMilestone('HC', 1)) setBuyableAmount('U', 12, getBuyableAmount('U', 12).add(9))
                     if(hasMilestone('UMF', 1)) setBuyableAmount('U', 12, getBuyableAmount('U', 12).add(40))

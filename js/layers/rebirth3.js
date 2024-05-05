@@ -44,9 +44,9 @@ addLayer('HC', {
     update(diff) {
         let hypEss = new Decimal(1)
         hypEss = hypEss.times(player.points.add(10).log(10).pow(0.6).times(player.SR.points.add(1).pow(0.4)).times(player.P.points.add(10).log(10)).pow(0.25))
-        if(hasUpgrade('HC', 33)) hypEss = hypEss.times(layers.C.effect()[3])
+        if(hasUpgrade('HC', 33)) hypEss = hypEss.times(tmp.C.effect[3])
         if(hypEss === null || hypEss === undefined) hypEss = new Decimal(1)
-        hypEss = hypEss.times(layers.UMF.effect2())
+        hypEss = hypEss.times(tmp.UMF.effect2)
         player.HC.hyperNumberBase = hypEss
         if(hypEss.gte(2500)) hypEss = hypEss.div(2500).pow(0.2).times(2500)
         player.HC.hyperNumber = hypEss
@@ -83,7 +83,7 @@ addLayer('HC', {
     },
     getResetGain() {
         let base = player.HC.hyperNumber.add(1).div(25).pow(1.6).floor()
-        if(hasMilestone('UMF', 2)) base = base.times(layers.UMF.effect2().log(4).add(1))
+        if(hasMilestone('UMF', 2)) base = base.times(tmp.UMF.effect2.log(4).add(1))
         return base
     },
     getNextAt() {
@@ -352,7 +352,7 @@ addLayer('HC', {
                 player.HC.upgrades = []
                 player.HC.paths = []
                 const layersa = ['U', 'R', 'SR', 'P', 'HC', 'C']
-                for (let index = 0; index < layers.length; index++) {
+                for (let index = 0; index < layersa.length; index++) {
                     const element = layers[index];
                     layers[layersa].doReset("HC")
                     

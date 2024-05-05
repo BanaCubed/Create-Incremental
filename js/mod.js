@@ -109,15 +109,15 @@ function getPointGen(softcaps = true) {
 
 
 	// Hyper Rebirth Layer
-	gain = gain.times(layers.HC.effect()[0])
+	gain = gain.times(tmp.HC.effect[0])
 	if(hasUpgrade('HC', 11)) gain = gain.times(10000)
 	if(hasUpgrade('HC', 14)) gain = gain.times(100)
 	if(hasUpgrade('HC', 24)) gain = gain.times(200)
 
 	// Matters
-	gain = gain.times(layers.UMF.effect2())
+	gain = gain.times(tmp.UMF.effect2)
 
-	gain = gain.pow(layers.C.effect()[0])
+	gain = gain.pow(tmp.C.effect[0])
 
 
 	// Dunno were else to put this
@@ -158,7 +158,7 @@ function isEndgame() {
 function machineBonuses() {
 	let bonus = new Decimal(1);
 	if(hasUpgrade('R', 32)) bonus = bonus.times(1.3);
-	bonus = bonus.times(layers.P.effect())
+	bonus = bonus.times(tmp.P.effect)
 	if(hasUpgrade('U', 34) && hasMilestone('P', 8)) bonus = bonus.pow(1.25)
 	return bonus
 }

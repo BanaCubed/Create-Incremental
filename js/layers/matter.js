@@ -5,46 +5,46 @@ function matterGain(matterType) {
     if(matterType === 1) {
         // Matter
         if(!hasUpgrade('HC', 52)) {
-            mGain = mGain.div(layers.AM.buyables[13].effect())
-            mGain = mGain.div(layers.AM.effect())
+            mGain = mGain.div(tmp.AM.buyables[13].effect)
+            mGain = mGain.div(tmp.AM.effect)
         }
         if(hasUpgrade('M', 11)) mGain = mGain.times(2)
-        mGain = mGain.times(layers.M.buyables[11].effect())
+        mGain = mGain.times(tmp.M.buyables[11].effect)
         if(hasUpgrade('M', 21)) {
             if(hasMilestone('M', 0)) mGain = mGain.times(new Decimal(4).pow(0.7))
             if(hasMilestone('M', 1)) mGain = mGain.times(player.M.points.div(5).add(1).pow(0.2))
             if(hasMilestone('M', 2)) mGain = mGain.times(new Decimal(2).pow(0.7))
         }
         if(hasUpgrade('M', 22)) mGain = mGain.times(4)
-        mGain = mGain.times(layers.M.buyables[12].effect())
+        mGain = mGain.times(tmp.M.buyables[12].effect)
     }
 
     if(matterType === 2) {
         // Antimatter
         if(!hasUpgrade('HC', 51)) {
-            mGain = mGain.div(layers.M.effect())
-            mGain = mGain.div(layers.M.buyables[11].effect())
-            mGain = mGain.div(layers.M.buyables[12].effect())
+            mGain = mGain.div(tmp.M.effect)
+            mGain = mGain.div(tmp.M.buyables[11].effect)
+            mGain = mGain.div(tmp.M.buyables[12].effect)
             if(hasMilestone('M', 0)) mGain = mGain.div(4)
             if(hasMilestone('M', 1)) mGain = mGain.div(player.AM.points.div(5).add(1))
             if(hasMilestone('M', 2)) mGain = mGain.div(2)
         }
-        if(hasUpgrade('AM', 11)) mGain = mGain.times(layers.AM.upgrades[11].effect())
-        mGain = mGain.times(layers.AM.buyables[11].effect())
-        mGain = mGain.times(layers.AM.buyables[12].effect())
+        if(hasUpgrade('AM', 11)) mGain = mGain.times(tmp.AM.upgrades[11].effect)
+        mGain = mGain.times(tmp.AM.buyables[11].effect)
+        mGain = mGain.times(tmp.AM.buyables[12].effect)
         if(hasUpgrade('AM', 24)) mGain = mGain.times(10)
         if(hasUpgrade('AM', 14)) mGain = mGain.pow(1.2)
     }
 
     if(matterType === 3) {
         // Dark Matter
-        mGain = mGain.div(layers.EM.effect())
-        mGain = mGain.div(layers.HP.effect())
-        mGain = mGain.times(layers.BH.effect())
-        mGain = mGain.times(layers.BH.buyables[12].effect())
+        mGain = mGain.div(tmp.EM.effect)
+        mGain = mGain.div(tmp.HP.effect)
+        mGain = mGain.times(tmp.BH.effect)
+        mGain = mGain.times(tmp.BH.buyables[12].effect)
         if(hasUpgrade('DM', 11)) mGain = mGain.times(1.5)
-        if(hasUpgrade('DM', 12)) mGain = mGain.times(layers.DM.upgrades[12].effect())
-        if(hasUpgrade('DM', 21)) mGain = mGain.times(layers.DM.upgrades[21].effect())
+        if(hasUpgrade('DM', 12)) mGain = mGain.times(tmp.DM.upgrades[12].effect)
+        if(hasUpgrade('DM', 21)) mGain = mGain.times(tmp.DM.upgrades[21].effect)
         if(hasUpgrade('DM', 11)) mGain = mGain.pow(1.1)
         if(hasMilestone('BH', 1)) {
             if(hasUpgrade('DM', 11)) mGain = mGain.times(1.5)
@@ -55,14 +55,14 @@ function matterGain(matterType) {
     if(matterType === 4) {
         // Exotic Matter
         if(hasUpgrade('EM', 11)) mGain = mGain.times(3)
-        if(hasUpgrade('EM', 14)) mGain = mGain.times(layers.EM.upgrades[14].effect())
-        if(hasUpgrade('EM', 23)) mGain = mGain.times(layers.EM.upgrades[23].effect())
-        mGain = mGain.pow(layers.UnsM.effect())
-        mGain = mGain.div(layers.DM.effect())
+        if(hasUpgrade('EM', 14)) mGain = mGain.times(tmp.EM.upgrades[14].effect)
+        if(hasUpgrade('EM', 23)) mGain = mGain.times(tmp.EM.upgrades[23].effect)
+        mGain = mGain.pow(tmp.UnsM.effect)
+        mGain = mGain.div(tmp.DM.effect)
     }
 
     // Global
-    mGain = mGain.times(layers.UMF.effect())
+    mGain = mGain.times(tmp.UMF.effect)
 
     return mGain
 }
@@ -656,9 +656,9 @@ addLayer('BH', {
     color: "#4b0f75",
     gain() {
         let base = new Decimal(2)
-        base = base.times(layers.DM.buyables[11].effect())
-        base = base.times(layers.BH.buyables[11].effect())
-        base = base.times(layers.DM.buyables[12].effect())
+        base = base.times(tmp.DM.buyables[11].effect)
+        base = base.times(tmp.BH.buyables[11].effect)
+        base = base.times(tmp.DM.buyables[12].effect)
         if(hasMilestone('BH', 2)) base = base.pow(1.15)
         base = base.div(this.nerf())
         return base
@@ -1057,7 +1057,7 @@ addLayer('HP', {
     row: 3,
     symbol: "EM",
     update(diff) {
-        if(!inChallenge('EM', 11)) player.HP.points = player.HP.points.add(layers.EM.buyables[11].effect().times(diff))
+        if(!inChallenge('EM', 11)) player.HP.points = player.HP.points.add(tmp.EM.buyables[11].effect.times(diff))
     },
     effect() {
         let base = player.HP.points.add(2).log(2)
@@ -1081,8 +1081,8 @@ addLayer('HP', {
 })
 
 function unstableGain() {
-    let baseGain = layers.HP.effect2()
-    if(hasUpgrade('UnsM', 13)) baseGain = baseGain.times(layers.UnsM.upgrades[13].effect())
+    let baseGain = tmp.HP.effect2
+    if(hasUpgrade('UnsM', 13)) baseGain = baseGain.times(tmp.UnsM.upgrades[13].effect)
     return baseGain
 }
 
@@ -1125,11 +1125,11 @@ addLayer('UnsM', {
     halfLife() {
 
         let base = new Decimal(1)
-        if(hasUpgrade('EM', 24)) base = base.add(layers.EM.upgrades[24].effect())
+        if(hasUpgrade('EM', 24)) base = base.add(tmp.EM.upgrades[24].effect)
 
-        if(hasUpgrade('UnsM', 11)) base = base.times(layers.UnsM.upgrades[11].effect())
+        if(hasUpgrade('UnsM', 11)) base = base.times(tmp.UnsM.upgrades[11].effect)
         if(hasUpgrade('UnsM', 12)) base = base.times(3)
-        if(hasUpgrade('UnsM', 14)) base = base.times(layers.UnsM.upgrades[14].effect())
+        if(hasUpgrade('UnsM', 14)) base = base.times(tmp.UnsM.upgrades[14].effect)
 
         if(hasUpgrade('UnsM', 13)) base = base.pow(0.5)
 
@@ -1157,8 +1157,8 @@ addLayer('UnsM', {
             description: "Root Unstable Matter's half-life length in seconds, but multiply it's gain by the same amount",
             cost: new Decimal(5000),
             effect() {
-                if(!hasUpgrade('UnsM', 13)) return layers.UnsM.halfLife().pow(0.5)
-                if(hasUpgrade('UnsM', 13)) return layers.UnsM.halfLife()
+                if(!hasUpgrade('UnsM', 13)) return tmp.UnsM.halfLife.pow(0.5)
+                if(hasUpgrade('UnsM', 13)) return tmp.UnsM.halfLife
             },
             effectDisplay() {
                 return "x" + format(this.effect())
@@ -1169,7 +1169,7 @@ addLayer('UnsM', {
             description: "Exotic Matter now also boosts Unstable Matter's half-life",
             cost: new Decimal(10000),
             effect() {
-                return layers.EM.effect2().pow(1e10).add(10).log(10).add(10).log(10)
+                return tmp.EM.effect2.pow(1e10).add(10).log(10).add(10).log(10)
             },
             effectDisplay() {
                 return "x" + format(this.effect())
