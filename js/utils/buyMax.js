@@ -284,11 +284,44 @@ function buyMax(item = "None") {
         let buyBH1
         let buyBH2
         if(player.BH.points.gt(0)) {
-            buyBH1 = player.DM.points.log(10).div(Decimal.log(1000, 10)).log(10).div(Decimal.log(1.1, 10))
-            buyBH2 = player.DM.points.log(10).div(Decimal.log(1000000, 10)).log(10).div(Decimal.log(1.4, 10))
+            buyBH1 = player.DM.points.log(10).div(Decimal.log(1000, 10)).log(10).div(Decimal.log(1.1, 10)).floor()
+            buyBH2 = player.DM.points.log(10).div(Decimal.log(1000000, 10)).log(10).div(Decimal.log(1.4, 10)).floor()
 
             if(buyBH1.gte(getBuyableAmount('BH', 11))) setBuyableAmount('BH', 11, buyBH1)
             if(buyBH2.gte(getBuyableAmount('BH', 12))) setBuyableAmount('BH', 12, buyBH2)
+        }
+    }
+
+    if(item === "EMatter") {
+        let buy1
+        if(player.EM.points.div(10).add(1).log(1.5).gte(250)) {
+            buy1 = player.EM.points.div(10).add(1).log(1.5)
+            buy1 = buy1.sub(250).pow(0.5).add(250)
+        } else {
+            buy1 = player.EM.points.div(10).add(1).log(1.5)
+        }
+        if(hasUpgrade('EM', 22)) buy1 = buy1.times(2)
+        buy1 = buy1.floor().add(1)
+
+        if(buy1.gte(getBuyableAmount('EM', 11))) {
+            setBuyableAmount('EM', 11, buy1)
+            player.EM.points = player.EM.points.sub(layers.EM.buyables[11].cost(buy1.sub(1)))
+        }
+
+        
+        let buy2
+        if(player.EM.points.div(1e25).add(1).log(5).gte(250)) {
+            buy2 = player.EM.points.div(1e25).add(1).log(5)
+            buy2 = buy2.sub(150).pow(0.5).add(150)
+        } else {
+            buy2 = player.EM.points.div(1e25).add(1).log(5)
+        }
+        if(hasUpgrade('EM', 22)) buy2 = buy2.times(2)
+        buy2 = buy2.floor().add(1)
+
+        if(buy2.gte(getBuyableAmount('EM', 12))) {
+            setBuyableAmount('EM', 12, buy2)
+            player.EM.points = player.EM.points.sub(layers.EM.buyables[12].cost(buy2.sub(1)))
         }
     }
 }

@@ -804,6 +804,7 @@ addLayer('EM', {
         "Exotic": {
             content: [
                 "main-display",
+                "clickables",
                 "buyables",
                 "upgrades",
             ],
@@ -868,7 +869,7 @@ addLayer('EM', {
         },
         22: {
             title: "Untitled Upgrade",
-            description: "Half the scaling of both Exotic Matter buyables",
+            description: "Half the scaling of both Exotic Matter buyables and unlock Buy Max for Exotic Matter buyables",
             cost: new Decimal(1e30)
         },
         23: {
@@ -974,7 +975,7 @@ addLayer('EM', {
         },
         2: {
             requirementDescription: "1e24 Exotic Matter",
-            effectDescription: "Raise Unstable Matter gain by 1.05, again (I swear this is the last time)",
+            effectDescription: "Raise Unstable Matter gain by 1.05, yet again",
             done() {
                 return player.EM.points.gte("1e24")
             },
@@ -1042,7 +1043,15 @@ addLayer('EM', {
             },
         },
     },
-    resetsNothing() { return true }
+    resetsNothing() { return true },
+    clickables: {
+        11: {
+            unlocked() { return hasUpgrade('EM', 22) },
+            onClick() { buyMax('EMatter') },
+            title: "Buy Max",
+            canClick() { return true }
+        }
+    }
 })
 
 addLayer('HP', {

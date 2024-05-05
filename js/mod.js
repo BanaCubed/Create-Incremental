@@ -83,11 +83,7 @@ function getPointGen(softcaps = true) {
 		if (getClickableState('U', 12)) gain = gain.times(3)
 		if (getClickableState('U', 13)) gain = gain.times(2)
 
-		let machineBoost = new Decimal(1)
-		if (hasUpgrade('R', 32)) machineBoost = machineBoost.times(1.3)
-		machineBoost = machineBoost.times(tmp.P.effect)
-		if(hasMilestone('P', 8) && hasUpgrade('U', 34)) machineBoost = machineBoost.pow(1.25)
-		if(hasUpgrade('U', 34)) gain = gain.times(machineBoost)
+		gain = gain.times(machineBonuses())
 	}
 
 	if(!hasMilestone('P', 8)) { if (hasUpgrade('U', 21)) gain = gain.pow(1.25) }
@@ -125,7 +121,7 @@ function getPointGen(softcaps = true) {
 	everyTick();
 
 	if(softcaps !== false) {
-        if(gain.gte("1e5000000")) gain = gain.div("1e5000000").pow(new Decimal(1).div(base.log(10).sub(49900000).pow(0.001))).times("1e5000000")
+        if(gain.gte("1e5000000")) gain = new Decimal(10).pow(gain.log(10).div(5000000).pow(0.3333).times(5000000))
 	}
 
 	return gain
