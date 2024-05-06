@@ -107,10 +107,18 @@ function formatZeroo(decimal) {
 }
 
 function iDontWantToNameThis(decimal, mantissa) {
-    decimal = new Decimal(decimal)
-    let number = format(decimal, mantissa)
-
-    if(number.length == 5) number = " " + number
+    let number
+    if (mantissa !== 0) {
+        decimal = new Decimal(decimal)
+        number = format(decimal, mantissa)
+    
+        if(number.length == 2 + mantissa) number = " " + number
+    } else {
+        decimal = new Decimal(decimal)
+        number = formatWhole(decimal)
+    
+        if(number.length == 1) number = " " + number
+    }
 
     return number
 }
