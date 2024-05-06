@@ -278,10 +278,16 @@ function exportSave() {
 function importSave(imported = undefined, forced = false) {
 	if (imported === undefined)
 		imported = prompt("Paste your save here");
-	if (imported = "Save") {
-		player.SA14 = true
-		return
+
+	for (let index = 0; index < 2; index++) {
+		const element = saveImports[index];
+		
+		if(imported == element.import) {
+			element.onImport()
+			return
+		}
 	}
+
 	try {
 		tempPlr = Object.assign(getStartPlayer(), JSON.parse(atob(imported)));
 		if (tempPlr.versionType != modInfo.id && !forced && !confirm("This save appears to be for a different mod! Are you sure you want to import?")) // Wrong save (use "Forced" to force it to accept.)

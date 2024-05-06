@@ -121,7 +121,7 @@ function getPointGen(softcaps = true) {
 	everyTick();
 
 	if(softcaps !== false) {
-        if(gain.gte("1e5000000")) gain = new Decimal(10).pow(gain.log(10).div(5000000).pow(0.3333).times(5000000))
+        if(gain.gte("1e5000000")) gain = new Decimal(10).pow(gain.log(10).div(5000000).pow(0.25).times(5000000))
 	}
 
 	return gain
@@ -129,6 +129,9 @@ function getPointGen(softcaps = true) {
 
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
 function addedPlayerData() { return {
+	SA14: false,
+	SA15: false,
+	MILK: false
 }}
 
 // Display extra things at the top of the page

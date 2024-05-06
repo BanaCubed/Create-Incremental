@@ -162,6 +162,16 @@ var colors = {
 		background: "#de8004",
 		background_tooltip: "rgba(111, 64, 2, 0.75)",
 	},
+	milk: {
+		1: "#ffffff",
+		2: "#ffffff",
+		3: "#ffffff",
+		color: "#ffffff",
+		points: "#ffffff",
+		locked: "#ffffff",
+		background: "#ffffff",
+		background_tooltip: "rgba(255, 255, 255, 0.75)",
+	},
 }
 function changeTheme() {
 
@@ -221,10 +231,14 @@ function updateSecretThemes() {
 		themes.push("enacra")
 	}
 
-	if(hasAchievement('SA', 11) && hasAchievement('SA', 12) && hasAchievement('SA', 13) && hasAchievement('SA', 14) && themes.indexOf("electro") == -1) {
+	if(player.MILK === true && themes.indexOf("milk") == -1) {
+		themes.push("milk")
+	}
+
+	if(hasAchievement('SA', 11) && hasAchievement('SA', 12) && hasAchievement('SA', 13) && hasAchievement('SA', 14) && hasAchievement('SA', 15) && themes.indexOf("electro") == -1) {
 		themes.push("electro")
 	}
-	if(hasAchievement('SA', 11) && hasAchievement('SA', 12) && hasAchievement('SA', 13) && hasAchievement('SA', 14) && themes.indexOf("wooden") == -1) {
+	if(hasAchievement('SA', 11) && hasAchievement('SA', 12) && hasAchievement('SA', 13) && hasAchievement('SA', 14) && hasAchievement('SA', 15) && themes.indexOf("wooden") == -1) {
 		themes.push("wooden")
 	}
 }
