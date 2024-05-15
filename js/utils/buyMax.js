@@ -323,6 +323,8 @@ function buyMax(item = "None") {
             setBuyableAmount('EM', 12, buy2)
             player.EM.points = player.EM.points.sub(layers.EM.buyables[12].cost(buy2.sub(1)))
         }
+
+        if(player.EM.points.lt(0)) player.EM.points = new Decimal(0)
     }
 }
 
