@@ -67,6 +67,15 @@ function matterGain(matterType) {
     return mGain
 }
 
+function retryMatters() {
+    if(confirm('Are you sure that you waynt to reset your matters? Thiss will reset EVERYTHING in row 5, even completed matters!')) {
+        layerDataReset('M')
+        layerDataReset('AM')
+        layerDataReset('DM')
+        layerDataReset('EM')
+    }
+}
+
 
 
 
