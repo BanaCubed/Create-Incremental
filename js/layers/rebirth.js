@@ -22,7 +22,29 @@ addLayer("R", {
         if(baseGain.gte(1e17)) baseGain = baseGain.div(1e17).pow(0.25).times(1e17)
         if(baseGain.gte("1e2000")) baseGain = baseGain.div("1e2000").pow(0.2).times("1e2000")
         baseGain = baseGain.times(this.directMult())
+        if(baseGain.gte("1e1000000")) baseGain = baseGain.div("1e1000000").pow(new Decimal(1).div(base.log(10).sub(9999999).pow(0.05))).times("1e1000000")
         return baseGain
+    },
+    softcapEffects() {
+        let softcaps = [[]]
+        let baseGain = this.baseAmount().times(this.gainMult()).div(this.requires()).pow(this.exponent())
+        let basedGain = baseGain
+        if(baseGain.gte(1e17)) {
+            softcaps[0].push(baseGain.div(1e17).pow(0.75))
+            baseGain = baseGain.div(1e17).pow(0.25).times(1e17)
+        }
+        if(baseGain.gte("1e2000")) {
+            softcaps[0].push(baseGain.div("1e2000").pow(0.8))
+            baseGain = baseGain.div("1e2000").pow(0.2).times("1e2000")
+        }
+        baseGain = baseGain.times(this.directMult())
+        basedGain = basedGain.times(this.directMult())
+        if(baseGain.gte("1e1000000")) {
+            softcaps[0].push(baseGain.div(baseGain.div("1e1000000").pow(new Decimal(1).div(base.log(10).sub(9999999).pow(0.05))).times("1e1000000")))
+            baseGain = baseGain.div("1e1000000").pow(new Decimal(1).div(base.log(10).sub(9999999).pow(0.2))).times("1e1000000")
+        }
+        softcaps.push(basedGain)
+        return softcaps
     },
     getNextAt() {
         let baseGain = this.getResetGain().add(1)
@@ -32,8 +54,13 @@ addLayer("R", {
         baseGain = baseGain.pow(new Decimal(1).div(this.exponent())).div(this.gainMult()).times(this.requires())
     },
     prestigeButtonText() {
-        if(!inChallenge('SR', 11)) return "Rebirth for " + formatWhole(this.getResetGain()) + " Rebirth Points"
-        if(inChallenge('SR', 11)) return "A Superior being is stopping you from Rebirthing"
+        let text
+        if(!inChallenge('SR', 11)) {
+            if(this.getResetGain().lt(1e17)) text = "Rebirth for " + formatWhole(this.getResetGain()) + " Rebirth Points"
+            if(this.getResetGain().gte(1e17)) text = formatWhole(this.getResetGain()) + "<br>(" + format(this.softcapEffects()[1]) + " base) RP"
+        }
+        if(inChallenge('SR', 11)) text = "A Superior being is stopping you from Rebirthing"
+        return text
     },
     prestigeNotify() { return this.getResetGain().gte(player.R.points.div(5)) && this.passiveGen === 0 },
     baseResource: "$",
@@ -55,11 +82,10 @@ addLayer("R", {
         if (getClickableState('U', 13)) remult = remult.times(4)
         if (hasUpgrade('U', 43) && !hasMilestone('P', 8)) remult = remult.times(player.points.add(10).log(10).add(10).log(10))
         if (hasUpgrade('U', 43) && hasMilestone('P', 8)) remult = remult.times(player.points.add(9).log(9).add(8).log(8))
-        remult = remult.times(layers.R.buyables[11].effect())
-        if (hasUpgrade('R', 32)) remult = remult.times(1.3)
-        remult = remult.times(layers.SR.effect()[0])
-        remult = remult.times(layers.U.buyables[11].effect())
-        remult = remult.times(layers.P.effect())
+        remult = remult.times(tmp.R.buyables[11].effect)
+        remult = remult.times(tmp.SR.effect[0])
+        remult = remult.times(tmp.U.buyables[11].effect)
+        remult = remult.times(machineBonuses())
         if (hasUpgrade('U', 52)) remult = remult.times(player.P.points.add(3).log(3))
         return remult
     },
@@ -67,7 +93,8 @@ addLayer("R", {
         let remult = new Decimal(1)
         if(hasUpgrade('HC', 21)) remult = remult.times(10000)
         if(hasUpgrade('HC', 14)) remult = remult.times(100)
-        if(hasUpgrade('HC', 33)) remult = remult.times(layers.C.effect()[1])
+        if(hasUpgrade('HC', 33)) remult = remult.times(tmp.C.effect[1])
+        remult = remult.times(tmp.UMF.effect2)
         return remult
     },
     exponent() {
@@ -98,7 +125,11 @@ addLayer("R", {
 		points: new Decimal(0),
     }},
     effectDescription() {
-        return "multiplying $ gain by " + coolDynamicFormat(this.effect(), 2)
+        let text = "multiplying $ gain by " + coolDynamicFormat(this.effect(), 2)
+        if(this.getResetGain().gte(1e17)) text = text + "<br>RP gain past 1e17 is softcapped, diving it by " + format(this.softcapEffects()[0][0])
+        if(this.getResetGain().gte("1e2000")) text = text + "<br>RP gain past 1e2000 is softcapped again, further diving it by " + format(this.softcapEffects()[0][1])
+        if(this.getResetGain().gte("1e1000000")) text = text + "<br>RP gain has become victim of inflation, diving it by " + format(this.softcapEffects()[0][2])
+        return text
     },
     upgrades: {
         11: {
@@ -211,7 +242,7 @@ addLayer("R", {
                 return hasUpgrade('R', 22)
             },
             effect(x) {
-                return new Decimal(1.5).add(layers.R.buyables[12].effect()).pow(x)
+                return new Decimal(1.5).add(tmp.R.buyables[12].effect).pow(x)
             },
         },
         12: {
@@ -273,15 +304,19 @@ addLayer("R", {
     },
     automate() {
         if(!inChallenge('SR', 21)) {
-            if(layers.R.buyables[11].canAfford() && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
-                if(!hasMilestone('SR', 0)) player.R.points = player.R.points.sub(layers.R.buyables[11].cost())
-                if(!hasMilestone('HC', 1)) setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(1))
-                if(hasMilestone('HC', 1)) setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(10))
-            }
-            if(layers.R.buyables[12].canAfford() && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
-                if(!hasMilestone('SR', 0)) player.R.points = player.R.points.sub(layers.R.buyables[12].cost())
-                if(!hasMilestone('HC', 1)) setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(1))
-                if(hasMilestone('HC', 1)) setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(10))
+            if (!hasMilestone('UMF', 1)) {
+                if(tmp.R.buyables[11].canAfford && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
+                    setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(1))
+                    if(hasMilestone('HC', 1)) setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(9))
+                    if(hasMilestone('UMF', 1)) setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(40))
+                }
+                if(tmp.R.buyables[12].canAfford && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
+                    setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(1))
+                    if(hasMilestone('HC', 1)) setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(9))
+                    if(hasMilestone('UMF', 1)) setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(40))
+                }
+            } else {
+                buyMax("Rebirth")
             }
             if(hasMilestone('HC', 3)) {
                 buyUpgrade('R', 11)

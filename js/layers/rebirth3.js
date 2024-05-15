@@ -21,6 +21,20 @@ addLayer('HC', {
 				["upgrade-tree", [[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34], [41]]]
             ]
         },
+        "Matter": {
+            content: [
+                ["layer-proxy", ['M', ["main-display"]]],
+                ["layer-proxy", ['AM', ["main-display"]]],
+                ["layer-proxy", ['DM', ["main-display"]]],
+                ["layer-proxy", ['EM', ["main-display"]]],
+                "blank",
+                "h-line",
+                "blank",
+                ["layer-proxy", ['UMF', ["main-display"]]],
+                ["upgrade-tree", [[51, 52, 53, 54]]],
+                ["layer-proxy", ['UMF', ["milestones"]]]
+            ]
+        }
     },
     symbol: "HR",
     row: "3",
@@ -30,19 +44,29 @@ addLayer('HC', {
     update(diff) {
         let hypEss = new Decimal(1)
         hypEss = hypEss.times(player.points.add(10).log(10).pow(0.6).times(player.SR.points.add(1).pow(0.4)).times(player.P.points.add(10).log(10)).pow(0.25))
-        if(hasUpgrade('HC', 33)) hypEss = hypEss.times(layers.C.effect()[3])
+        if(hasUpgrade('HC', 33)) hypEss = hypEss.times(tmp.C.effect[3])
         if(hypEss === null || hypEss === undefined) hypEss = new Decimal(1)
+        hypEss = hypEss.times(tmp.UMF.effect2)
+        player.HC.hyperNumberBase = hypEss
+        if(hypEss.gte(2500)) hypEss = hypEss.div(2500).pow(0.2).times(2500)
         player.HC.hyperNumber = hypEss
+        if(hasMilestone('UMF', 0)) player.HC.points = player.HC.points.add(this.getResetGain().times(0.0005).times(diff))
+        if(hasMilestone('UMF', 0)) player.HC.total = player.HC.total.add(this.getResetGain().times(0.0005).times(diff))
     },
     effect() {
-        return [new Decimal(3).pow(player['HC'].total.add(1)).div(3),
-            player['HC'].total.add(25).div(25).pow(0.5),
-            new Decimal(2).pow(player['HC'].total.add(2).div(2)).div(2)]
+        let totalitism = player.HC.total
+        if(totalitism.gte(50000)) totalitism = totalitism.div(50000).pow(0.25).times(50000)
+        if(totalitism.gte(500000)) totalitism = totalitism.div(50000).pow(0.25).times(500000)
+        return [
+            new Decimal(3).pow(totalitism.add(1)).div(3),
+            totalitism.add(25).div(25).pow(0.5),
+            new Decimal(2).pow(totalitism.add(2).div(2)).div(2)
+        ]
     },
     effectDescription() {
         return "multiplying $ gain by " + formatWhole(this.effect()[0]) + ", SRP gain by " + format(this.effect()[1]) + ", and Power Pylon effectiveness by " + format(this.effect()[2]) + "<br>Based on total HRP"
     },
-    baseAmount() { return player.HC.hyperNumber },
+    baseAmount() { return player.HC.hyperNumberBase },
     baseResource: "Hyper Essence",
     branches: ['SR', 'P'],
     layerShown() { return hasAchievement('A', 75) },
@@ -53,11 +77,14 @@ addLayer('HC', {
             hyperNumber: new Decimal(1),
             hyperCash: new Decimal(0),
 			total: new Decimal(0),
-            paths: []
+            paths: [],
+            hyperNumberBase: new Decimal(1)
         }
     },
     getResetGain() {
-        return player.HC.hyperNumber.add(1).div(25).pow(1.6).floor()
+        let base = player.HC.hyperNumber.add(1).div(25).pow(1.6).floor()
+        if(hasMilestone('UMF', 2)) base = base.times(tmp.UMF.effect2.log(4).add(1))
+        return base
     },
     getNextAt() {
         return this.getResetGain().add(1).pow(0.625).times(25).floor()
@@ -66,7 +93,7 @@ addLayer('HC', {
     canReset() {
         return player.HC.hyperNumber.gte(25) && hasUpgrade('SR', 21)
     },
-    prestigeNotify() { return this.canReset() },
+    prestigeNotify() { return this.canReset() && !hasMilestone('UMF', 0) },
     prestigeButtonText() {
         if(!this.getResetGain().gte(1024)) return "Go Hyper for " + formatWhole(this.getResetGain(), 0) + " Hyper Rebirth Points"
         + "<br><br>Next at " + formatWhole(this.getNextAt(), 0) + " Hyper Essence"
@@ -137,7 +164,8 @@ addLayer('HC', {
             },
             description: "Multiply RP gain by 10,000",
 			branches: [11, 31],
-            canAfford() { return hasUpgrade('HC', 11) }
+            canAfford() { return hasUpgrade('HC', 11) },
+            title: "Cubic"
         },
         31: {
             cost() {
@@ -146,7 +174,8 @@ addLayer('HC', {
                 return base
             },
             description: "Start with 12 SRP, and reduce SRP base cost by 1e9",
-            canAfford() { return hasUpgrade('HC', 21) }
+            canAfford() { return hasUpgrade('HC', 21) },
+            title: "Permanance"
         },
 
         12: {
@@ -169,7 +198,8 @@ addLayer('HC', {
             },
             description: "Power Pylons become 5 times more effective",
 			branches: [12, 32],
-            canAfford() { return hasUpgrade('HC', 12) }
+            canAfford() { return hasUpgrade('HC', 12) },
+            title: "Power Core"
         },
         32: {
             cost() {
@@ -178,7 +208,8 @@ addLayer('HC', {
                 return base
             },
             description: "You start with all Power Pylons unlocked, keep all Power milestones on Hyper reset, and reduce Power Pylon scaling",
-            canAfford() { return hasUpgrade('HC', 22) }
+            canAfford() { return hasUpgrade('HC', 22) },
+            title: "Maintainment"
         },
 
         13: {
@@ -192,7 +223,10 @@ addLayer('HC', {
             },
             title: "The Hyper Path",
             description: "Multiply Hyper Cash gain based on $",
-			tooltip: "log10($ + 10)^0.4"
+			tooltip: "log10($ + 10)^0.4",
+            effectDisplay() {
+                return "x" + format(player.points.add(10).log(10).pow(0.4))
+            }
         },
         23: {
             cost() {
@@ -202,7 +236,8 @@ addLayer('HC', {
             },
             description: "Multiply Hyper Cash gain by 10",
 			branches: [13, 33],
-            canAfford() { return hasUpgrade('HC', 13) }
+            canAfford() { return hasUpgrade('HC', 13) },
+            title: "Hypercube"
         },
         33: {
             cost() {
@@ -210,9 +245,10 @@ addLayer('HC', {
                 base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 3)))
                 return base
             },
-            description: "Hyper Cash also boosts RP, SRP and Hyper Essence at drastically reduced rates",
+            description: "Hyper Cash also boosts RP, SRP and Hyper Essence",
 			tooltip: "RP: x(HC + 1)<br>SRP: x(log(log(HC + 10) + 10))<br>HE: x(HC^0.1/3 + 1)",
-            canAfford() { return hasUpgrade('HC', 23) }
+            canAfford() { return hasUpgrade('HC', 23) },
+            title: "Ultra Cash"
         },
 
         14: {
@@ -235,7 +271,8 @@ addLayer('HC', {
             },
             description: "Multiply $ gain and PPy effect by 200",
 			branches: [14, 34],
-            canAfford() { return hasUpgrade('HC', 14) }
+            canAfford() { return hasUpgrade('HC', 14) },
+            title: "Elemental"
         },
         34: {
             cost() {
@@ -244,7 +281,8 @@ addLayer('HC', {
                 return base
             },
             description: "Divide RP, SRP, and PPy cost by 100,000, and increase both of the $ buyables bases",
-            canAfford() { return hasUpgrade('HC', 24) }
+            canAfford() { return hasUpgrade('HC', 24) },
+            title: "Cheapening"
         },
 
         41: {
@@ -253,7 +291,44 @@ addLayer('HC', {
             description: "Unlock the Matter Paths",
             canAfford() { return hasUpgrade('HC', 31) && hasUpgrade('HC', 32) && hasUpgrade('HC', 33) && hasUpgrade('HC', 34) },
             branches: [31, 32, 33, 34]
-        }
+        },
+
+        51: {
+            cost: new Decimal("1.5e12"),
+            currencyDisplayName: "Matter",
+            currencyInternalName: "points",
+            currencyLayer() { return 'M' },
+            title: "Matter Annihilation",
+            onPurchase() { player.UMF.points = player.UMF.points.add(1) },
+            description: "Disable Matter's nerf to Antimatter, and gain an Ultimate Matter Fragment"
+        },
+        52: {
+            cost: new Decimal("5e11"),
+            currencyDisplayName: "Antimatter",
+            currencyInternalName: "points",
+            currencyLayer() { return 'AM' },
+            title: "Antimatter Annihilation",
+            onPurchase() { player.UMF.points = player.UMF.points.add(1) },
+            description: "Disable Antimatter's nerf to Matter, and gain an Ultimate Matter Fragment"
+        },
+        53: {
+            cost: new Decimal("1e260"),
+            currencyDisplayName: "Black Hole Volume",
+            currencyInternalName: "points",
+            currencyLayer() { return 'BH' },
+            title: "Dark Matter Annihilation",
+            onPurchase() { player.UMF.points = player.UMF.points.add(1) },
+            description: "Disable Dark Matter's nerf to Exotic Matter, and gain an Ultimate Matter Fragment"
+        },
+        54: {
+            cost: new Decimal("50000"),
+            currencyDisplayName: "Unstable Matter",
+            currencyInternalName: "points",
+            currencyLayer() { return 'UnsM' },
+            title: "Exotic Matter Annihilation",
+            onPurchase() { player.UMF.points = player.UMF.points.add(1) },
+            description: "Disable Exotic Matter's nerf to Dark Matter, and gain an Ultimate Matter Fragment"
+        },
     },
     hotkeys: [
         {
@@ -276,6 +351,12 @@ addLayer('HC', {
                 player.HC.points = player.HC.total
                 player.HC.upgrades = []
                 player.HC.paths = []
+                const layersa = ['U', 'R', 'SR', 'P', 'HC', 'C']
+                for (let index = 0; index < layersa.length; index++) {
+                    const element = layers[index];
+                    layers[layersa].doReset("HC")
+                    
+                }
             },
         }
     }
@@ -309,27 +390,54 @@ addLayer('C', {
     row: 2,
     update(diff) {
         if(hasMilestone('HC', 0)) {
-            player.C.points = player.C.points.add(new Decimal(hyperCashGain()).times(diff))
+            player.C.points = player.C.points.add(new Decimal(hyperCashGain()[0]).times(diff))
         }
     },
     effect() {
-        return [
+        let base = [
             hCashB1(),
             player.C.points.add(1),
             player.C.points.add(10).log(10).add(10).log(10),
             player.C.points.pow(0.1).div(3).add(1)
         ]
+        if(hasMilestone('UMF', 3)) base = [base[0], base[1].pow(milestoneEffect('UMF', 2)), base[2].pow(milestoneEffect('UMF', 2)), base[3].pow(milestoneEffect('UMF', 2))]
+        return base
     },
     effectDescription() {
-        if(!hasUpgrade('HC', 33)) return "raising $ gain by " + format(layers.C.effect()[0])
-        + "<br>Producing " + format(hyperCashGain()) + "/sec"
+        let text
+        if(!hasUpgrade('HC', 33)) text = "raising $ gain by " + format(tmp.C.effect[0])
+        + "<br>Producing " + format(hyperCashGain()[0]) + "/sec"
         + "<br>Hyper Cash is reset on Hyper Reset"
 
-        if(hasUpgrade('HC', 33)) return "raising $ gain by " + format(layers.C.effect()[0])
-        + ", multiplying RP gain by  " + format(layers.C.effect()[1])
-        + ", multiplying SRP gain by  " + format(layers.C.effect()[2])
-        + ", multiplying Hyper Essence gain by  " + format(layers.C.effect()[3])
-        + "<br>Producing " + format(hyperCashGain()) + "/sec"
+        if(hasUpgrade('HC', 33)) text = "raising $ gain by " + format(tmp.C.effect[0])
+        + ", multiplying RP gain by  " + format(tmp.C.effect[1])
+        + ", multiplying SRP gain by  " + format(tmp.C.effect[2])
+        + ", multiplying Hyper Essence gain by  " + format(tmp.C.effect[3])
+        + "<br>Producing " + format(hyperCashGain()[0]) + "/sec"
+
+        if(hyperCashGain()[0].gte(100)) text = text + "<br>Hyper Cash gain is softcapped past 100, dividing it by " + format(hyperCashGain()[1][0])
+
+        return text
     },
     color: "#34eb67",
 })
+
+function hCashB1() {
+	let boost = player.C.points.times(0.005).add(1).pow(0.15)
+    if(boost.gte(2)) boost = boost.div(2).pow(0.1).times(2)
+	return boost
+}
+
+function hyperCashGain() {
+	let HCgain = new Decimal(0)
+    let softcaps = []
+	if (hasMilestone('HC', 0)) HCgain = HCgain.add(0.1)
+	if (hasUpgrade('HC', 13)) HCgain = HCgain.times(player.points.add(10).log(10).pow(0.4))
+	if (hasUpgrade('HC', 23)) HCgain = HCgain.times(10)
+	if (HCgain.gte(100)) {
+        softcaps.push(HCgain.div(new Decimal(100).times(new Decimal(10).pow(HCgain.div(100).log(10).add(1).log(10)))))
+        HCgain = new Decimal(100).times(new Decimal(10).pow(HCgain.div(100).log(10).add(1).log(10)))
+    }
+	return [HCgain, softcaps]
+}
+

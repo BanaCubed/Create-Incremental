@@ -2,7 +2,7 @@
 
 ## Overview
 
-Create Incremental is a game where all content was decided by _other_ people on galaxy. The forum can be accessed [here](galaxy.click/forum/thread/255).
+Create Incremental is a game where all content was decided by _other_ people on galaxy. The forum can be accessed [here](https://galaxy.click/forum/thread/255).
 
 
 # Current Content
@@ -16,29 +16,11 @@ The game currently has a total of 3 prestige layers:
 - Hyper Rebirth
     - Upgrade Tree
     - Hyper Cash
-    - Matters **_UNFINISHED_**
+    - Matters
 
 # Planned Content
 
-Below is a list of features that aren't currently in the game, but are planned to be worked on
-
-## v0.3.2
-
-Matter Paths:
-- Matter
-- Antimatter
-- Dark Matter
-    - Black Hole
-- Exotic Matter
-    - Hypothetical Particles
-    - Unstable Matter
-- Ultimate Matter Fragments
-
-More Themes
-- Electro
-- Cameron's Theme
-- Steel
-- Wooden
+Below is a list of features that aren't currently in the game, but are planned to be worked on as they are already in the forum
 
 ## v0.4
 
@@ -51,4 +33,3 @@ Universes:
 - More Matter Paths
     - Heavenly Matter
     - Cursed Matter
-

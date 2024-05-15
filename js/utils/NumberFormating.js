@@ -1,5 +1,6 @@
 function coolDynamicFormat(num, precision) {
-    return format(num)
+    if(precision !== 0) return format(num)
+    if(precision == 0) return formatWhole(num)
 }
 
 function exponentialFormat(num, precision, mantissa = true) {
@@ -82,12 +83,55 @@ function formatWhole(decimal) {
     return format(decimal, 0)
 }
 
-function formatTime(s) {
-    if (s < 60) return format(s) + "s"
-    else if (s < 3600) return formatWhole(Math.floor(s / 60)) + "m " + format(s % 60) + "s"
-    else if (s < 86400) return formatWhole(Math.floor(s / 3600)) + "h " + formatWhole(Math.floor(s / 60) % 60) + "m " + format(s % 60) + "s"
-    else if (s < 31536000) return formatWhole(Math.floor(s / 86400) % 365) + "d " + formatWhole(Math.floor(s / 3600) % 24) + "h " + formatWhole(Math.floor(s / 60) % 60) + "m " + format(s % 60) + "s"
-    else return formatWhole(Math.floor(s / 31536000)) + "y " + formatWhole(Math.floor(s / 86400) % 365) + "d " + formatWhole(Math.floor(s / 3600) % 24) + "h " + formatWhole(Math.floor(s / 60) % 60) + "m " + format(s % 60) + "s"
+function formatZero(decimal) {
+    decimal = new Decimal(decimal)
+    let number
+    if (decimal.gte(1e9)) number = format(decimal, 2)
+    if (decimal.lte(0.99) && !decimal.eq(0)) number = format(decimal, 2)
+    else number = format(decimal, 0)
+
+    if (number.length == 1) number = " " + number
+    return number
+}
+
+function formatZeroo(decimal) {
+    decimal = new Decimal(decimal)
+    let number
+    if (decimal.gte(1e9)) number = format(decimal, 2)
+    if (decimal.lte(0.99) && !decimal.eq(0)) number = format(decimal, 2)
+    else number = format(decimal, 0)
+
+    if (number.length == 1) number = " " + number
+    if (number.length == 2) number = " " + number
+    return number
+}
+
+function iDontWantToNameThis(decimal, mantissa) {
+    let number
+    if (mantissa !== 0) {
+        decimal = new Decimal(decimal)
+        number = format(decimal, mantissa)
+    
+        if(number.length == 2 + mantissa) number = " " + number
+    } else {
+        decimal = new Decimal(decimal)
+        number = formatWhole(decimal)
+    
+        if(number.length == 1) number = " " + number
+    }
+
+    return number
+}
+
+function formatTime(s, mantissa = 3) {
+    let sec = new Decimal(s)
+    if (sec.lt(60)) return format(sec, mantissa) + "s"
+    else if (sec.lt(3600)) return formatWhole(sec.div(60).floor()) + "m " + iDontWantToNameThis(sec.sub(sec.div(60).floor().mul(60)), mantissa) + "s"
+    else if (sec.lt(86400)) return formatWhole(sec.div(3600).floor()) + "h " + formatZero(sec.div(60).floor().sub(sec.div(3600).floor().mul(60))) + "m " + iDontWantToNameThis(sec.sub(sec.div(60).floor().mul(60)), mantissa) + "s"
+    else if (sec.lt(31536000)) return formatWhole(sec.div(86400).floor()) + "d " + formatZero(sec.div(3600).floor().sub(sec.div(86400).floor().mul(24))) + "h " + formatZero(sec.div(60).floor().sub(sec.div(3600).floor().mul(60))) + "m " + iDontWantToNameThis(sec.sub(sec.div(60).floor().mul(60)), mantissa) + "s"
+    else if (sec.lt(31536000000)) return formatWhole(sec.div(31536000).floor()) + "y " + formatZeroo(sec.div(86400).floor().sub(sec.div(31536000).floor().mul(365))) + "d " + formatZero(sec.div(3600).floor().sub(sec.div(86400).floor().mul(24))) + "h"
+    else if (sec.lt(31536000000000000)) return formatWhole(sec.div(31536000).floor()) + "y " + formatZeroo(sec.div(86400).floor().sub(sec.div(31536000).floor().mul(365))) + "d"
+    else return formatWhole(sec.div(31536000).floor()) + "y"
 }
 
 function toPlaces(x, precision, maxAccepted) {

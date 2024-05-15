@@ -9,6 +9,34 @@ addLayer("A", {
     startData() { return {
         unlocked: true,
     }},
+    update() {
+        let title = "Create Incremental"
+        if(hasAchievement('A', 11) && !hasUpgrade('A', 21)) {
+            title = "Create Incremental, " + formatWhole(player.points) + " $"
+            changeFavicon('favicon.ico')
+        }
+        if(hasAchievement('A', 21) && !hasUpgrade('A', 43)) {
+            title = "Create Incremental, " + formatWhole(player.R.points) + " RP"
+            changeFavicon('rebirthfavicon.ico')
+        }
+        if(hasAchievement('A', 43) && !hasAchievement('A', 52)) {
+            title = "Create Incremental, " + formatWhole(player.SR.points) + " SRP"
+            changeFavicon('superrebirthfavicon.ico')
+        }
+        if(hasAchievement('A', 52) && !hasAchievement('A', 83)) {
+            title = "Create Incremental, " + formatWhole(player.SR.points) + " SRP, " + formatWhole(player.P.points) + " Power"
+            changeFavicon('powerfavicon.ico')
+        }
+        if(hasAchievement('A', 83) && !hasAchievement('A', 101)) {
+            title = "Create Incremental, " + formatWhole(player.HC.points) + " HRP, " + formatWhole(player.C.points) + " Hyper Cash"
+            changeFavicon('hyperrebirthfavicon.ico')
+        }
+        if(hasAchievement('A', 101)) {
+            title = "Create Incremental, " + formatWhole(player.HC.points) + " HRP"
+            changeFavicon('hyperrebirthfavicon.ico')
+        }
+        document.title = title
+    },
     tabFormat: {
         "Achievements": {
             content: [
@@ -18,8 +46,8 @@ addLayer("A", {
         "Secrets": {
             content: [
                 ["layer-proxy", ["SA", [
-                    ["display-text", "Secret Achievements only say what to do to get them after obtaining them<br>Most Secret Achievements will become impossible if too much progression is made before unlocking them<br>Each Secret Achievement will also eventually have its own exclusive visual theme (available in options) once I figure out how to do that<br>There will be a surprise for getting all of them once there are enough of them for it to be interesting"],
-                    ["display-text", "<br>There are currently 2 Secret Achievements<br>Every Secret Achievement has a hint when hovering over them to make them possible to obtain without searching up the answers (you'll do it anyways)"],
+                    ["display-text", "Secret Achievements only say what to do to get them after obtaining them<br>Most Secret Achievements will become impossible if too much progression is made before unlocking them<br>Each Secret Achievement has its own color theme<br>Getting all secret achievements unlocks more themes (ugly themes but whatever)"],
+                    ["display-text", "<br>Every Secret Achievement has a hint when hovering over them to make them theoretically possible to obtain without searching up the answers (you'll do it anyways)"],
                     "h-line",
                     "achievements"]]]
             ]
@@ -230,7 +258,7 @@ addLayer("A", {
             },
         },
         65: {
-            name: "To Inifinity, and Beyond!",
+            name: "To Infinity, and Beyond!",
             tooltip: "Reach Infinity",
             done() {
                 if (player.points.gte(new Decimal(2).pow(1024))) return true
@@ -342,10 +370,38 @@ addLayer("A", {
             },
         },
         101: {
-            name: "Material Possesions",
+            name: "Material Possessions",
             tooltip: "Unlock the Matter Combustor",
             done() {
                 if (hasUpgrade('HC', 41)) return true
+            },
+        },
+        102: {
+            name: "Nothing Matters",
+            tooltip: "Annihilate Matter",
+            done() {
+                if (hasUpgrade('HC', 51)) return true
+            },
+        },
+        103: {
+            name: "Antimatter Dimensions",
+            tooltip: "Annihilate Antimatter",
+            done() {
+                if (hasUpgrade('HC', 52)) return true
+            },
+        },
+        104: {
+            name: "Born from Void",
+            tooltip: "Annihilate Dark Matter",
+            done() {
+                if (hasUpgrade('HC', 53)) return true
+            },
+        },
+        105: {
+            name: "Dying Stars",
+            tooltip: "Annihilate Exotic Matter",
+            done() {
+                if (hasUpgrade('HC', 54)) return true
             },
         },
     }
@@ -369,15 +425,37 @@ addLayer("SA", {
     achievements: {
         11: {
             name: "Out of Order",
-            tooltip() { if(!hasAchievement(this.layer, this.id)) return "That's not going to do anything"; else return "Buy $ Upgrade 7 before $ Upgrade 3<br>That's not going to do anything"},
+            tooltip() { if(!hasAchievement(this.layer, this.id)) return "That's not going to do anything"; else return "Buy $ Upgrade 7 before $ Upgrade 3<br>Reward: unlock the quality theme<br>That's not going to do anything"},
             unlocked() { return true },
             done() { return !hasUpgrade('U', 13) && hasUpgrade('U', 23) }
         },
         12: {
-            name: "Minimum Wage",
-            tooltip() { if(!hasAchievement(this.layer, this.id)) return "Infinite Tax"; else return "Get 1e308 tax<br>Infinite Tax"},
+            name: "Can't Escape the IRS",
+            tooltip() { if(!hasAchievement(this.layer, this.id)) return "Infinite tax"; else return "Get 1e308 tax<br>Reward: unlock the golden theme<br>Infinite Tax"},
             unlocked() { return true },
             done() { return player.SR.tax.gte("1e308") }
+        },
+        13: {
+            name: "Blinded",
+            tooltip() { if(!hasAchievement(this.layer, this.id)) return "ARGH, MY EYES!!"; else return "Use a bright theme<br>Reward: unlock the void theme<br>ARGH, MY EYES!!"},
+            unlocked() { return true },
+            done() { return options.theme == "quality" || options.theme == "light" || options.theme == "auqa" || options.theme == "tnadrev" || options.theme == "oryp" || options.theme == "enacra" }
+        },
+        14: {
+            name: "Following Instructions",
+            tooltip() { if(!hasAchievement(this.layer, this.id)) return "Follow instructions"; else return "Import 'save'<br>Reward: unlock the light theme<br>Follow instructions"},
+            unlocked() { return true },
+            done() {
+                return player.SA14 === true
+            }
+        },
+        15: {
+            name: "Backup",
+            tooltip() { if(!hasAchievement(this.layer, this.id)) return "No Hint"; else return "Export your save<br>Reward: unlock the auqa, oryp, tnadrev and enacra themes"},
+            unlocked() { return true },
+            done() {
+                return player.SA15 === true
+            }
         },
     },
 })
@@ -396,16 +474,16 @@ addLayer("Sft", {
     infoboxes: {
         general: {
             title: "Overall Information",
-            body: "Softcaps have a start value and a power.<br>The power of a softcap is basically a divisor on the amount of OoM's (Order's of Magnitude) beyond the start value.<br>Some softcaps are also logarithmic, meaning that the amount of extra OoM's past the starting value is based on the log of OoM's past the start amount."
+            body: "This tab contains spoilers, to a similar degree as reading the first few lines of every updates changelog<br><br>Softcaps have a start value and a power.<br>The power of a softcap is basically a divisor on the amount of OoM's (Order's of Magnitude) beyond the start value.<br>Some softcaps are also logarithmic, meaning that the amount of extra OoM's past the starting value is based on the log of OoM's past the start amount."
         },
         rebirth: {
             title: "Rebirth Layer",
-            body: "Rebirth Point Gain<br>Beyond 1e17 Rebirth Points, gain is softcapped with a power of 4<br>Beyond 1e2000 Rebirth Points, gain is softcapped again with a power of 5, multiplying to 20",
+            body: "Rebirth Point Gain<br>Beyond 1e17 Rebirth Points, gain is softcapped with a power of 4<br>Beyond 1e2000 Rebirth Points, gain is softcapped again with a power of 5, multiplying to 20<br>All multipliers from Hyper or further bypass the first two softcaps",
             unlocked() { return player.R.unlocked }
         },
         hyper: {
             title: "Hyper Rebirth Layer",
-            body: "Hyper Cash First Effect<br>Beyond 100, the effect is logarithmically reduced with a base of 10",
+            body: "Hyper Cash Gain<br>Beyond 100, gain is logarithmically reduced<br><br>Hyper Essence<br>Beyond 2,500, the amount if softcapped with a power of 5",
             unlocked() { return player.HC.unlocked }
         },
     },
@@ -413,5 +491,6 @@ addLayer("Sft", {
         ["infobox", "general"],
         ["infobox", "rebirth"],
         ["infobox", "hyper"],
-    ]
+    ],
+    layerShown() { return false }
 })

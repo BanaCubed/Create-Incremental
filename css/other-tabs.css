@@ -9,7 +9,7 @@
 }
 
 #optionWheel:hover {
-	transform: rotate(360deg);
+	transform: rotate(120deg);
 }
 
 #info {

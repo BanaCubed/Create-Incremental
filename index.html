@@ -22,15 +22,19 @@
 
 	<script src="js/technical/temp.js"></script>
 	<script src="js/technical/displays.js"></script>
+	<script src="js/technical/change-favicon.js"></script>
 	
 	<script src="js/game.js"></script>
 	<script src="js/utils.js"></script>
 	<script src="js/utils/easyAccess.js"></script>
+	<script src="js/utils/secrets.js"></script>
+	<script src="js/utils/particleConsts.js"></script>
 	<script src="js/technical/systemComponents.js"></script>
 	<script src="js/components.js"></script>
 	<script src="js/technical/canvas.js"></script>
 	<script src="js/technical/particleSystem.js"></script>
 	<script src="js/utils/NumberFormating.js"></script>
+	<script src="js/utils/buyMax.js"></script>
 	<script src="js/utils/options.js"></script>
 	<script src="js/utils/save.js"></script>
 	<script src="js/utils/themes.js"></script>
@@ -39,12 +43,13 @@
 
 
 <body onload="load()" onmousemove="updateMouse(event)">
+	<div v-if="false" id="loadingSection" class="fullWidth">
+		<span><h1>Loading...
+			<br>(If this takes too long it means there was a serious error!)</h1></span>
+	</div>
 	<div id="app">
 		<canvas id="treeCanvas" class="canvas" v-if="!(tmp.gameEnded && !player.keepGoing)"></canvas>
-
-		<div v-if="false" id="loadingSection" class="fullWidth">
-			<h1>Loading... (If this takes too long it means there was a serious error!)←</h1>
-		</div>
+		
 		<div class="vl" v-if="player.navTab !== 'none' && tmp.other.splitScreen && player.tab!='none' && !(tmp.gameEnded && !player.keepGoing)"></div>
 		<div v-if="(tmp.gameEnded && !player.keepGoing)" class="fullWidth">
 			<br>
@@ -53,8 +58,7 @@
 			<h3>Please check the Discord to see if there are new content updates!</h3><br><br>
 			<div v-if="!player.timePlayedReset">It took you {{formatTime(player.timePlayed)}} to beat the game.</div>
 			<br>
-			<button class="longUpg can" onclick="hardReset(true)">Play Again</button>&nbsp;&nbsp;&nbsp;&nbsp;<button
-				class="longUpg can" onclick="keepGoing()">Keep Going</button>
+			<button class="longUpg can" onclick="keepGoing()">Keep Going</button>
 			<br><br><br>
 			<span v-if="modInfo.discordLink"><a class="link" v-bind:href="modInfo.discordLink"
 					target="_blank">{{modInfo.discordName}}</a><br></span>
@@ -134,6 +138,7 @@
 
 		</div>
 		<div class = "bg2" v-bind:style = "tmp.backgroundStyle"></div>
-
+		
 	</div>
+	
 </body>

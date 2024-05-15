@@ -1,20 +1,21 @@
 let modInfo = {
 	name: "Create Incremental",
 	id: "nhug dkjldgsgrcinhgrv",
-	author: "BanaCubed (Coding), and many people (Concepts)",
+	oldid: "nhug dkjldgsgrcinhgrv",
+	author: "BanaCubed, with ideas from galaxy",
 	pointsName: "$",
 	modFiles: ["layers.js", "tree.js", "layers/cash.js", "layers/rebirth.js", "layers/rebirth2.js", "layers/rebirth3.js", "layers/matter.js"],
 
 	discordName: "Create Incremental Server",
 	discordLink: "https://discord.gg/wt5XyPRtte",
 	initialStartPoints: new Decimal(0), // Used for hard resets and new players
-	offlineLimit: 48,  // In hours
+	offlineLimit: 168,  // In hours
 }
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.3.0.5",
-	name: "Hyper Rebirth",
+	num: "0.3.2β",
+	name: "The Matter Combustor",
 }
 
 let changelog = `<h1>""""""Changelog""""""</h1><br><br>
@@ -37,7 +38,7 @@ function canGenPoints(){
 }
 
 // Calculate points/sec!
-function getPointGen() {
+function getPointGen(softcaps = true) {
 	if(!canGenPoints())
 		return new Decimal(0)
 
@@ -82,11 +83,7 @@ function getPointGen() {
 		if (getClickableState('U', 12)) gain = gain.times(3)
 		if (getClickableState('U', 13)) gain = gain.times(2)
 
-		let machineBoost = new Decimal(1)
-		if (hasUpgrade('R', 32)) machineBoost = machineBoost.times(1.3)
-		machineBoost = machineBoost.times(layers.P.effect())
-		if(hasMilestone('P', 8) && hasUpgrade('U', 34)) machineBoost = machineBoost.pow(1.25)
-		gain = gain.times(machineBoost)
+		gain = gain.times(machineBonuses())
 	}
 
 	if(!hasMilestone('P', 8)) { if (hasUpgrade('U', 21)) gain = gain.pow(1.25) }
@@ -94,68 +91,48 @@ function getPointGen() {
 
 
 	// Rebirth Layer
-	gain = gain.times(layers.R.effect())
+	gain = gain.times(tmp.R.effect)
 	if (hasUpgrade('R', 11)) gain = gain.times(5)
 	if (hasUpgrade('R', 14)) gain = gain.times(2)
 
 
 	// Super Rebrith Layer
-	gain = gain.times(layers.SR.effect()[0])
-	if (hasMilestone('SR', 9)) gain = gain.times(layers.SR.milestones[9].effect())
+	gain = gain.times(tmp.SR.effect[0])
+	if (hasMilestone('SR', 9)) gain = gain.times(tmp.SR.milestones[9].effect)
 	if (hasMilestone('SR', 4)) gain = gain.pow(1.1)
 	if (inChallenge('SR', 12)) gain = gain.pow(0.5)
 	if (inChallenge('SR', 31)) gain = gain.div(player.SR.tax)
 
 
 	// Hyper Rebirth Layer
-	gain = gain.times(layers.HC.effect()[0])
+	gain = gain.times(tmp.HC.effect[0])
 	if(hasUpgrade('HC', 11)) gain = gain.times(10000)
 	if(hasUpgrade('HC', 14)) gain = gain.times(100)
 	if(hasUpgrade('HC', 24)) gain = gain.times(200)
 
-	gain = gain.pow(layers.C.effect()[0])
+	// Matters
+	gain = gain.times(tmp.UMF.effect2)
+
+	gain = gain.pow(tmp.C.effect[0])
 
 
 	// Dunno were else to put this
 
 	everyTick();
 
+	if(softcaps !== false) {
+        if(gain.gte("1e5000000")) gain = new Decimal(10).pow(gain.log(10).div(5000000).pow(0.25).times(5000000))
+	}
+
 	return gain
 }
 
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
 function addedPlayerData() { return {
+	SA14: false,
+	SA15: false,
+	MILK: false
 }}
-
-function pPylon(pylon, pylons, pylobs) {
-	let effect = pylons.div(10)
-
-	// Pylob Innate Bonus
-	if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(pylobs))
-
-	// Super Layer
-	if(hasMilestone('P', 4) && pylon == 'A') effect = effect.times(5)
-	if(hasUpgrade('HC', 14) && pylon == 'A') effect = effect.times(100)
-	if(hasUpgrade('U', 54 && (pylon =='A' || pylon == 'B' || pylon == 'C'))) effect = effect.times(2)
-
-	if(hasChallenge('SR', 31) && pylon == 'A') effect = effect.times(player.P.points.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-	if(hasChallenge('SR', 31) && pylon == 'B') effect = effect.times(player.P.pylonA.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-	if(hasChallenge('SR', 31) && pylon == 'C') effect = effect.times(player.P.pylonB.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-	if(hasChallenge('SR', 31) && pylon == 'D') effect = effect.times(player.P.pylonC.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-	if(hasChallenge('SR', 31) && pylon == 'E') effect = effect.times(player.P.pylonD.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-	if(hasChallenge('SR', 31) && pylon == 'F') effect = effect.times(player.P.pylonE.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-
-	effect = effect.times(layers.U.buyables[12].effect())
-	if(hasUpgrade('SR', 13)) effect = effect.pow(1.2)
-
-	// Hyper Layer
-	effect = effect.times(layers.HC.effect()[2])
-	if(hasUpgrade('HC', 12)) effect = effect.times(2)
-	if(hasUpgrade('HC', 22)) effect = effect.times(5)
-	if(hasUpgrade('HC', 24)) effect = effect.times(200)
-
-	return effect
-}
 
 // Display extra things at the top of the page
 var displayThings = [
@@ -163,25 +140,24 @@ var displayThings = [
 		if(inChallenge('SR', 31)) {
 			return "You have " + format(player.SR.tax) + " tax"
 		}
+	},
+	function() {
+		if(getPointGen().gte("1e5000000")) {
+			return "Inflation is dividing your income by " + format(player.U.softcapPower)
+		}
 	}
 ]
 
 
 // Determines when the game "ends"
 function isEndgame() {
-	return hasUpgrade('HC', 41)
-}
-
-function hCashB1() {
-	let boost = player.C.points.times(0.005).add(1).pow(0.15)
-	if(boost.gte(100)) boost = new Decimal(100).times(new Decimal(10).pow(boost.div(100).log(10).add(1).log(10)))
-	return boost
+	return player.UMF.points.gte(4)
 }
 
 function machineBonuses() {
 	let bonus = new Decimal(1);
 	if(hasUpgrade('R', 32)) bonus = bonus.times(1.3);
-	bonus = bonus.times(layers.P.effect())
+	bonus = bonus.times(tmp.P.effect)
 	if(hasUpgrade('U', 34) && hasMilestone('P', 8)) bonus = bonus.pow(1.25)
 	return bonus
 }
@@ -193,14 +169,6 @@ function everyTick() {
 function findIndex(arr, x) {
 	const index = arr.indexOf(x);
 	return index !== -1 ? index : arr.length;
-}
-
-function hyperCashGain() {
-	let HCgain = new Decimal(0)
-	if(hasMilestone('HC', 0)) HCgain = HCgain.add(0.1)
-	if(hasUpgrade('HC', 13)) HCgain = HCgain.times(player.points.add(10).log(10).pow(0.4))
-	if(hasUpgrade('HC', 23)) HCgain = HCgain.times(10)
-	return HCgain
 }
 
 // Less important things beyond this point!
@@ -218,6 +186,27 @@ function maxTickLength() {
 // Use this if you need to undo inflation from an older version. If the version is older than the version that fixed the issue,
 // you can cap their current resources with this.
 function fixOldSave(oldVersion){
+	if(oldVersion == "0.3.2") {
+		player.DM.points = new Decimal(0)
+		player.EM.points = new Decimal(0)
+	}
+	if(oldVersion == "0.3.0.5") {
+		if(player.points.gte("1e100000")) {
+			player.points = new Decimal("1e100000")
+			doReset('HC')
+			player.HC.points = new Decimal(10000)
+		}
+		if(player.C.points.gte(1000000)) {
+			player.C.points = new Decimal(1000000)
+			doReset('HC')
+			player.HC.points = new Decimal(10000)
+		}
+		if(player.HC.points.gte(10000)) {
+			player.HC.points = new Decimal(10000)
+			doReset('HC')
+			player.HC.points = new Decimal(10000)
+		}
+	}
 }
 
 function achievement33() {
@@ -231,4 +220,8 @@ function achievement33() {
 
 	// >= 2 return true
 	if (machinemodes >= 2) return true; else return false
+}
+
+function timeDisplay(value) {
+	formatTime(value)
 }
