@@ -14,7 +14,7 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.3.2β",
+	num: "0.3.2.1",
 	name: "The Matter Combustor",
 }
 
@@ -186,27 +186,6 @@ function maxTickLength() {
 // Use this if you need to undo inflation from an older version. If the version is older than the version that fixed the issue,
 // you can cap their current resources with this.
 function fixOldSave(oldVersion){
-	if(oldVersion == "0.3.2") {
-		player.DM.points = new Decimal(0)
-		player.EM.points = new Decimal(0)
-	}
-	if(oldVersion == "0.3.0.5") {
-		if(player.points.gte("1e100000")) {
-			player.points = new Decimal("1e100000")
-			doReset('HC')
-			player.HC.points = new Decimal(10000)
-		}
-		if(player.C.points.gte(1000000)) {
-			player.C.points = new Decimal(1000000)
-			doReset('HC')
-			player.HC.points = new Decimal(10000)
-		}
-		if(player.HC.points.gte(10000)) {
-			player.HC.points = new Decimal(10000)
-			doReset('HC')
-			player.HC.points = new Decimal(10000)
-		}
-	}
 }
 
 function achievement33() {

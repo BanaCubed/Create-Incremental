@@ -867,7 +867,7 @@ addLayer('EM', {
             cost: new Decimal(500),
             tooltip: "log1,00,000(M*AM)",
             effect() {
-                return player.M.points.times(player.AM.points).log(1000000)
+                return player.M.points.times(player.AM.points).add(1).log(1000000).add(1)
             },
             effectDisplay() { return "x" + format(this.effect()) }
         },
@@ -887,7 +887,7 @@ addLayer('EM', {
             cost: new Decimal(1.32e81),
             tooltip: "log1e10(EM + 1e10)",
             effect() {
-                return player.EM.points.add(1e10).log(1e10)
+                return player.EM.points.add(1e10).log(1e10).add(1)
             },
             effectDisplay() { return "x" + format(this.effect()) }
         },
@@ -923,9 +923,6 @@ addLayer('EM', {
                 player[this.layer].points = player[this.layer].points.sub(this.cost())
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
-            unlocked() {
-                return hasUpgrade('DM', 22)
-            },
             effect(x) {
                 let bob = x
                 if(hasUpgrade('EM', 21)) bob = bob.pow(2)
@@ -955,9 +952,6 @@ addLayer('EM', {
             buy() {
                 player[this.layer].points = player[this.layer].points.sub(this.cost())
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
-            },
-            unlocked() {
-                return hasUpgrade('DM', 22)
             },
             effect(x) {
                 let greg = new Decimal(2).pow(x)
