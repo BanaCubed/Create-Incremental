@@ -252,8 +252,18 @@ addLayer("SR", {
             onEnter() {
                 player.SR.tax = new Decimal(10).pow(challengeCompletions('SR', 31))
             },
-            style: {
-                width: "450px"
+            style() { if(challengeCompletions('SR', 31) < 4) return {
+                width: "450px",
+                "background-color": "#bf8f8f"
+            }
+            else if(inChallenge('SR', 31) && tmp.SR.challenges[31].canComplete) return {
+                width: "450px",
+                "background-color": "#ffbf00"
+            }
+            else return {
+                width: "450px",
+                "background-color": "#77bf5f"
+            }
             }
         },
     },
