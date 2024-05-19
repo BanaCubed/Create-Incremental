@@ -175,7 +175,10 @@ addLayer('HC', {
             },
             description: "Start with 12 SRP, and reduce SRP base cost by 1e9",
             canAfford() { return hasUpgrade('HC', 21) },
-            title: "Permanance"
+            title: "Permanance",
+            onPurchase() {
+                if(player.SR.points.lte(12)) player.SR.points = new Decimal(12)
+            }
         },
 
         12: {

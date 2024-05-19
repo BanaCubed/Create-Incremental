@@ -606,7 +606,7 @@ addLayer("P", {
             },
             canClick() { return player[this.layer].points.gte(this.cost()) },
             onClick() {
-                if(hasMilestone('P', 11)) player[this.layer].points = player[this.layer].points.sub(this.cost());
+                if(!hasMilestone('P', 11)) player[this.layer].points = player[this.layer].points.sub(this.cost());
                 let amt = new Decimal(1)
                 player.P.pylonA = player.P.pylonA.add(amt)
                 player.P.pylobA = player.P.pylobA.add(amt)
@@ -641,7 +641,7 @@ addLayer("P", {
             },
             canClick() { return player[this.layer].pylonA.gte(this.cost()) },
             onClick() {
-                if(hasMilestone('P', 11)) player[this.layer].pylonA = player[this.layer].pylonA.sub(this.cost());
+                if(!hasMilestone('P', 11)) player[this.layer].pylonA = player[this.layer].pylonA.sub(this.cost());
                 let amt = new Decimal(1)
                 player.P.pylonB = player.P.pylonB.add(amt)
                 player.P.pylobB = player.P.pylobB.add(amt)
@@ -676,7 +676,7 @@ addLayer("P", {
             },
             canClick() { return player[this.layer].pylonB.gte(this.cost()) },
             onClick() {
-                if(hasMilestone('P', 11)) player[this.layer].pylonB = player[this.layer].pylonB.sub(this.cost());
+                if(!hasMilestone('P', 11)) player[this.layer].pylonB = player[this.layer].pylonB.sub(this.cost());
                 let amt = new Decimal(1)
                 player.P.pylonC = player.P.pylonC.add(amt)
                 player.P.pylobC = player.P.pylobC.add(amt)
@@ -711,7 +711,7 @@ addLayer("P", {
             },
             canClick() { return player[this.layer].pylonC.gte(this.cost()) },
             onClick() {
-                if(hasMilestone('P', 11)) player[this.layer].pylonC = player[this.layer].pylonC.sub(this.cost());
+                if(!hasMilestone('P', 11)) player[this.layer].pylonC = player[this.layer].pylonC.sub(this.cost());
                 let amt = new Decimal(1)
                 player.P.pylonD = player.P.pylonD.add(amt)
                 player.P.pylobD = player.P.pylobD.add(amt)
@@ -746,7 +746,7 @@ addLayer("P", {
             },
             canClick() { return player[this.layer].pylonD.gte(this.cost()) },
             onClick() {
-                if(hasMilestone('P', 11)) player[this.layer].pylonD = player[this.layer].pylonD.sub(this.cost());
+                if(!hasMilestone('P', 11)) player[this.layer].pylonD = player[this.layer].pylonD.sub(this.cost());
                 let amt = new Decimal(1)
                 player.P.pylonE = player.P.pylonE.add(amt)
                 player.P.pylobE = player.P.pylobE.add(amt)
@@ -781,7 +781,7 @@ addLayer("P", {
             },
             canClick() { return player[this.layer].pylonE.gte(this.cost()) },
             onClick() {
-                if(hasMilestone('P', 11)) player[this.layer].pylonE = player[this.layer].pylonE.sub(this.cost());
+                if(!hasMilestone('P', 11)) player[this.layer].pylonE = player[this.layer].pylonE.sub(this.cost());
                 let amt = new Decimal(1)
                 player.P.pylonF = player.P.pylonF.add(amt)
                 player.P.pylobF = player.P.pylobF.add(amt)
