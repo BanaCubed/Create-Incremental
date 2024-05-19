@@ -279,7 +279,7 @@ function importSave(imported = undefined, forced = false) {
 	if (imported === undefined)
 		imported = prompt("Paste your save here");
 
-	for (let index = 0; index < 2; index++) {
+	for (let index = 0; index < saveImports.length; index++) {
 		const element = saveImports[index];
 		
 		if(imported == element.import) {

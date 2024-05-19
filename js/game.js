@@ -345,6 +345,7 @@ function gameLoop(diff) {
 			player[layer].resetTime += diff
 			if (tmp[layer].passiveGeneration) generatePoints(layer, diff*tmp[layer].passiveGeneration);
 			if (layers[layer].update) layers[layer].update(diff);
+			player[layer].points = player[layer].points.max(0)
 		}
 	}
 
