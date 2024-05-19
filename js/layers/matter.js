@@ -832,7 +832,7 @@ addLayer('EM', {
         },
         "Challenges": {
             content: [
-                ["display-text", "Challenges will reset Exotic Matter, Dark Mater, Hypothetical Particles and Unstable Matter, but will NOT reset any upgrades or milestones (and buyables for challenge 1) in this layer. Entering a Challenge will save the current amount of Dark Matter and Exotic Matter which will be returned after exiting the challenge"],
+                ["display-text", "Challenges will reset Exotic Matter, Dark Matter, Hypothetical Particles and Unstable Matter, but will NOT reset any upgrades or milestones (and buyables for challenge 1) in this layer. Entering a Challenge will save the current amount of Dark Matter and Exotic Matter which will be returned after exiting the challenge"],
                 "blank",
                 "challenges"
             ]
