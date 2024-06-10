@@ -1,6 +1,10 @@
-function coolDynamicFormat(num, precision) {
-    if(precision !== 0) return format(num)
-    if(precision == 0) return formatWhole(num)
+const standardSuffixes = ["", "K", "M", "B", "T", "Qa", "Qt", "Sx", "Sp", "Oc", "No", "Dc", "Ud", "DDc", "Td", "Qad", "Qid", "Sxd", "Spd", "Ocd", "Nod", "Vg", "UVg", "DVg", "TVg", "QaVg", "QtVg", "SxVg", "SpVg", "OVg", "NVg", "Tg", "UTg", "DTg", "TTg", "QaTg", "QtTg", "SxTg", "SpTg", "OTg", "NTg", "Qd", "UQd", "DQd", "TQd", "QaQd", "QtQd", "SxQd", "SpQd", "OQd", "NQd", "Qi", "UQi", "DQi", "TQi", "QaQi", "QtQi", "SxQi", "SpQi", "OQi", "NQi", "He", "UHe", "DHe", "THe", "QaHe", "QtHe", "SxHe", "SpHe", "OHe", "NHe", "St", "USt", "DSt", "TSt", "QaSt", "QtSt", "SxSt", "SpSt", "OSt", "NSt", "Og", "UOg", "DOg", "TOg", "QaOg", "QtOg", "SxOg", "SpOg", "OOg", "NOg", "Nn", "UNn", "DNn", "TNn", "QaNn", "QtNn", "SxNn", "SpNn", "ONn", "NNn", "Ce"]
+
+function standardFormat(num, precision) {
+    const index = num.max(1).add(1).log(10).div(3).floor().toNumber()
+    num = num.div(Decimal.pow(1000, index))
+    const suffix = standardSuffixes[index]
+    return num.toStringWithDecimalPlaces(precision) + suffix
 }
 
 function exponentialFormat(num, precision, mantissa = true) {
@@ -30,7 +34,6 @@ function commaFormat(num, precision) {
 function regularFormat(num, precision) {
     if (num === null || num === undefined) return "NaN"
     if (num.mag < 0.0001) return (0).toFixed(precision)
-    if (num.mag < 0.1 && precision !==0) precision = Math.max(precision, 4)
     return num.toStringWithDecimalPlaces(precision)
 }
 
@@ -60,7 +63,9 @@ function format(decimal, precision = 2, small) {
     }
     else if (decimal.gte("1e1000000")) return exponentialFormat(decimal, 0, false)
     else if (decimal.gte("1e10000")) return exponentialFormat(decimal, 0)
-    else if (decimal.gte(1e9)) return exponentialFormat(decimal, precision)
+    else if (decimal.gte('1e306')) return exponentialFormat(decimal, precision)
+    else if (decimal.gte('1e9') && !options.standardNotate) return exponentialFormat(decimal, precision)
+    else if (decimal.gte(1e6) && options.standardNotate) return standardFormat(decimal, precision)
     else if (decimal.gte(1e3)) return commaFormat(decimal, 0)
     else if (decimal.gte(0.0001) || !small) return regularFormat(decimal, precision)
     else if (decimal.eq(0)) return (0).toFixed(precision)
@@ -78,7 +83,7 @@ function format(decimal, precision = 2, small) {
 
 function formatWhole(decimal) {
     decimal = new Decimal(decimal)
-    if (decimal.gte(1e9)) return format(decimal, 2)
+    if (decimal.gte(1e6)) return format(decimal, 2)
     if (decimal.lte(0.99) && !decimal.eq(0)) return format(decimal, 2)
     return format(decimal, 0)
 }

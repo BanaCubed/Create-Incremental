@@ -10,10 +10,9 @@ function getStartOptions() {
 		hqTree: false,
 		offlineProd: true,
 		hideChallenges: false,
-		showStory: true,
-		forceOneTab: false,
-		oldStyle: false,
-		tooltipForcing: true,
+		forceOneTab: true,
+		forceTooltips: true,
+		standardNotate: true,
 	}
 }
 

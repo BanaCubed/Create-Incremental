@@ -264,7 +264,6 @@ function NaNcheck(data) {
 }
 function exportSave() {
 	//if (NaNalert) return
-	player.SA15 = true
 	let str = btoa(JSON.stringify(player));
 
 	const el = document.createElement("textarea");
@@ -275,18 +274,12 @@ function exportSave() {
 	document.execCommand("copy");
 	document.body.removeChild(el);
 }
+function fixLayers() {
+	importSave(btoa(JSON.stringify(player)))
+}
 function importSave(imported = undefined, forced = false) {
 	if (imported === undefined)
 		imported = prompt("Paste your save here");
-
-	for (let index = 0; index < saveImports.length; index++) {
-		const element = saveImports[index];
-		
-		if(imported == element.import) {
-			element.onImport()
-			return
-		}
-	}
 
 	try {
 		tempPlr = Object.assign(getStartPlayer(), JSON.parse(atob(imported)));

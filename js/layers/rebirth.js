@@ -1,345 +1,364 @@
-addLayer("R", {
-    name: "rebirth",
-    softcap() {
-        cap = new Decimal("1e17")
-        if(player.points.gte("1e6363.2")) cap = new Decimal("e1686.89")
-        return cap
-    },
-    softcapPower() {
-        let softness = new Decimal(0.25)
-        if(player.points.gte("1e6363.2")) softness = softness.div(5)
-        return softness
-    },
-    symbol: "R",
-    row: "1",
-    type: "custom",
-    canReset() { return this.baseAmount().gte(this.requires()) },
-    update(diff) {
-        player.R.points = player.R.points.add(this.getResetGain().times(this.passiveGen()).times(diff))
-    },
-    getResetGain() {
-        let baseGain = this.baseAmount().times(this.gainMult()).div(this.requires()).pow(this.exponent())
-        if(baseGain.gte(1e17)) baseGain = baseGain.div(1e17).pow(0.25).times(1e17)
-        if(baseGain.gte("1e2000")) baseGain = baseGain.div("1e2000").pow(0.2).times("1e2000")
-        baseGain = baseGain.times(this.directMult())
-        if(baseGain.gte("1e1000000")) baseGain = baseGain.div("1e1000000").pow(new Decimal(1).div(base.log(10).sub(9999999).pow(0.05))).times("1e1000000")
-        return baseGain
-    },
-    softcapEffects() {
-        let softcaps = [[]]
-        let baseGain = this.baseAmount().times(this.gainMult()).div(this.requires()).pow(this.exponent())
-        let basedGain = baseGain
-        if(baseGain.gte(1e17)) {
-            softcaps[0].push(baseGain.div(1e17).pow(0.75))
-            baseGain = baseGain.div(1e17).pow(0.25).times(1e17)
-        }
-        if(baseGain.gte("1e2000")) {
-            softcaps[0].push(baseGain.div("1e2000").pow(0.8))
-            baseGain = baseGain.div("1e2000").pow(0.2).times("1e2000")
-        }
-        baseGain = baseGain.times(this.directMult())
-        basedGain = basedGain.times(this.directMult())
-        if(baseGain.gte("1e1000000")) {
-            softcaps[0].push(baseGain.div(baseGain.div("1e1000000").pow(new Decimal(1).div(base.log(10).sub(9999999).pow(0.05))).times("1e1000000")))
-            baseGain = baseGain.div("1e1000000").pow(new Decimal(1).div(base.log(10).sub(9999999).pow(0.2))).times("1e1000000")
-        }
-        softcaps.push(basedGain)
-        return softcaps
-    },
-    getNextAt() {
-        let baseGain = this.getResetGain().add(1)
-        baseGain = baseGain.div(this.directMult())
-        if(baseGain.gte("1e2000")) baseGain = baseGain.div("1e2000").pow(5).times("1e2000")
-        if(baseGain.gte(1e17)) baseGain = baseGain.div(1e17).pow(4).times(1e17)
-        baseGain = baseGain.pow(new Decimal(1).div(this.exponent())).div(this.gainMult()).times(this.requires())
-    },
-    prestigeButtonText() {
-        let text
-        if(!inChallenge('SR', 11)) {
-            if(this.getResetGain().lt(1e17)) text = "Rebirth for " + formatWhole(this.getResetGain()) + " Rebirth Points"
-            if(this.getResetGain().gte(1e17)) text = formatWhole(this.getResetGain()) + "<br>(" + format(this.softcapEffects()[1]) + " base) RP"
-        }
-        if(inChallenge('SR', 11)) text = "A Superior being is stopping you from Rebirthing"
-        return text
-    },
-    prestigeNotify() { return this.getResetGain().gte(player.R.points.div(5)) && this.passiveGen === 0 },
-    baseResource: "$",
-    resource: "Rebirth Points",
-    baseAmount() { return player.points },
-    requires() {
-        let requirement = new Decimal(0)
-        if(!inChallenge('SR', 11)) requirement = requirement.add(100000)
-        if(inChallenge('SR', 11)) requirement = requirement.add("eeeeeeeee10")
-        if(hasChallenge('SR', 12)) requirement = requirement.div(10)
-        if(inChallenge('SR', 12)) requirement = requirement.times(10)
-        if(hasUpgrade('HC', 34)) requirement = requirement.div(100000)
-        return requirement
-    },
-    gainMult() {
-        let remult = new Decimal(1)
-        if (getClickableState('U', 11)) remult = remult.times(2)
-        if (getClickableState('U', 12)) remult = remult.times(3)
-        if (getClickableState('U', 13)) remult = remult.times(4)
-        if (hasUpgrade('U', 43) && !hasMilestone('P', 8)) remult = remult.times(player.points.add(10).log(10).add(10).log(10))
-        if (hasUpgrade('U', 43) && hasMilestone('P', 8)) remult = remult.times(player.points.add(9).log(9).add(8).log(8))
-        remult = remult.times(tmp.R.buyables[11].effect)
-        remult = remult.times(tmp.SR.effect[0])
-        remult = remult.times(tmp.U.buyables[11].effect)
-        remult = remult.times(machineBonuses())
-        if (hasUpgrade('U', 52)) remult = remult.times(player.P.points.add(3).log(3))
-        return remult
-    },
-    directMult() {
-        let remult = new Decimal(1)
-        if(hasUpgrade('HC', 21)) remult = remult.times(10000)
-        if(hasUpgrade('HC', 14)) remult = remult.times(100)
-        if(hasUpgrade('HC', 33)) remult = remult.times(tmp.C.effect[1])
-        remult = remult.times(tmp.UMF.effect2)
-        return remult
-    },
-    exponent() {
-        let power = new Decimal(0.5)
-        if (hasUpgrade('U', 32)) power = power.add(0.2)
-        if (hasMilestone('P', 8) && hasUpgrade('U', 32)) power = power.add(0.1)
-        return power
-    },
-    gainExp() {
-        let expo = new Decimal(1)
-        if(hasUpgrade('SR', 11)) expo = expo.times(1.05)
-        return expo
-    },
-    color: "#ba0022",
-    branches: ['U'],
-    effect() {
-        let power = new Decimal(0.6)
-        if (hasUpgrade('U', 33)) power = power.add(0.1)
-        if (hasUpgrade('U', 42)) power = power.add(0.1)
-        if (hasUpgrade('R', 33)) power = power.add(0.2)
-        if (hasMilestone('P', 8) && hasUpgrade('U', 33)) power = power.add(0.1)
-        if (hasMilestone('P', 8) && hasUpgrade('U', 42)) power = power.add(0.1)
-        return player.R.points.pow(power).add(1)
-    },
-    layerShown() { return hasAchievement('A', 12) },
+addLayer('rebirth', {
+    color: "rgb(21, 115, 7)",
+    tabFormat: [
+        "prestige-button",
+        "blank",
+        ['display-text', function() {return `Your RP is increasing cash gain by ×${format(tmp.rebirth.effect)}<br>You have rebirthed ${formatWhole(player.rebirth.rebirths)} times`}],
+        "blank",
+        ['row', [
+            ['buyable', 11],
+            ['buyable', 12],
+        ]],
+        "upgrades",
+    ],
     startData() { return {
         unlocked: false,
-		points: new Decimal(0),
+        points: new Decimal(0),
+        rebirths: new Decimal(0),
+        resetTime: 0,
     }},
-    effectDescription() {
-        let text = "multiplying $ gain by " + coolDynamicFormat(this.effect(), 2)
-        if(this.getResetGain().gte(1e17)) text = text + "<br>RP gain past 1e17 is softcapped, diving it by " + format(this.softcapEffects()[0][0])
-        if(this.getResetGain().gte("1e2000")) text = text + "<br>RP gain past 1e2000 is softcapped again, further diving it by " + format(this.softcapEffects()[0][1])
-        if(this.getResetGain().gte("1e1000000")) text = text + "<br>RP gain has become victim of inflation, diving it by " + format(this.softcapEffects()[0][2])
-        return text
+    shouldNotify() {
+        let state = false
+        for (const upgrades in tmp.rebirth.upgrades) {
+            if (Object.hasOwnProperty.call(tmp.rebirth.upgrades, upgrades)) {
+                const upgrade = tmp.rebirth.upgrades[upgrades];
+                if(upgrade.canAfford && !hasUpgrade('rebirth', upgrades)) state = true
+            }
+        }
+        for (const buyables in tmp.rebirth.buyables) {
+            if (Object.hasOwnProperty.call(tmp.rebirth.buyables, buyables)) {
+                const buyable = tmp.rebirth.buyables[buyables];
+                if(buyable.canAfford) state = true
+            }
+        }
+        return state
     },
+    type: 'custom',
+    getNextAt() {
+        return this.requires
+    },
+    getResetGain() {
+        let base = new Decimal(3)
+        if(hasUpgrade('cash', 24)) base = base.times(tmp.cash.upgrades[24].effect)
+        return tmp.rebirth.baseAmount.max(1).log(tmp.rebirth.requires).sub(1).pow_base(base).times(tmp.rebirth.gainMult).floor()
+    },
+    requires: new Decimal(1500),
+    update(diff) {
+        if(hasUpgrade('cash', 16)) player.rebirth.unlocked = true
+    },
+    color: "#BA0022",
+    resource: "RP",
+    prestigeButtonText() {
+        return tmp.rebirth.canReset ? `Rebirth for ${formatWhole(tmp.rebirth.getResetGain)} rebirth points`:`Reach $${format(tmp.rebirth.requires.times(tmp.rebirth.buyables[11].effect.pow(5)))} to rebirth`
+    },
+    canReset() {
+        return tmp.rebirth.baseAmount.gte(this.requires.times(tmp.rebirth.buyables[11].effect.pow(5)))
+    },
+    effect() {
+        let base = new Decimal(2)
+        if(hasUpgrade('cash', 25)) base = base.pow(tmp.cash.upgrades[25].effect)
+        if(hasUpgrade('rebirth', 21)) base = base.pow(tmp.rebirth.upgrades[21].effect)
+        return player.rebirth.points.max(0).add(base).log(base)
+    },
+    row: 1,
+    prestigeNotify() {
+        return tmp.rebirth.getResetGain.gte(player.rebirth.points.div(8)) && tmp.rebirth.canReset
+    },
+    baseResource: '$',
+    baseAmount() {return player.points},
     upgrades: {
         11: {
-            title: "$$$$$",
-            description: "Multiply $ gain by 5",
-            cost: new Decimal(1),
+            fullDisplay() {
+                return `<h3>Upgrader</h3><br>
+                Multiply cash gain based on rebirth upgrades bought<br>
+                Currently: ×${formatWhole(tmp[this.layer].upgrades[this.id].effect)}<br><br>
+                Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} RP`
+            },
+            costa: new Decimal(1),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            effect() {
+                let exponent = new Decimal(1)
+                if(hasUpgrade('rebirth', 14)) exponent = exponent.times(tmp.rebirth.upgrades[14].effect)
+                return Decimal.pow(player.rebirth.upgrades.length + 1, exponent).max(1)
+            },
         },
         12: {
-            title: "Moneybots",
-            description: "Automate $ upgrades 1-8",
-            cost: new Decimal(3),
+            fullDisplay() {
+                return `<h3>Retainer</h3><br>
+                Keep one cash upgrade for each rebirth^0.5 done<br>
+                Currently: ${formatWhole(tmp[this.layer].upgrades[this.id].effect)}<br><br>
+                Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} RP`
+            },
+            costa: new Decimal(2),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            effect() {
+                return player.rebirth.rebirths.pow(0.5).floor().min(hasUpgrade('rebirth', 13)?12:6)
+            },
         },
         13: {
-            title: "I need more!",
-            description: "Unlock another row of $ upgrades",
-            cost: new Decimal(15),
+            fullDisplay() {
+                return `<h3>Unlocker</h3><br>
+                Unlock some more cash upgrades<br><br>
+                Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} RP`
+            },
+            costa: new Decimal(3),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
         },
         14: {
-            title: "Underwhelming",
-            description: "Double $ gain",
-            cost: new Decimal(100),
+            fullDisplay() {
+                return `<h3>Enhancer</h3><br>
+                Improve the first rebirth upgrade's effect<br><br>
+                Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} RP`
+            },
+            costa: new Decimal(5),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            effect() {
+                return new Decimal(1.5)
+            }
+        },
+        15: {
+            fullDisplay() {
+                return `<h3>Inflater</h3><br>
+                Unlock the first rebirth buyable<br><br>
+                Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} RP`
+            },
+            costa: new Decimal(15),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            effect() {
+                return new Decimal(1.2)
+            }
+        },
+        16: {
+            fullDisplay() {
+                return `<h3>Improver</h3><br>
+                Unlock the second rebirth buyable<br><br>
+                Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} RP`
+            },
+            costa: new Decimal(30),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            effect() {
+                return new Decimal(1.2)
+            }
         },
         21: {
-            title: "Mechanical Reconstruction",
-            description: "The Machine starts unlocked",
-            cost: new Decimal(10000),
-            unlocked() {
-                return hasAchievement('A', 31)
+            fullDisplay() {
+                return `<h3>Empowerer</h3><br>
+                Increase RP effect base again<br><br>
+                Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} RP`
             },
+            costa: new Decimal(100),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            effect() {
+                return new Decimal(0.8)
+            },
+            unlocked(){return hasUpgrade('rebirth', 16)}
         },
         22: {
-            title: "Repeated Costs",
-            description: "Unlock a RP buyable",
-            cost: new Decimal(50000),
-            unlocked() {
-                return hasAchievement('A', 31)
+            fullDisplay() {
+                return `<h3>Focuser</h3><br>
+                Increase all machine mode's power by ×1.5<br><br>
+                Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} RP`
             },
+            costa: new Decimal(200),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            effect() {
+                return new Decimal(1.5)
+            },
+            unlocked(){return hasUpgrade('rebirth', 16)}
         },
         23: {
-            title: "Repeated Repeated Costs",
-            description: "Unlock a second RP buyable",
-            cost: new Decimal(1000000),
-            unlocked() {
-                return hasAchievement('A', 31)
+            fullDisplay() {
+                return `<h3>Synergiser</h3><br>
+                Increase Cash Mode's effect based on cash<br>
+                Currently: ×${format(tmp[this.layer].upgrades[this.id].effect)}<br><br>
+                Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} RP`
             },
+            costa: new Decimal(300),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            effect() {
+                return player.points.max(1).log(8000000).add(1)
+            },
+            unlocked(){return hasUpgrade('rebirth', 16)}
         },
         24: {
-            title: "Upgrading Revival",
-            description: "Unlock more upgrades (both RP and $)",
-            cost: new Decimal("1e8"),
-            unlocked() {
-                return hasAchievement('A', 31)
+            fullDisplay() {
+                return `<h3>Synergiser II</h3><br>
+                Increase Rebirth Mode's effect based on RP<br>
+                Currently: ×${format(tmp[this.layer].upgrades[this.id].effect)}<br><br>
+                Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} RP`
             },
-        },
-        31: {
-            title: "Doublatron 3000",
-            description: "Allows use of two of The Machines modes at once",
-            cost: new Decimal("1e16"),
-            unlocked() {
-                return hasUpgrade('R', 24)
+            costa: new Decimal(500),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            effect() {
+                return player.rebirth.points.max(1).log(100).add(1)
             },
+            unlocked(){return hasUpgrade('rebirth', 16)}
         },
-        32: {
-            title: "Machine automating Machine",
-            description: "Automatically select all three modes of The Machine<br>The Machine also gets a buff",
-            cost: new Decimal("1e18"),
-            unlocked() {
-                return hasUpgrade('R', 24)
+        25: {
+            fullDisplay() {
+                return `<h3>Constructor</h3><br>
+                Increase Neutral Mode's effect based on rebirths<br>
+                Currently: ×${format(tmp[this.layer].upgrades[this.id].effect)}<br><br>
+                Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} RP`
             },
-        },
-        33: {
-            title: "Rebirth Empowerment",
-            description: "Boost RP effect, again",
-            cost: new Decimal("1e23"),
-            unlocked() {
-                return hasMilestone('SR', 6)
+            costa: new Decimal(750),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            effect() {
+                return player.rebirth.rebirths.max(1).log(250).add(1)
             },
-            tooltip: "^0.8 -> ^1",
+            unlocked(){return hasUpgrade('rebirth', 16)}
         },
-        34: {
-            title: "Super Rebirth Empowerment",
-            description: "Boost SRP's boost to Cash",
-            cost: new Decimal("1e25"),
-            unlocked() {
-                return hasMilestone('SR', 6)
+        26: {
+            fullDisplay() {
+                return `<h3>Automator</h3><br>
+                Automatically select Neutral Mode<br><br>
+                Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} RP`
             },
-            tooltip: "1.5x -> 1.5(x^2)",
+            costa: new Decimal(1250),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            unlocked(){return hasUpgrade('rebirth', 16)}
         },
+    },
+    onPrestige(gain) {
+        player.rebirth.rebirths = player.rebirth.rebirths.add(1)
+    },
+    gainMult() {
+        let gain = new Decimal(1)
+        if(player.machine.state === 3) { gain = gain.times(tmp.machine.clickables[13].effect.add(1)) }
+        if(player.machine.state === 2) { gain = gain.times(tmp.machine.clickables[13].effect.times(tmp.machine.clickables[12].effect).add(1)) }
+        gain = gain.times(tmp.rebirth.buyables[11].effect)
+        return gain
     },
     buyables: {
         11: {
-            cost(x) {
-                scalar = 2
-                if(hasChallenge('SR', 21)) scalar = scalar - 0.5
-                return new Decimal(20000).times(new Decimal(1.2).pow(new Decimal(x).pow(scalar)))
-            },
-            title: "Rebirth Booster",
-            tooltip: "Base effect: 1.5^x<br>Base cost:20,000*(1.2^x^2)",
+            title: "Virtues",
             display() {
-                return "Multiply RP gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
-                + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
-                + "<br>Effect: x" + coolDynamicFormat(this.effect(), 2)
+                return `Increase RP gain, but also increase cash required to rebirth<br><br>Currently: ×${format(tmp.rebirth.buyables[11].effect)} RP, ×${format(tmp.rebirth.buyables[11].effect.pow(5))} req<br>Count: ${formatWhole(getBuyableAmount('rebirth', 11))}${getBuyableAmount('rebirth', 12).gte(1)?'×'+formatWhole(tmp.rebirth.buyables[12].effect):''}<br>Cost: ${formatWhole(tmp.rebirth.buyables[11].cost)} RP`
             },
-            canAfford() { return player[this.layer].points.gte(this.cost()) },
-            buy() {
-                if(!hasMilestone('SR', 0)) player[this.layer].points = player[this.layer].points.sub(this.cost())
-                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
-            },
-            unlocked() {
-                return hasUpgrade('R', 22)
+            cost(x) {
+                return x.add(1).pow_base(3)
             },
             effect(x) {
-                return new Decimal(1.5).add(tmp.R.buyables[12].effect).pow(x)
+                return x.times(tmp.rebirth.buyables[12].effect).add(1).pow(0.6)
+            },
+            unlocked(){return hasUpgrade('rebirth', 15)},
+            canAfford(){return player[this.layer].points.gte(layers[this.layer].buyables[this.id].cost(getBuyableAmount(this.layer, this.id)))},
+            buy() {
+                player[this.layer].points = player[this.layer].points.sub(layers[this.layer].buyables[this.id].cost(getBuyableAmount(this.layer), this.id))
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
         },
         12: {
-            cost(x) {
-                scalar = 2
-                if(hasChallenge('SR', 21)) scalar = scalar - 0.25
-                return new Decimal(1000000).times(new Decimal(3).pow(new Decimal(x).pow(scalar)))
-            },
-            title: "Rebirth Booster Booster",
-            tooltip: "Base effect: +x/4<br>Base cost:1,000,000*(3^x^2)",
+            title: "Anti-Sins",
             display() {
-                return "Boost the previous buyables power<br>Cost: " + coolDynamicFormat(this.cost(), 3)
-                + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
-                + "<br>Effect: +" + coolDynamicFormat(this.effect(), 2)
+                return `Increase functional amount of previous buyable<br><br>Currently: ×${formatWhole(tmp.rebirth.buyables[12].effect)}<br>Count: ${formatWhole(getBuyableAmount('rebirth', 12))}<br>Cost: ${formatWhole(tmp.rebirth.buyables[12].cost)} RP`
             },
-            canAfford() { return player[this.layer].points.gte(this.cost()) },
-            buy() {
-                if(!hasMilestone('SR', 0)) player[this.layer].points = player[this.layer].points.sub(this.cost())
-                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
-            },
-            unlocked() {
-                return hasUpgrade('R', 23)
+            cost(x) {
+                return x.add(1).pow_base(8)
             },
             effect(x) {
-                if (!hasUpgrade('U', 44)) return new Decimal(0.25).times(x)
-                if (hasUpgrade('U', 44) && !hasMilestone('P', 8)) return new Decimal(0.3).times(x)
-                if (hasUpgrade('U', 44) && hasMilestone('P', 8)) return new Decimal(0.4).times(x)
+                return x.add(1)
+            },
+            unlocked(){return hasUpgrade('rebirth', 16)},
+            canAfford(){return player[this.layer].points.gte(layers[this.layer].buyables[this.id].cost(getBuyableAmount(this.layer, this.id)))},
+            buy() {
+                player[this.layer].points = player[this.layer].points.sub(layers[this.layer].buyables[this.id].cost(getBuyableAmount(this.layer), this.id))
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
         },
     },
-    doReset(resetlayer) {
-        if(resetlayer == 'SR') {
-            player.R.points = new Decimal(0)
-            if(!hasMilestone('SR', 5)) player.R.upgrades = []
-            if(!inChallenge('SR', 21)) {
-                if(hasMilestone('SR', 1)) player.R.upgrades.push(11, 12, 13, 14)
-                if(hasMilestone('SR', 3)) player.R.upgrades.push(22, 23)
-                if(!hasMilestone('SR', 3)) setBuyableAmount('R', 11, new Decimal(0))
-                if(!hasMilestone('SR', 3)) setBuyableAmount('R', 12, new Decimal(0))
-                if(hasAchievement('A', 81)) player.R.upgrades.push(12, 21)
-                if(hasMilestone('HC', 0)) player.R.upgrades.push(12, 21, 13, 22, 23, 24)
-            }
-            if(inChallenge('SR', 21)) player.R.upgrades = []
-        }
-        if(resetlayer == 'HC') {
-            player.R.points = new Decimal(0)
-            player.R.upgrades = [12, 21, 13, 22, 23, 24]
-            setBuyableAmount('R', 11, new Decimal(0))
-            setBuyableAmount('R', 12, new Decimal(0))
-        }
+})
+
+addLayer('machine', {
+    color: "rgb(128, 128, 128)",
+    tabFormat: [
+        ['display-text', function() {return `<h1>The Machine</h1><br>The Machine is currently ${hasUpgrade('cash', 26)?`unlocked and ${player.machine.state == 0?'inactive':`set to ${player.machine.state == 1?'Cash':player.machine.state == 2?'Neutral':'Rebirth'} Mode`}`:'locked'}`}],
+        'blank',
+        'clickables'
+    ],
+    startData() { return {
+        unlocked: false,
+        points: new Decimal(0),
+        state: 0,
+    }},
+    type: 'none',
+    row: 0,
+    shouldNotify() {
+        return hasUpgrade('cash', 26) && player.machine.state == 0
     },
-    passiveGen() {
-        let passive = new Decimal(0)
-        if(!inChallenge('SR', 21)) {
-            if(hasChallenge('SR', 11)) passive = passive.add(0.2)
-            if(hasChallenge('SR', 21)) passive = passive.times(10)
-        }
-        return passive
+    update(diff) {
+        if(hasUpgrade('cash', 26)) player.machine.unlocked = true
     },
-    automate() {
-        if(!inChallenge('SR', 21)) {
-            if (!hasMilestone('UMF', 1)) {
-                if(tmp.R.buyables[11].canAfford && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
-                    setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(1))
-                    if(hasMilestone('HC', 1)) setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(9))
-                    if(hasMilestone('UMF', 1)) setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(40))
-                }
-                if(tmp.R.buyables[12].canAfford && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
-                    setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(1))
-                    if(hasMilestone('HC', 1)) setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(9))
-                    if(hasMilestone('UMF', 1)) setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(40))
-                }
-            } else {
-                buyMax("Rebirth")
-            }
-            if(hasMilestone('HC', 3)) {
-                buyUpgrade('R', 11)
-                buyUpgrade('R', 12)
-                buyUpgrade('R', 13)
-                buyUpgrade('R', 14)
-                buyUpgrade('R', 21)
-                buyUpgrade('R', 22)
-                buyUpgrade('R', 23)
-                buyUpgrade('R', 24)
-                buyUpgrade('R', 31)
-                buyUpgrade('R', 32)
-                buyUpgrade('R', 33)
-                buyUpgrade('R', 34)
-            }
-        }
+    clickables: {
+        11: {
+            title: "Cash",
+            display() {
+                return `Put the machine into Cash Mode<br>This increases cash gain by +${formatWhole(tmp.machine.clickables[11].effect.times(100))}%`
+            },
+            canClick() {
+                return hasUpgrade('cash', 26) && player.machine.state == 0
+            },
+            onClick() {
+                player.machine.state = 1
+            },
+            effect() {
+                let base = new Decimal(1)
+                if(hasUpgrade('rebirth', 22)) base = base.times(tmp.rebirth.upgrades[22].effect)
+                if(hasUpgrade('rebirth', 23)) base = base.times(tmp.rebirth.upgrades[23].effect)
+                return base
+            },
+        },
+        12: {
+            title: "Neutral",
+            display() {
+                return `Put the machine into Neutral Mode<br>This applies both Cash Mode and Rebirth Mode at ${formatWhole(tmp.machine.clickables[12].effect.times(100))}% efficiency`
+            },
+            canClick() {
+                return hasUpgrade('cash', 26) && player.machine.state == 0
+            },
+            onClick() {
+                player.machine.state = 2
+            },
+            effect() {
+                let base = new Decimal(0.5)
+                if(hasUpgrade('rebirth', 22)) base = base.times(tmp.rebirth.upgrades[22].effect)
+                if(hasUpgrade('rebirth', 25)) base = base.times(tmp.rebirth.upgrades[25].effect)
+                return base
+            },
+        },
+        13: {
+            title: "Rebirth",
+            display() {
+                return `Put the machine into Rebirth Mode<br>This increases rebirth point gain by +${formatWhole(tmp.machine.clickables[13].effect.times(100))}%`
+            },
+            canClick() {
+                return hasUpgrade('cash', 26) && player.machine.state == 0
+            },
+            onClick() {
+                player.machine.state = 3
+            },
+            effect() {
+                let base = new Decimal(0.5)
+                if(hasUpgrade('rebirth', 22)) base = base.times(tmp.rebirth.upgrades[22].effect)
+                if(hasUpgrade('rebirth', 24)) base = base.times(tmp.rebirth.upgrades[24].effect)
+                return base
+            },
+        },
     },
-    hotkeys: [
-        {
-            key: "r", // What the hotkey button is. Use uppercase if it's combined with shift, or "ctrl+x" for holding down ctrl.
-            description: "R: Rebirth into another life", // The description of the hotkey that is displayed in the game's How To Play tab
-            onPress() { if (player.R.unlocked) doReset("R") },
-            unlocked() {return player.R.unlocked} // Determines if you can use the hotkey, optional
-        }
-    ]
+    doReset(layer) {
+        layerDataReset('machine', [])
+        if(hasUpgrade('rebirth', 26)) player.machine.state = 2
+    }
 })

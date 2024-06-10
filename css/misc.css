@@ -14,15 +14,16 @@
 	font-size: 20px;
 	cursor: pointer;
 	padding: 5px 20px;
-	margin: 5px;
-	border-radius: 10px;
-	border: 2px solid;
+	margin: 2px;
+	border-radius: 20px;
+	border: 4px solid;
 	color: var(--color);
+    min-width: 150px;
 
 }
 
 .tabButton:hover {
-	transform: scale(1.1, 1.1);
+	transform: scale(1.05, 1.05);
 	text-shadow: 0 0 7px var(--color);
 }
 
@@ -79,5 +80,9 @@
 }
 
 .hl {
-	border-top: 3px solid var(--color);
+	border-top: 4px solid var(--color);
+}
+
+.currencyDisplayHeader {
+    width: 240px;
 }

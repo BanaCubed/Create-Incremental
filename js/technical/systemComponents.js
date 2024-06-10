@@ -103,28 +103,51 @@ var systemComponents = {
 	},
 
 	'overlay-head': {
-		template: `			
-		<div class="overlayThing" style="padding-bottom:7px; width: 90%; z-index: 1000; position: relative">
+		template: `	
+		<div>	
 		<span v-if="player.devSpeed && player.devSpeed != 1" class="overlayThing">
-			<br>Dev Speed: {{format(player.devSpeed)}}x<br>
+			<br>Dev Speed: ×{{format(player.devSpeed)}}<br>
 		</span>
 		<span v-if="player.offTime !== undefined"  class="overlayThing">
-			<br>Offline Time: {{formatTime(player.offTime.remain)}}<br>
-		</span>
-		<br>
-		<span v-if="player.points.lt('1e1000')"  class="overlayThing">You have </span>
-		<h2  class="overlayThing" id="points">{{format(player.points)}}</h2>
-		<span v-if="player.points.lt('1e1e6')"  class="overlayThing"> {{modInfo.pointsName}}</span>
-		<br>
-		<span v-if="canGenPoints()"  class="overlayThing">({{tmp.other.oompsMag != 0 ? format(tmp.other.oomps) + " OOM" + (tmp.other.oompsMag < 0 ? "^OOM" : tmp.other.oompsMag > 1 ? "^" + tmp.other.oompsMag : "") + "s" : formatSmall(getPointGen())}}/sec)</span>
-		<div v-for="thing in tmp.displayThings" class="overlayThing"><span v-if="thing" v-html="thing"></span></div>
-	</div>
+			<br>Offline Time: {{formatTime(player.offTime.remain)}}
+		</span>	<br>
+		<div class="overlayThing" style="padding-bottom:7px; width: 90%; z-index: 1000; position: relative; justify-content: space-around; display: flex;">
+			<div class="currencyDisplayHeader">
+				<span v-if="player.points.lt('1e1000')"  class="overlayThing">You have </span>
+				<h2  class="overlayThing" id="points" style="color: rgb(21, 115, 7); text-shadow: rgb(21, 115, 7) 0px 0px 10px;">{{"$" + format(player.points.max(0))}}</h2>
+				<span class="overlayThing"></span>
+				<br>
+				<span v-if="canGenPoints()"  class="overlayThing">({{tmp.other.oompsMag != 0 ? format(tmp.other.oomps) + " OOM" + (tmp.other.oompsMag < 0 ? "^OOM" : tmp.other.oompsMag > 1 ? "^" + tmp.other.oompsMag : "") + "s" : formatSmall(getPointGen())}}/sec)</span>
+				<div v-for="thing in tmp.displayThings" class="overlayThing"><span v-if="thing" v-html="thing"></span></div>
+			</div>
+			<div class="currencyDisplayHeader" v-if="player.rebirth.unlocked">
+				<span v-if="player.points.lt('1e1000')"  class="overlayThing">You have </span>
+				<h2  class="overlayThing" id="points" style="color: #BA0022; text-shadow: #BA0022 0px 0px 10px;">{{formatWhole(player.rebirth.points.max(0))}}</h2> RP
+				<span class="overlayThing"></span>
+				<br><br>
+			</div>
+	</div></div>
 	`
     },
 
     'info-tab': {
         template: `
         <div>
+		<div id="discord" class="overlayThing">
+			<img onclick="window.open((modInfo.discordLink ? modInfo.discordLink : 'https://discord.gg/F3xveHV'),'mywindow')"
+				src="discord.png" target="_blank"></img>
+			<ul id="discord-links">
+				<li v-if="modInfo.discordLink"><a class="link" v-bind:href="modInfo.discordLink"
+						target="_blank">{{modInfo.discordName}}</a><br></li>
+				<li><a class="link" href="https://discord.gg/F3xveHV" target="_blank"
+						v-bind:style="modInfo.discordLink ? {'font-size': '16px'} : {}">The Modding Tree
+						Discord</a><br></li>
+				<li><a class="link" href="http://discord.gg/wwQfgPa" target="_blank"
+						v-bind:style="{'font-size': '16px'}">Main Prestige Tree server</a></li>
+			</ul>
+		</div>
+		<div id="version" onclick="showTab('changelog-tab')" class="overlayThing" style="margin-right: 13px" >
+			{{VERSION.withoutName}}</div>
         <h2>{{modInfo.name}}</h2>
         <br>
         <h3>{{VERSION.withName}}</h3>
@@ -143,7 +166,7 @@ var systemComponents = {
         <a class="link" href="http://discord.gg/wwQfgPa" target="_blank" v-bind:style="{'font-size': '16px'}">Main Prestige Tree server</a><br>
 		<br><br>
         Time Played: {{ formatTime(player.timePlayed) }}<br><br>
-        If you wrote 3 digits per second, it would take you {{ formatTime(player.points.add(1).log(10).ceil().div(3), 1) }} to write your $ amount<br><br>
+        If you wrote 3 digits per second, it would take you {{ formatTime(player.points.add(1).log(10).ceil().div(3), 1) }} to write your cash amount<br><br>
         <h3>Hotkeys</h3><br>
         <span v-for="key in hotkeys" v-if="player[key.layer].unlocked && tmp[key.layer].hotkeys[key.id].unlocked"><br>{{key.description}}</span></div>
     `
@@ -152,29 +175,40 @@ var systemComponents = {
     'options-tab': {
         template: `
         <table>
+			<div id="discord" class="overlayThing">
+				<img onclick="window.open((modInfo.discordLink ? modInfo.discordLink : 'https://discord.gg/F3xveHV'),'mywindow')"
+					src="discord.png" target="_blank"></img>
+				<ul id="discord-links">
+					<li v-if="modInfo.discordLink"><a class="link" v-bind:href="modInfo.discordLink"
+							target="_blank">{{modInfo.discordName}}</a><br></li>
+					<li><a class="link" href="https://discord.gg/F3xveHV" target="_blank"
+							v-bind:style="modInfo.discordLink ? {'font-size': '16px'} : {}">The Modding Tree
+							Discord</a><br></li>
+					<li><a class="link" href="http://discord.gg/wwQfgPa" target="_blank"
+							v-bind:style="{'font-size': '16px'}">Main Prestige Tree server</a></li>
+				</ul>
+			</div>
+			<div id="version" onclick="showTab('changelog-tab')" class="overlayThing" style="margin-right: 13px" >
+				{{VERSION.withoutName}}</div>
             <tr>
-                <td><button class="opt" onclick="save()">Save</button></td>
-                <td><button class="opt" onclick="toggleOpt('autosave')">Autosave: {{ options.autosave?"ON":"OFF" }}</button></td>
-                <td><button class="opt" onclick="hardReset()">HARD RESET</button></td>
-            </tr>
-            <tr>
-                <td><button class="opt" onclick="exportSave()">Export Save to clipboard</button></td>
+				<td><button class="optTitle">Saving</button></td>
+                <td><button class="opt" onclick="save()" style="border-radius: 20px 0 0 0">Save</button></td>
                 <td><button class="opt" onclick="importSave()">Import Save</button></td>
-                <td><button class="opt" onclick="toggleOpt('offlineProd')">Offline Prod: {{ options.offlineProd?"ON":"OFF" }}</button></td>
+                <td><button class="opt" onclick="exportSave()">Export Save to clipboard</button></td>
+                <td><button class="opt" onclick="toggleOpt('autosave')">Autosave: {{ options.autosave?"ON":"OFF" }}</button></td>
+                <td><button class="opt" onclick="hardReset()" style="border-radius: 0 20px 20px 0">HARD RESET</button></td>
             </tr>
             <tr>
-                <td><button class="opt" onclick="switchTheme()">Theme: {{ getThemeName() }}</button></td>
+				<td><button class="optTitle">Visual</button></td>
                 <td><button class="opt" onclick="adjustMSDisp()">Show Milestones: {{ MS_DISPLAYS[MS_SETTINGS.indexOf(options.msDisplay)]}}</button></td>
-                <td><button class="opt" onclick="toggleOpt('hqTree')">High-Quality Tree: {{ options.hqTree?"ON":"OFF" }}</button></td>
+                <td><button class="opt" onclick="toggleOpt('hideChallenges')">Completed Challenges: {{ options.hideChallenges?"HIDDEN":"SHOWN" }}</button></td>
+                <td><button class="opt" onclick="toggleOpt('standardNotate')">Standard Notation: {{ options.standardNotate?"ON":"OFF" }}</button></td>
+				<td><button class="opt" onclick="toggleOpt('forceTooltips'); needsCanvasUpdate = true" style="border-radius: 0 0 20px 0">Shift-Click to Toggle Tooltips: {{ options.forceTooltips?"ON":"OFF" }}</button></td>
             </tr>
             <tr>
-                <td><button class="opt" onclick="toggleOpt('hideChallenges')">Completed Challenges: {{ options.hideChallenges?"HIDDEN":"SHOWN" }}</button></td>
-                <td><button class="opt" onclick="toggleOpt('forceOneTab'); needsCanvasUpdate = true">Single-Tab Mode: {{ options.forceOneTab?"ALWAYS":"AUTO" }}</button></td>
-				<td><button class="opt" onclick="toggleOpt('forceTooltips'); needsCanvasUpdate = true">Shift-Click to Toggle Tooltips: {{ options.forceTooltips?"ON":"OFF" }}</button></td>
-			</tr>
-            <tr>
-                <td><button class="opt" onclick="retryMatters()" v-if="hasAchievement('A', 101)">Restart Matters Progress (softlock prevention)</button></td>
-			</tr>
+				<td><button class="optTitle">Gameplay</button></td>
+				<td><button class="opt" onclick="toggleOpt('offlineProd')" style="border-radius: 0 0 20px 20px">Offline Prod: {{ options.offlineProd?"ON":"OFF" }}</button></td>
+            </tr>
         </table>`
     },
 
