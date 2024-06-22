@@ -1,7 +1,6 @@
 let modInfo = {
 	name: "Create Incremental",
-	id: "nhug dkjldgsgrcinhgrv",
-	oldid: "nhug dkjldgsgrcinhgrv",
+	id: "createIncremental",
 	author: "BanaCubed, with ideas from galaxy",
 	pointsName: "$",
 	modFiles: ["layers.js", "tree.js", "layers/cash.js", "layers/rebirth.js", "layers/rebirth2.js", "layers/rebirth3.js", "layers/matter.js"],
@@ -9,18 +8,57 @@ let modInfo = {
 	discordName: "Create Incremental Server",
 	discordLink: "https://discord.gg/wt5XyPRtte",
 	initialStartPoints: new Decimal(0), // Used for hard resets and new players
-	offlineLimit: 168,  // In hours
+	offlineLimit: 12,  // In hours
 }
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.3.2.3",
-	name: "The Matter Combustor",
+	num: "1.0",
+	name: "The Universe Update",
 }
 
-let changelog = `<h1>""""""Changelog""""""</h1><br><br>
-	Check the forum thread the game is based on at <a href=https://galaxy.click/forum/thread/255>galaxy.click/forum/thread/255</a> to see what is coming next<br><br>
-	Changelog is available at <a href=https://galaxy.click/updates/344>galaxy.click/updates/344</a>`
+let changelog = 
+`<h1>Changelog</h1><br><br>
+<span style="text-align: left; position: absolute; left: 30px;">
+	<h3>v1.0</h3><br>
+		- <span style="color: #9966BB">Remade the Entire Game</span><br>
+		- Actually Added <span style="color: #9966BB">The Changelog</span><br><br>
+	<h3>v0.3.2</h3><br>
+		- Added <span style="color: #2ed5e8">Matter Paths</span><br>
+		- Added <span style="color: #2dc0d6">Matter</span><br>
+		- Added <span style="color: #d6442d">Antimatter</span><br>
+		- Added <span style="color: #303030">Dark Matter</span> and <span style="color: #4b0f75">Black Hole</span><br>
+		- Added <span style="color: #cc59de">Exotic Matter</span>, <span style="color: #8c617e">Hypothetical Particles</span>, and <span style="color: #7bff00">Unstable Matter</span><br>
+		- Added <span style="color: #472961">Ultimate Matter Fragments</span><br>
+		- Added <span style="color: #9966BB">Softlock Prevention</span><br>
+		Endgame <span style="color: #472961">4 UMF</span><br><br>
+	<h3>v0.3.0.1 - v0.3.0.5</h3><br>
+		- Added <span style="color: #9966BB">Hotkeys</span><br>
+		- Added <span style="color: #2ed5e8">Hyper Paths Respec</span><br><br>
+	<h2>v0.3</h2><br>
+		- Added <span style="color: #2ed5e8">Hyper Rebirth</span><br>
+		- Added <span style="color: #2ed5e8">Hyper Paths</span><br>
+		- Added <span style="color: #34eb67">Hyper Cash</span><br>
+		Endgame <span style="color: #157307">e10,000 $</span> (wait, it went down?), <span style="color: #2ed5e8">130 HRP</span><br><br>
+	<h3>v0.2.1</h3><br>
+		- Added <span style="color: #d6c611">Power</span><br>
+		- Added <span style="color: #d6c611">Power Pylons</span><br>
+		- Added More <span style="color: #eb1a3d">Super Rebirth Challenges</span><br>
+		Endgame <span style="color: #157307">e12,000 $</span>, <span style="color: #ba0022">e5,000 RP</span>, <span style="color: #eb1a3d">100,000 SRP</span><br><br>
+	<h2>v0.2</h2><br>
+		- Added <span style="color: #eb1a3d">Super Rebirth</span><br>
+		- Added <span style="color: #eb1a3d">Super Rebirth Challenge 1</span><br>
+		- Added <span style="color: #eb1a3d">Super Rebirth Milestones</span><br>
+		- Added <span style="color: #9966BB">Secret Achievements</span><br>
+		- Added <span style="color: #9966BB">More Themes</span><br>
+		Endgame <span style="color: #eb1a3d">8 SRP, Challenge Completed</span><br><br>
+	<h3>v0.1.3</h3><br>
+		- Added <span style="color: #157307">Money</span><br>
+		- Added <span style="color: #ba0022">Rebirth</span><br>
+		- Added <span style="color: #157307">The Machine</span><br>
+		- Added <span style="color: #FFEE88">Achievements</span><br>
+		Endgame <span style="color: #9966BB">Unkown</span><br><br>
+</span>`
 
 let winText = `You are win! Congratulations on wasting your time! (Keep save for future updates)`
 
@@ -38,91 +76,29 @@ function canGenPoints(){
 }
 
 // Calculate points/sec!
-function getPointGen(softcaps = true) {
+function getPointGen() {
 	if(!canGenPoints())
 		return new Decimal(0)
 
 	let gain = new Decimal(0)
-	if(player.points === null || player.points === undefined) player.points = new Decimal(0)
 
+	if(hasUpgrade('cash', 11)) { gain = gain.add(tmp.cash.upgrades[11].effect) }
+	if(hasUpgrade('cash', 12)) { gain = gain.times(tmp.cash.upgrades[12].effect) }
+	if(hasUpgrade('cash', 13)) { gain = gain.times(tmp.cash.upgrades[13].effect) }
+	if(hasUpgrade('cash', 14)) { gain = gain.times(tmp.cash.upgrades[14].effect) }
+	if(hasUpgrade('cash', 15)) { gain = gain.times(tmp.cash.upgrades[15].effect) }
+	if(hasUpgrade('cash', 16)) { gain = gain.times(tmp.cash.upgrades[16].effect) }
+	if(hasUpgrade('cash', 21)) { gain = gain.times(tmp.cash.upgrades[21].effect) }
+	if(hasUpgrade('cash', 22)) { gain = gain.times(tmp.cash.upgrades[22].effect) }
+	if(player.machine.state === 1) { gain = gain.times(tmp.machine.clickables[11].effect.add(1)) }
+	if(player.machine.state === 2) { gain = gain.times(tmp.machine.clickables[11].effect.times(tmp.machine.clickables[12].effect).add(1)) }
 
-	// $ Layer ('U')
-	if(!hasMilestone('P', 8)) {
-		if (hasUpgrade('U', 11) || inChallenge('SR', 22)) gain = gain.add(1)
+	gain = gain.times(tmp.rebirth.effect)
+	if(hasUpgrade('rebirth', 11)) { gain = gain.times(tmp.rebirth.upgrades[11].effect) }
 
-		if (hasUpgrade('U', 12)) gain = gain.times(4)
-		if (hasUpgrade('U', 13) && !hasUpgrade('U', 23)) gain = gain.times(player.points.add(5).log(5))
-		if (hasUpgrade('U', 13) && hasUpgrade('U', 23)) gain = gain.times(player.points.add(3).log(3))
-		if (hasUpgrade('U', 14)) gain = gain.times(2)
-		if (hasUpgrade('U', 22)) gain = gain.times(player.points.pow(1.5).add(8).log(8).pow(0.5))
-		if (hasUpgrade('U', 24)) gain = gain.times(1.5)
-		if (hasUpgrade('U', 31)) gain = gain.times(player.points.add(10).log(10).pow(0.5))
-		if (hasUpgrade('U', 41)) gain = gain.times(10)
-		if (hasUpgrade('U', 43)) gain = gain.times(player.R.points.add(10).log(10))
-	}
+	gain = gain.times(tmp.super.effect[1])
 
-	if(hasMilestone('P', 8)) {
-		if (hasUpgrade('U', 11) || inChallenge('SR', 22)) gain = gain.add(100)
-
-		if (hasUpgrade('U', 12)) gain = gain.times(5)
-		if (hasUpgrade('U', 13) && !hasUpgrade('U', 23)) gain = gain.times(player.points.add(4.5).log(3.5))
-		if (hasUpgrade('U', 13) && hasUpgrade('U', 23)) gain = gain.times(player.points.add(2.5).log(2.5))
-		if (hasUpgrade('U', 14)) gain = gain.times(3)
-		if (hasUpgrade('U', 22)) gain = gain.times(player.points.pow(1.55).add(7).log(7).pow(0.5))
-		if (hasUpgrade('U', 24)) gain = gain.times(2)
-		if (hasUpgrade('U', 31)) gain = gain.times(player.points.add(8).log(8).pow(0.5))
-		if (hasUpgrade('U', 41)) gain = gain.times(1000)
-		if (hasUpgrade('U', 43)) gain = gain.times(player.R.points.add(8).log(8))
-	}
-
-	if (hasUpgrade('U', 51)) gain = gain.times(player.P.points.add(1))
-
-	// The Machine
-	if(!inChallenge('SR', 22)) {
-		if (getClickableState('U', 11)) gain = gain.times(4)
-		if (getClickableState('U', 12)) gain = gain.times(3)
-		if (getClickableState('U', 13)) gain = gain.times(2)
-
-		gain = gain.times(machineBonuses())
-	}
-
-	if(!hasMilestone('P', 8)) { if (hasUpgrade('U', 21)) gain = gain.pow(1.25) }
-	if(hasMilestone('P', 8)) { if (hasUpgrade('U', 21)) gain = gain.pow(1.3) }
-
-
-	// Rebirth Layer
-	gain = gain.times(tmp.R.effect)
-	if (hasUpgrade('R', 11)) gain = gain.times(5)
-	if (hasUpgrade('R', 14)) gain = gain.times(2)
-
-
-	// Super Rebrith Layer
-	gain = gain.times(tmp.SR.effect[0])
-	if (hasMilestone('SR', 9)) gain = gain.times(tmp.SR.milestones[9].effect)
-	if (hasMilestone('SR', 4)) gain = gain.pow(1.1)
-	if (inChallenge('SR', 12)) gain = gain.pow(0.5)
-	if (inChallenge('SR', 31)) gain = gain.div(player.SR.tax)
-
-
-	// Hyper Rebirth Layer
-	gain = gain.times(tmp.HC.effect[0])
-	if(hasUpgrade('HC', 11)) gain = gain.times(10000)
-	if(hasUpgrade('HC', 14)) gain = gain.times(100)
-	if(hasUpgrade('HC', 24)) gain = gain.times(200)
-
-	// Matters
-	gain = gain.times(tmp.UMF.effect2)
-
-	gain = gain.pow(tmp.C.effect[0])
-
-
-	// Dunno were else to put this
-
-	everyTick();
-
-	if(softcaps !== false) {
-        if(gain.gte("1e5000000")) gain = new Decimal(10).pow(gain.log(10).div(5000000).pow(0.25).times(5000000))
-	}
+	if(inChallenge('super', 12)) { gain = gain.div(tmp.super.challenges[12].nerf)}
 
 	return gain
 }
@@ -136,34 +112,12 @@ function addedPlayerData() { return {
 
 // Display extra things at the top of the page
 var displayThings = [
-	function() {
-		if(inChallenge('SR', 31)) {
-			return "You have " + format(player.SR.tax) + " tax"
-		}
-	},
-	function() {
-		if(getPointGen().gte("1e5000000")) {
-			return "Inflation is dividing your income by " + format(player.U.softcapPower)
-		}
-	}
 ]
 
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.UMF.points.gte(4)
-}
-
-function machineBonuses() {
-	let bonus = new Decimal(1);
-	if(hasUpgrade('R', 32)) bonus = bonus.times(1.3);
-	bonus = bonus.times(tmp.P.effect)
-	if(hasUpgrade('U', 34) && hasMilestone('P', 8)) bonus = bonus.pow(1.25)
-	return bonus
-}
-
-function everyTick() {
-	// meh
+	return false
 }
 
 function findIndex(arr, x) {
@@ -186,21 +140,4 @@ function maxTickLength() {
 // Use this if you need to undo inflation from an older version. If the version is older than the version that fixed the issue,
 // you can cap their current resources with this.
 function fixOldSave(oldVersion){
-}
-
-function achievement33() {
-	// Variable setup
-	let machinemodes = 0
-
-	// Total modes selected
-	if (getClickableState('U', 11) === true) machinemodes = machinemodes + 1
-	if (getClickableState('U', 12) === true) machinemodes = machinemodes + 1
-	if (getClickableState('U', 13) === true) machinemodes = machinemodes + 1
-
-	// >= 2 return true
-	if (machinemodes >= 2) return true; else return false
-}
-
-function timeDisplay(value) {
-	formatTime(value)
 }

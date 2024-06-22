@@ -228,8 +228,7 @@ function loadVue() {
 			v-bind:style="[tmp[layer].canReset ? {'background-color': tmp[layer].color} : {}, tmp[layer].componentStyles['prestige-button']]"
 			v-html="prestigeButtonText(layer)" v-on:click="doReset(layer)">
 		</button>
-		`
-	
+	`	
 	})
 
 	// Displays the main resource for the layer
@@ -604,6 +603,9 @@ function loadVue() {
 	Vue.component('layer-tab', systemComponents['layer-tab'])
 	Vue.component('overlay-head', systemComponents['overlay-head'])
 	Vue.component('info-tab', systemComponents['info-tab'])
+	Vue.component('discord-version-overlay', systemComponents['discord-version-overlay'])
+	Vue.component('help-tab', systemComponents['help-tab'])
+	Vue.component('stats-tab', systemComponents['stats-tab'])
 	Vue.component('options-tab', systemComponents['options-tab'])
 	Vue.component('tooltip', systemComponents['tooltip'])
 	Vue.component('particle', systemComponents['particle'])

@@ -1,6 +1,32 @@
-function coolDynamicFormat(num, precision) {
-    if(precision !== 0) return format(num)
-    if(precision == 0) return formatWhole(num)
+const standardSuffixes = [[
+    '', 'K', 'M', 'B'
+    ], [
+        '', 'U', 'D', 'T', 'Qa', 'Qt', 'Sx', 'Sp', 'Oc', 'No'
+    ], [
+        '', 'Dc', 'Vg', 'Tg', 'Qg', 'Qi', 'He', 'Se', 'Og', 'Nn'
+    ], [
+        '', 'Ce', 'De', 'Tc', 'Qc', 'Qe', 'Hc', 'Sc', 'Oe', 'Ne'
+    ], [
+        '', 'Mi', 'Dm', 'Tm', 'Qm', 'Ql', 'Hm', 'Sm', 'Om', 'Nm'
+]]
+
+function standardFormat(num, precision) {
+    num = new Decimal(num)
+    let index = num.max(1).add(1).log(10).div(3).floor().toNumber()
+    num = num.div(Decimal.pow(1000, index))
+    let suffix = ''
+    let suffindex
+    if(index <= 3) suffix = standardSuffixes[0][index]
+    else {
+        index -= 1;
+        index = index.toString()
+        for (let loop = 0; loop < index.length; loop++) {
+            suffindex = index.charAt(index.length - loop - 1)
+            if(loop % 4 == 0 && loop != 0) suffix = suffix + '-'
+            suffix = suffix + standardSuffixes[(loop % 4) + 1][suffindex]
+        }
+    }
+    return num.toStringWithDecimalPlaces(precision) + suffix
 }
 
 function exponentialFormat(num, precision, mantissa = true) {
@@ -30,7 +56,6 @@ function commaFormat(num, precision) {
 function regularFormat(num, precision) {
     if (num === null || num === undefined) return "NaN"
     if (num.mag < 0.0001) return (0).toFixed(precision)
-    if (num.mag < 0.1 && precision !==0) precision = Math.max(precision, 4)
     return num.toStringWithDecimalPlaces(precision)
 }
 
@@ -59,8 +84,10 @@ function format(decimal, precision = 2, small) {
         else return Decimal.pow(10, slog.sub(slog.floor())).toStringWithDecimalPlaces(3) + "F" + commaFormat(slog.floor(), 0)
     }
     else if (decimal.gte("1e1000000")) return exponentialFormat(decimal, 0, false)
-    else if (decimal.gte("1e10000")) return exponentialFormat(decimal, 0)
-    else if (decimal.gte(1e9)) return exponentialFormat(decimal, precision)
+    else if (decimal.gte('1e30003')) return exponentialFormat(decimal, precision)
+    else if (decimal.gte('1e9') && !options.standardNotate) return exponentialFormat(decimal, precision)
+    else if (decimal.gte(1e306) && options.standardNotate) return standardFormat(decimal, 0)
+    else if (decimal.gte(1e6) && options.standardNotate) return standardFormat(decimal, precision)
     else if (decimal.gte(1e3)) return commaFormat(decimal, 0)
     else if (decimal.gte(0.0001) || !small) return regularFormat(decimal, precision)
     else if (decimal.eq(0)) return (0).toFixed(precision)
@@ -78,7 +105,7 @@ function format(decimal, precision = 2, small) {
 
 function formatWhole(decimal) {
     decimal = new Decimal(decimal)
-    if (decimal.gte(1e9)) return format(decimal, 2)
+    if (decimal.gte(1e6)) return format(decimal, 2)
     if (decimal.lte(0.99) && !decimal.eq(0)) return format(decimal, 2)
     return format(decimal, 0)
 }
@@ -126,11 +153,10 @@ function iDontWantToNameThis(decimal, mantissa) {
 function formatTime(s, mantissa = 3) {
     let sec = new Decimal(s)
     if (sec.lt(60)) return format(sec, mantissa) + "s"
-    else if (sec.lt(3600)) return formatWhole(sec.div(60).floor()) + "m " + iDontWantToNameThis(sec.sub(sec.div(60).floor().mul(60)), mantissa) + "s"
-    else if (sec.lt(86400)) return formatWhole(sec.div(3600).floor()) + "h " + formatZero(sec.div(60).floor().sub(sec.div(3600).floor().mul(60))) + "m " + iDontWantToNameThis(sec.sub(sec.div(60).floor().mul(60)), mantissa) + "s"
-    else if (sec.lt(31536000)) return formatWhole(sec.div(86400).floor()) + "d " + formatZero(sec.div(3600).floor().sub(sec.div(86400).floor().mul(24))) + "h " + formatZero(sec.div(60).floor().sub(sec.div(3600).floor().mul(60))) + "m " + iDontWantToNameThis(sec.sub(sec.div(60).floor().mul(60)), mantissa) + "s"
-    else if (sec.lt(31536000000)) return formatWhole(sec.div(31536000).floor()) + "y " + formatZeroo(sec.div(86400).floor().sub(sec.div(31536000).floor().mul(365))) + "d " + formatZero(sec.div(3600).floor().sub(sec.div(86400).floor().mul(24))) + "h"
-    else if (sec.lt(31536000000000000)) return formatWhole(sec.div(31536000).floor()) + "y " + formatZeroo(sec.div(86400).floor().sub(sec.div(31536000).floor().mul(365))) + "d"
+    else if (sec.lt(3600)) return formatWhole(sec.div(60).floor()) + ":" + iDontWantToNameThis(sec.sub(sec.div(60).floor().mul(60)), mantissa)
+    else if (sec.lt(86400)) return formatWhole(sec.div(3600).floor()) + ":" + formatZero(sec.div(60).floor().sub(sec.div(3600).floor().mul(60))) + ":" + iDontWantToNameThis(sec.sub(sec.div(60).floor().mul(60)), mantissa)
+    else if (sec.lt(31536000)) return formatWhole(sec.div(86400).floor()) + "d " + formatZero(sec.div(3600).floor().sub(sec.div(86400).floor().mul(24))) + ":" + formatZero(sec.div(60).floor().sub(sec.div(3600).floor().mul(60))) + ":" + iDontWantToNameThis(sec.sub(sec.div(60).floor().mul(60)), mantissa)
+    else if (sec.lt(31536000000000)) return formatWhole(sec.div(31536000).floor()) + "y " + formatZeroo(sec.div(86400).floor().sub(sec.div(31536000).floor().mul(365))) + "d"
     else return formatWhole(sec.div(31536000).floor()) + "y"
 }
 
