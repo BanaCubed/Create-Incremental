@@ -85,4 +85,21 @@
 
 .currencyDisplayHeader {
     width: 240px;
+    background-color: var(--background);
+    box-shadow:
+        var(--background) 0 0 10px,
+        var(--background) 0 0 15px,
+        var(--background) 0 0 5px,
+        var(--background) 0 0 10px,
+        var(--background) 0 0 25px;
+    border-radius: 20px;
+}
+
+.overlayThing * {
+    pointer-events: none;
+}
+
+.overlayThing {
+    width: fit-content;
+    height: fit-content;
 }

@@ -1,6 +1,6 @@
 
 #discord {
-	position: absolute;
+	position: fixed;
 	bottom: 4px;
 	left: 4px;
 	width: 40px;
@@ -19,14 +19,15 @@
 	left: -244px;
 	width: 200px;
 	transition: left .3s ease;
+	pointer-events: all;
 }
 
 #discord:hover #discord-links {
-	left: -4px;
+	left: -44px;
 }
 
 #version {
-	position: absolute;
+	position: fixed;
 	right: 4px;
 	bottom: 4px;
 	text-align: right;
@@ -55,6 +56,7 @@ a {
 	-webkit-text-stroke-width: 1px;
 	-webkit-text-stroke-color: #02f2f2;
 	text-decoration: none;
+	pointer-events: all;
 }
 
 .link:hover {
@@ -66,23 +68,27 @@ a {
 .opt {
 	height: 100px;
 	width: 100px;
-	border-radius: 0;
+	border-radius: 20px;
 	border: 4px solid;
-	background-color: var(--color);
+	background-color: slategray;
 	border-color: rgba(0, 0, 0, 0.125);
-	color: rgba(0, 0, 0, 0.5);
+	color: black;
 	cursor: pointer;
+	margin: -1px;
 }
 
 .opt:hover {
-	background-color: #439ea3;
+	background-color: rgb(152, 172, 192);
+	transform: scale(1.05, 1.05);
+	box-shadow: rgb(152, 172, 192) 0 0 10px;
 }
 
 .optTitle {
 	height: 80px;
-	width: 80px;
+	width: 100px;
 	background-color: transparent;
 	color: rgba(255, 255, 255, 1);
-	margin: 10px;
+	margin: 2px;
 	border: none;
+	text-align: right;
 }

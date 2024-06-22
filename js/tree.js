@@ -16,15 +16,15 @@ addNode("blank", {
 addLayer("tree-tab", {
     tabFormat: {
         "Cash": {
-            unlocked(){return true},
+            unlocked(){return options.cashTab},
             buttonStyle: {
                 "border-color": "rgb(21, 115, 7)",
                 "background-color": "rgb(10, 57, 3)",
             },
             embedLayer: 'cash',
         },
-        "Rebirth": {
-            unlocked(){return player.rebirth.unlocked},
+        "Rebirths": {
+            unlocked(){return player.rebirth.unlocked && options.rebirthTab},
             buttonStyle: {
                 "border-color": "#BA0022",
                 "background-color": "#5D0011",
@@ -32,24 +32,26 @@ addLayer("tree-tab", {
             embedLayer: 'rebirth',
         },
         "Options": {
-            unlocked(){return true},
+            embedLayer: 'options-tab',
             buttonStyle: {
-                "border-color": "rgb(128, 128, 128)",
-                "background-color": "rgb(64, 64, 64)",
+                "border-color": "rgb(112, 128, 144)",
+                "background-color": "rgb(56, 64, 72)",
             },
-            content: [
-                "options-tab"
-            ],
         },
         "Info": {
-            unlocked(){return true},
+            embedLayer: 'info-tab',
             buttonStyle: {
-                "border-color": "rgb(128, 128, 128)",
-                "background-color": "rgb(64, 64, 64)",
+                "border-color": "rgb(112, 128, 144)",
+                "background-color": "rgb(56, 64, 72)",
             },
-            content: [
-                "info-tab"
-            ],
+        },
+        "Challenges": {
+            unlocked(){return player.chall.unlocked && options.challTab},
+            buttonStyle: {
+                "border-color": "rgb(112, 128, 144)",
+                "background-color": "rgb(56, 64, 72)",
+            },
+            embedLayer: 'chall',
         },
     },
     previousTab: "",

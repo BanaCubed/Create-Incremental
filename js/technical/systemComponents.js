@@ -111,19 +111,23 @@ var systemComponents = {
 		<span v-if="player.offTime !== undefined"  class="overlayThing">
 			<br>Offline Time: {{formatTime(player.offTime.remain)}}
 		</span>	<br>
-		<div class="overlayThing" style="padding-bottom:7px; width: 90%; z-index: 1000; position: relative; justify-content: space-around; display: flex;">
-			<div class="currencyDisplayHeader">
+		<div v-for="thing in tmp.displayThings" class="overlayThing"><span v-if="thing" v-html="thing"></span></div>
+		<div class="overlayThing" style="padding-bottom:7px; width: 90%; z-index: 1000; position: relative; justify-content: space-around; display: flex; flex-wrap: wrap; pointer-events: none;">
+			<div class="currencyDisplayHeader" v-if="options.cashPin">
 				<span v-if="player.points.lt('1e1000')"  class="overlayThing">You have </span>
 				<h2  class="overlayThing" id="points" style="color: rgb(21, 115, 7); text-shadow: rgb(21, 115, 7) 0px 0px 10px;">{{"$" + format(player.points.max(0))}}</h2>
-				<span class="overlayThing"></span>
 				<br>
 				<span v-if="canGenPoints()"  class="overlayThing">({{tmp.other.oompsMag != 0 ? format(tmp.other.oomps) + " OOM" + (tmp.other.oompsMag < 0 ? "^OOM" : tmp.other.oompsMag > 1 ? "^" + tmp.other.oompsMag : "") + "s" : formatSmall(getPointGen())}}/sec)</span>
-				<div v-for="thing in tmp.displayThings" class="overlayThing"><span v-if="thing" v-html="thing"></span></div>
 			</div>
-			<div class="currencyDisplayHeader" v-if="player.rebirth.unlocked">
-				<span v-if="player.points.lt('1e1000')"  class="overlayThing">You have </span>
+			<div class="currencyDisplayHeader" v-if="player.rebirth.unlocked && options.rebirthPin">
+				<span v-if="player.rebirth.points.lt('1e1000')"  class="overlayThing">You have </span>
 				<h2  class="overlayThing" id="points" style="color: #BA0022; text-shadow: #BA0022 0px 0px 10px;">{{formatWhole(player.rebirth.points.max(0))}}</h2> RP
-				<span class="overlayThing"></span>
+				<br>
+				<span v-if="maxedChallenge('super', 11)"  class="overlayThing">({{formatSmall(tmp.rebirth.getResetGain.times(tmp.rebirth.passiveGeneration))}}/sec)</span>
+			</div>
+			<div class="currencyDisplayHeader" v-if="player.super.unlocked && options.superPin">
+				<span v-if="player.super.points.lt('1e1000')"  class="overlayThing">You have </span>
+				<h2  class="overlayThing" id="points" style="color: rgb(251, 26, 61); text-shadow: rgb(251, 26, 61) 0px 0px 10px;">{{formatWhole(player.super.points.max(0))}}</h2> SRP
 				<br><br>
 			</div>
 	</div></div>
@@ -133,21 +137,6 @@ var systemComponents = {
     'info-tab': {
         template: `
         <div>
-		<div id="discord" class="overlayThing">
-			<img onclick="window.open((modInfo.discordLink ? modInfo.discordLink : 'https://discord.gg/F3xveHV'),'mywindow')"
-				src="discord.png" target="_blank"></img>
-			<ul id="discord-links">
-				<li v-if="modInfo.discordLink"><a class="link" v-bind:href="modInfo.discordLink"
-						target="_blank">{{modInfo.discordName}}</a><br></li>
-				<li><a class="link" href="https://discord.gg/F3xveHV" target="_blank"
-						v-bind:style="modInfo.discordLink ? {'font-size': '16px'} : {}">The Modding Tree
-						Discord</a><br></li>
-				<li><a class="link" href="http://discord.gg/wwQfgPa" target="_blank"
-						v-bind:style="{'font-size': '16px'}">Main Prestige Tree server</a></li>
-			</ul>
-		</div>
-		<div id="version" onclick="showTab('changelog-tab')" class="overlayThing" style="margin-right: 13px" >
-			{{VERSION.withoutName}}</div>
         <h2>{{modInfo.name}}</h2>
         <br>
         <h3>{{VERSION.withName}}</h3>
@@ -164,17 +153,44 @@ var systemComponents = {
         <span v-if="modInfo.discordLink"><a class="link" v-bind:href="modInfo.discordLink" target="_blank">{{modInfo.discordName}}</a><br></span>
         <a class="link" href="https://discord.gg/F3xveHV" target="_blank" v-bind:style="modInfo.discordLink ? {'font-size': '16px'} : {}">The Modding Tree Discord</a><br>
         <a class="link" href="http://discord.gg/wwQfgPa" target="_blank" v-bind:style="{'font-size': '16px'}">Main Prestige Tree server</a><br>
-		<br><br>
-        Time Played: {{ formatTime(player.timePlayed) }}<br><br>
-        If you wrote 3 digits per second, it would take you {{ formatTime(player.points.add(1).log(10).ceil().div(3), 1) }} to write your cash amount<br><br>
-        <h3>Hotkeys</h3><br>
-        <span v-for="key in hotkeys" v-if="player[key.layer].unlocked && tmp[key.layer].hotkeys[key.id].unlocked"><br>{{key.description}}</span></div>
+		<br></div>
     `
     },
 
-    'options-tab': {
+    'stats-tab': {
         template: `
-        <table>
+        <div>
+		Time Played: {{ formatTime(player.timePlayed) }}<br><br>
+        <span v-if="player.points.max(0).add(1).log(10).ceil().div(3).gte(1) || player.rebirth.points.max(0).add(1).log(10).ceil().div(3).gte(1) || player.super.points.max(0).add(1).log(10).ceil().div(3).gte(1)">If you wrote 3 digits per second, it would take you:<br>
+		<span v-if="player.points.max(0).add(1).log(10).ceil().div(3).gte(1)">{{ formatTime(player.points.max(0).add(1).log(10).ceil().div(3), 1) }} to write your cash amount<br></span>
+		<span v-if="player.rebirth.points.max(0).add(1).log(10).ceil().div(3).gte(1)">{{ formatTime(player.rebirth.points.max(0).add(1).log(10).ceil().div(3), 1) }} to write your RP amount<br></span>
+		<span v-if="player.super.points.max(0).add(1).log(10).ceil().div(3).gte(1)">{{ formatTime(player.super.max(0).points.add(1).log(10).ceil().div(3), 1) }} to write your SRP amount<br></span><br></span>
+		</div>
+    `
+    },
+
+    'help-tab': {
+        template: `
+        <div>
+		<h3>Hotkeys</h3><br>
+        <span v-for="key in hotkeys" v-if="player[key.layer].unlocked && tmp[key.layer].hotkeys[key.id].unlocked"><br>{{key.description}}</span><br><br><br>
+		<h3>Standard Notation Key</h3><br><br>
+		<h3>Unique Standalones</h3><br>
+		M: e6,
+		B: e9<br><br><br>
+		<h3>Units</h3><br>
+		U: e3, D: e6, T: e9, Qa: e12, Qt: e15, Sx: e18, Sp: e21, Oc: e24, No: e27<br><br>
+		<h3>Decillions</h3><br>
+		Dc: e30, Vg: e60, Tg: e90, Qg: e120, Qi: e150, He: e180, Se: e210, Og: e240, Nn: e270<br><br>
+		<h3>Other Info</h3><br>
+		Standard Notation is always e3 higher than the sum of its parts when not a Unique Standalone.<br>
+		</div>
+    `
+    },
+
+    'discord-version-overlay': {
+        template: `
+        <div>	
 			<div id="discord" class="overlayThing">
 				<img onclick="window.open((modInfo.discordLink ? modInfo.discordLink : 'https://discord.gg/F3xveHV'),'mywindow')"
 					src="discord.png" target="_blank"></img>
@@ -190,24 +206,37 @@ var systemComponents = {
 			</div>
 			<div id="version" onclick="showTab('changelog-tab')" class="overlayThing" style="margin-right: 13px" >
 				{{VERSION.withoutName}}</div>
+		</div>`
+    },
+
+    'options-tab': {
+        template: `
+        <table>
             <tr>
-				<td><button class="optTitle">Saving</button></td>
-                <td><button class="opt" onclick="save()" style="border-radius: 20px 0 0 0">Save</button></td>
+				<td><button class="optTitle">Saving -</button></td>
+                <td><button class="opt" onclick="save()">Save</button></td>
                 <td><button class="opt" onclick="importSave()">Import Save</button></td>
                 <td><button class="opt" onclick="exportSave()">Export Save to clipboard</button></td>
                 <td><button class="opt" onclick="toggleOpt('autosave')">Autosave: {{ options.autosave?"ON":"OFF" }}</button></td>
-                <td><button class="opt" onclick="hardReset()" style="border-radius: 0 20px 20px 0">HARD RESET</button></td>
+                <td><button class="opt" onclick="hardReset()">HARD RESET</button></td>
             </tr>
             <tr>
-				<td><button class="optTitle">Visual</button></td>
+				<td><button class="optTitle">Visual -</button></td>
                 <td><button class="opt" onclick="adjustMSDisp()">Show Milestones: {{ MS_DISPLAYS[MS_SETTINGS.indexOf(options.msDisplay)]}}</button></td>
                 <td><button class="opt" onclick="toggleOpt('hideChallenges')">Completed Challenges: {{ options.hideChallenges?"HIDDEN":"SHOWN" }}</button></td>
                 <td><button class="opt" onclick="toggleOpt('standardNotate')">Standard Notation: {{ options.standardNotate?"ON":"OFF" }}</button></td>
-				<td><button class="opt" onclick="toggleOpt('forceTooltips'); needsCanvasUpdate = true" style="border-radius: 0 0 20px 0">Shift-Click to Toggle Tooltips: {{ options.forceTooltips?"ON":"OFF" }}</button></td>
+				<td><button class="opt" onclick="toggleOpt('forceTooltips'); needsCanvasUpdate = true">Shift-Click to Toggle Tooltips: {{ options.forceTooltips?"ON":"OFF" }}</button></td>
             </tr>
             <tr>
-				<td><button class="optTitle">Gameplay</button></td>
-				<td><button class="opt" onclick="toggleOpt('offlineProd')" style="border-radius: 0 0 20px 20px">Offline Prod: {{ options.offlineProd?"ON":"OFF" }}</button></td>
+				<td><button class="optTitle">Gameplay -</button></td>
+				<td><button class="opt" onclick="toggleOpt('offlineProd')">Offline Prod: {{ options.offlineProd?"ON":"OFF" }}</button></td>
+				<td><button class="opt" onclick="toggleOpt('missingTabs')">Move Hidden Tabs Into Unique Tab: {{ options.missingTabs?"ON":"OFF" }}</button></td>
+            </tr>
+            <tr>
+				<td><button class="optTitle">Header -</button></td>
+				<td><button class="opt" onclick="toggleOpt('cashPin')">Cash: {{ options.cashPin?"ON":"OFF" }}</button></td>
+				<td><button class="opt" onclick="toggleOpt('rebirthPin')">{{ player.rebirth.unlocked?'RP':'???' }}: {{ options.rebirthPin?"ON":"OFF" }}</button></td>
+				<td><button class="opt" onclick="toggleOpt('superPin')">{{ player.super.unlocked?'SRP':'???' }}: {{ options.superPin?"ON":"OFF" }}</button></td>
             </tr>
         </table>`
     },

@@ -271,7 +271,7 @@ function someLayerUnlocked(row){
 }
 
 
-// This isn't worth making a .ts file over
+// This isn't worth making a .ts(?) file over
 const UP = 0
 const DOWN = 1
 const LEFT = 2
@@ -279,12 +279,44 @@ const RIGHT = 3
 
 
 addLayer("info-tab", {
-    tabFormat: ["info-tab"],
+    tabFormat: {
+        "Credits": {
+            content: [
+                'discord-version-overlay',
+                'info-tab',
+            ],
+            buttonStyle: {
+                "border-color": "rgb(112, 128, 144)",
+                "background-color": "rgb(56, 64, 72)",
+            },
+        },
+        "Help": {
+            content: [
+                'discord-version-overlay',
+                'help-tab',
+            ],
+            buttonStyle: {
+                "border-color": "rgb(112, 128, 144)",
+                "background-color": "rgb(56, 64, 72)",
+            },
+        },
+        "Stats": {
+            content: [
+                'discord-version-overlay',
+                'stats-tab',
+            ],
+            buttonStyle: {
+                "border-color": "rgb(112, 128, 144)",
+                "background-color": "rgb(56, 64, 72)",
+            },
+        },
+    },
     row: "otherside"
 })
 
 addLayer("options-tab", {
-    tabFormat: ["options-tab"],
+    tabFormat: [
+                'discord-version-overlay',"options-tab"],
     row: "otherside"
 })
 

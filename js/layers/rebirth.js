@@ -1,58 +1,98 @@
 addLayer('rebirth', {
-    color: "rgb(21, 115, 7)",
-    tabFormat: [
-        "prestige-button",
-        "blank",
-        ['display-text', function() {return `Your RP is increasing cash gain by ×${format(tmp.rebirth.effect)}<br>You have rebirthed ${formatWhole(player.rebirth.rebirths)} times`}],
-        "blank",
-        ['row', [
-            ['buyable', 11],
-            ['buyable', 12],
-        ]],
-        "upgrades",
-    ],
+    tabFormat: {
+        "Rebirth": {
+            content: [
+                ['display-text', function() { return options.rebirthPin?'':`You have <h2 style="color: #BA0022; text-shadow: #BA0022 0px 0px 10px;">${formatWhole(player.rebirth.points)}</h2> RP<br><br>`}],
+                "prestige-button",
+                "blank",
+                ['display-text', function() {return `Your RP is increasing cash gain by ×${format(tmp.rebirth.effect)}<br>You have rebirthed ${formatWhole(player.rebirth.rebirths)} times`}],
+                "blank",
+                ['row', [
+                    ['buyable', 11],
+                    ['buyable', 12],
+                ]],
+                "upgrades",
+            ],
+            buttonStyle: {
+                "border-color": "#BA0022",
+                "background-color": "#5D0011",
+            },
+            shouldNotify() {
+                let state = false
+                for (const upgrades in tmp.rebirth.upgrades) {
+                    if (Object.hasOwnProperty.call(tmp.rebirth.upgrades, upgrades)) {
+                        const upgrade = tmp.rebirth.upgrades[upgrades];
+                        if(upgrade.canAfford && !hasUpgrade('rebirth', upgrades)) state = true
+                    }
+                }
+                for (const buyables in tmp.rebirth.buyables) {
+                    if (Object.hasOwnProperty.call(tmp.rebirth.buyables, buyables)) {
+                        const buyable = tmp.rebirth.buyables[buyables];
+                        if(buyable.canAfford && buyable.unlocked && !buyable.auto) state = true
+                    }
+                }
+                return state
+            },
+            prestigeNotify() {
+                return tmp.rebirth.getResetGain.gte(player.rebirth.points.div(8)) && tmp.rebirth.canReset
+            },
+        },
+        "Super": {
+            unlocked(){return player.super.unlocked && options.superTab},
+            buttonStyle: {
+                "border-color": "#EB1A3D",
+                "background-color": "#750D1E",
+            },
+            embedLayer: 'super',
+        },
+    },
     startData() { return {
         unlocked: false,
         points: new Decimal(0),
         rebirths: new Decimal(0),
         resetTime: 0,
     }},
-    shouldNotify() {
-        let state = false
-        for (const upgrades in tmp.rebirth.upgrades) {
-            if (Object.hasOwnProperty.call(tmp.rebirth.upgrades, upgrades)) {
-                const upgrade = tmp.rebirth.upgrades[upgrades];
-                if(upgrade.canAfford && !hasUpgrade('rebirth', upgrades)) state = true
-            }
-        }
-        for (const buyables in tmp.rebirth.buyables) {
-            if (Object.hasOwnProperty.call(tmp.rebirth.buyables, buyables)) {
-                const buyable = tmp.rebirth.buyables[buyables];
-                if(buyable.canAfford) state = true
-            }
-        }
-        return state
-    },
     type: 'custom',
     getNextAt() {
-        return this.requires
+        let base = new Decimal(3)
+        if(hasUpgrade('cash', 24)) base = base.times(tmp.cash.upgrades[24].effect)
+        let has = tmp.rebirth.baseAmount.max(1).log(tmp.rebirth.requires).sub(1).pow_base(base).times(tmp.rebirth.gainMult).floor()
+        has = has.add(1)
+        return has.div(tmp.rebirth.gainMult).log(base).add(1).pow_base(tmp.rebirth.requires).max(1)
     },
     getResetGain() {
         let base = new Decimal(3)
         if(hasUpgrade('cash', 24)) base = base.times(tmp.cash.upgrades[24].effect)
         return tmp.rebirth.baseAmount.max(1).log(tmp.rebirth.requires).sub(1).pow_base(base).times(tmp.rebirth.gainMult).floor()
     },
-    requires: new Decimal(1500),
+    requires() {
+        let base = new Decimal(1500)
+        if(inChallenge('super', 12)) { base = base.times(tmp.super.challenges[12].nerf) }
+        return base
+    },
     update(diff) {
         if(hasUpgrade('cash', 16)) player.rebirth.unlocked = true
+        if(hasMilestone('super', 2)) player.rebirth.rebirths = player.rebirth.rebirths.add(Decimal.times(2, diff))
+        
+        if(inChallenge('super', 11)) {
+            player.rebirth.points = player.rebirth.points.min(tmp.super.challenges[11].nerf)
+            player.rebirth.rebirths = player.rebirth.rebirths.min(tmp.super.challenges[11].nerf)
+        }
+
+    },
+    passiveGeneration() {
+        let gain = new Decimal(0)
+        if(maxedChallenge('super', 11)) gain = gain.add(0.001)
+        if(maxedChallenge('super', 12)) gain = gain.times(10)
+        return gain
     },
     color: "#BA0022",
-    resource: "RP",
+    resource: "SRP",
     prestigeButtonText() {
-        return tmp.rebirth.canReset ? `Rebirth for ${formatWhole(tmp.rebirth.getResetGain)} rebirth points`:`Reach $${format(tmp.rebirth.requires.times(tmp.rebirth.buyables[11].effect.pow(5)))} to rebirth`
+        return tmp.rebirth.canReset ? `Rebirth for ${formatWhole(tmp.rebirth.getResetGain)} rebirth points${player.rebirth.points.lte(1000)?`<br>Next at $${formatWhole(tmp.rebirth.getNextAt)}`:''}`:`Reach $${format(tmp.rebirth.requires.times(tmp.rebirth.buyables[11].effect.pow(tmp.rebirth.buyables[11].nerfExpo)).times(tmp.cash.buyables[11].effect.pow(tmp.cash.buyables[11].nerfExpo)))} to rebirth`
     },
     canReset() {
-        return tmp.rebirth.baseAmount.gte(this.requires.times(tmp.rebirth.buyables[11].effect.pow(5)))
+        return tmp.rebirth.baseAmount.gte(tmp.rebirth.requires.times(tmp.rebirth.buyables[11].effect.pow(tmp.rebirth.buyables[11].nerfExpo)).times(tmp.cash.buyables[11].effect.pow(tmp.cash.buyables[11].nerfExpo)))
     },
     effect() {
         let base = new Decimal(2)
@@ -61,9 +101,6 @@ addLayer('rebirth', {
         return player.rebirth.points.max(0).add(base).log(base)
     },
     row: 1,
-    prestigeNotify() {
-        return tmp.rebirth.getResetGain.gte(player.rebirth.points.div(8)) && tmp.rebirth.canReset
-    },
     baseResource: '$',
     baseAmount() {return player.points},
     upgrades: {
@@ -86,7 +123,7 @@ addLayer('rebirth', {
         12: {
             fullDisplay() {
                 return `<h3>Retainer</h3><br>
-                Keep one cash upgrade for each rebirth^0.5 done<br>
+                Keep up to 6 cash upgrades based on rebirths done<br>
                 Currently: ${formatWhole(tmp[this.layer].upgrades[this.id].effect)}<br><br>
                 Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} RP`
             },
@@ -94,13 +131,16 @@ addLayer('rebirth', {
             canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
             pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
             effect() {
-                return player.rebirth.rebirths.pow(0.5).floor().min(hasUpgrade('rebirth', 13)?12:6)
+                let limit = 6
+                if(hasUpgrade('rebirth', 13)) limit += 5
+                if(hasUpgrade('rebirth', 26)) limit += 1
+                return player.rebirth.rebirths.pow(0.55).floor().min(limit)
             },
         },
         13: {
             fullDisplay() {
                 return `<h3>Unlocker</h3><br>
-                Unlock some more cash upgrades<br><br>
+                Unlock some more cash upgrades and increase previous upgrade's limit to 11<br><br>
                 Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} RP`
             },
             costa: new Decimal(3),
@@ -154,7 +194,7 @@ addLayer('rebirth', {
             },
             costa: new Decimal(100),
             canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
-            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {if(challengeCompletions('super', 12) < 1)player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
             effect() {
                 return new Decimal(0.8)
             },
@@ -168,7 +208,7 @@ addLayer('rebirth', {
             },
             costa: new Decimal(200),
             canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
-            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {if(challengeCompletions('super', 12) < 2)player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
             effect() {
                 return new Decimal(1.5)
             },
@@ -183,7 +223,7 @@ addLayer('rebirth', {
             },
             costa: new Decimal(300),
             canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
-            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {if(challengeCompletions('super', 12) < 3)player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
             effect() {
                 return player.points.max(1).log(8000000).add(1)
             },
@@ -198,7 +238,7 @@ addLayer('rebirth', {
             },
             costa: new Decimal(500),
             canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
-            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {if(challengeCompletions('super', 12) < 4)player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
             effect() {
                 return player.rebirth.points.max(1).log(100).add(1)
             },
@@ -213,7 +253,7 @@ addLayer('rebirth', {
             },
             costa: new Decimal(750),
             canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
-            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {if(challengeCompletions('super', 12) < 5)player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
             effect() {
                 return player.rebirth.rebirths.max(1).log(250).add(1)
             },
@@ -222,12 +262,12 @@ addLayer('rebirth', {
         26: {
             fullDisplay() {
                 return `<h3>Automator</h3><br>
-                Automatically select Neutral Mode<br><br>
+                Automatically select Neutral Mode and increase Retainer's limit to 12<br><br>
                 Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} RP`
             },
             costa: new Decimal(1250),
             canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
-            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {if(challengeCompletions('super', 12) < 6)player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
             unlocked(){return hasUpgrade('rebirth', 16)}
         },
     },
@@ -239,13 +279,15 @@ addLayer('rebirth', {
         if(player.machine.state === 3) { gain = gain.times(tmp.machine.clickables[13].effect.add(1)) }
         if(player.machine.state === 2) { gain = gain.times(tmp.machine.clickables[13].effect.times(tmp.machine.clickables[12].effect).add(1)) }
         gain = gain.times(tmp.rebirth.buyables[11].effect)
+        gain = gain.times(tmp.cash.buyables[11].effect)
+        gain = gain.times(tmp.super.effect[0])
         return gain
     },
     buyables: {
         11: {
             title: "Virtues",
             display() {
-                return `Increase RP gain, but also increase cash required to rebirth<br><br>Currently: ×${format(tmp.rebirth.buyables[11].effect)} RP, ×${format(tmp.rebirth.buyables[11].effect.pow(5))} req<br>Count: ${formatWhole(getBuyableAmount('rebirth', 11))}${getBuyableAmount('rebirth', 12).gte(1)?'×'+formatWhole(tmp.rebirth.buyables[12].effect):''}<br>Cost: ${formatWhole(tmp.rebirth.buyables[11].cost)} RP`
+                return `Increase RP gain, but also increase cash required to rebirth<br><br>Currently: ×${format(tmp.rebirth.buyables[11].effect)} RP, ×${format(tmp.rebirth.buyables[11].effect.pow(tmp.rebirth.buyables[11].nerfExpo))} req<br>Count: ${formatWhole(getBuyableAmount('rebirth', 11))}${getBuyableAmount('rebirth', 12).gte(1)?'×'+formatWhole(tmp.rebirth.buyables[12].effect):''}<br>Cost: ${formatWhole(tmp.rebirth.buyables[11].cost)} RP`
             },
             cost(x) {
                 return x.add(1).pow_base(3)
@@ -256,8 +298,15 @@ addLayer('rebirth', {
             unlocked(){return hasUpgrade('rebirth', 15)},
             canAfford(){return player[this.layer].points.gte(layers[this.layer].buyables[this.id].cost(getBuyableAmount(this.layer, this.id)))},
             buy() {
-                player[this.layer].points = player[this.layer].points.sub(layers[this.layer].buyables[this.id].cost(getBuyableAmount(this.layer), this.id))
+                if(!hasMilestone('super', 2)) player[this.layer].points = player[this.layer].points.sub(layers[this.layer].buyables[this.id].cost(getBuyableAmount(this.layer), this.id))
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            auto(){return hasMilestone('super', 3)},
+            nerfExpo() {
+                let base = new Decimal(4)
+                base = base.sub(Decimal.times(0.4, challengeCompletions('super', 12)))
+                if(hasMilestone('super', 4)){base = base.div(2)}
+                return base
             },
         },
         12: {
@@ -274,10 +323,58 @@ addLayer('rebirth', {
             unlocked(){return hasUpgrade('rebirth', 16)},
             canAfford(){return player[this.layer].points.gte(layers[this.layer].buyables[this.id].cost(getBuyableAmount(this.layer, this.id)))},
             buy() {
-                player[this.layer].points = player[this.layer].points.sub(layers[this.layer].buyables[this.id].cost(getBuyableAmount(this.layer), this.id))
+                if(!hasMilestone('super', 2)) player[this.layer].points = player[this.layer].points.sub(layers[this.layer].buyables[this.id].cost(getBuyableAmount(this.layer), this.id))
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
+            auto(){return hasMilestone('super', 4)},
         },
+    },
+    hotkeys: [
+        {
+            key: "r", // What the hotkey button is. Use uppercase if it's combined with shift, or "ctrl+x" for holding down ctrl.
+            description: "R: Rebirth", // The description of the hotkey that is displayed in the game's How To Play tab
+            onPress() { if (player.rebirth.unlocked) doReset("rebirth") },
+            unlocked() {return player.rebirth.unlocked} // Determines if you can use the hotkey, optional
+        }
+    ],
+    doReset(layer) {
+        if(layer == 'rebirth') return
+        layerDataReset('rebirth')
+        let savedUpgs = []
+        if(layer == 'super') {
+            if(hasMilestone('super', 1)) {
+                if(player.super.rebirths.gte(1)) savedUpgs.push(11)
+                if(player.super.rebirths.gte(2)) savedUpgs.push(12)
+                if(player.super.rebirths.gte(3)) savedUpgs.push(13)
+                if(player.super.rebirths.gte(4)) savedUpgs.push(14)
+                if(player.super.rebirths.gte(5)) savedUpgs.push(15)
+                if(player.super.rebirths.gte(6)) savedUpgs.push(16)
+            }
+            for (let index = 0; index < savedUpgs.length; index++) {
+                const element = savedUpgs[index];
+                player.rebirth.upgrades.push(element)
+            }
+        }
+    },
+    automate() {
+        let autoUpg = []
+        if(hasMilestone('super', 3)) {
+            buyMax('rebirth', 'buyables', 11)
+        }
+        if(hasMilestone('super', 4)) {
+            buyMax('rebirth', 'buyables', 12)
+        }
+        if(challengeCompletions('super', 12) >= 1){ autoUpg.push(21) }
+        if(challengeCompletions('super', 12) >= 2){ autoUpg.push(22) }
+        if(challengeCompletions('super', 12) >= 3){ autoUpg.push(23) }
+        if(challengeCompletions('super', 12) >= 4){ autoUpg.push(24) }
+        if(challengeCompletions('super', 12) >= 5){ autoUpg.push(25) }
+        if(challengeCompletions('super', 12) >= 6){ autoUpg.push(26) }
+        for (let index = 0; index < autoUpg.length; index++) {
+            const element = autoUpg[index];
+            const upg = layers.cash.upgrades[element]
+            if(upg.canAfford() && !hasUpgrade('cash', element)) { upg.pay(); player.cash.upgrades.push(element) }
+        }
     },
 })
 
@@ -296,7 +393,7 @@ addLayer('machine', {
     type: 'none',
     row: 0,
     shouldNotify() {
-        return hasUpgrade('cash', 26) && player.machine.state == 0
+        return hasUpgrade('cash', 26) && player.machine.state == 0 && !hasUpgrade('rebirth', 26)
     },
     update(diff) {
         if(hasUpgrade('cash', 26)) player.machine.unlocked = true
@@ -357,8 +454,7 @@ addLayer('machine', {
             },
         },
     },
-    doReset(layer) {
-        layerDataReset('machine', [])
-        if(hasUpgrade('rebirth', 26)) player.machine.state = 2
+    update(diff) {
+        if(hasUpgrade('rebirth', 26) && hasUpgrade('cash', 26)) player.machine.state = 2
     }
 })

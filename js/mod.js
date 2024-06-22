@@ -13,17 +13,16 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.3.3",
-	name: "The Great Rebalancing",
+	num: "1.0",
+	name: "The Universe Update",
 }
 
 let changelog = 
 `<h1>Changelog</h1><br><br>
 <span style="text-align: left; position: absolute; left: 30px;">
-	<h3>v0.3.3</h3><br>
+	<h3>v1.0</h3><br>
 		- <span style="color: #9966BB">Remade the Entire Game</span><br>
-		- Actually Added <span style="color: #9966BB">The Changelog</span><br>
-		- Added <span style="color: #9966BB">Fix Broken Layers in Options</span><br><br>
+		- Actually Added <span style="color: #9966BB">The Changelog</span><br><br>
 	<h3>v0.3.2</h3><br>
 		- Added <span style="color: #2ed5e8">Matter Paths</span><br>
 		- Added <span style="color: #2dc0d6">Matter</span><br>
@@ -96,6 +95,10 @@ function getPointGen() {
 
 	gain = gain.times(tmp.rebirth.effect)
 	if(hasUpgrade('rebirth', 11)) { gain = gain.times(tmp.rebirth.upgrades[11].effect) }
+
+	gain = gain.times(tmp.super.effect[1])
+
+	if(inChallenge('super', 12)) { gain = gain.div(tmp.super.challenges[12].nerf)}
 
 	return gain
 }
