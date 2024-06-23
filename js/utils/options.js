@@ -13,13 +13,6 @@ function getStartOptions() {
 		forceOneTab: true,
 		forceTooltips: true,
 		standardNotate: true,
-		cashPin: true,
-		rebirthPin: true,
-		superPin: true,
-		cashTab: true,
-		rebirthTab: true,
-		challTab: true,
-		missingTabs: false,
 	}
 }
 

@@ -32,7 +32,7 @@ function challengeStyle(layer, id) {
 }
 
 function challengeButtonText(layer, id) {
-    return (player[layer].activeChallenge==(id)?(canCompleteChallenge(layer, id)?"Finish":"Exit Early"):(maxedChallenge(layer, id)?"Completed":"Start"))
+    return (player[layer].activeChallenge==(id)?(canCompleteChallenge(layer, id)?"Complete":"Escape"):(maxedChallenge(layer, id)?"Completed":"Enter"))
 
 }
 
@@ -93,18 +93,18 @@ function constructBarStyle(layer, id) {
 		bar.progress = bar.progress.toNumber()
 	progress = (1 -Math.min(Math.max(bar.progress, 0), 1)) * 100
 
-	style.dims = {'width': bar.width + "px", 'height': bar.height + "px"}
+	style.dims = {'width': bar.width + "vw", 'height': bar.height + "px"}
 	let dir = bar.direction
-	style.fillDims = {'width': (bar.width + 0.5) + "px", 'height': (bar.height + 0.5)  + "px"}
+	style.fillDims = {'width': (bar.width + 0.5) + "vw", 'height': (bar.height + 0.5)  + "px"}
 
 	switch(bar.direction) {
 		case UP:
 			style.fillDims['clip-path'] = 'inset(' + progress + '% 0% 0% 0%)'
-			style.fillDims.width = bar.width + 1 + 'px'
+			style.fillDims.width = bar.width + 1 + 'vw'
 			break;
 		case DOWN:
 			style.fillDims['clip-path'] = 'inset(0% 0% ' + progress + '% 0%)'
-			style.fillDims.width = bar.width + 1 + 'px'
+			style.fillDims.width = bar.width + 1 + 'vw'
 
 			break;
 		case RIGHT:

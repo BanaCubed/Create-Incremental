@@ -14,7 +14,7 @@ let modInfo = {
 // Set your version in num and name
 let VERSION = {
 	num: "1.0",
-	name: "The Universe Update",
+	name: "Universe Update",
 }
 
 let changelog = 
@@ -22,6 +22,7 @@ let changelog =
 <span style="text-align: left; position: absolute; left: 30px;">
 	<h3>v1.0</h3><br>
 		- <span style="color: #9966BB">Remade the Entire Game</span><br>
+		- Added <span style="color: #9966BB">Standard Notation</span><br>
 		- Actually Added <span style="color: #9966BB">The Changelog</span><br><br>
 	<h3>v0.3.2</h3><br>
 		- Added <span style="color: #2ed5e8">Matter Paths</span><br>
@@ -72,7 +73,7 @@ function getStartPoints(){
 
 // Determines if it should show points/sec
 function canGenPoints(){
-	return true
+	return hasUpgrade('cash', 11)
 }
 
 // Calculate points/sec!
@@ -80,9 +81,9 @@ function getPointGen() {
 	if(!canGenPoints())
 		return new Decimal(0)
 
-	let gain = new Decimal(0)
+	let gain = new Decimal(1)
 
-	if(hasUpgrade('cash', 11)) { gain = gain.add(tmp.cash.upgrades[11].effect) }
+	if(hasUpgrade('cash', 11)) { gain = gain.times(tmp.cash.upgrades[11].effect) }
 	if(hasUpgrade('cash', 12)) { gain = gain.times(tmp.cash.upgrades[12].effect) }
 	if(hasUpgrade('cash', 13)) { gain = gain.times(tmp.cash.upgrades[13].effect) }
 	if(hasUpgrade('cash', 14)) { gain = gain.times(tmp.cash.upgrades[14].effect) }
@@ -90,6 +91,7 @@ function getPointGen() {
 	if(hasUpgrade('cash', 16)) { gain = gain.times(tmp.cash.upgrades[16].effect) }
 	if(hasUpgrade('cash', 21)) { gain = gain.times(tmp.cash.upgrades[21].effect) }
 	if(hasUpgrade('cash', 22)) { gain = gain.times(tmp.cash.upgrades[22].effect) }
+	if(hasUpgrade('cash', 31)) { gain = gain.times(tmp.cash.upgrades[31].effect) }
 	if(player.machine.state === 1) { gain = gain.times(tmp.machine.clickables[11].effect.add(1)) }
 	if(player.machine.state === 2) { gain = gain.times(tmp.machine.clickables[11].effect.times(tmp.machine.clickables[12].effect).add(1)) }
 

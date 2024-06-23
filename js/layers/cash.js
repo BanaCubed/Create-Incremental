@@ -77,7 +77,7 @@ addLayer('cash', {
         16: {
             fullDisplay() {
                 return `<h3>Overcompensate for Inflation</h3><br>
-                Double cash gain again<br><br>
+                Double cash gain again, again<br><br>
                 Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
             },
             costa: new Decimal(599.99),
@@ -170,13 +170,90 @@ addLayer('cash', {
             pay() {if(challengeCompletions('super', 11) < 6)player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             unlocked(){return hasUpgrade('rebirth', 13)}
         },
+        31: {
+            fullDisplay() {
+                return `<h3>Capitalism</h3><br>
+                Increase cash gain based on RP on Rebirth<br>
+                Currently: ×${format(tmp[this.layer].upgrades[this.id].effect)}<br><br>
+                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+            },
+            costa: new Decimal(1e10),
+            canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
+            pay() {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
+            unlocked(){return hasUpgrade('super', 13)},
+            effect() {
+                return tmp.rebirth.getResetGain.max(0).add(1).log(150).add(1)
+            },
+        },
+        32: {
+            fullDisplay() {
+                return `<h3>Socialism</h3><br>
+                Increase RP gain based on cash upgrades<br>
+                Currently: ×${format(tmp[this.layer].upgrades[this.id].effect)}<br><br>
+                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+            },
+            costa: new Decimal(1e11),
+            canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
+            pay() {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
+            unlocked(){return hasUpgrade('super', 13)},
+            effect() {
+                return Decimal.add(player.cash.upgrades.length, 3).div(3).max(1)
+            },
+        },
+        33: {
+            fullDisplay() {
+                return `<h3>Communism</h3><br>
+                If RP on Rebirth is greater than current RP, set current RP to RP on Rebirth<br><br>
+                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+            },
+            costa: new Decimal(1e12),
+            canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
+            pay() {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
+            unlocked(){return hasUpgrade('super', 13)},
+        },
+        34: {
+            fullDisplay() {
+                return `<h3>Buy a Country</h3><br>
+                Reduce Rebirth requirement to $1000<br><br>
+                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+            },
+            costa: new Decimal(1e13),
+            canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
+            pay() {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
+            unlocked(){return hasUpgrade('super', 13)},
+        },
+        35: {
+            fullDisplay() {
+                return `<h3>Buy a Continent</h3><br>
+                Reduce Super Rebirth requirement to 1500 RP<br><br>
+                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+            },
+            costa: new Decimal(1e14),
+            canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
+            pay() {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
+            unlocked(){return hasUpgrade('super', 13)},
+        },
+        36: {
+            fullDisplay() {
+                return `<h3>Buy the Earth</h3><br>
+                Neutral Mode's effect also boosts SRP gain at a reduced rate<br>
+                Currently: ×${format(tmp[this.layer].upgrades[this.id].effect)}<br><br>
+                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+            },
+            costa: new Decimal(1.0001e15),
+            canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
+            pay() {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
+            unlocked(){return hasUpgrade('super', 13)},
+            effect() {
+                return tmp.machine.clickables[12].effect.max(0).add(1).pow(0.5)
+            },
+        },
     },
     color: "rgb(21, 115, 7)",
     tabFormat: {
         "Main": {
             unlocked(){return player.machine.unlocked},
             content: [
-                ['display-text', function() { return options.cashPin?'':`You have <h2 style="color: rgb(21, 115, 7); text-shadow: rgb(21, 115, 7) 0px 0px 10px;">$${format(player.points)}</h2><br>(${format(getPointGen())}/sec)<br><br>`}],
                 "buyables",
                 'upgrades'
             ],
@@ -189,7 +266,7 @@ addLayer('cash', {
                 for (const upgrades in tmp.cash.upgrades) {
                     if (Object.hasOwnProperty.call(tmp.cash.upgrades, upgrades)) {
                         const upgrade = tmp.cash.upgrades[upgrades];
-                        if(upgrade.canAfford && !hasUpgrade('cash', upgrades)) state = true
+                        if(upgrade.canAfford && !hasUpgrade('cash', upgrades) && upgrade.unlocked) state = true
                     }
                 }
                 for (const buyables in tmp.cash.buyables) {
@@ -211,10 +288,12 @@ addLayer('cash', {
         },
     },
     doReset(layer) {
-        layerDataReset('cash', [])
+        let keep = []
+        if(hasMilestone('super', 7) && (layer == 'rebirth' || layer == 'super')) keep.push('upgrades')
+        layerDataReset('cash', keep)
         let upgs = []
         if(layer === 'rebirth') {
-            if(hasUpgrade('rebirth', 12)) {
+            if(hasUpgrade('rebirth', 12) && !hasMilestone('super', 7)) {
                 if(layers.rebirth.upgrades[12].effect().gte(1)) upgs.push(11)
                 if(layers.rebirth.upgrades[12].effect().gte(2)) upgs.push(12)
                 if(layers.rebirth.upgrades[12].effect().gte(3)) upgs.push(13)
@@ -257,7 +336,7 @@ addLayer('cash', {
         11: {
             title: "Pay a Megachurch",
             display() {
-                return `Increase RP gain, but also increase cash required to rebirth<br><br>Currently: ×${format(tmp.cash.buyables[11].effect)} RP, ×${format(tmp.cash.buyables[11].effect.pow(tmp.cash.buyables[11].nerfExpo))} req<br>Count: ${formatWhole(getBuyableAmount('cash', 11))}<br>Cost: $${formatWhole(tmp.cash.buyables[11].cost)}`
+                return `Increase RP gain${maxedChallenge('super', 12)?'':', but also increase cash required to rebirth'}<br><br>Currently: ×${format(tmp.cash.buyables[11].effect)}${maxedChallenge('super', 12)?'':` RP, ×${format(tmp.cash.buyables[11].effect.pow(tmp.cash.buyables[11].nerfExpo))} req`}<br>Count: ${formatWhole(getBuyableAmount('cash', 11))}<br>Cost: $${formatWhole(tmp.cash.buyables[11].cost)}`
             },
             cost(x) {
                 return x.add(6).pow_base(10)

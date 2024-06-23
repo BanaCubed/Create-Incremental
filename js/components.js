@@ -102,6 +102,35 @@ function loadVue() {
 		</div>
 		`
 	})
+	Vue.component('cash-display', {
+		template: `
+			<div class="currencyDisplayHeader" style="border-color: rgba(21, 115, 7, 25%);" v-if="data">
+				<span v-if="player.points.lt('1e1000')"  class="overlayThing">You have </span>
+				<h2  class="overlayThing" id="points" style="color: rgb(21, 115, 7); text-shadow: rgb(21, 115, 7) 0px 0px 10px;">{{"$" + format(player.points.max(0))}}</h2>
+				<br>
+				<span v-if="canGenPoints()"  class="overlayThing">({{tmp.other.oompsMag != 0 ? format(tmp.other.oomps) + " OOM" + (tmp.other.oompsMag < 0 ? "^OOM" : tmp.other.oompsMag > 1 ? "^" + tmp.other.oompsMag : "") + "s" : formatSmall(getPointGen())}}/sec)</span>
+			</div>
+		`
+	})
+	Vue.component('rp-display', {
+		template: `
+			<div class="currencyDisplayHeader" style="border-color: rgba(186, 0, 34, 25%);">
+				<span v-if="player.rebirth.points.lt('1e1000')"  class="overlayThing">You have </span>
+				<h2  class="overlayThing" id="points" style="color: #BA0022; text-shadow: #BA0022 0px 0px 10px;">{{formatWhole(player.rebirth.points.max(0))}}</h2> RP
+				<br>
+				<span v-if="maxedChallenge('super', 11)"  class="overlayThing">({{formatSmall(tmp.rebirth.getResetGain.times(tmp.rebirth.passiveGeneration))}}/sec)</span>
+			</div>
+		`
+	})
+	Vue.component('srp-display', {
+		template: `
+			<div class="currencyDisplayHeader" style="border-color: rgba(251, 26, 61, 25%);">
+				<span v-if="player.super.points.lt('1e1000')"  class="overlayThing">You have </span>
+				<h2  class="overlayThing" id="points" style="color: rgb(251, 26, 61); text-shadow: rgb(251, 26, 61) 0px 0px 10px;">{{formatWhole(player.super.points.max(0))}}</h2> SRP
+				<br><br>
+			</div>
+		`
+	})
 
 
 	// Data = width in px, by default fills the full area
@@ -147,8 +176,7 @@ function loadVue() {
 				Goal:  <span v-if="tmp[layer].challenges[data].goalDescription" v-html="tmp[layer].challenges[data].goalDescription"></span><span v-else>{{format(tmp[layer].challenges[data].goal)}} {{tmp[layer].challenges[data].currencyDisplayName ? tmp[layer].challenges[data].currencyDisplayName : modInfo.pointsName}}</span><br>
 				Reward: <span v-html="tmp[layer].challenges[data].rewardDescription"></span><br>
 				<span v-if="layers[layer].challenges[data].rewardDisplay!==undefined">Currently: <span v-html="(tmp[layer].challenges[data].rewardDisplay) ? (run(layers[layer].challenges[data].rewardDisplay, layers[layer].challenges[data])) : format(tmp[layer].challenges[data].rewardEffect)"></span></span>
-			</span>
-			<node-mark :layer='layer' :data='tmp[layer].challenges[data].marked' :offset="20" :scale="1.5"></node-mark></span>
+			</span></span>
 
 		</div>
 		`

@@ -69,93 +69,93 @@ function sumValues(x) {
     return x.reduce((a, b) => Decimal.add(a, b))
 }
 
-function format(decimal, precision = 2, small) {
+function format(num, precision = 2, small) {
     small = small || modInfo.allowSmall
-    decimal = new Decimal(decimal)
-    if (isNaN(decimal.sign) || isNaN(decimal.layer) || isNaN(decimal.mag)) {
+    num = new Decimal(num)
+    if (isNaN(num.sign) || isNaN(num.layer) || isNaN(num.mag)) {
         player.hasNaN = true;
         return "NaN"
     }
-    if (decimal.sign < 0) return "-" + format(decimal.neg(), precision, small)
-    if (decimal.mag == Number.POSITIVE_INFINITY) return "Infinity"
-    if (decimal.gte("eeee1000")) {
-        var slog = decimal.slog()
+    if (num.sign < 0) return "-" + format(num.neg(), precision, small)
+    if (num.mag == Number.POSITIVE_INFINITY) return "Infinity"
+    if (num.gte("eeee1000")) {
+        var slog = num.slog()
         if (slog.gte(1e6)) return "F" + format(slog.floor())
         else return Decimal.pow(10, slog.sub(slog.floor())).toStringWithDecimalPlaces(3) + "F" + commaFormat(slog.floor(), 0)
     }
-    else if (decimal.gte("1e1000000")) return exponentialFormat(decimal, 0, false)
-    else if (decimal.gte('1e30003')) return exponentialFormat(decimal, precision)
-    else if (decimal.gte('1e9') && !options.standardNotate) return exponentialFormat(decimal, precision)
-    else if (decimal.gte(1e306) && options.standardNotate) return standardFormat(decimal, 0)
-    else if (decimal.gte(1e6) && options.standardNotate) return standardFormat(decimal, precision)
-    else if (decimal.gte(1e3)) return commaFormat(decimal, 0)
-    else if (decimal.gte(0.0001) || !small) return regularFormat(decimal, precision)
-    else if (decimal.eq(0)) return (0).toFixed(precision)
+    else if (num.gte("1e1000000")) return exponentialFormat(num, 0, false)
+    else if (num.gte('1e30003')) return exponentialFormat(num, precision)
+    else if (num.gte('1e9') && !options.standardNotate) return exponentialFormat(num, precision)
+    else if (num.gte(1e306) && options.standardNotate) return standardFormat(num, 0)
+    else if (num.gte(1e6) && options.standardNotate) return standardFormat(num, precision)
+    else if (num.gte(1e3)) return commaFormat(num, 0)
+    else if (num.gte(0.0001) || !small) return regularFormat(num, precision)
+    else if (num.eq(0)) return (0).toFixed(precision)
 
-    decimal = invertOOM(decimal)
+    num = invertOOM(num)
     let val = ""
-    if (decimal.lt("1e1000")){
-        val = exponentialFormat(decimal, precision)
+    if (num.lt("1e1000")){
+        val = exponentialFormat(num, precision)
         return val.replace(/([^(?:e|F)]*)$/, '-$1')
     }
     else   
-        return format(decimal, precision) + "⁻¹"
+        return format(num, precision) + "⁻¹"
 
 }
 
-function formatWhole(decimal) {
-    decimal = new Decimal(decimal)
-    if (decimal.gte(1e6)) return format(decimal, 2)
-    if (decimal.lte(0.99) && !decimal.eq(0)) return format(decimal, 2)
-    return format(decimal, 0)
+function formatWhole(num) {
+    num = new Decimal(num)
+    if (num.gte(1e6)) return format(num, 2)
+    if (num.lte(0.99) && !num.eq(0)) return format(num, 2)
+    return format(num, 0)
 }
 
-function formatZero(decimal) {
-    decimal = new Decimal(decimal)
+function formatZero(num) {
+    num = new Decimal(num)
     let number
-    if (decimal.gte(1e9)) number = format(decimal, 2)
-    if (decimal.lte(0.99) && !decimal.eq(0)) number = format(decimal, 2)
-    else number = format(decimal, 0)
+    if (num.gte(1e9)) number = format(num, 2)
+    if (num.lte(0.99) && !num.eq(0)) number = format(num, 2)
+    else number = format(num, 0)
 
-    if (number.length == 1) number = " " + number
+    if (number.length == 1) number = "0" + number
     return number
 }
 
-function formatZeroo(decimal) {
-    decimal = new Decimal(decimal)
+function formatZeroo(num) {
+    num = new Decimal(num)
     let number
-    if (decimal.gte(1e9)) number = format(decimal, 2)
-    if (decimal.lte(0.99) && !decimal.eq(0)) number = format(decimal, 2)
-    else number = format(decimal, 0)
+    if (num.gte(1e9)) number = format(num, 2)
+    if (num.lte(0.99) && !num.eq(0)) number = format(num, 2)
+    else number = format(num, 0)
 
-    if (number.length == 1) number = " " + number
-    if (number.length == 2) number = " " + number
+    if (number.length == 1) number = "0" + number
+    if (number.length == 2) number = "0" + number
     return number
 }
 
-function iDontWantToNameThis(decimal, mantissa) {
+function iDontWantToNameThis(num, precision) {
     let number
-    if (mantissa !== 0) {
-        decimal = new Decimal(decimal)
-        number = format(decimal, mantissa)
+    if (precision !== 0) {
+        num = new Decimal(num)
+        number = format(num, precision)
     
-        if(number.length == 2 + mantissa) number = " " + number
+        if(number.length == 2 + precision) number = "0" + number
     } else {
-        decimal = new Decimal(decimal)
-        number = formatWhole(decimal)
+        num = new Decimal(num)
+        number = formatWhole(num)
     
-        if(number.length == 1) number = " " + number
+        if(number.length == 1) number = "0" + number
     }
 
     return number
 }
 
-function formatTime(s, mantissa = 3) {
+function formatTime(s, precision = 3) {
     let sec = new Decimal(s)
-    if (sec.lt(60)) return format(sec, mantissa) + "s"
-    else if (sec.lt(3600)) return formatWhole(sec.div(60).floor()) + ":" + iDontWantToNameThis(sec.sub(sec.div(60).floor().mul(60)), mantissa)
-    else if (sec.lt(86400)) return formatWhole(sec.div(3600).floor()) + ":" + formatZero(sec.div(60).floor().sub(sec.div(3600).floor().mul(60))) + ":" + iDontWantToNameThis(sec.sub(sec.div(60).floor().mul(60)), mantissa)
-    else if (sec.lt(31536000)) return formatWhole(sec.div(86400).floor()) + "d " + formatZero(sec.div(3600).floor().sub(sec.div(86400).floor().mul(24))) + ":" + formatZero(sec.div(60).floor().sub(sec.div(3600).floor().mul(60))) + ":" + iDontWantToNameThis(sec.sub(sec.div(60).floor().mul(60)), mantissa)
+    if (sec.lt(60)) return format(sec, precision) + "s"
+    else if (sec.lt(3600)) return formatWhole(sec.div(60).floor()) + ":" + iDontWantToNameThis(sec.sub(sec.div(60).floor().mul(60)), precision)
+    else if (sec.lt(86400)) return formatWhole(sec.div(3600).floor()) + ":" + formatZero(sec.div(60).floor().sub(sec.div(3600).floor().mul(60))) + ":" + iDontWantToNameThis(sec.sub(sec.div(60).floor().mul(60)), precision)
+    else if (sec.lt(31536000)) return formatWhole(sec.div(86400).floor()) + "d " + formatZero(sec.div(3600).floor().sub(sec.div(86400).floor().mul(24))) + ":" + formatZero(sec.div(60).floor().sub(sec.div(3600).floor().mul(60))) + ":" + iDontWantToNameThis(sec.sub(sec.div(60).floor().mul(60)), precision)
     else if (sec.lt(31536000000000)) return formatWhole(sec.div(31536000).floor()) + "y " + formatZeroo(sec.div(86400).floor().sub(sec.div(31536000).floor().mul(365))) + "d"
     else return formatWhole(sec.div(31536000).floor()) + "y"
 }
