@@ -4,248 +4,270 @@ addLayer('cash', {
         points: new Decimal(0),
     }},
     row: 0,
+    costFactor() {
+        let factor = new Decimal(1)
+        if(inChallenge('super', 13)) { factor = factor.times(tmp.super.challenges[13].nerf.add(1)) }
+        if(inChallenge('super', 14)) { factor = factor.times('1e1.79e308') }
+        if(hasUpgrade('super', 16)) { factor = factor.div(tmp.super.effect[1]) }
+        if(hasMilestone('chall', 0)) { factor = factor.times(1e12) }
+        return factor
+    },
     upgrades: {
         11: {
+            title: 'Passive Income',
             fullDisplay() {
-                return `<h3>Passive Income</h3><br>
-                Start passively earning $1.00 per second<br><br>
-                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+                return `Start passively earning $${format(tmp[this.layer].upgrades[this.id].effect)} per second`
             },
             costa: new Decimal(0),
-            canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
-            pay() {if(!hasMilestone('super', 0)) {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)}},
+            canAfford() {return true},
             effect() {
-                return new Decimal(1)
-            }
+                let effect = new Decimal(1)
+                if(hasMilestone('chall', 0)) { effect = effect.times(5) }
+                return effect
+            },
+            pay() {}
         },
         12: {
+            title: 'Double Shifts',
             fullDisplay() {
-                return `<h3>Double Shifts</h3><br>
-                Double cash gain<br><br>
-                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+                return `${hasMilestone('chall', 0)?'Quadruple':'Double'} cash gain`
             },
-            costa: new Decimal(9.99),
+            costa() {return Decimal.times(9.99, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(!hasMilestone('super', 0)) {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)}},
             effect() {
-                return new Decimal(2)
+                let effect = new Decimal(2)
+                if(hasMilestone('chall', 0)) { effect = effect.times(2) }
+                return effect
             }
         },
         13: {
+            title: 'Get a Promotion',
             fullDisplay() {
-                return `<h3>Stop Working at McDonalds</h3><br>
-                Increase cash gain based on current cash<br>
-                Currently: ×${format(tmp[this.layer].upgrades[this.id].effect)}<br><br>
-                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+                return `Increase <span class="cash infoText">cash</span> gain based on current <span class="cash infoText">cash</span><br>
+                Currently: <span class="cash infoText">×${format(tmp[this.layer].upgrades[this.id].effect)}</span>`
             },
-            costa: new Decimal(24.99),
+            costa() {return Decimal.times(24.99, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(!hasMilestone('super', 0)) {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)}},
             effect() {
                 let exponent = new Decimal(1)
                 if(hasUpgrade('cash', 23)) exponent = exponent.times(tmp.cash.upgrades[23].effect)
+                if(hasMilestone('chall', 0)) { exponent = exponent.times(1.5) }
                 return player.points.max(1).log(10).add(1).pow(exponent)
             },
         },
         14: {
+            title: 'Get a Second Job',
             fullDisplay() {
-                return `<h3>Get a<br>Full-Time Job</h3><br>
-                Increase cash gain based on current cash again<br>
-                Currently: ×${format(tmp[this.layer].upgrades[this.id].effect)}<br><br>
-                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+                return `Increase <span class="cash infoText">cash</span> gain based on current <span class="cash infoText">cash</span> again<br>
+                Currently: <span class="cash infoText">×${format(tmp[this.layer].upgrades[this.id].effect)}</span>`
             },
-            costa: new Decimal(99.99),
+            costa() {return Decimal.times(99.99, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(!hasMilestone('super', 0)) {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)}},
             effect() {
-                return player.points.max(1).log(1.5).add(1).pow(0.4)
+                let effect = player.points.max(1).log(1.5).add(1).pow(0.4)
+                if(hasMilestone('chall', 0)) { effect = effect.pow(2) }
+                return effect
             },
         },
         15: {
+            title: 'Compensate for Inflation',
             fullDisplay() {
-                return `<h3>Compensate for Inflation</h3><br>
-                Double cash gain again<br><br>
-                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+                return `${hasMilestone('chall', 0)?'Quadruple':'Double'} <span class="cash infoText">cash</span> gain again`
             },
-            costa: new Decimal(249.99),
+            costa() {return Decimal.times(249.99, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(!hasMilestone('super', 0)) {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)}},
             effect() {
-                return new Decimal(2)
+                let effect = new Decimal(2)
+                if(hasMilestone('chall', 0)) { effect = effect.times(2) }
+                return effect
             },
         },
         16: {
+            title: 'Overcompensate for Inflation',
             fullDisplay() {
-                return `<h3>Overcompensate for Inflation</h3><br>
-                Double cash gain again, again<br><br>
-                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+                return `${hasMilestone('chall', 0)?'Quadruple':'Double'} <span class="cash infoText">cash</span> gain yet again`
             },
-            costa: new Decimal(599.99),
+            costa() {return Decimal.times(599.99, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(!hasMilestone('super', 0)) {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)}},
             effect() {
-                return new Decimal(2)
+                let effect = new Decimal(2)
+                if(hasMilestone('chall', 0)) { effect = effect.times(2) }
+                return effect
             },
         },
         21: {
+            title: 'Accellerate Inflation',
             fullDisplay() {
-                return `<h3>Accellerate Inflation</h3><br>
-                Increase cash gain absed on time in current rebirth<br>
-                Currently: ×${format(tmp[this.layer].upgrades[this.id].effect)}<br><br>
-                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+                return `Increase <span class="cash infoText">cash</span> gain absed on time in current <span class="rebirth infoText">rebirth</span><br>
+                Currently: <span class="cash infoText">×${format(tmp[this.layer].upgrades[this.id].effect)}</span>`
             },
-            costa: new Decimal(2500),
+            costa() {return Decimal.times(2500, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(challengeCompletions('super', 11) < 1)player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             effect() {
-                return Decimal.max(player.rebirth.resetTime, 1).log(10).add(1)
+                let effect = Decimal.max(player.rebirth.resetTime, 1).log(10).add(1)
+                if(hasMilestone('chall', 0)) { effect = effect.pow(2) }
+                return effect
             },
             unlocked(){return hasUpgrade('rebirth', 13)}
         },
         22: {
+            title: 'Triple Shifts',
             fullDisplay() {
-                return `<h3>Triple Shifts</h3><br>
-                Increase cash gain based on amount of cash upgrades<br>
-                Currently: ×${format(tmp[this.layer].upgrades[this.id].effect)}<br><br>
-                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+                return `Increase <span class="cash infoText">cash</span> gain based on amount of <span class="cash infoText">cash</span> upgrades<br>
+                Currently: <span class="cash infoText">×${format(tmp[this.layer].upgrades[this.id].effect)}</span>`
             },
-            costa: new Decimal(10000),
+            costa() {return Decimal.times(1e4, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(challengeCompletions('super', 11) < 2)player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             effect() {
-                return Decimal.max(player.cash.upgrades.length, 1).pow(0.5).add(1)
+                let effect = Decimal.max(player.cash.upgrades.length, 1).pow(0.5).add(1)
+                if(hasMilestone('chall', 0)) { effect = effect.pow(3) }
+                return effect
             },
             unlocked(){return hasUpgrade('rebirth', 13)}
         },
         23: {
+            title: 'Buy a Workplace',
             fullDisplay() {
-                return `<h3>Buy a McDonalds</h3><br>
-                Increase above upgrades effect<br><br>
-                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+                return `Increase <span class="cash infoText">${options.upgID?"$U13s":"Get a Promotion's"}</span> effect`
             },
-            costa: new Decimal(100000),
+            costa() {return Decimal.times(1e5, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(challengeCompletions('super', 11) < 3)player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             effect() {
-                return new Decimal(1.3)
+                let effect = new Decimal(1.3)
+                if(hasMilestone('chall', 0)) { effect = effect.add(0.2) }
+                return effect
             },
             unlocked(){return hasUpgrade('rebirth', 13)}
         },
         24: {
+            title: 'Buy a Church',
             fullDisplay() {
-                return `<h3>Buy a Church</h3><br>
-                Increase RP gain base<br><br>
-                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+                return `Increase <span class="rebirth infoText">RP</span> gain base`
             },
-            costa: new Decimal(500000),
+            costa() {return Decimal.times(5e5, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(challengeCompletions('super', 11) < 4)player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             effect() {
-                return new Decimal(1.25)
+                let effect = new Decimal(1.25)
+                if(hasMilestone('chall', 0)) { effect = effect.add(0.25) }
+                return effect
             },
             unlocked(){return hasUpgrade('rebirth', 13)}
         },
         25: {
+            title: 'Buy an Artifact',
             fullDisplay() {
-                return `<h3>Buy a Relgious Artifact</h3><br>
-                Increase RP effect base<br><br>
-                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+                return `Increase <span class="rebirth infoText">RP</span> effect base`
             },
-            costa: new Decimal(2500000),
+            costa() {return Decimal.times(2.5e6, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(challengeCompletions('super', 11) < 5)player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             effect() {
-                return new Decimal(0.8)
+                let effect = new Decimal(0.8)
+                if(hasMilestone('chall', 0)) { effect = effect.sub(0.2) }
+                return effect
             },
             unlocked(){return hasUpgrade('rebirth', 13)}
         },
         26: {
+            title: 'Discover Something',
             fullDisplay() {
-                return `<h3>Buy a Money Printer</h3><br>
-                Unlock The Machine<br><br>
-                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+                return `Unlock <span class="machine infoText">The Machine</span>`
             },
-            costa: new Decimal(8000000),
+            costa() {return Decimal.times(8e6, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(challengeCompletions('super', 11) < 6)player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             unlocked(){return hasUpgrade('rebirth', 13)}
         },
         31: {
+            title: 'Capitalism',
             fullDisplay() {
-                return `<h3>Capitalism</h3><br>
-                Increase cash gain based on RP on Rebirth<br>
-                Currently: ×${format(tmp[this.layer].upgrades[this.id].effect)}<br><br>
-                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+                return `Increase <span class="cash infoText">cash</span> gain based on <span class="rebirth infoText">RP</span> gain on <span class="rebirth infoText">Rebirth</span><br>
+                Currently: <span class="cash infoText">×${format(tmp[this.layer].upgrades[this.id].effect)}</span>`
             },
-            costa: new Decimal(1e10),
+            costa() {return Decimal.times(1e10, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             unlocked(){return hasUpgrade('super', 13)},
             effect() {
-                return tmp.rebirth.getResetGain.max(0).add(1).log(150).add(1)
+                let effect = tmp.rebirth.getResetGain.max(0).add(1).log(150).add(1)
+                if(hasMilestone('chall', 0)) { effect = effect.pow(1.5) }
+                return effect
             },
         },
         32: {
+            title: 'Socialism',
             fullDisplay() {
-                return `<h3>Socialism</h3><br>
-                Increase RP gain based on cash upgrades<br>
-                Currently: ×${format(tmp[this.layer].upgrades[this.id].effect)}<br><br>
-                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+                return `Increase <span class="rebirth infoText">RP</span> gain based on <span class="cash infoText">cash</span> upgrades<br>
+                Currently: <span class="rebirth infoText">×${format(tmp[this.layer].upgrades[this.id].effect)}</span>`
             },
-            costa: new Decimal(1e11),
+            costa() {return Decimal.times(1e11, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             unlocked(){return hasUpgrade('super', 13)},
             effect() {
-                return Decimal.add(player.cash.upgrades.length, 3).div(3).max(1)
+                let effect = Decimal.add(player.cash.upgrades.length, 3).div(3).max(1)
+                if(hasMilestone('chall', 0)) { effect = effect.pow(1.5) }
+                return effect
             },
         },
         33: {
+            title: 'Communism',
             fullDisplay() {
-                return `<h3>Communism</h3><br>
-                If RP on Rebirth is greater than current RP, set current RP to RP on Rebirth<br><br>
-                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+                return `${hasMilestone('chall', 0)?'If RP on Rebirth ×300 is greater than current RP, set current RP to RP on Rebirth ×300':'If RP on Rebirth is greater than current RP, set current RP to RP on Rebirth'}`
             },
-            costa: new Decimal(1e12),
+            costa() {return Decimal.times(1e12, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             unlocked(){return hasUpgrade('super', 13)},
+            effect() {
+                let effect = new Decimal(1)
+                if(hasMilestone('chall', 0)) { effect = effect.times(300) }
+                return effect
+            }
         },
         34: {
+            title: 'Buy a Country',
             fullDisplay() {
-                return `<h3>Buy a Country</h3><br>
-                Reduce Rebirth requirement to $1000<br><br>
-                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+                return `Reduce Rebirth requirement to $1000`
             },
-            costa: new Decimal(1e13),
+            costa() {return Decimal.times(1e13, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             unlocked(){return hasUpgrade('super', 13)},
         },
         35: {
+            title: 'Buy a Continent',
             fullDisplay() {
-                return `<h3>Buy a Continent</h3><br>
-                Reduce Super Rebirth requirement to 1500 RP<br><br>
-                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+                return `Reduce Super Rebirth requirement to 1500 RP`
             },
-            costa: new Decimal(1e14),
+            costa() {return Decimal.times(1e14, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             unlocked(){return hasUpgrade('super', 13)},
         },
         36: {
+            title: 'Buy the Earth',
             fullDisplay() {
-                return `<h3>Buy the Earth</h3><br>
-                Neutral Mode's effect also boosts SRP gain at a reduced rate<br>
-                Currently: ×${format(tmp[this.layer].upgrades[this.id].effect)}<br><br>
-                Cost: ${"$" + format(tmp.cash.upgrades[this.id].costa)}`
+                return `Neutral Mode's effect also boosts SRP gain at a reduced rate<br>
+                Currently: ×${format(tmp[this.layer].upgrades[this.id].effect)}`
             },
-            costa: new Decimal(1.0001e15),
+            costa() {return Decimal.times(1.0001e15, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             unlocked(){return hasUpgrade('super', 13)},
             effect() {
-                return tmp.machine.clickables[12].effect.max(0).add(1).pow(0.5)
+                let effect = tmp.machine.clickables[12].effect.max(0).add(1).pow(0.5)
+                if(hasMilestone('chall', 0)) { effect = effect.pow(1.25) }
+                return effect
             },
         },
     },
@@ -258,8 +280,8 @@ addLayer('cash', {
                 'upgrades'
             ],
             buttonStyle: {
-                "border-color": "rgb(21, 115, 7)",
-                "background-color": "rgb(10, 57, 3)",
+                "background-color": "rgb(21, 115, 7)",
+                "border-color": "rgba(255, 255, 255, 0.25)",
             },
             shouldNotify() {
                 let state = false
@@ -281,8 +303,8 @@ addLayer('cash', {
         "The Machine": {
             unlocked(){return player.machine.unlocked},
             buttonStyle: {
-                "border-color": "#444444",
-                "background-color": "#222222",
+                "background-color": "#444444",
+                "border-color": "rgba(255, 255, 255, 0.25)",
             },
             embedLayer: 'machine',
         },
@@ -336,7 +358,7 @@ addLayer('cash', {
         11: {
             title: "Pay a Megachurch",
             display() {
-                return `Increase RP gain${maxedChallenge('super', 12)?'':', but also increase cash required to rebirth'}<br><br>Currently: ×${format(tmp.cash.buyables[11].effect)}${maxedChallenge('super', 12)?'':` RP, ×${format(tmp.cash.buyables[11].effect.pow(tmp.cash.buyables[11].nerfExpo))} req`}<br>Count: ${formatWhole(getBuyableAmount('cash', 11))}<br>Cost: $${formatWhole(tmp.cash.buyables[11].cost)}`
+                return `Increase RP gain${maxedChallenge('super', 12)?'':', but also increase cash required to rebirth'}<br>Currently: ×${format(tmp.cash.buyables[11].effect)}${maxedChallenge('super', 12)?'':` RP, ×${format(tmp.cash.buyables[11].effect.pow(tmp.cash.buyables[11].nerfExpo))} req`}`
             },
             cost(x) {
                 return x.add(6).pow_base(10)

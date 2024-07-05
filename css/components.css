@@ -1,12 +1,30 @@
-.upg {
-	min-height: 120px;
-	width: 120px;
-	border-radius: 20px;
+.upg, .buyable {
+	min-height: 110px;
+	width: 230px;
 	border: 4px solid;
-	border-color: rgba(0, 0, 0, 0.125);
+	border-color: rgba(0, 0, 0, 0.25);
 	font-size: 10px;
 	overflow: visible;
+	padding: 10px;
 }
+
+.upgBuy {
+	border: 4px solid;
+	border-color: rgba(0, 0, 0, 0.25);
+}
+
+.cash.upg    { background-color: rgba(21, 115, 7, 0.25); }
+.rebirth.upg { background-color: rgba(186, 0, 34, 0.25); }
+.super.upg   { background-color: rgba(251, 26, 61, 0.25); }
+.power.upg   { background-color: rgba(214, 198, 17, 0.25); }
+.machine.upg { background-color: rgba(128, 128, 128, 0.25); }
+.tax.upg     { background-color: rgba(241, 112, 255, 0.25); }
+
+.cash.can    { background-color: rgba(21, 115, 7, 1); }
+.rebirth.can { background-color: rgb(186, 0, 34); }
+.super.can   { background-color: rgba(251, 26, 61, 1); }
+.power.can   { background-color: rgba(214, 198, 17, 1); }
+.machine.can { background-color: rgba(128, 128, 128, 1); }
 
 .achievement {
 	height: 90px;
@@ -18,66 +36,59 @@
 	color: white;
 	text-shadow: 0 0 2px #000000;
 }
+
+.button {
+	min-height: 35px;
+	width: 110px;
+	border: 4px solid;
+	border-color: rgba(255, 255, 255, 0.25);
+	font-size: 10px;
+	overflow: visible;
+	padding: 10px;
+}
+
 .achievement:hover {
 	box-shadow: 0 0 10px var(--points);
 	z-index: 7;
 }
 
-.buyable {
-	height: 150px;
-	width: 150px;
-	border-radius: 20px;
-	border: 4px solid;
-	border-color: rgba(0, 0, 0, 0.125);
-	font-size: 10px;
-	position:relative;
+.cash.buyable    { background-color: rgba(21, 115, 7, 0.25); }
+.rebirth.buyable { background-color: rgba(186, 0, 34, 0.25); }
+.super.buyable   { background-color: rgba(251, 26, 61, 0.25); }
+.power.buyable   { background-color: rgba(214, 198, 17, 0.25); }
+
+.milestone, .milestoneDone {
+	width: calc(100% - 5px);
+	min-height: 75px;
+	text-align: center;
+	font-size: 12px;
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
-.milestone {
-	width: calc(100vw - 60px);
-	min-width: 120px;
-	padding-left: 5px;
-	padding-right: 5px;
-	height: 75px;
-	background-color: #bf8f8f;
-	border: 4px solid;
-	border-radius: 20px;
-	border-color: rgba(0, 0, 0, 0.125);
-	color: rgba(0, 0, 0, 0.5);
+.milestoneDone h2 {
+	color: #77bf5f;
 }
 
-.milestoneDone {
-	width: 100%;
-	min-width: 120px;
-	padding-left: 5px;
-	padding-right: 5px;
-
-	height: 75px;
-	background-color: #77bf5f;
-	border: 4px solid;
-	border-radius: 20px;
-	border-color: rgba(0, 0, 0, 0.125);
-	color: rgba(0, 0, 0, 0.5);
+.milestone h2 {
+	color: #bf8f8f;
 }
 
 .challenge {
-	background-color: #bf8f8f;
+	color: #bf8f8f;
 	position: relative;
 	border: 4px solid;
-	border-color: rgba(0, 0, 0, 0.125);
-	color: rgba(0, 0, 0, 0.5);
-	width: 300px;
-	height: 300px;
-	font-size: 15px;
-	border-radius: 20px;
+	border-color: rgba(0, 0, 0, 0.25);
+	width: 360px;
+	height: 200px;
 }
 
 .challenge.done {
-	background-color: #77bf5f;
+	color: #77bf5f;
 }
 
 .challenge.canComplete {
-	background-color: #ffbf00;
+	color: #ffbf00;
 }
 
 /* Infoboxes */
@@ -147,13 +158,13 @@
 
 /* Used for respec button and similar */
 .longUpg {
-	height: 50px;
-	width: 120px;
-	background: var(--points);
-	border-radius: 50%;
+	min-height: 35px;
+	width: 110px;
 	border: 4px solid;
-	border-color: rgba(0, 0, 0, 0.125);
-	color:rgba(0, 0, 0, 0.75)
+	border-color: rgba(255, 255, 255, 0.25);
+	font-size: 11px;
+	overflow: visible;
+	padding: 10px;
 }
 
 .smallUpg {

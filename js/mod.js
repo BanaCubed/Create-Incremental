@@ -99,8 +99,11 @@ function getPointGen() {
 	if(hasUpgrade('rebirth', 11)) { gain = gain.times(tmp.rebirth.upgrades[11].effect) }
 
 	gain = gain.times(tmp.super.effect[1])
+	if(hasMilestone('power', 4)) { gain = gain.times(tmp.power.milestones[4].effect) }
+	if(hasChallenge('super', 14)) { gain = gain.times(tmp.super.challenges[14].effect) }
 
 	if(inChallenge('super', 12)) { gain = gain.div(tmp.super.challenges[12].nerf)}
+	if(inChallenge('super', 15)) { gain = gain.div(player.super.tax) }
 
 	return gain
 }

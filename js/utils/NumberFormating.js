@@ -1,5 +1,5 @@
 const standardSuffixes = [[
-    '', 'K', 'M', 'B'
+    '', ' K', ' M', ' B'
     ], [
         '', 'U', 'D', 'T', 'Qa', 'Qt', 'Sx', 'Sp', 'Oc', 'No'
     ], [
@@ -14,7 +14,7 @@ function standardFormat(num, precision) {
     num = new Decimal(num)
     let index = num.max(1).add(1).log(10).div(3).floor().toNumber()
     num = num.div(Decimal.pow(1000, index))
-    let suffix = ''
+    let suffix = ' '
     let suffindex
     if(index <= 3) suffix = standardSuffixes[0][index]
     else {
@@ -119,6 +119,46 @@ function formatZero(num) {
 
     if (number.length == 1) number = "0" + number
     return number
+}
+
+function formatCost(num, layer) {
+    if(layer == 'cash') {
+        return '$' + format(num)
+    } else if(layer == 'rebirth') {
+        return formatWhole(num) + ' RP'
+    } else if(layer == 'super') {
+        return formatWhole(num) + ' SRP'
+    } else if(layer == 'power') {
+        return formatWhole(num) + ' Power'
+    }
+}
+
+function formatBoost(num, additive = true) {
+    if(additive) {
+        if(num.lt(0.1)){return '+' + format(num.times(100)) + '%'}
+        if(num.lt(9)) {return '+' + formatWhole(num.times(100)) + '%'}
+        if(num.lt(100)){return '×' + format(num.add(1))}
+        else return '×' + formatWhole(num.add(1))
+    } else {
+        if(num.lt(0.1)){return format(num.times(100)) + '%'}
+        if(num.lt(9)) {return formatWhole(num.times(100)) + '%'}
+        if(num.lt(100)){return '×' + format(num)}
+        else return '×' + formatWhole(num)
+    }
+}
+
+function machineText() {
+    if(player.machine.state == 1) return 'active and set to Cash Mode'
+    if(player.machine.state == 2) return 'active and set to Neutral Mode'
+    if(player.machine.state == 3) return 'active and set to Rebirth Mode'
+    return 'inactive'
+}
+
+function formatLayer(layer) {
+    if(layer == 'cash') { return '$' }
+    if(layer == 'rebirth') { return 'R' }
+    if(layer == 'super') { return 'S' }
+    if(layer == 'power') { return 'P' }
 }
 
 function formatZeroo(num) {

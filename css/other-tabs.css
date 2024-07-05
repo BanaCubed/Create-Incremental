@@ -68,19 +68,15 @@ a {
 .opt {
 	height: 100px;
 	width: 100px;
-	border-radius: 20px;
 	border: 4px solid;
 	background-color: slategray;
-	border-color: rgba(0, 0, 0, 0.125);
-	color: black;
+	border-color: rgba(255, 255, 255, 0.25);
 	cursor: pointer;
 	margin: -1px;
 }
 
 .opt:hover {
 	background-color: rgb(152, 172, 192);
-	transform: scale(1.05, 1.05);
-	box-shadow: rgb(152, 172, 192) 0 0 10px;
 }
 
 .optTitle {

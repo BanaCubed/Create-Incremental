@@ -253,11 +253,11 @@ function startChallenge(layer, x) {
 		} else {
 		enter = true
 	}	
-	doReset(layer, true)
 	if(enter) {
 		Vue.set(player[layer], "activeChallenge", x)
 		run(layers[layer].challenges[x].onEnter, layers[layer].challenges[x])
 	}
+	doReset(layer, true)
 	updateChallengeTemp(layer)
 }
 
@@ -426,6 +426,6 @@ var interval = setInterval(function() {
 	adjustPopupTime(trueDiff)
 	updateParticles(trueDiff)
 	ticking = false
-}, 50)
+}, 1000/60)
 
 setInterval(function() {needCanvasUpdate = true}, 500)

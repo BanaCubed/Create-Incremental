@@ -4,8 +4,8 @@ var systemComponents = {
 		template: `
 			<div class="upgRow">
 				<div v-for="tab in Object.keys(data)">
-					<button v-if="data[tab].unlocked == undefined || data[tab].unlocked" v-bind:class="{tabButton: true, notify: subtabShouldNotify(layer, name, tab), resetNotify: subtabResetNotify(layer, name, tab), tooltipBox: true}"
-					v-bind:style="[{'border-color': tmp[layer].color}, (subtabShouldNotify(layer, name, tab) ? {'box-shadow': 'var(--hqProperty2a), 0 0 20px '  + (data[tab].glowColor || defaultGlow)} : {}), tmp[layer].componentStyles['tab-button'], data[tab].buttonStyle]"
+					<button v-if="data[tab].unlocked == undefined || data[tab].unlocked" v-bind:class="{tabButton: true, tooltipBox: true}"
+					v-bind:style="[{'border-color': tmp[layer].color}, tmp[layer].componentStyles['tab-button'], data[tab].buttonStyle]"
 						v-on:click="function(){player.subtabs[layer][name] = tab; updateTabFormats(); needCanvasUpdate = true;}">{{tab}}
 						</button>
 				</div>
@@ -110,7 +110,7 @@ var systemComponents = {
 			<br>Dev Speed: ×{{format(player.devSpeed)}}<br>
 		</span>	
 		<span class="overlayThing">
-			<br>Anything that ends with ⁕ is currently unimplemented<br>
+			<br>BETA VERSION - CURRENTLY UNFINISHED<br>
 		</span>
 		<span v-if="player.offTime !== undefined"  class="overlayThing">
 			<br>Offline Time: {{formatTime(player.offTime.remain)}}
@@ -121,6 +121,8 @@ var systemComponents = {
 			<cash-display v-if="options.cashPin"></cash-display>
 			<rp-display v-if="options.rebirthPin && player.rebirth.unlocked"></rp-display>
 			<srp-display v-if="options.superPin && player.super.unlocked"></srp-display>
+			<power-display v-if="player.power.unlocked"></power-display>
+			<tax-display v-if="inChallenge('super', 15)"></tax-display>
 		</div>
 		</div>
 	`
@@ -132,11 +134,11 @@ var systemComponents = {
         <h2>{{modInfo.name}}</h2>
         <br>
         <h3>{{VERSION.withName}}</h3>
-        <span v-if="modInfo.author">
-            <br>
-            Made by {{modInfo.author}}	
-        </span>
-        <br>
+		<br>
+		Coding by BanaCubed<br>
+		Ideas by adoplayzz, galaxyuser63274, EchoingLycanthrope, Shadow69420,<br>
+		BanaCubed, Create_Incremental_Boy, EdenGameMaster
+        <br><br>
         The Modding Tree <a v-bind:href="'https://github.com/Acamaeda/The-Modding-Tree/blob/master/changelog.md'" target="_blank" class="link" v-bind:style = "{'font-size': '14px', 'display': 'inline'}" >{{TMT_VERSION.tmtNum}}</a> by Acamaeda
         <br>
         The Prestige Tree made by Jacorb and Aarex
@@ -152,11 +154,7 @@ var systemComponents = {
     'stats-tab': {
         template: `
         <div>
-		Time Played: {{ formatTime(player.timePlayed) }}<br><br>
-        <span v-if="player.points.max(0).add(1).log(10).ceil().div(3).gte(1) || player.rebirth.points.max(0).add(1).log(10).ceil().div(3).gte(1) || player.super.points.max(0).add(1).log(10).ceil().div(3).gte(1)">If you wrote 3 digits per second, it would take you:<br>
-		<span v-if="player.points.max(0).add(1).log(10).ceil().div(3).gte(1)">{{ formatTime(player.points.max(0).add(1).log(10).ceil().div(3), 1) }} to write your cash amount<br></span>
-		<span v-if="player.rebirth.points.max(0).add(1).log(10).ceil().div(3).gte(1)">{{ formatTime(player.rebirth.points.max(0).add(1).log(10).ceil().div(3), 1) }} to write your RP amount<br></span>
-		<span v-if="player.super.points.max(0).add(1).log(10).ceil().div(3).gte(1)">{{ formatTime(player.super.max(0).points.add(1).log(10).ceil().div(3), 1) }} to write your SRP amount<br></span><br></span>
+		Nothing Here Yet :(
 		<br><br></div>
     `
     },
@@ -207,6 +205,7 @@ var systemComponents = {
                 <td><button class="opt" onclick="adjustMSDisp()">Show Milestones: {{ MS_DISPLAYS[MS_SETTINGS.indexOf(options.msDisplay)]}}</button></td>
                 <td><button class="opt" onclick="toggleOpt('hideChallenges')">Completed Challenges: {{ options.hideChallenges?"HIDDEN":"SHOWN" }}</button></td>
                 <td><button class="opt" onclick="toggleOpt('standardNotate')">Standard Notation: {{ options.standardNotate?"ON":"OFF" }}</button></td>
+                <td><button class="opt" onclick="toggleOpt('upgID')">Display IDs: {{ options.upgID?"ON":"OFF" }}</button></td>
             </tr>
             <tr>
 				<td><button class="optTitle">Gameplay -</button></td>

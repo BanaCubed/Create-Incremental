@@ -13,6 +13,7 @@ function getStartOptions() {
 		forceOneTab: true,
 		forceTooltips: true,
 		standardNotate: true,
+		upgID: false,
 	}
 }
 

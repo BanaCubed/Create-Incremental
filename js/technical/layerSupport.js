@@ -285,30 +285,18 @@ addLayer("info-tab", {
                 'discord-version-overlay',
                 'info-tab',
             ],
-            buttonStyle: {
-                "border-color": "rgb(112, 128, 144)",
-                "background-color": "rgb(56, 64, 72)",
-            },
         },
         "Help": {
             content: [
                 'discord-version-overlay',
                 'help-tab',
             ],
-            buttonStyle: {
-                "border-color": "rgb(112, 128, 144)",
-                "background-color": "rgb(56, 64, 72)",
-            },
         },
         "Stats": {
             content: [
                 'discord-version-overlay',
                 'stats-tab',
             ],
-            buttonStyle: {
-                "border-color": "rgb(112, 128, 144)",
-                "background-color": "rgb(56, 64, 72)",
-            },
         },
     },
     row: "otherside"

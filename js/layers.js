@@ -3,26 +3,17 @@ addLayer('chall', {
     startData() { return {
         unlocked: false,
         points: new Decimal(0),
+        pap: 50, // Power Allocation Percentage (0-100)
     }},
     tabFormat: {
         "Super": {
             content: [
-                ['display-text', `Because nobody likes grinding challenges during each reset,<br>challenges will be retained if you reach a certain point in progression.<br>This bonus is never reset.<br><br>Hyper is absent, so Super challenges aren't ever reset.<br><br>`],
                 ['layer-proxy', ['super', [
                     'challenges',
                 ]]],
             ],
             buttonStyle: {
-                "border-color": "#EB1A3D",
-                "background-color": "#750D1E",
-            },
-            shouldNotify() {
-                const challs = [11, 12]
-                for (let index = 0; index < challs.length; index++) {
-                    const element = challs[index];
-                    if(inChallenge('super', element) && tmp.super.challenges[element].canComplete) return true
-                }
-                return false
+                "background-color": "#EA183D",
             },
         },
     },
@@ -43,22 +34,33 @@ addLayer('chall', {
                     return player.rebirth.points.div(1250)
                 }
                 if(true) {
-                    if(inChallenge('super', 11)) {
-                        return player.points.div(8000000)
+                    if(inChallenge('super', 11) || inChallenge('super', 12) || inChallenge('super', 13)) {
+                        return player.points.div(tmp.cash.upgrades[26].costa)
                     }
-                    if(inChallenge('super', 12)) {
-                        return player.points.div(8000000)
+                    if(inChallenge('super', 14)) {
+                        return player.rebirth.points.div(tmp.super.requires)
                     }
-                    return player.super.points.div(50)
+                    if(inChallenge('super', 15)) {
+                        return player.rebirth.points.div(1e13)
+                    }
+                    if(!player.power.unlocked) {
+                        return player.super.points.div(50)
+                    }
+                    if(!hasMilestone('chall', 0)) {
+                        return player.power.power.max(0).add(1).log(10).div(50)
+                    }
+                    return player.power.power.max(0).add(1).log(10).div(65).times(0.75).add(player.power.pylonF.div(16))
                 }
             },
             unlocked(){return true},
             borderStyle: {
-                'border-width': '4px',
-                'border-radius': '20px',
+                'border-width': '4px 4px',
             },
             baseStyle: {
                 'background-color': 'var(--background)',
+            },
+            textStyle: {
+                'text-shadow': 'black 0 0 5px'
             },
             display() {
                 if(!player.rebirth.unlocked) {
@@ -70,13 +72,31 @@ addLayer('chall', {
                 if(true) {
                     if(inChallenge('super', 11)) {
                         if(canCompleteChallenge('super', 11)) return `Can complete challenge`
-                        return `Unlock the machine to complete<br>${format(player.points)}/$8.00M`
+                        return `Unlock the machine to complete<br>${format(player.points)}/$${formatWhole(tmp.cash.upgrades[26].costa)}`
                     }
                     if(inChallenge('super', 12)) {
                         if(canCompleteChallenge('super', 12)) return `Can complete challenge`
-                        return `Unlock the machine to complete<br>${format(player.points)}/$8.00M`
+                        return `Unlock the machine to complete<br>${format(player.points)}/$${formatWhole(tmp.cash.upgrades[26].costa)}`
                     }
-                    return `Purchase Super Rebirth upgrade 4 to unlock Power<br>${formatWhole(player.super.points)}/50 SRP`
+                    if(inChallenge('super', 13)) {
+                        if(canCompleteChallenge('super', 13)) return `Can complete challenge`
+                        return `Unlock the machine to complete<br>${format(player.points)}/$${formatWhole(tmp.cash.upgrades[26].costa)}`
+                    }
+                    if(inChallenge('super', 14)) {
+                        if(canCompleteChallenge('super', 14)) return `Can complete challenge`
+                        return `Reach Super Rebirth requirement to complete<br>${format(player.rebirth.points)}/${formatWhole(tmp.super.requires)} RP`
+                    }
+                    if(inChallenge('super', 15)) {
+                        if(canCompleteChallenge('super', 15)) return `Can complete challenge`
+                        return `Reach ${formatWhole(1e13)} RP to complete<br>${format(player.rebirth.points)}/${formatWhole(1e13)} RP`
+                    }
+                    if(!player.power.unlocked) {
+                        return `Purchase Super Rebirth upgrade 4 to unlock Power<br>${formatWhole(player.super.points)}/50 SRP`
+                    }
+                    if(!hasMilestone('chall', 0)) {
+                        return `Reach ${formatWhole(1e50)} Power to permanently improve the first three rows of cash upgrades<br>${format(player.power.power)}/${formatWhole(1e50)} Power`
+                    }
+                    return `Reach 4 Power Pylon F to unlock Hyper Rebirth<br>${formatWhole(player.power.pylonF)}/4 Pylons | ${formatWhole(player.power.power)}/${formatWhole(1e65)} Power`
                 }
             },
             nextColor() {
@@ -87,18 +107,32 @@ addLayer('chall', {
                     return `#BA0022`
                 }
                 if(true) {
-                    if(inChallenge('super', 11)) {
+                    if(inChallenge('super', 11) || inChallenge('super', 12) || inChallenge('super', 13)) {
                         return `rgb(21, 115, 7)`
                     }
-                    if(inChallenge('super', 12)) {
-                        return `rgb(21, 115, 7)`
+                    if(inChallenge('super', 14) || inChallenge('super', 15)) {
+                        return `#BA0022`
                     }
-                    return `rgb(251, 26, 61)`
+                    if(!player.power.unlocked) {
+                        return `rgb(251, 26, 61)`
+                    }
+                    return '#d6c611'
                 }
             },
             fillStyle() { return {
                 'background-color': this.nextColor()
             }},
         },
-    }
+    },
+    milestones: {
+        0: {
+            done() {
+                return player.power.power.gte(1e45)
+            },
+            onComplete() {
+                player.cash.upgrades = []
+            }
+        },
+    },
+    milestonePopups: false,
 })
