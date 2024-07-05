@@ -16,14 +16,13 @@ addNode("blank", {
 addLayer("tree-tab", {
     tabFormat: {
         "Cash": {
-            unlocked(){return options.cashTab},
             buttonStyle: {
                 "background-color": "rgb(21, 115, 7)",
             },
             embedLayer: 'cash',
         },
         "Rebirths": {
-            unlocked(){return player.rebirth.unlocked && options.rebirthTab},
+            unlocked(){return player.rebirth.unlocked},
             buttonStyle: {
                 "background-color": "#BA0022",
             },
@@ -36,7 +35,7 @@ addLayer("tree-tab", {
             embedLayer: 'info-tab',
         },
         "Challenges": {
-            unlocked(){return player.chall.unlocked && options.challTab},
+            unlocked(){return player.chall.unlocked},
             embedLayer: 'chall',
         },
     },

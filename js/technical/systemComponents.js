@@ -118,9 +118,9 @@ var systemComponents = {
 		<div v-for="thing in tmp.displayThings" class="overlayThing"><span v-if="thing" v-html="thing"></span></div>
 		<bar :layer="'chall'" :data="'nextFeature'"></bar><br>
 		<div class="overlayThing" id="headerFlexbox">
-			<cash-display v-if="options.cashPin"></cash-display>
-			<rp-display v-if="options.rebirthPin && player.rebirth.unlocked"></rp-display>
-			<srp-display v-if="options.superPin && player.super.unlocked"></srp-display>
+			<cash-display></cash-display>
+			<rp-display v-if="player.rebirth.unlocked"></rp-display>
+			<srp-display v-if="player.super.unlocked"></srp-display>
 			<power-display v-if="player.power.unlocked"></power-display>
 			<tax-display v-if="inChallenge('super', 15)"></tax-display>
 		</div>
