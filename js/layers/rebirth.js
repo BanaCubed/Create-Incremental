@@ -363,6 +363,8 @@ addLayer('rebirth', {
         if(hasUpgrade('hyper', 12)) { gain = gain.times(500) }
         if(hasUpgrade('hyper', 33)) { gain = gain.times(tmp.hyper.upgrades[33].effect) }
         if(hasUpgrade('hyper', 41)) { gain = gain.times(10) }
+        if(hasUpgrade('hyper', 43)) { gain = gain.times(5) }
+        if(hasUpgrade('hyper', 44)) { gain = gain.times(3) }
         return gain
     },
     buyables: {
