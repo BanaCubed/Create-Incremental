@@ -3,8 +3,9 @@ addLayer('rebirth', {
         "Rebirth": {
             content: [
                 "prestige-button",
-                "blank",
-                ['display-text', function() {return `Your RP is increasing cash gain by ×${format(tmp.rebirth.effect)}<br>You have rebirthed ${formatWhole(player.rebirth.rebirths)} times`}],
+                'rp-uhoh-display',
+                'blank',
+                ['display-text', function() {return `Your RP is increasing cash gain by ${formatBoost(tmp.rebirth.effect.sub(1))}<br>You have rebirthed ${formatWhole(player.rebirth.rebirths)} times`}],
                 "blank",
                 ['row', [
                     ['buyable', 11],
@@ -37,12 +38,20 @@ addLayer('rebirth', {
             },
         },
         "Super": {
-            unlocked(){return player.super.unlocked && options.superTab},
+            unlocked(){return player.super.unlocked},
             buttonStyle: {
                 "background-color": "#EB1A3D",
                 "border-color": "rgba(255, 255, 255, 0.25)",
             },
             embedLayer: 'super',
+        },
+        "Hyper": {
+            unlocked(){return player.hyper.unlocked},
+            buttonStyle: {
+                "background-color": "#2eb5c8",
+                "border-color": "rgba(255, 255, 255, 0.25)",
+            },
+            embedLayer: 'hyper',
         },
     },
     startData() { return {
@@ -50,7 +59,19 @@ addLayer('rebirth', {
         points: new Decimal(0),
         rebirths: new Decimal(0),
         resetTime: 0,
+        uResetTime: new Decimal(0),
     }},
+    resetTooltip() {
+        if(options.tooltipCredits) return `Idea from galaxyuser63274<br>RP gain formula: floor((cash/100,000)<sup>0.5</sup>)<br>RP boost to cash formula: 1+RP<sup>0.5</sup>`
+
+        let base = new Decimal(3)
+        if(hasUpgrade('cash', 24)) base = base.times(tmp.cash.upgrades[24].effect)
+        
+        let effbase = new Decimal(2)
+        if(hasUpgrade('cash', 25)) effbase = effbase.pow(tmp.cash.upgrades[25].effect)
+        if(hasUpgrade('rebirth', 21)) effbase = effbase.pow(tmp.rebirth.upgrades[21].effect)
+        return `Gain formula: floor(${format(base)}<sup>log<sub>${format(tmp.rebirth.requires)}</sub>(cash)-1</sup>)<br>Boost to cash formula: log<sub>${format(effbase)}</sub>(RP+${format(effbase)})`
+    },
     type: 'custom',
     getNextAt() {
         let base = new Decimal(3)
@@ -81,12 +102,14 @@ addLayer('rebirth', {
             player.rebirth.rebirths = player.rebirth.rebirths.min(tmp.super.challenges[11].nerf)
         }
 
+        player.rebirth.uResetTime = player.rebirth.uResetTime.add(Decimal.times(diff, tmp.chall.uTime))
     },
     passiveGeneration() {
         let gain = new Decimal(0)
         if(maxedChallenge('super', 11)) { gain = gain.add(0.1) }
         if(maxedChallenge('super', 12)) { gain = gain.times(10) }
         if(maxedChallenge('super', 13)) { gain = gain.times(10) }
+        gain = gain.times(tmp.chall.uTime)
         return tmp.rebirth.canReset?gain:new Decimal(0)
     },
     color: "#BA0022",
@@ -121,6 +144,13 @@ addLayer('rebirth', {
                 if(hasUpgrade('rebirth', 14)) exponent = exponent.times(tmp.rebirth.upgrades[14].effect)
                 return Decimal.pow(player.rebirth.upgrades.length + 1, exponent).max(1)
             },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>1RP: $ is boosted by RP upgrades. (Formula: 1+Upgrades)`
+                
+                let exponent = new Decimal(1)
+                if(hasUpgrade('rebirth', 14)) exponent = exponent.times(tmp.rebirth.upgrades[14].effect)
+                return `${exponent.neq(1)?'(':''}upgrades+1${exponent.neq(1)?`)<sup>${format(exponent)}</sup>`:''}`
+            },
         },
         12: {
             title: 'Retainer',
@@ -137,27 +167,42 @@ addLayer('rebirth', {
                 if(hasUpgrade('rebirth', 26)) limit += 1
                 return player.rebirth.rebirths.pow(0.7).floor().min(limit)
             },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>2RP: Keep 1 $ Upgrade per best RP.`
+                
+                return `floor(rebirths<sup>0.7</sup>)`
+            },
         },
         13: {
             title: 'Unlocker',
             fullDisplay() {
-                return `Unlock some more cash upgrades and increase ${options.upgID?'RU12s':"the previous upgrade's"} limit to 11`
+                return `Unlock some more cash upgrades and increase ${options.upgID?'RU2s':"the previous upgrade's"} limit to 11`
             },
             costa: new Decimal(3),
             canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
             pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>3RP: Unlock more $ upgrades.`
+                
+                return
+            },
         },
         14: {
             title: 'Enhancer',
             fullDisplay() {
-                return `Improve the first rebirth upgrade's effect`
+                return `Improve the effect of ${options.upgID?'RU1':'Upgrader'}`
             },
             costa: new Decimal(5),
             canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
             pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
             effect() {
                 return new Decimal(1.5)
-            }
+            },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>20RP: Change the first upgrades formula to 2xUpgrade#`
+                
+                return `upgrades+1 to (upgrades+1)<sup>1.5</sup>`
+            },
         },
         15: {
             title: 'Inflater',
@@ -169,7 +214,12 @@ addLayer('rebirth', {
             pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
             effect() {
                 return new Decimal(1.2)
-            }
+            },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>100,000RP: Unlock a RP buyable!?`
+                
+                return
+            },
         },
         16: {
             title: 'Improver',
@@ -181,7 +231,12 @@ addLayer('rebirth', {
             pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
             effect() {
                 return new Decimal(1.2)
-            }
+            },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>10,000,000RP: Unlock a second RP buyable!`
+                
+                return
+            },
         },
         21: {
             title: 'Empowerer',
@@ -194,7 +249,12 @@ addLayer('rebirth', {
             effect() {
                 return new Decimal(0.8)
             },
-            unlocked(){return hasUpgrade('rebirth', 16)}
+            unlocked(){return hasUpgrade('rebirth', 16)},
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from galacyuser63274<br>2.40e14$: improve rp boost to cash formula again x<sup>0.7</sup> to x<sup>0.8</sup>`
+                
+                return `log<sub>${format(Decimal.pow(2, tmp.cash.upgrades[25].effect))}</sub>(x) to log<sub>${format(Decimal.pow(2, tmp.cash.upgrades[25].effect).pow(tmp[this.layer].upgrades[this.id].effect))}</sub>(x)`
+            },
         },
         22: {
             title: 'Focuser',
@@ -207,7 +267,12 @@ addLayer('rebirth', {
             effect() {
                 return new Decimal(1.5)
             },
-            unlocked(){return hasUpgrade('rebirth', 16)}
+            unlocked(){return hasUpgrade('rebirth', 16)},
+            tooltip() {
+                if(options.tooltipCredits) return `Uninspired`
+                
+                return
+            },
         },
         23: {
             title: 'Synergiser',
@@ -221,7 +286,12 @@ addLayer('rebirth', {
             effect() {
                 return player.points.max(1).log(8000000).add(1)
             },
-            unlocked(){return hasUpgrade('rebirth', 16)}
+            unlocked(){return hasUpgrade('rebirth', 16)},
+            tooltip() {
+                if(options.tooltipCredits) return `Uninspired`
+                
+                return `log<sub>${format(8e6)}</sub>(cash)+1`
+            },
         },
         24: {
             title: 'Synergiser II',
@@ -235,7 +305,12 @@ addLayer('rebirth', {
             effect() {
                 return player.rebirth.points.max(1).log(100).add(1)
             },
-            unlocked(){return hasUpgrade('rebirth', 16)}
+            unlocked(){return hasUpgrade('rebirth', 16)},
+            tooltip() {
+                if(options.tooltipCredits) return `Uninspired`
+                
+                return `log<sub>${formatWhole(100)}</sub>(RP)+1`
+            },
         },
         25: {
             title: 'Constructor',
@@ -249,17 +324,27 @@ addLayer('rebirth', {
             effect() {
                 return player.rebirth.rebirths.max(1).log(250).add(1)
             },
-            unlocked(){return hasUpgrade('rebirth', 16)}
+            unlocked(){return hasUpgrade('rebirth', 16)},
+            tooltip() {
+                if(options.tooltipCredits) return `Uninspired`
+                
+                return `log<sub>${formatWhole(250)}</sub>(rebirths)+1`
+            },
         },
         26: {
             title: 'Automator',
             fullDisplay() {
-                return `Automatically select Neutral Mode and increase Retainer's limit to 12`
+                return `Automatically select Neutral Mode and increase ${options.upgID?'RU2':"Retainer's"} limit to 12`
             },
             costa: new Decimal(1250),
             canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
             pay() {if(challengeCompletions('super', 12) < 6)player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
-            unlocked(){return hasUpgrade('rebirth', 16)}
+            unlocked(){return hasUpgrade('rebirth', 16)},
+            tooltip() {
+                if(options.tooltipCredits) return `Uninspired`
+                
+                return
+            },
         },
     },
     onPrestige(gain) {
@@ -274,6 +359,10 @@ addLayer('rebirth', {
         gain = gain.times(tmp.cash.buyables[11].effect)
         gain = gain.times(tmp.super.effect[0])
         if(hasChallenge('super', 14)) { gain = gain.times(tmp.super.challenges[14].effect) }
+        gain = gain.times(tmp.hyper.effect[1])
+        if(hasUpgrade('hyper', 12)) { gain = gain.times(500) }
+        if(hasUpgrade('hyper', 33)) { gain = gain.times(tmp.hyper.upgrades[33].effect) }
+        if(hasUpgrade('hyper', 41)) { gain = gain.times(10) }
         return gain
     },
     buyables: {
@@ -301,6 +390,11 @@ addLayer('rebirth', {
                 if(hasMilestone('super', 4)){base = base.div(2)}
                 return base
             },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>RP Buyable 1: Increase RP gain.<br>Price formula: [Times Bought]<sup>4</sup><br>Effect formula: 1.5<sup>[Times bought]</sup>`
+                
+                return `Effect: (x+1)<sup>0.6</sup><br>Cost: 3<sup>x+1</sup>${maxedChallenge('super', 12)?'':`<br>Nerf: (x+1)<sup>${tmp.rebirth.buyables[11].nerfExpo.times(0.6)}</sup>`}`
+            },
         },
         12: {
             title: "Anti-Sins",
@@ -320,6 +414,11 @@ addLayer('rebirth', {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             auto(){return hasMilestone('super', 4)},
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>RP Buyable 2: Increase RP buyable 1 base.<br>Price formula: [Times Bought]<sup>8</sup><br>Changes RPB1 effect formula to: (1.5+0.25×[Times RBP2 bought])<sup>[Times RPB1 bought]</sup>`
+                
+                return `Effect: (x+1)<br>Cost: 8<sup>x+1</sup>`
+            },
         },
     },
     hotkeys: [
@@ -354,6 +453,11 @@ addLayer('rebirth', {
             for (let index = 0; index < savedUpgs.length; index++) {
                 const element = savedUpgs[index];
                 player.rebirth.upgrades.push(element)
+            }
+        }
+        if(layer == 'hyper') {
+            if(hasMilestone('hyper', 2)) {
+                player.rebirth.upgrades.push(11, 12, 13, 14, 15, 16)
             }
         }
     },
@@ -445,6 +549,7 @@ addLayer('machine', {
                 base = base.add(player.power.neutralPower.max(0).add(1).log(2).div(10))
                 if(hasUpgrade('rebirth', 22)) { base = base.times(tmp.rebirth.upgrades[22].effect) }
                 if(hasUpgrade('rebirth', 25)) { base = base.times(tmp.rebirth.upgrades[25].effect) }
+                if(hasUpgrade('hyper', 21)) { base = base.times(25) }
                 return base
             },
             style: {

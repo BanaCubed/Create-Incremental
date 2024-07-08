@@ -14,6 +14,7 @@ function getStartOptions() {
 		forceTooltips: true,
 		standardNotate: true,
 		upgID: false,
+		tooltipCredits: false,
 	}
 }
 

@@ -119,10 +119,12 @@ var systemComponents = {
 		<bar :layer="'chall'" :data="'nextFeature'"></bar><br>
 		<div class="overlayThing" id="headerFlexbox">
 			<cash-display></cash-display>
-			<rp-display v-if="player.rebirth.unlocked"></rp-display>
-			<srp-display v-if="player.super.unlocked"></srp-display>
-			<power-display v-if="player.power.unlocked"></power-display>
-			<tax-display v-if="inChallenge('super', 15)"></tax-display>
+			<tax-display v-if="inChallenge('super', 15) && !hasMilestone('chall', 1)"></tax-display>
+			<rp-display v-if="player.rebirth.unlocked && !hasMilestone('chall', 1)"></rp-display>
+			<srp-display v-if="player.super.unlocked && !hasMilestone('chall', 1)"></srp-display>
+			<power-display v-if="player.power.unlocked && !hasMilestone('chall', 1)"></power-display>
+			<hyper-display v-if="player.hyper.unlocked"></hyper-display>
+			<utime-display v-if="player.hyper.rebirths.gte(1)"></utime-display>
 		</div>
 		</div>
 	`
@@ -137,7 +139,8 @@ var systemComponents = {
 		<br>
 		Coding by BanaCubed<br>
 		Ideas by adoplayzz, galaxyuser63274, EchoingLycanthrope, Shadow69420,<br>
-		BanaCubed, Create_Incremental_Boy, EdenGameMaster
+		BanaCubed, Create_Incremental_Boy, EdenGameMaster<br>
+		Artwork by BanaCubed, adoplayzz
         <br><br>
         The Modding Tree <a v-bind:href="'https://github.com/Acamaeda/The-Modding-Tree/blob/master/changelog.md'" target="_blank" class="link" v-bind:style = "{'font-size': '14px', 'display': 'inline'}" >{{TMT_VERSION.tmtNum}}</a> by Acamaeda
         <br>
@@ -206,6 +209,7 @@ var systemComponents = {
                 <td><button class="opt" onclick="toggleOpt('hideChallenges')">Completed Challenges: {{ options.hideChallenges?"HIDDEN":"SHOWN" }}</button></td>
                 <td><button class="opt" onclick="toggleOpt('standardNotate')">Standard Notation: {{ options.standardNotate?"ON":"OFF" }}</button></td>
                 <td><button class="opt" onclick="toggleOpt('upgID')">Display IDs: {{ options.upgID?"ON":"OFF" }}</button></td>
+                <td><button class="opt" onclick="toggleOpt('tooltipCredits')">Tooltips: {{ options.tooltipCredits?"Credits/ Oringial Formula":"Formula" }}</button></td>
             </tr>
             <tr>
 				<td><button class="optTitle">Gameplay -</button></td>
@@ -223,7 +227,14 @@ var systemComponents = {
 
 	'tooltip' : {
 		props: ['text'],
-		template: `<div class="tooltip" v-html="text"></div>
+		template: `<div class="tooltip" v-html="text" style="width: 100%;"></div>
+		`
+	},
+
+
+	'tooltipSide' : {
+		props: ['text'],
+		template: `<div class="tooltipSide" v-html="text" style="height: 100%;"></div>
 		`
 	},
 

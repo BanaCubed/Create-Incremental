@@ -130,10 +130,13 @@ function formatCost(num, layer) {
         return formatWhole(num) + ' SRP'
     } else if(layer == 'power') {
         return formatWhole(num) + ' Power'
+    } else if(layer == 'hyper') {
+        return formatWhole(num) + ' HRP'
     }
 }
 
 function formatBoost(num, additive = true) {
+    num = new Decimal(num)
     if(additive) {
         if(num.lt(0.1)){return '+' + format(num.times(100)) + '%'}
         if(num.lt(9)) {return '+' + formatWhole(num.times(100)) + '%'}
@@ -145,6 +148,52 @@ function formatBoost(num, additive = true) {
         if(num.lt(100)){return '×' + format(num)}
         else return '×' + formatWhole(num)
     }
+}
+
+function formatID(layer = 'cash', type = 'upgrades', id = 11) {
+    let text
+    if(layer == 'cash') { text = '$' }
+    if(layer == 'rebirth') { text = 'R' }
+    if(layer == 'super') { text = 'S' }
+    if(layer == 'power') { text = 'P' }
+    if(layer == 'hyper') { text = 'H' }
+
+    if(type == 'upgrades') { text = text + 'U' }
+    if(type == 'buyables') { text = text + 'B' }
+    if(type == 'milestones') { text = text + 'M' }
+    if(type == 'challenges') { text = text + 'C' }
+    if(type == 'pylons') { text = text + 'Py' }
+
+    if(type == 'upgrades' || type == 'buyables' || type == 'challenges') {
+        if(id == 11) { text = text + '1' }
+        if(id == 12) { text = text + '2' }
+        if(id == 13) { text = text + '3' }
+        if(id == 14) { text = text + '4' }
+        if(id == 15) { text = text + '5' }
+        if(id == 16) { text = text + '6' }
+        if(id == 21) { text = text + '7' }
+        if(id == 22) { text = text + '8' }
+        if(id == 23) { text = text + '9' }
+        if(id == 24) { text = text + '10' }
+        if(id == 25) { text = text + '11' }
+        if(id == 26) { text = text + '12' }
+        if(id == 31) { text = text + '13' }
+        if(id == 32) { text = text + '14' }
+        if(id == 33) { text = text + '15' }
+        if(id == 34) { text = text + '16' }
+        if(id == 35) { text = text + '17' }
+        if(id == 36) { text = text + '18' }
+    } else if(type == 'milestones') { id++; text = text + id }
+    else if(type == 'pylons') {
+        if(id == 21) { text = text + 'A' }
+        if(id == 22) { text = text + 'B' }
+        if(id == 23) { text = text + 'C' }
+        if(id == 24) { text = text + 'D' }
+        if(id == 25) { text = text + 'E' }
+        if(id == 26) { text = text + 'F' }
+    }
+
+    return text
 }
 
 function machineText() {
@@ -159,6 +208,7 @@ function formatLayer(layer) {
     if(layer == 'rebirth') { return 'R' }
     if(layer == 'super') { return 'S' }
     if(layer == 'power') { return 'P' }
+    if(layer == 'hyper') { return 'H' }
 }
 
 function formatZeroo(num) {

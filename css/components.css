@@ -19,12 +19,20 @@
 .power.upg   { background-color: rgba(214, 198, 17, 0.25); }
 .machine.upg { background-color: rgba(128, 128, 128, 0.25); }
 .tax.upg     { background-color: rgba(241, 112, 255, 0.25); }
+.hyper.upg   { background-color: rgb(46, 181, 200, 0.25); }
+.hcash.upg   { background-color: rgb(52, 235, 103, 0.25); }
+.universe.upg{ background-color: rgba(61, 3, 88, 0.25); }
+
+.c           { color: rgba(21, 115, 7, 1); }
+.r           { color: rgb(186, 0, 34); }
+.m           { color: rgba(128, 128, 128, 1); }
 
 .cash.can    { background-color: rgba(21, 115, 7, 1); }
 .rebirth.can { background-color: rgb(186, 0, 34); }
 .super.can   { background-color: rgba(251, 26, 61, 1); }
 .power.can   { background-color: rgba(214, 198, 17, 1); }
 .machine.can { background-color: rgba(128, 128, 128, 1); }
+.hyper.can   { background-color: rgba(46, 181, 200, 1); }
 
 .achievement {
 	height: 90px;

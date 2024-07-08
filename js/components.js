@@ -122,18 +122,49 @@ function loadVue() {
 			</div>
 		`
 	})
+	Vue.component('rp-uhoh-display', {
+		template: `
+			<div class="currencyDisplayHeader rebirth upg" v-if="hasMilestone('chall', 1)">
+				<span v-if="player.rebirth.points.lt('1e1000')"  class="overlayThing">You have </span>
+				<h2  class="overlayThing" id="points" style="color: #BA0022; text-shadow: #BA0022 0px 0px 10px;">{{formatWhole(player.rebirth.points.max(0))}}</h2> RP
+				<br>
+				<span v-if="maxedChallenge('super', 11)"  class="overlayThing">({{formatSmall(tmp.rebirth.getResetGain.times(tmp.rebirth.passiveGeneration))}}/sec)</span>
+			</div>
+		`
+	})
 	Vue.component('srp-display', {
 		template: `
 			<div class="currencyDisplayHeader super upg">
 				<span v-if="player.super.points.lt('1e1000')"  class="overlayThing">You have </span>
 				<h2  class="overlayThing" id="points" style="color: rgb(251, 26, 61); text-shadow: rgb(251, 26, 61) 0px 0px 10px;">{{formatWhole(player.super.points.max(0))}}</h2> SRP
-				<br><br>
+				<br>
+				<span v-if="hasMilestone('hyper', 0)"  class="overlayThing">({{formatSmall(tmp.super.getResetGain.times(tmp.super.passiveGeneration))}}/sec)</span>
+			</div>
+		`
+	})
+	Vue.component('srp-uhoh-display', {
+		template: `
+			<div class="currencyDisplayHeader super upg" v-if="hasMilestone('chall', 1)">
+				<span v-if="player.super.points.lt('1e1000')"  class="overlayThing">You have </span>
+				<h2  class="overlayThing" id="points" style="color: rgb(251, 26, 61); text-shadow: rgb(251, 26, 61) 0px 0px 10px;">{{formatWhole(player.super.points.max(0))}}</h2> SRP
+				<br>
+				<span v-if="hasMilestone('hyper', 0)"  class="overlayThing">({{formatSmall(tmp.super.getResetGain.times(tmp.super.passiveGeneration))}}/sec)</span>
 			</div>
 		`
 	})
 	Vue.component('power-display', {
 		template: `
 			<div class="currencyDisplayHeader power upg">
+				<span v-if="player.power.power.lt('1e1000')"  class="overlayThing">You have </span>
+				<h2  class="overlayThing" id="points" style="color: #d6c611; text-shadow: #d6c611 0px 0px 10px;">{{formatWhole(player.power.power.max(0))}}</h2> Power
+				<br>
+				<span class="overlayThing" v-if="hasUpgrade('super', 14)">({{formatSmall(tmp.power.pylons.a.effect)}}/sec)</span>
+			</div>
+		`
+	})
+	Vue.component('power-uhoh-display', {
+		template: `
+			<div class="currencyDisplayHeader power upg" v-if="hasMilestone('chall', 1)">
 				<span v-if="player.power.power.lt('1e1000')"  class="overlayThing">You have </span>
 				<h2  class="overlayThing" id="points" style="color: #d6c611; text-shadow: #d6c611 0px 0px 10px;">{{formatWhole(player.power.power.max(0))}}</h2> Power
 				<br>
@@ -148,6 +179,44 @@ function loadVue() {
 				<h2  class="overlayThing" id="points" style="color: rgb(241, 112, 255); text-shadow: rgb(241, 112, 255) 0px 0px 10px;">{{formatWhole(player.super.tax.max(0))}}</h2> Tax
 				<br>
 				<span class="overlayThing">(×{{formatSmall(tmp.super.challenges[15].nerf)}}/sec)</span>
+			</div>
+		`
+	})
+	Vue.component('tax-uhoh-display', {
+		template: `
+			<div class="currencyDisplayHeader tax upg" v-if="hasMilestone('chall', 1) && inChallenge('super', 15)">
+				<span v-if="player.super.tax.lte('1e1000')"  class="overlayThing">You have </span>
+				<h2  class="overlayThing" id="points" style="color: rgb(241, 112, 255); text-shadow: rgb(241, 112, 255) 0px 0px 10px;">{{formatWhole(player.super.tax.max(0))}}</h2> Tax
+				<br>
+				<span class="overlayThing">(×{{formatSmall(tmp.super.challenges[15].nerf)}}/sec)</span>
+			</div>
+		`
+	})
+	Vue.component('hyper-display', {
+		template: `
+			<div class="currencyDisplayHeader hyper upg">
+				<span v-if="player.hyper.points.lt('1e1000')"  class="overlayThing">You have </span>
+				<h2  class="overlayThing" id="points" style="color: #2eb5c8; text-shadow: #2eb5c8 0px 0px 10px;">{{formatWhole(player.hyper.points.max(0))}}</h2> HRP
+				<br>
+			</div>
+		`
+	})
+	Vue.component('hcash-display', {
+		template: `
+			<div class="currencyDisplayHeader hcash upg">
+				<span v-if="player.hyper.cash.lt('1e1000')"  class="overlayThing">You have Hyper</span>
+				<h2  class="overlayThing" id="points" style="color: #34eb67; text-shadow: #34eb67 0px 0px 10px;">{{'$' + format(player.hyper.cash.max(0))}}</h2>
+				<br>
+				<span class="overlayThing" v-if="hasUpgrade('super', 14)">({{formatSmall(tmp.chall.uTime.times(tmp.hyper.cashGain))}}/sec)</span>
+			</div>
+		`
+	})
+	Vue.component('utime-display', {
+		template: `
+			<div class="currencyDisplayHeader universe upg">
+				<span v-if="player.hyper.cash.lt('1e1000')"  class="overlayThing">Universal Time is </span>
+				<h2  class="overlayThing" id="points" style="color: rgba(122, 6, 176, 1); text-shadow: rgba(122, 6, 176, 1) 0px 0px 10px;">{{formatBoost(tmp.chall.uTime.max(0), false)}}</h2> as fast
+				<br><span>as real time</span>
 			</div>
 		`
 	})
@@ -187,7 +256,7 @@ function loadVue() {
 		props: ['layer', 'data'],
 		template: `
 		<div v-if="tmp[layer].challenges && tmp[layer].challenges[data]!== undefined && tmp[layer].challenges[data].unlocked && !(options.hideChallenges && maxedChallenge(layer, [data]) && !inChallenge(layer, [data]))"
-			v-bind:class="['challenge', challengeStyle(layer, data), player[layer].activeChallenge === data ? 'resetNotify' : '', 'upg', layer]" v-bind:style="tmp[layer].challenges[data].style"
+			v-bind:class="['challenge', challengeStyle(layer, data), player[layer].activeChallenge === data ? 'resetNotify' : '', 'upg', layer, 'tooltipBox']" v-bind:style="tmp[layer].challenges[data].style"
 			:id="'challenge-' + layer + '-' + data">
 			<h3 v-html="tmp[layer].challenges[data].name"></h3><br><br>
 			<button v-bind:class="{ longUpg: true, can: true, [layer]: true }" v-bind:style="{'background-color': tmp[layer].color}" v-on:click="startChallenge(layer, data)">{{challengeButtonText(layer, data)}}</button><br><br>
@@ -198,7 +267,147 @@ function loadVue() {
 				Reward: <span v-html="tmp[layer].challenges[data].rewardDescription"></span><br>
 				<span v-if="layers[layer].challenges[data].rewardDisplay!==undefined">Currently: <span v-html="(tmp[layer].challenges[data].rewardDisplay) ? (run(layers[layer].challenges[data].rewardDisplay, layers[layer].challenges[data])) : format(tmp[layer].challenges[data].rewardEffect)"></span></span>
 			</span></span>
+			<tooltip v-if="tmp[layer].challenges[data].tooltip" :text="tmp[layer].challenges[data].tooltip"></tooltip>
+			
+			<div style="position: absolute; bottom: 5px; left: 5px;" class="upgID" v-if="options.upgID">{{ formatID(layer, 'challenges', data) }}</div>
 
+		</div>
+		`
+	})
+
+	// data = id
+	Vue.component('changelog', {
+		props: ['layer', 'data'],
+		template: `
+		<div>
+			<h1>Changelog</h1><br><br>
+<span style="text-align: left; position: absolute; left: 30px;">
+	<h3>v1.0</h3><br>
+		- <span style="color: #9966BB">Remade the Entire Game</span><br>
+		- Added <span style="color: #9966BB">Standard Notation</span><br>
+		- Added <span style="color: #d6c611">Power Allocation</span><br>
+		- Added <span style="color: rgba(61, 3, 88, 1)">Universal Time</span><br>
+		- Actually Added <span style="color: #9966BB">The Changelog</span><br><br>
+	<h3>v0.3.2</h3><br>
+		- Added <span style="color: #2ed5e8">Matter Paths</span><br>
+		- Added <span style="color: #2dc0d6">Matter</span><br>
+		- Added <span style="color: #d6442d">Antimatter</span><br>
+		- Added <span style="color: #303030">Dark Matter</span> and <span style="color: #4b0f75">Black Hole</span><br>
+		- Added <span style="color: #cc59de">Exotic Matter</span>, <span style="color: #8c617e">Hypothetical Particles</span>, and <span style="color: #7bff00">Unstable Matter</span><br>
+		- Added <span style="color: #472961">Ultimate Matter Fragments</span><br>
+		- Added <span style="color: #9966BB">Softlock Prevention</span><br>
+		Endgame <span style="color: #472961">4 UMF</span><br><br>
+	<h3>v0.3.0.1 - v0.3.0.5</h3><br>
+		- Added <span style="color: #9966BB">Hotkeys</span><br>
+		- Added <span style="color: #2ed5e8">Hyper Paths Respec</span><br><br>
+	<h2>v0.3</h2><br>
+		- Added <span style="color: #2ed5e8">Hyper Rebirth</span><br>
+		- Added <span style="color: #2ed5e8">Hyper Paths</span><br>
+		- Added <span style="color: #34eb67">Hyper Cash</span><br>
+		Endgame <span style="color: #157307">e10,000 $</span> (wait, it went down?), <span style="color: #2ed5e8">130 HRP</span><br><br>
+	<h3>v0.2.1</h3><br>
+		- Added <span style="color: #d6c611">Power</span><br>
+		- Added <span style="color: #d6c611">Power Pylons</span><br>
+		- Added More <span style="color: #eb1a3d">Super Rebirth Challenges</span><br>
+		Endgame <span style="color: #157307">e12,000 $</span>, <span style="color: #ba0022">e5,000 RP</span>, <span style="color: #eb1a3d">100,000 SRP</span><br><br>
+	<h2>v0.2</h2><br>
+		- Added <span style="color: #eb1a3d">Super Rebirth</span><br>
+		- Added <span style="color: #eb1a3d">Super Rebirth Challenge 1</span><br>
+		- Added <span style="color: #eb1a3d">Super Rebirth Milestones</span><br>
+		- Added <span style="color: #9966BB">Secret Achievements</span><br>
+		- Added <span style="color: #9966BB">More Themes</span><br>
+		Endgame <span style="color: #eb1a3d">8 SRP, Challenge Completed</span><br><br>
+	<h3>v0.1.3</h3><br>
+		- Added <span style="color: #157307">Money</span><br>
+		- Added <span style="color: #ba0022">Rebirth</span><br>
+		- Added <span style="color: #157307">The Machine</span><br>
+		- Added <span style="color: #FFEE88">Achievements</span><br>
+		Endgame <span style="color: #9966BB">Unkown</span><br><br>
+	<h3>Game Stats</h3><br>
+		- Reset Layers: 3<br>
+		- Upgrades: 97<br>
+		- Challenges: 5<br>
+		- Buyables: 3<br>
+		- Milestones: 26<br>
+		- Pylons: 6<br>
+		- Tabs: 5<br>
+		- Subtabs: 9<br>
+		- Things you can press in the machine: 12<br>
+		- Times the machine can be improved: 3<br>
+		- Max Ultimate Matter Fragments: 4<br>
+		- Settings: 11<br>
+		- Currencies: 5<br>
+		- Resources: 7<br>
+		- Random Number: 17.742<br><br>
+</span>
+		</div>
+		`
+	})
+
+	// data = id
+	Vue.component('forumClone', {
+		props: ['layer', 'data'],
+		template: `
+		<div>
+	<h1>Forum Clone</h1><br><h3>This is a copy of all posts from the <a href="https://galaxy.click/forum/thread/255">Galaxy Forum</a> that have features, with some slight modifications to formatting and color<br>This is before rebalancing, so these numbers are drastically off</h3><br><span style="text-align: left; position: absolute; left: 30px;">
+
+	<h3>Post 1</h3><br>
+- adoplayzz:<br>
+<span class="c">0$</span>: start generating <span class="c">1$</span> per second<br>
+<span class="c">10$</span>: multiply your <span class="c">cash</span> gain by ×4<br>
+<span class="c">50$</span>: boost cash by log<sub>5</sub>(<span class="c">cash</span>)<br>
+<span class="c">200$</span>: tickspeed x2<br>
+<span class="c">500$</span>: <span class="c">cash</span> is boosted by n<sup>1.25</sup><br>
+<span class="c">2,000$</span>: boost <span class="c">cash</span> by sqrt(log<sub>8</sub>(<span class="c">cash</span><sup>1.5</sup>))<br><br>
+
+<h3>Post 2</h3><br>
+- galaxyuser63274:<br>
+<span class="c">20,000$</span>: change the <span class="c">50$</span> upgrade's log to 3<br>
+<span class="c">60,000$</span>: tickspeed x1.5<br>
+Reset <span class="c">cash</span> and <span class="c">cash upgrades</span> to gain <span class="r">rebirth points</span> (<span class="r">rp</span>)<br>
+1st <span class="r">rebirth point</span> at <span class="c">100,000</span><br>
+<span class="r">rp</span> gain formula: floor(sqrt(<span class="c">cash</span>/100000))<br>
+<span class="r">rp</span> boost to <span class="c">cash</span> formula: 1+sqrt(<span class="r">rp</span>)<br><br>
+
+<h3>Post 3</h3><br>
+- EchoingLycanthrope:<br>
+<span class="r">1RP</span>: <span class="c">$</span> is boosted by <span class="r">RP upgrades</span>. (Formula: 1+Upgrade#)<br>
+<span class="r">2RP</span>: Keep 1 <span class="c">$ Upgrade</span> per best <span class="r">RP</span>. (Can be toggled on or off.)<br>
+<span class="r">3RP</span>: Unlock more <span class="c">$ upgrades</span>.<br>
+<span class="r">5RP</span>: Unlock the ability to bulk buy <span class="r">RP points</span>.<br>
+<span class="r">20RP</span>: Change the <span class="r">first upgrade</span>s formula to 2×Upgrade#<br><br>
+
+<h3>Post 4</h3><br>
+- galaxyuser63274:<br>
+<span class="c">25,000,000$</span>: boost <span class="c">cash</span> by sqrt(log<sub>10</sub>(<span class="c">cash</span>)) (must have <span class="r">3RP upgrade</span>)<br>
+<span class="c">80,000,000$</span>: improve <span class="r">rp</span> gain formula n<sup>0.5</sup> -> n<sup>0.7</sup> (must have <span class="r">3RP upgrade</span>)<br>
+<span class="c">250,000,000$</span>: improve <span class="r">rp</span> boost to <span class="c">cash</span> formula n<sup>0.5</sup> -> n<sup>0.7</sup> (must have <span class="r">3RP upgrade</span>)<br>
+<span class="c">1.00e9$</span>: unlock a <span class="m">useful machine</span>... (must have <span class="r">3RP upgrade</span>)<br><br>
+
+<h2 class="m">THE MACHINE</h2><br>
+lets you give boosts to <span class="c">cash</span> and <span class="r">RP</span> gain, but you have to make a decision<br>
+<span class="c">Cash mode</span>: ×4 <span class="c">cash</span>, ×2 <span class="r">RP</span><br>
+<span class="m">Neutral mode</span>: ×3 <span class="c">cash</span>, ×3 <span class="r">RP</span><br>
+<span class="r">Rebirth mode</span>: ×2 <span class="c">cash</span>, ×4 <span class="r">RP</span><br>
+Choose wisely, because you can only switch between modes when you reach <span class="c">1e12$</span><br><br>
+
+<h3>Post 5</h3><br>
+- EchoingLycanthrope:<br>
+(I'm too lazy to do the math, so these upgrades might not be fairly priced! I'm also assuming THE MACHINE stops on RP resets, for minor balancing reasons.)<br>
+10,00RP: Keep THE MACHINE's boost on RP reset.<br>
+100,000RP: Unlock a RP buyable!?<br>
+10,000,000RP: Unlock a second RP buyable!<br><br>
+
+RP Buyable 1: Increase RP gain.<br>
+Price formula: [Times Bought]^4<br>
+Effect formula: 1.5^[Times bought]<br><br>
+
+RP Buyable 2: Increase RP buyable 1 base.<br>
+Price formula: [Times Bought]^8<br>
+Changes RPB1 effect formula to: (1.5+(.25 x [Times RBP2 bought]))^[Times RPB1 bought]<br><br>
+
+
+</span>
 		</div>
 		`
 	})
@@ -232,7 +441,8 @@ function loadVue() {
 					v-bind:class="{ upgBuy: true, tooltipBox: true, can: tmp[layer].upgrades[data].canAfford && !hasUpgrade(layer, data), locked: !tmp[layer].upgrades[data].canAfford, bought: hasUpgrade(layer, data), [layer]: true}"
 					v-on:click="buyUpg(layer, data)">{{ hasUpgrade(layer, data)?'Bought':'Buy' }}</button>
 			</div>
-			<div style="position: absolute; bottom: 5px; left: 5px;" class="upgID" v-if="options.upgID">{{ formatLayer(layer) }}U{{ data }}</div>
+			<div style="position: absolute; bottom: 5px; left: 5px;" class="upgID" v-if="options.upgID">{{ formatID(layer, 'upgrades', data) }}</div>
+			<tooltip :text="tmp[layer].upgrades[data].tooltip" v-if="tmp[layer].upgrades[data].tooltip !== undefined"></tooltip>
 		</div>
 		`
 	})
@@ -264,7 +474,8 @@ function loadVue() {
 				</div>
 			</div>
 			<h2 v-if="hasMilestone('power', 2)"><br>Power Allocation</h2><br>
-			<slider v-if="hasMilestone('power', 2)" :layer="'chall'" :data="['pap', 1, 100]" :text="player.chall.pap + '%'" class="power"></slider><br>
+			<slider v-if="hasMilestone('power', 2) && !hasMilestone('chall', 1)" :layer="'chall'" :data="['pap', 1, 100]" :text="player.chall.pap + '%'" class="power"></slider>
+			<power-uhoh-display v-if="hasMilestone('chall', 1)"></power-uhoh-display><br>
 			<div v-if="hasMilestone('power', 2)" style="display: flex; justify-content: space-evenly; flex-direction: row; width: 100%; margin-top: 10px; min-height: 4em;">
 				<div style="width: 130px; margin-top: 0;">
 					Cash Mode has<br>{{ formatWhole(player.power.cashPower) }}<br>Power allocated
@@ -276,7 +487,7 @@ function loadVue() {
 					Rebirth Mode has<br>{{ formatWhole(player.power.rebirthPower) }}<br>Power allocated
 				</div>
 			</div>
-			<div v-if="hasMilestone('power', 2)" style="display: flex; justify-content: space-evenly; flex-direction: row; width: 100%; margin-top: 10px;">
+			<div v-if="hasMilestone('power', 2) && !hasMilestone('chall', 1)" style="display: flex; justify-content: space-evenly; flex-direction: row; width: 100%; margin-top: 10px;">
 				<clickable :layer="'power'" :data="11"></clickable>
 				<clickable :layer="'power'" :data="12"></clickable>
 				<clickable :layer="'power'" :data="13"></clickable>
@@ -307,7 +518,7 @@ function loadVue() {
 		props: ['layer', 'data', 'letter'],
 		template: `
 		<div style="width: 100%; display: flex; flex-flow: row nowrap; justify-content: space-between;" v-if="tmp.power.clickables[data].unlocked">
-			<h2 style="margin: auto 0;">{{ tmp.power.clickables[data].title }}<br><span v-if="options.upgID" class="upgID" style="font-size: 15px">PPy{{letter}}</span></h2><br>
+			<h2 style="margin: auto 0;">{{ tmp.power.clickables[data].title }}<br><span v-if="options.upgID" class="upgID" style="font-size: 15px">{{ formatID(layer, 'pylons', data) }}</span></h2><br>
 			<span style="margin: auto 0;">{{ formatWhole(player.power['pylon' + letter]) }} [{{ formatWhole(player.power['pylob' + letter]) }}]</span>
 			<span style="margin: auto 0;">+{{ format(tmp.power.pylons[letter.toLowerCase()].effect) }}/sec</span>
 			<clickable :layer="'power'" :data="data" style="margin: auto 0;"></clickable>
@@ -318,7 +529,8 @@ function loadVue() {
 	Vue.component('milestones', {
 		props: ['layer', 'data'],
 		template: `
-		<div v-if="tmp[layer].milestones" style="width: fit-content; display: flex; flex-direction: column;">
+		<div v-if="tmp[layer].milestones" style="width: fit-content; display: flex; flex-direction: column; overflow-x: clip;">
+			<h2>Milestones</h2><h3>of {{ tmp[layer].resetName }}</h3><br><br>
 			<milestone :layer = "layer" :data = "id" v-bind:style="tmp[layer].componentStyles.milestone" v-for="id in (data === undefined ? Object.keys(tmp[layer].milestones) : data)" v-if="tmp[layer].milestones[id]!== undefined && tmp[layer].milestones[id].unlocked && milestoneShown(layer, id)">
 				</milestone>
 		</div>
@@ -344,7 +556,7 @@ function loadVue() {
 			<span v-html="run(layers[layer].milestones[data].effectDescription, layers[layer].milestones[data])"></span><br>
 			<tooltip v-if="tmp[layer].milestones[data].tooltip" :text="tmp[layer].milestones[data].tooltip"></tooltip>
 
-			<div style="position: absolute; bottom: 5px; left: 5px;" class="upgID" v-if="options.upgID">{{ formatLayer(layer) }}M{{ data }}</div>
+			<div style="position: absolute; bottom: 5px; left: 5px;" class="upgID" v-if="options.upgID">{{ formatID(layer, 'milestones', data) }}</div>
 		<span v-if="(tmp[layer].milestones[data].toggles)&&(hasMilestone(layer, data))" v-for="toggle in tmp[layer].milestones[data].toggles"><toggle :layer= "layer" :data= "toggle" v-bind:style="tmp[layer].componentStyles.toggle"></toggle>&nbsp;</span></div>
 		`
 	})
@@ -369,6 +581,7 @@ function loadVue() {
 			v-bind:style="[tmp[layer].canReset ? {'background-color': tmp[layer].color} : {}, tmp[layer].componentStyles['prestige-button']]"
 			v-on:click="doReset(layer)">{{ tmp[layer].canReset?tmp[layer].resetName:'Cannot '+tmp[layer].resetName }}
 			</button>
+			<tooltip v-if="tmp[layer].resetTooltip" :text="tmp[layer].resetTooltip"></tooltip>
 		</div>
 	`	
 	})
@@ -424,7 +637,8 @@ function loadVue() {
 					v-bind:class="{ upgBuy: true, tooltipBox: true, can: tmp[layer].buyables[data].canAfford, locked: !tmp[layer].buyables[data].canAfford, [layer]: true}"
 					v-on:click="if(!interval) buyBuyable(layer, data)">Buy</button>
 			</div>
-			<div style="position: absolute; bottom: 5px; left: 5px;" class="upgID" v-if="options.upgID">{{ formatLayer(layer) }}B{{ data }}</div>
+			<div style="position: absolute; bottom: 5px; left: 5px;" class="upgID" v-if="options.upgID">{{ formatID(layer, 'buyables', data) }}</div>
+			<tooltip :text="tmp[layer].buyables[data].tooltip" v-if="tmp[layer].buyables[data].tooltip !== undefined"></tooltip>
 		</div>
 		`,
 		data() { return { interval: false, time: 0,}},
@@ -476,12 +690,12 @@ function loadVue() {
 		template: `
 		<button 
 			v-if="tmp[layer].clickables && tmp[layer].clickables[data]!== undefined && tmp[layer].clickables[data].unlocked" 
-			v-bind:class="{ button: true, tooltipBox: true, can: tmp[layer].clickables[data].canClick, locked: !tmp[layer].clickables[data].canClick}"
+			v-bind:class="{ button: true, tooltipBox: true, can: tmp[layer].clickables[data].canClick, locked: !tmp[layer].clickables[data].canClick, bought: tmp[layer].clickables[data].has, [layer]: true}"
 			v-bind:style="[tmp[layer].clickables[data].canClick ? {'background-color': tmp[layer].color} : {}, tmp[layer].clickables[data].style]"
 			v-on:click="if(!interval) clickClickable(layer, data)" :id='"clickable-" + layer + "-" + data' @mousedown="start" @mouseleave="stop" @mouseup="stop" @touchstart="start" @touchend="stop" @touchcancel="stop">
 			<span v-bind:style="{'white-space': 'pre-line'}" v-html="run(layers[layer].clickables[data].display, layers[layer].clickables[data])"></span>
 			<node-mark :layer='layer' :data='tmp[layer].clickables[data].marked'></node-mark>
-			<tooltip v-if="tmp[layer].clickables[data].tooltip" :text="tmp[layer].clickables[data].tooltip"></tooltip>
+			<tooltip v-if="tmp[layer].clickables[data].tooltip" :text="tmp[layer].clickables[data].tooltip" style="min-width: 240px"></tooltip>
 
 		</button>
 		`,
@@ -649,6 +863,18 @@ function loadVue() {
 
 	`
 	})
+	// Data is an array with the structure of the tree
+	Vue.component('hyper-paths', {
+		props: ['layer', 'data'],
+		computed: {
+			key() {return this.$vnode.key}
+		},
+		template: `<div>
+		<clickable-tree :layer='layer' :data = "[[11], [12], [13], [14], [21], [22], [23], [24], [31], [32], [33], [34], [41], [42], [43], [44], [51], [52], [53], [54], [99]]"></clickable-tree>
+		</div>
+
+	`
+	})
 
 	// Data is an array with the structure of the tree
 	Vue.component('upgrade-tree', {
@@ -692,7 +918,7 @@ function loadVue() {
 			key() {return this.$vnode.key}
 		},
 		template: `<div>
-		<span class="upgRow" v-for="(row, r) in data" style="height: 240px;">
+		<span class="upgRow" v-for="(row, r) in data" style="height: 0px;">
 			<span v-for="id in row" style = "{width: 0px; height: 0px;}" v-if="tmp[layer][type+'s'][id]!== undefined && tmp[layer][type+'s'][id].unlocked" class="upgAlign">
 				<div v-bind:is="type" :layer = "layer" :data = "id" v-bind:style="tmp[layer].componentStyles[type]" class = "treeThing"></div>
 			</span>
@@ -756,6 +982,7 @@ function loadVue() {
 	Vue.component('stats-tab', systemComponents['stats-tab'])
 	Vue.component('options-tab', systemComponents['options-tab'])
 	Vue.component('tooltip', systemComponents['tooltip'])
+	Vue.component('tooltipSide', systemComponents['tooltipSide'])
 	Vue.component('particle', systemComponents['particle'])
 	Vue.component('bg', systemComponents['bg'])
 

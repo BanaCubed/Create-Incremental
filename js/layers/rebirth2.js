@@ -5,8 +5,9 @@ addLayer('super', {
             "prestige-button",
             "milestones-scroll",
         ]],
+        'srp-uhoh-display',
         "blank",
-        ['display-text', function() {return `Your total SRP is increasing cash gain by ×${format(tmp.super.effect[1])} and RP gain by ×${format(tmp.super.effect[0])}<br>You have super rebirthed ${formatWhole(player.super.rebirths)} times, and have ${formatWhole(player.super.total)} total SRP`}],
+        ['display-text', function() {return `Your total SRP is increasing cash gain by ${formatBoost(tmp.super.effect[1].sub(1))}, and RP gain by ${formatBoost(tmp.super.effect[0].sub(1))}<br>You have super rebirthed ${formatWhole(player.super.rebirths)} times, and have ${formatWhole(player.super.total)} total SRP`}],
         "blank",
         "upgrades",
         "blank",
@@ -50,6 +51,7 @@ addLayer('super', {
         if(inChallenge('super', 15)) {
             player.super.tax = player.super.tax.times(tmp.super.challenges[15].nerf.pow(diff))
         }
+        if(hasMilestone('hyper', 6)) { player.super.rebirths = player.super.rebirths.add(Decimal.times(25, diff)) }
     },
     resource: "SRP",
     prestigeButtonText() {
@@ -71,41 +73,82 @@ addLayer('super', {
     onPrestige(gain) {
         player.super.rebirths = player.super.rebirths.add(1)
     },
+    resetTooltip() {
+        if(options.tooltipCredits) return `Idea from galaxyuser63274<br>Super Rebirth resets everything rebirth points do including rebirth points, all upgrades, THE MACHINE, and RP buyables, but you gain super rebirth points (SRP)<br>1st SRP at 1.00e10RP<br>SRP gain formula: 1+log<sub>2</sub>(RP/1.00e10)<br>SRP boost to cash: 1+0.1x<br>SRP boost to RP: 1+x<sup>0.5</sup>`
+
+        let base = new Decimal(3)
+        if(hasUpgrade('cash', 24)) base = base.times(tmp.cash.upgrades[24].effect)
+        
+        let effbase = new Decimal(2)
+        if(hasUpgrade('cash', 25)) effbase = effbase.pow(tmp.cash.upgrades[25].effect)
+        if(hasUpgrade('rebirth', 21)) effbase = effbase.pow(tmp.rebirth.upgrades[21].effect)
+        return `Gain formula: floor(3.14<sup>log<sub>${format(tmp.super.requires)}</sub>(RP)-1</sup>)<br>Boost to cash: log<sub>2</sub>(SRP×3+1)<sup>1.25</sup>+1<br>Boost to RP: log<sub>2</sub>(SRP+2)`
+    },
     milestones: {
         0: {
             requirementDescription: "1 Super Rebirth",
             effectDescription: "Automate the first 6 cash upgrades, and they no longer spend any cash",
             done() { return player.super.rebirths.gte(1) },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from galaxyuser63274 / EchoingLycanthrope<br>1SRP Milestone: Automate first 8 cash upgrades and RBP1, and they cost nothing.`
+        
+                return
+            },
         },
         1: {
             requirementDescription: "2 Super Rebirths",
             effectDescription: "Keep a rebirth upgrade for each super rebirth, up to 6<br>Also unlock a cash buyable",
             done() { return player.super.rebirths.gte(2) },
             unlocked() {return hasMilestone('super', 0)},
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>2SRP Milestone: Keep the first 5 RP upgrades on SRP reset.`
+        
+                return
+            },
         },
         2: {
             requirementDescription: "3 Super Rebirths",
             effectDescription: "Rebirth buyables no longer spend RP, and passively earn 2 rebirths per second",
             done() { return player.super.rebirths.gte(3) },
             unlocked() {return hasMilestone('super', 1)},
+            tooltip() {
+                if(options.tooltipCredits) return `Uninspired`
+        
+                return
+            },
         },
         3: {
             requirementDescription: "5 Super Rebirths",
             effectDescription: "Automate the first rebirth and cash buyables",
             done() { return player.super.rebirths.gte(5) },
             unlocked() {return hasMilestone('super', 2)},
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>5SRP Milestone: Automate the first $ buyable, and its effect is increased. (From 1.1<sup>x</sup> to 1.3<sup>x</sup>)`
+        
+                return
+            },
         },
         4: {
             requirementDescription: "8 Super Rebirths",
             effectDescription: "Automate the second rebirth buyable and buyables affect rebirth requirement less",
             done() { return player.super.rebirths.gte(8) },
             unlocked() {return hasMilestone('super', 3)},
+            tooltip() {
+                if(options.tooltipCredits) return `Uninspired`
+        
+                return `Nerf exponent/2`
+            },
         },
         5: {
             requirementDescription: "10 Super Rebirths",
             effectDescription: "The cash buyable no longer spends cash",
             done() { return player.super.rebirths.gte(10) },
             unlocked() {return hasMilestone('super', 4)},
+            tooltip() {
+                if(options.tooltipCredits) return `Uninspired`
+        
+                return
+            },
         },
         6: {
             requirementDescription: "15 Super Rebirths",
@@ -114,13 +157,23 @@ addLayer('super', {
             unlocked() {return hasMilestone('super', 5)},
             effect() {
                 return player.super.rebirths.max(1).log(5).times(2).floor()
-            }
+            },
+            tooltip() {
+                if(options.tooltipCredits) return `Uninspired`
+        
+                return `floor(log<sub>5</sub>(SRP)×2)`
+            },
         },
         7: {
             requirementDescription: "35 Super Rebirths",
-            effectDescription: "Keep all cash upgrades on rebirth and supreme<br>Doesn't work in challenges",
+            effectDescription: "Keep all cash upgrades on rebirth and super rebirth<br>Doesn't work in challenges",
             done() { return player.super.rebirths.gte(35) },
             unlocked() {return hasMilestone('super', 6)},
+            tooltip() {
+                if(options.tooltipCredits) return `Uninspired`
+        
+                return
+            },
         },
     },
     resetName: 'Super Rebirth',
@@ -133,6 +186,11 @@ addLayer('super', {
             costa: new Decimal(5),
             canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
             pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>5SRP Upgrade: Unlock Challenges!`
+        
+                return 
+            },
         },
         12: {
             title: 'Unhomed',
@@ -142,6 +200,11 @@ addLayer('super', {
             costa: new Decimal(10),
             canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
             pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from galaxyuser63274<br>20SRP milestone: automate first 5 rebirth upgrades, they no longer cost RP, and unlock another challenge`
+        
+                return 
+            },
         },
         13: {
             title: 'Extended',
@@ -151,6 +214,11 @@ addLayer('super', {
             costa: new Decimal(15),
             canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
             pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from galaxyuser63274<br>25SRP upg: Unlock more RP and cash upgrades`
+        
+                return 
+            },
         },
         14: {
             title: 'Unlocked',
@@ -160,16 +228,26 @@ addLayer('super', {
             costa: new Decimal(50),
             canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
             pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from galaxyuser63274<br>150SRP upg: Extend THE MACHINE with a unique currency... (Power)`
+        
+                return 
+            },
         },
         15: {
             title: 'Empowered',
             fullDisplay() {
-                return `Neutral Mode also effects Power Pylon A's effect`
+                return `Neutral Mode also effects ${options.upgID?'PPyA':'Power Pylon A'}'s effect`
             },
             costa: new Decimal(500),
             canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
             pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
-            unlocked() { return player.power.unlocked }
+            unlocked() { return player.power.unlocked },
+            tooltip() {
+                if(options.tooltipCredits) return `Uninspired`
+        
+                return
+            },
         },
         16: {
             title: 'Cheapened',
@@ -179,7 +257,12 @@ addLayer('super', {
             costa: new Decimal(2500),
             canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
             pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
-            unlocked() { return player.power.unlocked }
+            unlocked() { return player.power.unlocked },
+            tooltip() {
+                if(options.tooltipCredits) return `Uninspired`
+        
+                return
+            },
         },
     },
     hotkeys: [
@@ -209,10 +292,15 @@ addLayer('super', {
             onEnter() {
                 player.cash.upgrades = []
             },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>Challenge 1: Wait, wasn't there something else?<br>Challenge effect: Removes the ability to get RP.<br>Challenge goal: Unlock THE MACHINE (Again.)<br>Challenge reward: Gain 20% of your RP on reset per second.`
+
+                return `Nerf scaling:<br>Level 1: 100<br>Level 2: 50<br>Level 3: 25<br>Level 4: 12<br>Level 5: 6<br>Level 6: 3<br>Level 7: 0`
+            },
         },
         12: {
             name: "<h2>Low-Income Family</h2><br>",
-            fullDisplay(){return `Divide cash gain and multiply rebirth requirement by ${format(tmp[this.layer].challenges[this.id].nerf)}<br>Unlock The Machine to complete<br>Completed ${formatWhole(challengeCompletions('super', 12))}/10 times<br><br>Reward: Automate a rebirth upgrade from 7-12 per completion<br>Completions also reduce nerfs of ${options.upgID?'RB11 & $B11':'first rebirth and cash buyables'}<br>When fully completed, ×10 passive RP/s`},
+            fullDisplay(){return `Divide cash gain and multiply rebirth requirement by ${format(tmp[this.layer].challenges[this.id].nerf)}<br>Unlock The Machine to complete<br>Completed ${formatWhole(challengeCompletions('super', 12))}/10 times<br><br>Reward: Automate a rebirth upgrade from 7-12 per completion<br>Completions also reduce nerfs of ${options.upgID?'RB1 & $B1':'first rebirth and cash buyables'}<br>When fully completed, ×10 passive RP/s`},
             canComplete(){return hasUpgrade('cash', 26)},
             nerf(x = challengeCompletions(this.layer, this.id)) {
                 x = new Decimal(x)
@@ -222,6 +310,11 @@ addLayer('super', {
             unlocked(){return hasUpgrade('super', 12)},
             onEnter() {
                 player.cash.upgrades = []
+            },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>Challenge 2 (A low-income family in the midst of inflation): Cash gain is gain<sup>0.5</sup> and rebirth requirement is 10x higher<br>Goal: 10RP<br>Reward: Rebirth requirement is 10× lower`
+
+                return `Nerf scaling:<br>Level 1: 1.69<br>Level 2: 2.20<br>Level 3: 2.86<br>Level 4: 3.71<br>Level 5: 4.83<br>Level 6: 6.27<br>Level 7: 8.16<br>Level 8: 10.60<br>Level 9: 13.79<br>Level 10: 17.92<br>Reduces nerfs by -^0.1 per completion additive`
             },
         },
         13: {
@@ -241,6 +334,11 @@ addLayer('super', {
                 x = new Decimal(x)
                 return x.pow_base(3)
             },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>Challenge 3: Clicking simulator 202X<br>Goal: SRP Reset<br>Effect: All automation is disabled, each upgrade must be clicked twice to buy it, and disable holding down on buyables to buy multiple.<br>Reward: Gain 100% RP/s, and reduce all RP buyable scaling by ^1. (RPB1 X<sup>4</sup> -> X<sup>3</sup>, so on so forth.) Also unlock more Power milestones.`
+
+                return `Nerf scaling:<br>Level 1: 160%<br>Level 2: ×64<br>Level 3: ×2,560<br>Level 4: ×102,400`
+            },
         },
         14: {
             name: "<h2>Sold Out</h2><br>",
@@ -254,6 +352,11 @@ addLayer('super', {
             effect() {
                 return player.points.max(0).add(1).log(10).add(1)
             },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from galaxyuser63274<br>Challenge 4: Sold Out<br>Goal: Super rebirth reset<br>Effect: You cannot buy cash upgrades<br>Reward: Cash boosts SRP gain at a very reduced rate (log<sub>10</sub>(cash))<sup>0.1</sup>`
+
+                return `Effect formula:<br>log<sub>10</sub>(cash)+1`
+            },
         },
         15: {
             name: "<h2>World of Reversal</h2><br>",
@@ -266,7 +369,12 @@ addLayer('super', {
                 player.super.tax = new Decimal(1)
             },
             nerf(x = challengeCompletions('super', 15)) {
-                return Decimal.pow(2    , x+1)
+                return Decimal.pow(2, x+1).pow(tmp.chall.uTime)
+            },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from adoplayzz<br>Challenge 5: World of reversal (completable 4 times)<br>Goal: 1.00e5 RP<br>Effect: You have 1 Tax that divides your cash gain by it. every seconds Tax is multiplied by 1+(0.005*2<sup>challenge completion+1</sup>)<br>Reward: all PPy are boosted by log<sub>50</sub>(PPy(n-2)) (log divides by 1.5 per completion)`
+
+                return `Nerf scaling:<br>Level 1: ×2/sec<br>Level 2: ×4/sec<br>Level 3: ×8/sec`
             },
         },
     },
@@ -274,8 +382,27 @@ addLayer('super', {
         let gain = new Decimal(1)
         if(hasUpgrade('cash', 36)) { gain = gain.times(tmp.cash.upgrades[36].effect) }
         if(hasChallenge('super', 14)) { gain = gain.times(tmp.super.challenges[14].effect) }
+        gain = gain.times(tmp.hyper.effect[2])
+        if(hasUpgrade('hyper', 13)) { gain = gain.times(50) }
+        if(hasUpgrade('hyper', 33)) { gain = gain.times(tmp.hyper.upgrades[33].effect) }
+        if(hasUpgrade('hyper', 41)) { gain = gain.times(10) }
+        if(hasUpgrade('hyper', 43)) { gain = gain.times(5) }
+        if(hasUpgrade('hyper', 44)) { gain = gain.times(3) }
         return gain
-    }
+    },
+    passiveGeneration() {
+        let gain = new Decimal(0)
+        if(hasMilestone('hyper', 0)) { gain = gain.add(0.05) }
+        gain = gain.times(tmp.chall.uTime)
+        return tmp.super.canReset?gain:new Decimal(0)
+    },
+    doReset(layer) {
+        if(layer == 'super') { return }
+        let keep = []
+        if(hasMilestone('hyper', 1) && layer == 'hyper') { keep.push('challenges') }
+        if(hasMilestone('hyper', 2) && layer == 'hyper') { keep.push('milestones', 'upgrades') }
+        layerDataReset('super', keep)
+    },
 })
 
 addLayer('power', {
@@ -302,6 +429,14 @@ addLayer('power', {
         rebirthPower: new Decimal(0),
         neutralPower: new Decimal(0),
     }},
+    resetName: 'Power',
+    doReset(layer) {
+        if(layer == 'super') { return }
+        let keep = []
+        if(hasMilestone('hyper', 3) && layer == 'hyper') { keep.push('milestones') }
+        layerDataReset('power', keep)
+        if(hasUpgrade('hyper', 23)) { player.power.pylonF = player.power.pylonF.max(10); player.power.pylobF = player.power.pylobF.max(10) }
+    },
     update(diff) {
         player.power.pylonE = player.power.pylonE.add(tmp.power.pylons.f.effect.times(diff))
         player.power.pylonD = player.power.pylonD.add(tmp.power.pylons.e.effect.times(diff))
@@ -317,6 +452,9 @@ addLayer('power', {
         if(hasMilestone('power', 6)) {
             let gain = new Decimal(0.01)
             if(hasMilestone('power', 10)) { gain = gain.times(100) }
+            if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
+            if(hasUpgrade('hyper', 42)) { gain = gain.times(10) }
+            gain = gain.times(tmp.chall.uTime)
             player.power.cashPower = player.power.cashPower.add(player.power.power.times(gain).times(diff))
             player.power.rebirthPower = player.power.rebirthPower.add(player.power.power.times(gain).times(diff))
             player.power.neutralPower = player.power.neutralPower.add(player.power.power.times(gain).times(diff))
@@ -329,6 +467,7 @@ addLayer('power', {
             buyMax('power', 'pylons', 23)
         }
         if(hasMilestone('power', 10)) { buyMax('power', 'pylons', 24) }
+        if(hasMilestone('hyper', 3)) { buyMax('power', 'pylons', 25); buyMax('power', 'pylons', 26) }
     },
     pylons: {
         a: {
@@ -339,6 +478,14 @@ addLayer('power', {
                 if(hasUpgrade('super', 15)) { gain = gain.times(tmp.machine.clickables[12].effect.add(1)) }
                 if(hasChallenge('super', 14)) { gain = gain.times(tmp.super.challenges[14].effect) }
                 gain = gain.times(player.power.power.max(10).log(10).pow(challengeCompletions('super', 15)))
+                gain = gain.times(tmp.hyper.effect[2])
+                if(hasUpgrade('hyper', 14)) { gain = gain.times(1000) }
+                if(hasUpgrade('hyper', 22)) { gain = gain.times(10) }
+                if(hasUpgrade('hyper', 24)) { gain = gain.times(Decimal.pow(1.04, player.power.pylobA.min(1000))) }
+                if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
+                if(hasUpgrade('hyper', 42)) { gain = gain.times(100) }
+                if(hasUpgrade('hyper', 43)) { gain = gain.times(5) }
+                gain = gain.times(tmp.chall.uTime)
                 return gain
             },
             cost(x = player.power.pylobA) {
@@ -351,6 +498,12 @@ addLayer('power', {
                 if(hasMilestone('power', 1)) { gain = gain.times(player.power.pylobB.div(1.25).add(1)) }
                 gain = gain.times(tmp.super.challenges[13].effect)
                 gain = gain.times(player.power.pylonA.max(10).log(10).pow(challengeCompletions('super', 15)))
+                gain = gain.times(tmp.hyper.effect[2])
+                if(hasUpgrade('hyper', 22)) { gain = gain.times(10) }
+                if(hasUpgrade('hyper', 24)) { gain = gain.times(Decimal.pow(1.08, player.power.pylobB.min(1000))) }
+                if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
+                if(hasUpgrade('hyper', 42)) { gain = gain.times(10) }
+	            gain = gain.times(tmp.chall.uTime)
                 return gain
             },
             cost(x = player.power.pylobB) {
@@ -363,6 +516,12 @@ addLayer('power', {
                 if(hasMilestone('power', 1)) { gain = gain.times(player.power.pylobC.times(1.6).add(1)) }
                 gain = gain.times(tmp.super.challenges[13].effect)
                 gain = gain.times(player.power.pylonB.max(10).log(10).pow(challengeCompletions('super', 15)))
+                gain = gain.times(tmp.hyper.effect[2])
+                if(hasUpgrade('hyper', 22)) { gain = gain.times(10) }
+                if(hasUpgrade('hyper', 24)) { gain = gain.times(Decimal.pow(1.16, player.power.pylobC.min(1000))) }
+                if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
+                if(hasUpgrade('hyper', 42)) { gain = gain.times(10) }
+	            gain = gain.times(tmp.chall.uTime)
                 return gain
             },
             cost(x = player.power.pylobC) {
@@ -375,6 +534,12 @@ addLayer('power', {
                 if(hasMilestone('power', 1)) { gain = gain.times(player.power.pylobD.times(3.2).add(1)) }
                 gain = gain.times(tmp.super.challenges[13].effect)
                 gain = gain.times(player.power.pylonC.max(10).log(10).pow(challengeCompletions('super', 15)))
+                gain = gain.times(tmp.hyper.effect[2])
+                if(hasUpgrade('hyper', 22)) { gain = gain.times(10) }
+                if(hasUpgrade('hyper', 24)) { gain = gain.times(Decimal.pow(1.32, player.power.pylobD.min(1000))) }
+                if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
+                if(hasUpgrade('hyper', 42)) { gain = gain.times(10) }
+	            gain = gain.times(tmp.chall.uTime)
                 return gain
             },
             cost(x = player.power.pylobD) {
@@ -387,6 +552,12 @@ addLayer('power', {
                 if(hasMilestone('power', 1)) { gain = gain.times(player.power.pylobE.times(6.4).add(1)) }
                 gain = gain.times(tmp.super.challenges[13].effect)
                 gain = gain.times(player.power.pylonD.max(10).log(10).pow(challengeCompletions('super', 15)))
+                gain = gain.times(tmp.hyper.effect[2])
+                if(hasUpgrade('hyper', 22)) { gain = gain.times(10) }
+                if(hasUpgrade('hyper', 24)) { gain = gain.times(Decimal.pow(1.64, player.power.pylobE.min(1000))) }
+                if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
+                if(hasUpgrade('hyper', 42)) { gain = gain.times(10) }
+	            gain = gain.times(tmp.chall.uTime)
                 return gain
             },
             cost(x = player.power.pylobE) {
@@ -399,6 +570,12 @@ addLayer('power', {
                 if(hasMilestone('power', 1)) { gain = gain.times(player.power.pylobF.times(128).add(1)) }
                 gain = gain.times(tmp.super.challenges[13].effect)
                 gain = gain.times(player.power.pylonE.max(10).log(10).pow(challengeCompletions('super', 15)))
+                gain = gain.times(tmp.hyper.effect[2])
+                if(hasUpgrade('hyper', 22)) { gain = gain.times(10) }
+                if(hasUpgrade('hyper', 24)) { gain = gain.times(Decimal.pow(2.28, player.power.pylobF.min(1000))) }
+                if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
+                if(hasUpgrade('hyper', 42)) { gain = gain.times(10) }
+	            gain = gain.times(tmp.chall.uTime)
                 return gain
             },
             cost(x = player.power.pylobF) {
@@ -581,24 +758,44 @@ addLayer('power', {
             requirementDescription: "60 Power",
             effectDescription: "Unlock Power Pylon B",
             done() { return player.power.power.gte(60) },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>20 Power Milestone: Unlock PPyB`
+        
+                return 
+            },
         },
         1: {
             requirementDescription: "100 Power Pylon A",
             effectDescription: "Each bought Power Pylon boosts its effect by (20×2<sup>Pylon Number</sup>)%",
             done() { return player.power.pylonA.gte(100) },
             unlocked() { return hasMilestone('power', this.id - 1) },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>3 PPyB Milestone: Each Power Pylon bought (Not created) grants that Power Pylon a multiplicative 1.2x boost.`
+        
+                return 
+            },
         },
         2: {
             requirementDescription: "100,000 Power",
             effectDescription: "Unlock Power Allocation",
             done() { return player.power.power.gte(100000) },
             unlocked() { return hasMilestone('power', this.id - 1) },
+            tooltip() {
+                if(options.tooltipCredits) return `Uninspired`
+        
+                return `+(log<sub>2</sub>(Allocated)×10)%`
+            },
         },
         3: {
             requirementDescription: "6 Power Pylon B",
             effectDescription: "Unlock a third challenge",
             done() { return player.power.pylonB.gte(6) },
             unlocked() { return hasMilestone('power', this.id - 1) },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>1 PPyA Milestone: Unlock a challenge!`
+        
+                return
+            },
         },
         4: {
             requirementDescription: "6 Power Pylon C",
@@ -612,42 +809,77 @@ addLayer('power', {
                 amt = new Decimal(amt)
                 return amt.div(2.5).add(1)
             },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>500 SRP: every bought upgrade increases cash tickspeed by +40% non-compounding`
+        
+                return `×(1+upgrades/2.5)`
+            },
         },
         5: {
             requirementDescription: "8 Power Pylon C",
             effectDescription: "Improve power allocation's effect on Cash Mode",
             done() { return player.power.pylonC.gte(8) },
             unlocked() { return hasMilestone('power', this.id - 1) },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>$1.00e40: cash gain ×Power`
+        
+                return `Multiplier from allocation ^1.6`
+            },
         },
         6: {
             requirementDescription: "10 Power Pylon C",
             effectDescription: "Improve power allocation's effect on Rebirth Mode, and automatically get 1% of allocated power in each mode per second",
             done() { return player.power.pylonC.gte(10) },
             unlocked() { return hasMilestone('power', this.id - 1) },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>$1.00e45: RP gain ×log<sub>10</sub>(Power)`
+        
+                return `Multiplier from allocation ^1.4`
+            },
         },
         7: {
             requirementDescription: "13 Power Pylon C",
             effectDescription: "Unlock a fourth challenge and Power Pylon D",
             done() { return player.power.pylonC.gte(13) },
             unlocked() { return hasMilestone('power', this.id - 1) },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>5000 Power milestone: unlock a new challenge and PPyD`
+        
+                return
+            },
         },
         8: {
             requirementDescription: "5 Power Pylon D",
             effectDescription: "Unlock a fifth challenge and Power Pylon E",
             done() { return player.power.pylonD.gte(5) },
             unlocked() { return hasMilestone('power', this.id - 1) },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from adoplayzz<br>2.50e5 Power Milestone: Unlocks a new challenges, 3 more upgrades and PPyE`
+        
+                return
+            },
         },
         9: {
             requirementDescription: "10 Power Pylon E",
             effectDescription: "Automate Power Pylons A-C and unlock Power Pylon F",
             done() { return player.power.pylonE.gte(10) },
             unlocked() { return hasMilestone('power', this.id - 1) },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from galaxyuser63274<br>5.00e6 Power milestone: Unlock the final Power Pylon, PPyF`
+        
+                return
+            },
         },
         10: {
             requirementDescription: "4 Power Pylon F",
             effectDescription: "Automate Power Pylon D, unlock Hyper Rebirth, and increase automatic power allocation to 100%",
             done() { return player.power.pylonF.gte(4) },
             unlocked() { return hasMilestone('power', this.id - 1) },
+            tooltip() {
+                if(options.tooltipCredits) return `Uninspired`
+        
+                return
+            },
         },
     },
 })

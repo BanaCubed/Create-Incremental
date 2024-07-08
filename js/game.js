@@ -250,10 +250,7 @@ function startChallenge(layer, x) {
 	if (player[layer].activeChallenge == x) {
 		completeChallenge(layer, x)
 		Vue.set(player[layer], "activeChallenge", null)
-		} else {
-		enter = true
-	}	
-	if(enter) {
+	} else {
 		Vue.set(player[layer], "activeChallenge", x)
 		run(layers[layer].challenges[x].onEnter, layers[layer].challenges[x])
 	}

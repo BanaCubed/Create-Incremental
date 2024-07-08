@@ -9,7 +9,6 @@ addLayer('cash', {
         if(inChallenge('super', 13)) { factor = factor.times(tmp.super.challenges[13].nerf.add(1)) }
         if(inChallenge('super', 14)) { factor = factor.times('1e1.79e308') }
         if(hasUpgrade('super', 16)) { factor = factor.div(tmp.super.effect[1]) }
-        if(hasMilestone('chall', 0)) { factor = factor.times(1e12) }
         return factor
     },
     upgrades: {
@@ -25,7 +24,11 @@ addLayer('cash', {
                 if(hasMilestone('chall', 0)) { effect = effect.times(5) }
                 return effect
             },
-            pay() {}
+            pay() {},
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from adoplayzz<br>0$: start generating 1$ per second`
+                return
+            },
         },
         12: {
             title: 'Double Shifts',
@@ -39,7 +42,11 @@ addLayer('cash', {
                 let effect = new Decimal(2)
                 if(hasMilestone('chall', 0)) { effect = effect.times(2) }
                 return effect
-            }
+            },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from adoplayzz<br>10$: multiply your cash gain by ×4`
+                return
+            },
         },
         13: {
             title: 'Get a Promotion',
@@ -56,6 +63,14 @@ addLayer('cash', {
                 if(hasMilestone('chall', 0)) { exponent = exponent.times(1.5) }
                 return player.points.max(1).log(10).add(1).pow(exponent)
             },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from adoplayzz<br>50$: boost cash by log<sub>5</sub>(cash)`
+                
+                let exponent = new Decimal(1)
+                if(hasUpgrade('cash', 23)) exponent = exponent.times(tmp.cash.upgrades[23].effect)
+                if(hasMilestone('chall', 0)) { exponent = exponent.times(1.5) }
+                return `${exponent.neq(1)?'(':''}log<sub>10</sub>(cash)+1${exponent.neq(1)?`)<sup>${format(exponent)}</sup>`:''}`
+            },
         },
         14: {
             title: 'Get a Second Job',
@@ -71,6 +86,13 @@ addLayer('cash', {
                 if(hasMilestone('chall', 0)) { effect = effect.pow(2) }
                 return effect
             },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from adoplayzz<br>2,000$: boost cash by log<sub>8</sub>(cash<sup>1.5</sup>)<sup>0.5</sup>`
+                
+                let exponent = new Decimal(0.4)
+                if(hasMilestone('chall', 0)) { exponent = exponent.times(2) }
+                return `${exponent.neq(1)?'(':''}log<sub>1.5</sub>(cash)+1${exponent.neq(1)?`)<sup>${format(exponent)}</sup>`:''}`
+            },
         },
         15: {
             title: 'Compensate for Inflation',
@@ -84,6 +106,11 @@ addLayer('cash', {
                 let effect = new Decimal(2)
                 if(hasMilestone('chall', 0)) { effect = effect.times(2) }
                 return effect
+            },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from adoplayzz<br>200$: tickspeed ×2`
+                
+                return
             },
         },
         16: {
@@ -99,6 +126,11 @@ addLayer('cash', {
                 if(hasMilestone('chall', 0)) { effect = effect.times(2) }
                 return effect
             },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from galaxyuser63274<br>60,000$: tickspeed ×1.5`
+                
+                return
+            },
         },
         21: {
             title: 'Accellerate Inflation',
@@ -110,11 +142,18 @@ addLayer('cash', {
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(challengeCompletions('super', 11) < 1)player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             effect() {
-                let effect = Decimal.max(player.rebirth.resetTime, 1).log(10).add(1)
+                let effect = Decimal.max(player.rebirth.uResetTime, 1).log(10).add(1)
                 if(hasMilestone('chall', 0)) { effect = effect.pow(2) }
                 return effect
             },
-            unlocked(){return hasUpgrade('rebirth', 13)}
+            unlocked(){return hasUpgrade('rebirth', 13)},
+            tooltip() {
+                if(options.tooltipCredits) return `Uninspired`
+                
+                let exponent = new Decimal(1)
+                if(hasMilestone('chall', 0)) { exponent = exponent.times(2) }
+                return `${exponent.neq(1)?'(':''}log<sub>10</sub>(seconds)+1${exponent.neq(1)?`)<sup>${format(exponent)}</sup>`:''}`
+            },
         },
         22: {
             title: 'Triple Shifts',
@@ -130,22 +169,37 @@ addLayer('cash', {
                 if(hasMilestone('chall', 0)) { effect = effect.pow(3) }
                 return effect
             },
-            unlocked(){return hasUpgrade('rebirth', 13)}
+            unlocked(){return hasUpgrade('rebirth', 13)},
+            tooltip() {
+                if(options.tooltipCredits) return `Uninspired`
+                
+                let exponent = new Decimal(0.5)
+                if(hasMilestone('chall', 0)) { exponent = exponent.times(3) }
+                return `upgrades${exponent.neq(1)?`<sup>${format(exponent)}</sup>`:''}`
+            },
         },
         23: {
             title: 'Buy a Workplace',
             fullDisplay() {
-                return `Increase <span class="cash infoText">${options.upgID?"$U13s":"Get a Promotion's"}</span> effect`
+                return `Increase <span class="cash infoText">${options.upgID?"$U3s":"Get a Promotion's"}</span> effect`
             },
             costa() {return Decimal.times(1e5, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(challengeCompletions('super', 11) < 3)player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             effect() {
                 let effect = new Decimal(1.3)
-                if(hasMilestone('chall', 0)) { effect = effect.add(0.2) }
+                if(hasMilestone('chall', 0)) { effect = effect.add(0.3) }
                 return effect
             },
-            unlocked(){return hasUpgrade('rebirth', 13)}
+            unlocked(){return hasUpgrade('rebirth', 13)},
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from galaxyuser63274<br>20,000$: change the 50$ upgrade (${options.upgID?'$U3':'Get a Promotion'}) log to log<sub>3</sub>(cash)`
+                
+                let exponent = new Decimal(1)
+                let boost = new Decimal(1.3)
+                if(hasMilestone('chall', 0)) { exponent = exponent.times(1.5); boost = boost.add(0.3) }
+                return `${exponent.neq(1)?'(':''}log<sub>10</sub>(cash)+1${exponent.neq(1)?`)<sup>${format(exponent)}</sup>`:''} to (log<sub>10</sub>(cash)+1)<sup>${format(exponent.times(boost))}</sup>`
+            },
         },
         24: {
             title: 'Buy a Church',
@@ -160,12 +214,17 @@ addLayer('cash', {
                 if(hasMilestone('chall', 0)) { effect = effect.add(0.25) }
                 return effect
             },
-            unlocked(){return hasUpgrade('rebirth', 13)}
+            unlocked(){return hasUpgrade('rebirth', 13)},
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from galaxyuser63274<br>80,000,000$: improve rp gain formula x<sup>0.5</sup> to x<sup>0.7</sup>`
+                
+                return `3<sup>x</sup> to ${format(tmp[this.layer].upgrades[this.id].effect.times(3))}<sup>x</sup>`
+            },
         },
         25: {
             title: 'Buy an Artifact',
             fullDisplay() {
-                return `Increase <span class="rebirth infoText">RP</span> effect base`
+                return `Improve <span class="rebirth infoText">RP</span> effect base`
             },
             costa() {return Decimal.times(2.5e6, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
@@ -175,7 +234,12 @@ addLayer('cash', {
                 if(hasMilestone('chall', 0)) { effect = effect.sub(0.2) }
                 return effect
             },
-            unlocked(){return hasUpgrade('rebirth', 13)}
+            unlocked(){return hasUpgrade('rebirth', 13)},
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from galaxyuser63274<br>250,000,000$: improve rp boost to cash formula x<sup>0.5</sup> to x<sup>0.7</sup>`
+                
+                return `log<sub>2</sub>(x) to log<sub>${format(Decimal.pow(2, tmp[this.layer].upgrades[this.id].effect))}</sub>(x)`
+            },
         },
         26: {
             title: 'Discover Something',
@@ -185,7 +249,18 @@ addLayer('cash', {
             costa() {return Decimal.times(8e6, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(challengeCompletions('super', 11) < 6)player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
-            unlocked(){return hasUpgrade('rebirth', 13)}
+            unlocked(){return hasUpgrade('rebirth', 13)},
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from galaxyuser63274<br>1.00e9$: unlock a useful machine...<br><br>
+
+                    THE MACHINE<br>
+                    lets you give boosts to cash and RP gain, but you have to make a decision<br>
+                    Cash mode: ×4 cash, ×2 RP<br>
+                    Neutral mode: ×3 cash, ×3 RP<br>
+                    Rebirth mode: ×2 cash, ×4 RP`
+                
+                return
+            },
         },
         31: {
             title: 'Capitalism',
@@ -201,6 +276,13 @@ addLayer('cash', {
                 let effect = tmp.rebirth.getResetGain.max(0).add(1).log(150).add(1)
                 if(hasMilestone('chall', 0)) { effect = effect.pow(1.5) }
                 return effect
+            },
+            tooltip() {
+                if(options.tooltipCredits) return `Split from idea from galaxyuser63274<br>4.00e15$: Create a synergy boost between cash and RP<br>RP: log<sub>10</sub>(log<sub>10</sub>(cash)), cash: log<sub>10</sub>(RP)`
+                
+                let exponent = new Decimal(1)
+                if(hasMilestone('chall', 0)) { exponent = exponent.times(1.5) }
+                return `${exponent.neq(1)?'(':''}log<sub>150</sub>(RP)${exponent.neq(1)?')<sup>'+format(exponent)+'</sup>':''}`
             },
         },
         32: {
@@ -218,6 +300,13 @@ addLayer('cash', {
                 if(hasMilestone('chall', 0)) { effect = effect.pow(1.5) }
                 return effect
             },
+            tooltip() {
+                if(options.tooltipCredits) return `Split from idea from galaxyuser63274<br>4.00e15$: Create a synergy boost between cash and RP<br>RP: log<sub>10</sub>(log<sub>10</sub>(cash)), cash: log<sub>10</sub>(RP)`
+                
+                let exponent = new Decimal(1)
+                if(hasMilestone('chall', 0)) { exponent = exponent.times(1.5) }
+                return `${exponent.neq(1)?'(':''}(upgrades + 3)/3${exponent.neq(1)?')<sup>'+format(exponent)+'</sup>':''}`
+            },
         },
         33: {
             title: 'Communism',
@@ -232,7 +321,12 @@ addLayer('cash', {
                 let effect = new Decimal(1)
                 if(hasMilestone('chall', 0)) { effect = effect.times(300) }
                 return effect
-            }
+            },
+            tooltip() {
+                if(options.tooltipCredits) return `Uninspired`
+                
+                return
+            },
         },
         34: {
             title: 'Buy a Country',
@@ -243,6 +337,11 @@ addLayer('cash', {
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             unlocked(){return hasUpgrade('super', 13)},
+            tooltip() {
+                if(options.tooltipCredits) return `Uninspired`
+                
+                return
+            },
         },
         35: {
             title: 'Buy a Continent',
@@ -253,6 +352,11 @@ addLayer('cash', {
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             unlocked(){return hasUpgrade('super', 13)},
+            tooltip() {
+                if(options.tooltipCredits) return `Uninspired`
+                
+                return
+            },
         },
         36: {
             title: 'Buy the Earth',
@@ -269,6 +373,13 @@ addLayer('cash', {
                 if(hasMilestone('chall', 0)) { effect = effect.pow(1.25) }
                 return effect
             },
+            tooltip() {
+                if(options.tooltipCredits) return `Uninspired`
+                
+                let exponent = new Decimal(0.5)
+                if(hasMilestone('chall', 0)) { exponent = exponent.times(1.25) }
+                return `(effect+1)<sup>${format(exponent)}</sup>`
+            },
         },
     },
     color: "rgb(21, 115, 7)",
@@ -276,6 +387,7 @@ addLayer('cash', {
         "Main": {
             unlocked(){return player.machine.unlocked},
             content: [
+                'tax-uhoh-display',
                 "buyables",
                 'upgrades'
             ],
@@ -312,6 +424,7 @@ addLayer('cash', {
     doReset(layer) {
         let keep = []
         if(hasMilestone('super', 7) && (layer == 'rebirth' || layer == 'super')) keep.push('upgrades')
+        if(hasMilestone('hyper', 2) && (layer == 'hyper')) keep.push('upgrades')
         layerDataReset('cash', keep)
         let upgs = []
         if(layer === 'rebirth') {
@@ -378,6 +491,11 @@ addLayer('cash', {
                 base = base.sub(Decimal.times(0.5, challengeCompletions('super', 12)))
                 if(hasMilestone('super', 4)){base = base.div(2)}
                 return base
+            },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>$ Buyable 1: Increase RP gain.<br>Price formula: [Times Bought]<sup>6</sup><br>Effect formula: 1.1<sup>[Times bought]</sup>`
+                
+                return `Effect: (x+1)<sup>0.5</sup><br>Cost: 10<sup>x+6</sup>${maxedChallenge('super', 12)?'':`<br>Nerf: (x+1)<sup>${tmp.cash.buyables[11].nerfExpo.times(0.5)}</sup>`}`
             },
         },
     },

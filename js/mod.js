@@ -9,6 +9,7 @@ let modInfo = {
 	discordLink: "https://discord.gg/wt5XyPRtte",
 	initialStartPoints: new Decimal(0), // Used for hard resets and new players
 	offlineLimit: 12,  // In hours
+	forumClone: ``,
 }
 
 // Set your version in num and name
@@ -18,48 +19,7 @@ let VERSION = {
 }
 
 let changelog = 
-`<h1>Changelog</h1><br><br>
-<span style="text-align: left; position: absolute; left: 30px;">
-	<h3>v1.0</h3><br>
-		- <span style="color: #9966BB">Remade the Entire Game</span><br>
-		- Added <span style="color: #9966BB">Standard Notation</span><br>
-		- Actually Added <span style="color: #9966BB">The Changelog</span><br><br>
-	<h3>v0.3.2</h3><br>
-		- Added <span style="color: #2ed5e8">Matter Paths</span><br>
-		- Added <span style="color: #2dc0d6">Matter</span><br>
-		- Added <span style="color: #d6442d">Antimatter</span><br>
-		- Added <span style="color: #303030">Dark Matter</span> and <span style="color: #4b0f75">Black Hole</span><br>
-		- Added <span style="color: #cc59de">Exotic Matter</span>, <span style="color: #8c617e">Hypothetical Particles</span>, and <span style="color: #7bff00">Unstable Matter</span><br>
-		- Added <span style="color: #472961">Ultimate Matter Fragments</span><br>
-		- Added <span style="color: #9966BB">Softlock Prevention</span><br>
-		Endgame <span style="color: #472961">4 UMF</span><br><br>
-	<h3>v0.3.0.1 - v0.3.0.5</h3><br>
-		- Added <span style="color: #9966BB">Hotkeys</span><br>
-		- Added <span style="color: #2ed5e8">Hyper Paths Respec</span><br><br>
-	<h2>v0.3</h2><br>
-		- Added <span style="color: #2ed5e8">Hyper Rebirth</span><br>
-		- Added <span style="color: #2ed5e8">Hyper Paths</span><br>
-		- Added <span style="color: #34eb67">Hyper Cash</span><br>
-		Endgame <span style="color: #157307">e10,000 $</span> (wait, it went down?), <span style="color: #2ed5e8">130 HRP</span><br><br>
-	<h3>v0.2.1</h3><br>
-		- Added <span style="color: #d6c611">Power</span><br>
-		- Added <span style="color: #d6c611">Power Pylons</span><br>
-		- Added More <span style="color: #eb1a3d">Super Rebirth Challenges</span><br>
-		Endgame <span style="color: #157307">e12,000 $</span>, <span style="color: #ba0022">e5,000 RP</span>, <span style="color: #eb1a3d">100,000 SRP</span><br><br>
-	<h2>v0.2</h2><br>
-		- Added <span style="color: #eb1a3d">Super Rebirth</span><br>
-		- Added <span style="color: #eb1a3d">Super Rebirth Challenge 1</span><br>
-		- Added <span style="color: #eb1a3d">Super Rebirth Milestones</span><br>
-		- Added <span style="color: #9966BB">Secret Achievements</span><br>
-		- Added <span style="color: #9966BB">More Themes</span><br>
-		Endgame <span style="color: #eb1a3d">8 SRP, Challenge Completed</span><br><br>
-	<h3>v0.1.3</h3><br>
-		- Added <span style="color: #157307">Money</span><br>
-		- Added <span style="color: #ba0022">Rebirth</span><br>
-		- Added <span style="color: #157307">The Machine</span><br>
-		- Added <span style="color: #FFEE88">Achievements</span><br>
-		Endgame <span style="color: #9966BB">Unkown</span><br><br>
-</span>`
+`<h1>Changelog</h1>`
 
 let winText = `You are win! Congratulations on wasting your time! (Keep save for future updates)`
 
@@ -105,6 +65,14 @@ function getPointGen() {
 	if(inChallenge('super', 12)) { gain = gain.div(tmp.super.challenges[12].nerf)}
 	if(inChallenge('super', 15)) { gain = gain.div(player.super.tax) }
 
+	gain = gain.times(tmp.hyper.effect[0])
+
+	if(hasUpgrade('hyper', 11)) { gain = gain.times(1000) }
+	if(hasUpgrade('hyper', 33)) { gain = gain.times(tmp.hyper.upgrades[33].effect) }
+	if(hasUpgrade('hyper', 41)) { gain = gain.times(10) }
+
+
+	gain = gain.times(tmp.chall.uTime)
 	return gain
 }
 
