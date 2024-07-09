@@ -121,10 +121,10 @@ var systemComponents = {
 			<cash-display></cash-display>
 			<tax-display v-if="inChallenge('super', 15) && !hasMilestone('chall', 1)"></tax-display>
 			<rp-display v-if="player.rebirth.unlocked && !hasMilestone('chall', 1)"></rp-display>
-			<srp-display v-if="player.super.unlocked && !hasMilestone('chall', 1)"></srp-display>
+			<srp-display v-if="player.super.unlocked"></srp-display>
 			<power-display v-if="player.power.unlocked && !hasMilestone('chall', 1)"></power-display>
 			<hyper-display v-if="player.hyper.unlocked"></hyper-display>
-			<utime-display v-if="player.hyper.rebirths.gte(1)"></utime-display>
+			<utime-display v-if="player.hyper.unlocked"></utime-display>
 		</div>
 		</div>
 	`
@@ -157,7 +157,8 @@ var systemComponents = {
     'stats-tab': {
         template: `
         <div>
-		Nothing Here Yet :(
+		<span v-if="player.hyper.unlocked">Real </span>Playtime<br>{{ formatTime(player.timePlayed) }}<br><br>
+		<span v-if="player.hyper.unlocked">Universal Playtime<br>{{ formatTime(player.chall.uTimePlayed) }}<br><br></span>
 		<br><br></div>
     `
     },

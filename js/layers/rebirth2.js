@@ -51,7 +51,7 @@ addLayer('super', {
         if(inChallenge('super', 15)) {
             player.super.tax = player.super.tax.times(tmp.super.challenges[15].nerf.pow(diff))
         }
-        if(hasMilestone('hyper', 6)) { player.super.rebirths = player.super.rebirths.add(Decimal.times(25, diff)) }
+        if(hasMilestone('hyper', 6)) { player.super.rebirths = player.super.rebirths.add(Decimal.times(25, diff).times(tmp.chall.uTime)) }
     },
     resource: "SRP",
     prestigeButtonText() {
@@ -397,12 +397,28 @@ addLayer('super', {
         return tmp.super.canReset?gain:new Decimal(0)
     },
     doReset(layer) {
-        if(layer == 'super') { return }
-        let keep = []
-        if(hasMilestone('hyper', 1) && layer == 'hyper') { keep.push('challenges') }
-        if(hasMilestone('hyper', 2) && layer == 'hyper') { keep.push('milestones', 'upgrades') }
-        layerDataReset('super', keep)
+        if(tmp[layer].row == tmp[this.layer].row) { return; }
+        let keep = [];
+        if(hasMilestone('hyper', 1) && layer == 'hyper') {
+            keep.push('challenges');
+            if(player.hyper.rebirths.lt(5)) {
+                player.super.challenges[15] = 0
+                if(player.hyper.rebirths.lt(4)) { player.super.challenges[14] = 0 }
+                if(player.hyper.rebirths.lt(3)) { player.super.challenges[13] = 0 }
+            }
+        }
+        layerDataReset('super', keep);
     },
+    automate() {
+        let autoUpg = []
+        if(hasMilestone('hyper', 5)) { autoUpg.push(11, 12, 13, 14, 15, 16) }
+        for (let index = 0; index < autoUpg.length; index++) {
+            const element = autoUpg[index];
+            const upg = layers.super.upgrades[element]
+            if(upg.canAfford() && !hasUpgrade('super', element) && tmp[this.layer].upgrades[element].unlocked) { upg.pay(); player.super.upgrades.push(element) }
+        }
+    },
+    milestonePopups() { return !hasMilestone('hyper', 4) },
 })
 
 addLayer('power', {
@@ -431,10 +447,10 @@ addLayer('power', {
     }},
     resetName: 'Power',
     doReset(layer) {
-        if(layer == 'super') { return }
+        if(tmp[layer].row == tmp[this.layer].row) { return }
         let keep = []
-        if(hasMilestone('hyper', 3) && layer == 'hyper') { keep.push('milestones') }
         layerDataReset('power', keep)
+        if(hasMilestone('hyper', 4)) { player.power.pylonE = player.power.pylonE.max(10); player.power.pylobE = player.power.pylobE.max(10) }
         if(hasUpgrade('hyper', 23)) { player.power.pylonF = player.power.pylonF.max(10); player.power.pylobF = player.power.pylobF.max(10) }
     },
     update(diff) {
@@ -461,13 +477,9 @@ addLayer('power', {
         }
     },
     automate() {
-        if(hasMilestone('power', 9)) {
-            buyMax('power', 'pylons', 21)
-            buyMax('power', 'pylons', 22)
-            buyMax('power', 'pylons', 23)
-        }
+        if(hasMilestone('power', 9)) { buyMax('power', 'pylons', 21); buyMax('power', 'pylons', 22); buyMax('power', 'pylons', 23); }
         if(hasMilestone('power', 10)) { buyMax('power', 'pylons', 24) }
-        if(hasMilestone('hyper', 3)) { buyMax('power', 'pylons', 25); buyMax('power', 'pylons', 26) }
+        if(hasUpgrade('hyper', 23)) { buyMax('power', 'pylons', 25) }
     },
     pylons: {
         a: {
@@ -882,4 +894,5 @@ addLayer('power', {
             },
         },
     },
+    milestonePopups() { return !hasMilestone('hyper', 4) },
 })

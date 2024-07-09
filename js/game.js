@@ -250,12 +250,17 @@ function startChallenge(layer, x) {
 	if (player[layer].activeChallenge == x) {
 		completeChallenge(layer, x)
 		Vue.set(player[layer], "activeChallenge", null)
-	} else {
-		Vue.set(player[layer], "activeChallenge", x)
-		run(layers[layer].challenges[x].onEnter, layers[layer].challenges[x])
+		player[layer].activeChallenge = null
+		} else {
+		enter = true
 	}
 	doReset(layer, true)
 	updateChallengeTemp(layer)
+	if(enter) {
+		Vue.set(player[layer], "activeChallenge", x)
+		player[layer].activeChallenge = x
+		run(layers[layer].challenges[x].onEnter, layers[layer].challenges[x])
+	}
 }
 
 function canCompleteChallenge(layer, x)

@@ -4,6 +4,7 @@ addLayer('chall', {
         unlocked: false,
         points: new Decimal(0),
         pap: 50, // Power Allocation Percentage (0-100)
+        uTimePlayed: new Decimal(0)
     }},
     tabFormat: {
         "Super": {
@@ -19,6 +20,7 @@ addLayer('chall', {
     },
     update(diff) {
         if(hasUpgrade('super', 11)) player.chall.unlocked = true
+        player.chall.uTimePlayed = player.chall.uTimePlayed.add(Decimal.times(tmp.chall.uTime, diff))
     },
     row: 99,
     bars: {

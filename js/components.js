@@ -144,7 +144,7 @@ function loadVue() {
 	})
 	Vue.component('srp-uhoh-display', {
 		template: `
-			<div class="currencyDisplayHeader super upg" v-if="hasMilestone('chall', 1)">
+			<div class="currencyDisplayHeader super upg" v-if="false">
 				<span v-if="player.super.points.lt('1e1000')"  class="overlayThing">You have </span>
 				<h2  class="overlayThing" id="points" style="color: rgb(251, 26, 61); text-shadow: rgb(251, 26, 61) 0px 0px 10px;">{{formatWhole(player.super.points.max(0))}}</h2> SRP
 				<br>
@@ -207,7 +207,7 @@ function loadVue() {
 				<span v-if="player.hyper.cash.lt('1e1000')"  class="overlayThing">You have Hyper</span>
 				<h2  class="overlayThing" id="points" style="color: #34eb67; text-shadow: #34eb67 0px 0px 10px;">{{'$' + format(player.hyper.cash.max(0))}}</h2>
 				<br>
-				<span class="overlayThing" v-if="hasUpgrade('super', 14)">({{formatSmall(tmp.chall.uTime.times(tmp.hyper.cashGain))}}/sec)</span>
+				<span class="overlayThing">({{formatSmall(tmp.chall.uTime.times(tmp.hyper.cashGain))}}/sec)</span>
 			</div>
 		`
 	})
@@ -282,11 +282,19 @@ function loadVue() {
 		<div>
 			<h1>Changelog</h1><br><br>
 <span style="text-align: left; position: absolute; left: 30px;">
-	<h3>v1.0</h3><br>
+	<h1>v1.0</h1><br>
 		- <span style="color: #9966BB">Remade the Entire Game</span><br>
-		- Added <span style="color: #9966BB">Standard Notation</span><br>
+		- Improved <span style="color: #157307">Cash</span><br>
+		- Improved <span style="color: #ba0022">Rebirth</span><br>
+		- Improved <span style="color: #eb1a3d">Super Rebirth</span><br>
+		- Improved <span style="color: #2ed5e8">Hyper Rebirth</span><br>
+		- Improved <span style="color: rgb(241, 112, 255)">Tax Display</span><br>
 		- Added <span style="color: #d6c611">Power Allocation</span><br>
-		- Added <span style="color: rgba(61, 3, 88, 1)">Universal Time</span><br>
+		- Improved <span style="color: #d6c611">Power Pylons</span><br>
+		- Added <span style="color: rgba(122, 6, 176, 1)">Universal Time</span><br>
+		- Added <span style="color: #2ed5e8">Hyper Paths Icons</span><br>
+		- Added <span style="color: #9966BB">Standard Notation</span><br>
+		- Improved <span style="color: #9966BB">Credits</span><br>
 		- Actually Added <span style="color: #9966BB">The Changelog</span><br><br>
 	<h3>v0.3.2</h3><br>
 		- Added <span style="color: #2ed5e8">Matter Paths</span><br>
@@ -325,7 +333,7 @@ function loadVue() {
 		Endgame <span style="color: #9966BB">Unkown</span><br><br>
 	<h3>Game Stats</h3><br>
 		- Reset Layers: 3<br>
-		- Upgrades: 97<br>
+		- Upgrades: 92<br>
 		- Challenges: 5<br>
 		- Buyables: 3<br>
 		- Milestones: 26<br>
@@ -334,7 +342,8 @@ function loadVue() {
 		- Subtabs: 9<br>
 		- Things you can press in the machine: 12<br>
 		- Times the machine can be improved: 3<br>
-		- Max Ultimate Matter Fragments: 4<br>
+		- Max Ultimate Matter Fragments: 0<br>
+		- Max Singularities: 0<br>
 		- Settings: 11<br>
 		- Currencies: 5<br>
 		- Resources: 7<br>

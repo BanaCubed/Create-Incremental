@@ -3,7 +3,7 @@ let modInfo = {
 	id: "createIncremental",
 	author: "BanaCubed, with ideas from galaxy",
 	pointsName: "$",
-	modFiles: ["layers.js", "tree.js", "layers/cash.js", "layers/rebirth.js", "layers/rebirth2.js", "layers/rebirth3.js", "layers/matter.js"],
+	modFiles: ["layers.js", "tree.js", "layers/cash.js", "layers/rebirth.js", "layers/rebirth2.js", "layers/rebirth3.js", "layers/matter.js", "layers/universe.js"],
 
 	discordName: "Create Incremental Server",
 	discordLink: "https://discord.gg/wt5XyPRtte",
@@ -70,6 +70,7 @@ function getPointGen() {
 	if(hasUpgrade('hyper', 11)) { gain = gain.times(1000) }
 	if(hasUpgrade('hyper', 33)) { gain = gain.times(tmp.hyper.upgrades[33].effect) }
 	if(hasUpgrade('hyper', 41)) { gain = gain.times(10) }
+	if(hasUpgrade('hyper', 44)) { gain = gain.times(tmp.hyper.effect[1]) }
 
 
 	gain = gain.times(tmp.chall.uTime)

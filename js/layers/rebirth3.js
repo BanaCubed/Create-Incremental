@@ -39,13 +39,13 @@ addLayer('hyper', {
     type: 'custom',
     getNextAt() {
         let base = new Decimal(19)
-        let has = tmp.hyper.baseAmount.max(1).log(tmp.hyper.requires).sub(1).pow_base(base).times(tmp.hyper.gainMult).floor()
+        let has = tmp.hyper.baseAmount.max(1).log(tmp.hyper.requires).sub(1).pow_base(base).times(tmp.hyper.gainMult).pow(0.8).floor()
         has = has.add(1)
-        return has.div(tmp.hyper.gainMult).log(base).add(1).pow_base(tmp.hyper.requires).max(1)
+        return has.pow(1.25).div(tmp.hyper.gainMult).log(base).add(1).pow_base(tmp.hyper.requires).max(1)
     },
     getResetGain() {
         let base = new Decimal(19)
-        return tmp.hyper.baseAmount.max(1).log(tmp.hyper.requires).sub(1).pow_base(base).times(tmp.hyper.gainMult).floor()
+        return tmp.hyper.baseAmount.max(1).log(tmp.hyper.requires).sub(1).pow_base(base).times(tmp.hyper.gainMult).pow(0.8).floor()
     },
     requires() {
         let base = new Decimal(1e6)
@@ -106,7 +106,9 @@ addLayer('hyper', {
     },
     resetName: 'Hyper Rebirth',
     cashEffect() {
-        return player.hyper.cash.max(0).add(1).log(10).add(1).pow(0.4)
+        let effect = player.hyper.cash.max(0).add(1).log(10).add(1).pow(0.4)
+        if(hasUpgrade('hyper', 34)) { effect = effect.pow(1.5) }
+        return effect
     },
     cashGain() {
         let gain = new Decimal(1)
@@ -116,6 +118,7 @@ addLayer('hyper', {
         if(hasUpgrade('hyper', 32)) { gain = gain.times(10) }
         if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
         if(hasUpgrade('hyper', 43)) { gain = gain.times(5) }
+        if(hasUpgrade('hyper', 44)) { gain = gain.times(tmp.hyper.effect[1]) }
         return gain
     },
     milestones: {
@@ -132,7 +135,7 @@ addLayer('hyper', {
         },
         1: {
             requirementDescription: "2 Hyper Rebirths",
-            effectDescription: "Keep all super challenges on hyper rebirth",
+            effectDescription: "Keep one super challenge for each total Hyper Rebirth",
             done() { return player.hyper.rebirths.gte(2) },
             unlocked() {return hasMilestone(this.layer, this.id - 1)},
             tooltip() {
@@ -143,7 +146,7 @@ addLayer('hyper', {
         },
         2: {
             requirementDescription: "3 Hyper Rebirths",
-            effectDescription: "Keep all super milestones and upgrades on hyper rebirth",
+            effectDescription: "Automate all existing cash upgrades",
             done() { return player.hyper.rebirths.gte(3) },
             unlocked() {return hasMilestone(this.layer, this.id - 1)},
             tooltip() {
@@ -154,7 +157,7 @@ addLayer('hyper', {
         },
         3: {
             requirementDescription: "4 Hyper Rebirths",
-            effectDescription: "Keep all power milestones on hyper rebirth and automate Power Pylons E-F",
+            effectDescription: "Automate all existing RP upgrades",
             done() { return player.hyper.rebirths.gte(4) },
             unlocked() {return hasMilestone(this.layer, this.id - 1)},
             tooltip() {
@@ -165,7 +168,7 @@ addLayer('hyper', {
         },
         4: {
             requirementDescription: "5 Hyper Rebirths",
-            effectDescription: "Unlock Paths",
+            effectDescription: "Unlock Paths and start each Hyper Rebirth with 10 Power Pylon E",
             done() { return player.hyper.rebirths.gte(5) },
             unlocked() {return hasMilestone(this.layer, this.id - 1)},
             tooltip() {
@@ -176,7 +179,7 @@ addLayer('hyper', {
         },
         5: {
             requirementDescription: "7 Hyper Rebirths",
-            effectDescription: "Increase Hyper Cash gain by +10% per hyper rebirth",
+            effectDescription: "Increase Hyper Cash gain by +10% per hyper rebirth, and automate all existing SRP upgrades",
             done() { return player.hyper.rebirths.gte(7) },
             unlocked() {return hasMilestone(this.layer, this.id - 1)},
             tooltip() {
@@ -205,97 +208,93 @@ addLayer('hyper', {
             cost() {
                 let pos = player.hyper.paths.indexOf(1)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(1, Decimal.pow(2, pos))
+                return Decimal.times(1, Decimal.pow(3, pos))
             },
             onPurchase() {
                 player.hyper.paths.push(1)
             },
             description: `Increase cash gain by ×1,000`,
+            title: `Basic 1`,
         },
         12: {
             cost() {
                 let pos = player.hyper.paths.indexOf(1)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(2, Decimal.pow(2, pos))
+                return Decimal.times(4, Decimal.pow(3, pos))
             },
             description: `Increase RP gain by ×500`,
-            canAfford() {
-                return hasUpgrade(this.layer, this.id-1)
-            },
+            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            title: `Basic 2`,
         },
         13: {
             cost() {
                 let pos = player.hyper.paths.indexOf(1)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(3, Decimal.pow(2, pos))
+                return Decimal.times(10, Decimal.pow(3, pos))
             },
             description: `Increase SRP gain by ×50`,
-            canAfford() {
-                return hasUpgrade(this.layer, this.id-1)
-            },
+            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            title: `Basic 3`,
         },
         14: {
             cost() {
                 let pos = player.hyper.paths.indexOf(1)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(5, Decimal.pow(2, pos))
+                return Decimal.times(25, Decimal.pow(3, pos))
             },
             description: `Increase Power gain by ×1,000`,
-            canAfford() {
-                return hasUpgrade(this.layer, this.id-1)
-            },
+            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            title: `Basic 4`,
         },
         
         21: {
             cost() {
                 let pos = player.hyper.paths.indexOf(2)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(1, Decimal.pow(2, pos))
+                return Decimal.times(1, Decimal.pow(3, pos))
             },
             onPurchase() {
                 player.hyper.paths.push(2)
             },
             description: `Neutral mode is ×25 as effective`,
+            title: `Machine 1`,
         },
         22: {
             cost() {
                 let pos = player.hyper.paths.indexOf(2)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(2, Decimal.pow(2, pos))
+                return Decimal.times(4, Decimal.pow(3, pos))
             },
             description: `Power Pylons are ×10 as effective`,
-            canAfford() {
-                return hasUpgrade(this.layer, this.id-1)
-            },
+            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            title: `Machine 2`,
         },
         23: {
             cost() {
                 let pos = player.hyper.paths.indexOf(2)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(3, Decimal.pow(2, pos))
+                return Decimal.times(10, Decimal.pow(3, pos))
             },
-            description: `Start all Hyper Rebirths with 10 Power Pylon F`,
-            canAfford() {
-                return hasUpgrade(this.layer, this.id-1)
-            },
+            description: `Start all Hyper Rebirths with 10 Power Pylon F, and automate Power Pylon E`,
+            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            title: `Machine 3`,
         },
         24: {
             cost() {
                 let pos = player.hyper.paths.indexOf(2)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(5, Decimal.pow(2, pos))
+                return Decimal.times(25, Decimal.pow(3, pos))
             },
-            description: `Change Power Pylon self-boost to also be exponential, but have 10% as much of an individual boost<br>Boost caps at 1000 Pylons`,
-            canAfford() {
-                return hasUpgrade(this.layer, this.id-1)
-            },
+            description: `Add another Power Pylon self-boost that's exponential, but has 10% as much of an individual boost<br>Boost caps at 1000 Pylons`,
+            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            title: `Machine 4`,
         },
         
         31: {
             cost() {
                 let pos = player.hyper.paths.indexOf(3)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(1, Decimal.pow(2, pos))
+                return Decimal.times(1, Decimal.pow(3, pos))
             },
             onPurchase() {
                 player.hyper.paths.push(3)
@@ -304,28 +303,27 @@ addLayer('hyper', {
             effect() {
                 return player.hyper.cash.max(1).log(3).add(1)
             },
+            title: `Hyper 1`,
         },
         32: {
             cost() {
                 let pos = player.hyper.paths.indexOf(3)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(2, Decimal.pow(2, pos))
+                return Decimal.times(4, Decimal.pow(3, pos))
             },
             description: `Increase Hyper Cash gain by ×10`,
-            canAfford() {
-                return hasUpgrade(this.layer, this.id-1)
-            },
+            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            title: `Hyper 2`,
         },
         33: {
             cost() {
                 let pos = player.hyper.paths.indexOf(3)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(3, Decimal.pow(2, pos))
+                return Decimal.times(10, Decimal.pow(3, pos))
             },
             description() {return `Hyper Cash's boost to Universal Time also applies directly to Cash, RP, and SRP, at ^3 efficiency<br>Currently: ${formatBoost(tmp[this.layer].upgrades[this.id].effect.sub(1))}`},
-            canAfford() {
-                return hasUpgrade(this.layer, this.id-1)
-            },
+            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            title: `Hyper 3`,
             effect() {
                 return tmp.hyper.cashEffect.pow(3)
             },
@@ -334,83 +332,80 @@ addLayer('hyper', {
             cost() {
                 let pos = player.hyper.paths.indexOf(3)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(5, Decimal.pow(2, pos))
+                return Decimal.times(25, Decimal.pow(3, pos))
             },
-            description: `Hyper Cash's boost to Universal Time also applies directly to Power Pylons, Power Allocation, HRP, and HC`,
-            canAfford() {
-                return hasUpgrade(this.layer, this.id-1)
-            },
+            description: `Hyper Cash's boost to Universal Time also applies directly to Power Pylons, Power Allocation, HRP, and HC, and improve HC's boost to Universal Time`,
+            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            title: `Hyper 4`,
         },
         
         41: {
             cost() {
                 let pos = player.hyper.paths.indexOf(4)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(1, Decimal.pow(2, pos))
+                return Decimal.times(1, Decimal.pow(3, pos))
             },
             onPurchase() {
                 player.hyper.paths.push(4)
             },
             description: `Increase Cash, RP, and SRP gain by ×10`,
+            title: `Combined 1`,
         },
         42: {
             cost() {
                 let pos = player.hyper.paths.indexOf(4)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(2, Decimal.pow(2, pos))
+                return Decimal.times(4, Decimal.pow(3, pos))
             },
             description: `Increase Power, Power Pylons, and Power Allocation by ×10`,
-            canAfford() {
-                return hasUpgrade(this.layer, this.id-1)
-            },
+            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            title: `Combined 2`,
         },
         43: {
             cost() {
                 let pos = player.hyper.paths.indexOf(4)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(3, Decimal.pow(2, pos))
+                return Decimal.times(10, Decimal.pow(3, pos))
             },
             description: `Increase Hyper Cash, Power, RP, and SRP gain by ×5`,
-            canAfford() {
-                return hasUpgrade(this.layer, this.id-1)
-            },
+            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            title: `Combined 3`,
         },
         44: {
             cost() {
                 let pos = player.hyper.paths.indexOf(4)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(5, Decimal.pow(2, pos))
+                return Decimal.times(25, Decimal.pow(3, pos))
             },
-            description: `Increase RP, SRP and HRP gain by ×3`,
-            canAfford() {
-                return hasUpgrade(this.layer, this.id-1)
-            },
+            description: `Increase RP, SRP and HRP gain by ×3, and HRP's boost to RP now also applies to Cash and HC`,
+            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            title: `Combined 4`,
         },
         
         51: {
-            cost: new Decimal(50),
-            description: `Unlock the Matter Combustor in the machine`,
+            cost: new Decimal(2500),
+            description: `Unlock the Matter Combustor in the machine<br>Yes I know you can't buy this, it's hardcoded that way`,
             canAfford() {
                 return hasUpgrade(this.layer, 14) && hasUpgrade(this.layer, 24) && hasUpgrade(this.layer, 34) && hasUpgrade(this.layer, 44)
             }
         },
         52: {
-            cost: new Decimal(1000),
-            description: `Add an Antimatter Chamber into the Matter Combustor`,
+            cost: new Decimal(1e6),
+            description: `Add an Antimatter Chamber to the Matter Combustor`,
             canAfford() {
                 return hasUpgrade(this.layer, this.id-1)
             },
         },
         53: {
-            cost: new Decimal(50000),
-            description: `Add a Black Hole Container into the Matter Combustor`,
+            cost: new Decimal(1e10),
+            description: `Add a Black Hole Container to the Matter Combustor`,
             canAfford() {
                 return hasUpgrade(this.layer, this.id-1)
             },
         },
         54: {
-            cost: new Decimal(1e8),
-            description: `Add a Strange Matter Creator into the Matter Combustor`,
+            cost: new Decimal(1e15),
+            description: `Add a Matter Stabiliser to the Matter Combustor`,
             canAfford() {
                 return hasUpgrade(this.layer, this.id-1)
             },

@@ -93,7 +93,7 @@ addLayer('rebirth', {
     },
     update(diff) {
         if(hasUpgrade('cash', 16)) { player.rebirth.unlocked = true }
-        if(hasMilestone('super', 2)) { player.rebirth.rebirths = player.rebirth.rebirths.add(Decimal.times(2, diff).times(tmp.super.challenges[13].effect)) }
+        if(hasMilestone('super', 2)) { player.rebirth.rebirths = player.rebirth.rebirths.add(Decimal.times(2, diff).times(tmp.super.challenges[13].effect).times(tmp.chall.uTime)) }
         
         if(hasUpgrade('cash', 33)) { player.rebirth.points = player.rebirth.points.max(tmp.rebirth.getResetGain.times(tmp.cash.upgrades[33].effect)) }
 
@@ -432,7 +432,7 @@ addLayer('rebirth', {
         }
     ],
     doReset(layer) {
-        if(layer == 'rebirth') return
+        if(tmp[layer].row == tmp[this.layer].row) { return }
         layerDataReset('rebirth')
         let savedUpgs = []
         if(layer == 'super') {
@@ -457,26 +457,18 @@ addLayer('rebirth', {
                 player.rebirth.upgrades.push(element)
             }
         }
-        if(layer == 'hyper') {
-            if(hasMilestone('hyper', 2)) {
-                player.rebirth.upgrades.push(11, 12, 13, 14, 15, 16)
-            }
-        }
     },
     automate() {
         let autoUpg = []
-        if(hasMilestone('super', 3)) {
-            buyMax('rebirth', 'buyables', 11)
-        }
-        if(hasMilestone('super', 4)) {
-            buyMax('rebirth', 'buyables', 12)
-        }
-        if(challengeCompletions('super', 12) >= 1){ autoUpg.push(21) }
-        if(challengeCompletions('super', 12) >= 2){ autoUpg.push(22) }
-        if(challengeCompletions('super', 12) >= 3){ autoUpg.push(23) }
-        if(challengeCompletions('super', 12) >= 4){ autoUpg.push(24) }
-        if(challengeCompletions('super', 12) >= 5){ autoUpg.push(25) }
-        if(challengeCompletions('super', 12) >= 6){ autoUpg.push(26) }
+        if(hasMilestone('super', 3)) { buyMax('rebirth', 'buyables', 11) }
+        if(hasMilestone('super', 4)) { buyMax('rebirth', 'buyables', 12) }
+        if(hasMilestone('hyper', 3)) { autoUpg.push(11, 12, 13, 14, 15, 16) }
+        if(challengeCompletions('super', 12) >= 1 || hasMilestone('hyper', 3)){ autoUpg.push(21) }
+        if(challengeCompletions('super', 12) >= 2 || hasMilestone('hyper', 3)){ autoUpg.push(22) }
+        if(challengeCompletions('super', 12) >= 3 || hasMilestone('hyper', 3)){ autoUpg.push(23) }
+        if(challengeCompletions('super', 12) >= 4 || hasMilestone('hyper', 3)){ autoUpg.push(24) }
+        if(challengeCompletions('super', 12) >= 5 || hasMilestone('hyper', 3)){ autoUpg.push(25) }
+        if(challengeCompletions('super', 12) >= 6 || hasMilestone('hyper', 3)){ autoUpg.push(26) }
         for (let index = 0; index < autoUpg.length; index++) {
             const element = autoUpg[index];
             const upg = layers.rebirth.upgrades[element]

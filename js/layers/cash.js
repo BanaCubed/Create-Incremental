@@ -422,9 +422,9 @@ addLayer('cash', {
         },
     },
     doReset(layer) {
+        if(tmp[layer].row == tmp[this.layer].row) { return }
         let keep = []
         if(hasMilestone('super', 7) && (layer == 'rebirth' || layer == 'super')) keep.push('upgrades')
-        if(hasMilestone('hyper', 2) && (layer == 'hyper')) keep.push('upgrades')
         layerDataReset('cash', keep)
         let upgs = []
         if(layer === 'rebirth') {
@@ -451,17 +451,18 @@ addLayer('cash', {
     },
     automate() {
         let autoUpg = []
-        if(hasMilestone('super', 0)){ autoUpg.push(11, 12, 13, 14, 15, 16) }
-        if(challengeCompletions('super', 11) >= 1){ autoUpg.push(21) }
-        if(challengeCompletions('super', 11) >= 2){ autoUpg.push(22) }
-        if(challengeCompletions('super', 11) >= 3){ autoUpg.push(23) }
-        if(challengeCompletions('super', 11) >= 4){ autoUpg.push(24) }
-        if(challengeCompletions('super', 11) >= 5){ autoUpg.push(25) }
-        if(challengeCompletions('super', 11) >= 6){ autoUpg.push(26) }
+        if(hasMilestone('super', 0) || hasMilestone('hyper', 2)){ autoUpg.push(11, 12, 13, 14, 15, 16) }
+        if(challengeCompletions('super', 11) >= 1 || hasMilestone('hyper', 2)){ autoUpg.push(21) }
+        if(challengeCompletions('super', 11) >= 2 || hasMilestone('hyper', 2)){ autoUpg.push(22) }
+        if(challengeCompletions('super', 11) >= 3 || hasMilestone('hyper', 2)){ autoUpg.push(23) }
+        if(challengeCompletions('super', 11) >= 4 || hasMilestone('hyper', 2)){ autoUpg.push(24) }
+        if(challengeCompletions('super', 11) >= 5 || hasMilestone('hyper', 2)){ autoUpg.push(25) }
+        if(challengeCompletions('super', 11) >= 6 || hasMilestone('hyper', 2)){ autoUpg.push(26) }
+        if(hasMilestone('hyper', 2)) { autoUpg.push(31, 32, 33, 34, 35, 36) }
         for (let index = 0; index < autoUpg.length; index++) {
             const element = autoUpg[index];
             const upg = layers.cash.upgrades[element]
-            if(upg.canAfford() && !hasUpgrade('cash', element)) { upg.pay(); player.cash.upgrades.push(element) }
+            if(upg.canAfford() && !hasUpgrade('cash', element) && tmp[this.layer].upgrades[element].unlocked) { upg.pay(); player.cash.upgrades.push(element) }
         }
         if(hasMilestone('super', 3)) {
             buyMax('cash', 'buyables', 11)
