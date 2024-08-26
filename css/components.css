@@ -20,19 +20,53 @@
 .machine.upg { background-color: rgba(128, 128, 128, 0.25); }
 .tax.upg     { background-color: rgba(241, 112, 255, 0.25); }
 .hyper.upg   { background-color: rgb(46, 181, 200, 0.25); }
+body {
+	--cash:      hsla(115, 100%, 25%, 100%);
+	--cashBG:    hsla(115, 100%, 25%, 25%);
+	--rebirth:   hsla(345, 100%, 35%, 100%);
+	--rebirthBG: hsla(345, 100%, 35%, 25%);
+	--super:     hsla(330, 100%, 60%, 100%);
+	--superBG:   hsla(330, 100%, 60%, 25%);
+	--power:     hsla(60, 100%, 50%, 100%);
+	--powerBG:   hsla(60, 100%, 50%, 25%);
+	--tech:      hsla(0, 0%, 50%, 100%);
+	--techBG:    hsla(0, 0%, 50%, 25%);
+	--cursed:    hsla(300, 100%, 75%, 100%);
+	--cursedBG:  hsla(300, 100%, 75%, 25%);
+	--hyper:     hsla(165, 100%, 50%, 100%);
+	--hyperBG:   hsla(165, 100%, 50%, 25%);
+}
+
+.cash.upg    { background-color: var(--cashBG); }
+.rebirth.upg { background-color: var(--rebirthBG); }
+.super.upg   { background-color: var(--superBG); }
+.power.upg   { background-color: var(--powerBG); }
+.machine.upg { background-color: var(--techBG); }
+.tax.upg     { background-color: var(--cursedBG); }
+.hyper.upg   { background-color: var(--hyperBG); }
 .hcash.upg   { background-color: rgb(52, 235, 103, 0.25); }
 .universe.upg{ background-color: rgba(61, 3, 88, 0.25); }
 
-.c           { color: rgba(21, 115, 7, 1); }
-.r           { color: rgb(186, 0, 34); }
-.m           { color: rgba(128, 128, 128, 1); }
+.c           { color: var(--cash); }
+.r           { color: var(--rebirth); }
+.s           { color: var(--super); }
+.p           { color: var(--power); }
+.m           { color: var(--tech); }
 
-.cash.can    { background-color: rgba(21, 115, 7, 1); }
-.rebirth.can { background-color: rgb(186, 0, 34); }
-.super.can   { background-color: rgba(251, 26, 61, 1); }
-.power.can   { background-color: rgba(214, 198, 17, 1); }
-.machine.can { background-color: rgba(128, 128, 128, 1); }
-.hyper.can   { background-color: rgba(46, 181, 200, 1); }
+.cash.can    { background-color: var(--cash); }
+.rebirth.can { background-color: var(--rebirth); }
+.super.can   { background-color: var(--super); }
+.power.can   { background-color: var(--power); }
+.machine.can { background-color: var(--tech); }
+.hyper.can   { background-color: var(--hyper); }
+
+button {
+	border-style: solid;
+	border-width: 0.3rem;
+	border-color: hsla(0, 0%, 100%, 25%);
+	border-radius: 1rem;
+	color: white;
+}
 
 .achievement {
 	height: 90px;
@@ -43,16 +77,6 @@
 	font-size: 10px;
 	color: white;
 	text-shadow: 0 0 2px #000000;
-}
-
-.button {
-	min-height: 35px;
-	width: 110px;
-	border: 4px solid;
-	border-color: rgba(255, 255, 255, 0.25);
-	font-size: 10px;
-	overflow: visible;
-	padding: 10px;
 }
 
 .achievement:hover {

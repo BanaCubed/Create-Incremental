@@ -33,3 +33,34 @@ h1, h2, h3, b, input {
 	background-color: #9bde85;
 	cursor: default;
 }
+
+h1 {
+	font-size: 3rem;
+	font-weight: 500;
+}
+
+h2 {
+	font-size: 2.2rem;
+	font-weight: 500;
+}
+
+h3 {
+	font-size: 1.6rem;
+	font-weight: 400;
+}
+
+.betaWarning {
+	animation: betaWarning 5s infinite;
+}
+
+@keyframes betaWarning {
+	0% {
+		color: cornflowerblue;
+	}
+	50% {
+		color: palevioletred;
+	}
+	100% {
+		color: cornflowerblue;
+	}
+}

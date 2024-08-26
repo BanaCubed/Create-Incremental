@@ -1,12 +1,13 @@
 * {
 	transition-duration: 0.5s;
 	text-align: center;
-	font-family: "Chivo Mono", monospace;
-	font-weight: 500;
+	font-family: "Sono", monospace;
+	font-weight: 300;
 	margin: auto;
 	-webkit-text-size-adjust: none;
 	text-size-adjust: none;
     user-select: none;
+	font-size: 10px;
 }
 
 *:focus {
