@@ -13,9 +13,9 @@
 	<link rel="stylesheet" type="text/css" href="css/popup.css" />
 	<link rel="stylesheet" type="text/css" href="css/tree-node.css" />
 
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Sono:wght@200..800&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Reddit+Mono" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Chivo+Mono:wght@100..900&display=swap" rel="stylesheet">
 
 	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
 	<script src="js/technical/break_eternity.js"></script>
@@ -30,6 +30,7 @@
 	
 	<script src="js/game.js"></script>
 	<script src="js/utils.js"></script>
+	<script src="js/technical/systemComponents.js"></script>
 	<script src="js/components.js"></script>
 	<script src="js/technical/canvas.js"></script>
 	<script src="js/technical/particleSystem.js"></script>
@@ -44,30 +45,51 @@
 
 <body onload="load()" onmousemove="updateMouse(event)">
 	<div id="loadingSection" class="fullWidth">
-		<span class="loadingSectionText"><h1>Loading...
+		<span><h1>Loading...
 			<br>(If this takes too long it means there was a serious error!)</h1></span>
 	</div>
 	<div id="app">
-		<canvas id="treeCanvas" class="canvas"></canvas>
+		<canvas id="treeCanvas" class="canvas" v-if="!(tmp.gameEnded && !player.keepGoing)"></canvas>
 		
-		<!-- Game -->
-		<div id="treeTab"  onscroll="resizeCanvas()" 
-			v-bind:class="{ fullWidth: true, col: (player.tab !== 'none' && player.navTab !== 'none'), left: (player.tab !== 'none' && player.navTab !== 'none')}">
-			
-			<div>
-				<br>
-				<h1 class="betaWarning">beta version - expect changes</h1>
-				<div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center;">
-					<div style="width: 250px; min-height: 42px; padding: 2px; height: 42px; margin: 0; margin-top: 3px;" class="cash upg">
-						You have <h2 class="c">{{ '$' + format(player.points) }}</h2> in cash<br><span v-if="canGenPoints()">+{{format(getPointGen())}}/sec</span>
-					</div>
-				</div>
-				<br><br>
-				<div id="tabsSection">
-					<button class="cash can tabButton">Cash</button>
-					<changelog></changelog>
+		<div class="vl" v-if="player.navTab !== 'none' && tmp.other.splitScreen && player.tab!='none' && !(tmp.gameEnded && !player.keepGoing)"></div>
+		<div v-if="(tmp.gameEnded && !player.keepGoing)" class="fullWidth">
+			<br>
+			<h2>{{modInfo.name}} {{VERSION.withoutName}}</h2><br><br>
+			<h3 v-html="modInfo.winText"></h3><br>
+			<h3>Please check the Discord to see if there are new content updates!</h3><br><br>
+			<div v-if="!player.timePlayedReset">It took you {{formatTime(player.timePlayed)}} to beat the game.</div>
+			<br>
+			<button class="longUpg can" onclick="keepGoing()">Keep Going</button>
+			<br><br><br>
+			<span v-if="modInfo.discordLink"><a class="link" v-bind:href="modInfo.discordLink"
+					target="_blank">{{modInfo.discordName}}</a><br></span>
+			<a class="link" href="https://discord.gg/F3xveHV" target="_blank"
+				v-bind:style="modInfo.discordLink ? {'font-size': '16px'} : {}">The Modding Tree Discord</a><br>
+			<a class="link" href="http://discord.gg/wwQfgPa" target="_blank" v-bind:style="{'font-size': '16px'}">Main
+				Prestige Tree server</a><br>
+			<br><br>
+		</div>
+
+		<div id="treeOverlay" v-if="!(tmp.gameEnded && !player.keepGoing) && (player.tab === 'none' || tmp.other.splitScreen || !readData(layoutInfo.showTree))" class="treeOverlay" onscroll="resizeCanvas()"
+			v-bind:class="{ 
+			fullWidth: (player.tab == 'none' || player.navTab == 'none'), 
+			col: (player.tab !== 'none' && player.navTab !== 'none'), 
+			left: (player.tab !== 'none' && player.navTab !== 'none')}"
+			 :style="{'margin-top': !readData(layoutInfo.showTree) && player.tab == 'info-tab' ? '50px' : ''}">
+			<div class="sideLayers">
+				<div v-for="(node, index) in OTHER_LAYERS['side']">
+					<tree-node :layer='node' :abb='tmp[node].symbol' :size="'small'" :key="'side' + index"></tree-node>
 				</div>
 			</div>
+		</div>
+		
+		<div v-if="!(tmp.gameEnded && !player.keepGoing) && (player.tab === 'none' || tmp.other.splitScreen)" id="treeTab"  onscroll="resizeCanvas()" 
+			v-bind:class="{ fullWidth: (player.tab == 'none' || player.navTab == 'none'), col: (player.tab !== 'none' && player.navTab !== 'none'), left: (player.tab !== 'none' && player.navTab !== 'none')}">
+			
+			<overlay-head v-if="!(tmp.gameEnded && !player.keepGoing)"></overlay-head>
+			</overlay-head>
+			<layer-tab :layer="player.navTab == 'none' ? player.tab : player.navTab" :key="'left'"></layer-tab>
+			<bg :layer="player.navTab == 'none' ? player.tab : player.navTab" ></bg>
 		</div>
 
 		<!-- Popups -->
@@ -78,10 +100,8 @@
 					<h3>{{popup.title}}</h3><br>
 					<h2 v-html="popup.message"></h2>
 				</div>
-			</transition-group> <!--Relatable-->
+			</transition-group>
 		</div>
-
-		<!-- Particles -->
 		<div class="particle-container">
 				<div v-for="particle,index in particles">
 					<particle :data="particle" :index="index" v-bind:key="'b' + particle.id"></particle>

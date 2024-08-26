@@ -1,138 +1,274 @@
-/*
+const standardSuffixes = [[
+    '', ' K', ' M', ' B'
+    ], [
+        '', 'U', 'D', 'T', 'Qa', 'Qt', 'Sx', 'Sp', 'Oc', 'No'
+    ], [
+        '', 'Dc', 'Vg', 'Tg', 'Qg', 'Qi', 'He', 'Se', 'Og', 'Nn'
+    ], [
+        '', 'Ce', 'De', 'Tc', 'Qc', 'Qe', 'Hc', 'Sc', 'Oe', 'Ne'
+    ], [
+        '', 'Mi', 'Dm', 'Tm', 'Qm', 'Ql', 'Hm', 'Sm', 'Om', 'Nm'
+]]
 
-   --- GLOBAL NUMBER FORMATTING FUNCTION ---
-
-
-   --- INPUTS ---
-
-n         - Number to format
-int       - Whether or not to force whole numbers from 1-10,000
-small     - Whether or not to allow formatting of numbers below 0.01 (unfinished)
-type      - Formatting to use (see below key)
-minlength - Adds leading zeroes to ensure a fixed length (does nothing if length is above minlength)
-
-
-   --- NOTATIONS ---
-    (type variable)
-
-    0 - Mixed Scientific
-        Standard notation until e306 (all prefixes up to and including centillion)
-        Scientific notation until ee6 (beyond this point the number before the e becomes meaningless)
-        Logarithmic notation beyond ee6 (after ee9, will start to have notation in the exponent)
-    
-    1 - Scientific
-        Scientific notation until ee6 (beyond this point the number before the e becomes meaningless)
-        Logarithmic notation beyond ee6  (after ee9, will start to have notation in the exponent)
-    
-    2 - Logarithmic
-        Logarithmic notation beyond ee6  (after ee9, will start to have notation in the exponent)
-    
-    3 - Standard
-        Currently unimplemented
-    
-    4 - Letters
-        Currently unimplemented
-        Pseudo-Joke Notation
-    
-    5 - Mixed Logarithm
-        Scientific notation until e100
-        Logarithmic notation beyond e100  (after ee9, will start to have notation in the exponent)
-        This is different to sicentific, as it actually uses the decimal portion of the exponent in logarithmic notation meaningfully
-    
-    6 - YESNO
-        Zero is NO
-        All other numbers are YES
-        Joke Notation
-    
-    7 - Blind
-        All numbers are replaced with a space
-        Joke Notation
-    
-    8 - Infinity
-        Logarithmic but the initial exponent is divided by log10(2)*1024, and the leftmost 'e' is now an infinity at the right of the format
-        Currently Unimplemented
-        Pseudo-Joke Notation
-    
-    9 - Binary
-        Scientific but worse
-        Currently Unimplemented
-        Joke Notation
-
-*/
-
-function format(n, int = false, small = false, type = player.options.notation) {
-    n = new Decimal(n);
-    // Notations with complete format override
-    if(type == 6) { return n.eq(0)?'NO':'YES'; }
-    if(type == 7) { return ' '; }
-
-    // Default formatting (unnaffected by notations)
-    if(n.lt(0.01)) {
-        if(small) {
-            // TODO
-        } else return int?'0':'0.00';
-    }
-    if(n.lt(10000)) { if(int) { return n.toStringWithDecimalPlaces(0) } return n.toStringWithDecimalPlaces(2); }
-    if(n.lt(1e9)) { return formatComma(n); }
-
-    // Actual notations
-    if(type == 0) { if(n.lt('1e306')) { return formatStandard(n) } if(n.lt('1e1e6')) { return formatScience(n, type) } return formatLog(n, type); }
-    if(type == 1) { if(n.lt('1e1e6')) { return formatScience(n, type) } return formatLog(n, type); }
-    if(type == 2) { return formatLog(n, type); }
-    if(type == 5) { if(n.lt('1e1e2')) { return formatScience(n, type) } return formatLog(n, type) }
-}
-
-// For consistency with TMT
-function formatWhole(n) { return format(n, true) }
-function formatSmall(n) { return format(n, false, true) }
-
-// Useful for numbers that change length rapidly (has some issues with some formattings)
-function formatLength(n, int = false, minlength = 0) {
-    let text = format(n, int);
-    if(text.length < minlength) {
-        let toAdd = minlength - text.length;
-        while (toAdd > 0) {
-            text = '0' + text;
-            toAdd--;
+function standardFormat(num, precision) {
+    num = new Decimal(num)
+    let index = num.max(1).add(1).log(10).div(3).floor().toNumber()
+    num = num.div(Decimal.pow(1000, index))
+    let suffix = ' '
+    let suffindex
+    if(index <= 3) suffix = standardSuffixes[0][index]
+    else {
+        index -= 1;
+        index = index.toString()
+        for (let loop = 0; loop < index.length; loop++) {
+            suffindex = index.charAt(index.length - loop - 1)
+            if(loop % 4 == 0 && loop != 0) suffix = suffix + '-'
+            suffix = suffix + standardSuffixes[(loop % 4) + 1][suffindex]
         }
     }
-    return text;
+    return num.toStringWithDecimalPlaces(precision) + suffix
 }
 
-// For use in the (unfinished/unstarted) letters notation option (4)
-const letters = 'abcdefghjklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-function formatLetters(n) {
-    return 'abcdefghjklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-}
-
-// For use in the Mixed Scientific and Standard notation options
-// Mixed Scientific goes up to e306, Standard goes up to e30,006 (will extend later)
-// Numbers here are the index values of the array that contains the suffixes/prefixes (idk what one they are)
-// 0 = K/M/B | 1 = Millions | 2 = Decillions | 3 = Centillions | 4 = Millillions
-const standardSuffixes = [['', 'K', 'M', 'B'], ['', 'U', 'D', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No'], ['', 'Dc', 'Vg', 'Tg', 'Qg', 'Qq', 'Sg', 'Su', 'Og', 'Ng'], ['', 'Ce', 'Du', 'Tc', 'Qc', 'Qe', 'Sc', 'Se', 'Oe', 'Nc'], ['', 'Mi', 'Dm', 'Tm', 'Qm', 'Qn', 'Sm', 'Sl', 'Om', 'Nm'], ]
-function formatStandard(n) {
-    const position = n.times(1.001).log(1000).floor();
-    if(position.lt(4)) {
-        n = n.div(position.pow_base(1000));
-        length = n.times(1.001).log(10).floor().toNumber();
-        return n.toStringWithDecimalPlaces(3-length) + ' ' + standardSuffixes[0][position.toNumber()];
+function exponentialFormat(num, precision, mantissa = true) {
+    let e = num.log10().floor()
+    let m = num.div(Decimal.pow(10, e))
+    if (m.toStringWithDecimalPlaces(precision) == 10) {
+        m = decimalOne
+        e = e.add(1)
     }
-    n = n.div(position.pow_base(1000));
-    length = n.times(1.001).log(10).floor().toNumber();
-    return n.toStringWithDecimalPlaces(3-length) + ' ' + standardSuffixes[1][(position.toNumber()-1)%10] + standardSuffixes[2][Math.floor((position.toNumber()-1)/10)%10] + standardSuffixes[3][Math.floor((position.toNumber()-1)/100)%10] + standardSuffixes[4][Math.floor((position.toNumber()-1)/1000)%10];
+    e = (e.gte(1e9) ? format(e, 3) : (e.gte(10000) ? commaFormat(e, 0) : e.toStringWithDecimalPlaces(0)))
+    if (mantissa)
+        return m.toStringWithDecimalPlaces(precision) + "e" + e
+    else return "e" + e
 }
 
-// These should need no explanation, aside from type in formatLog() and formatScience(), which determine the notation for the exponent
-function formatComma(n) { return n.toStringWithDecimalPlaces(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") }
-function formatLog(n, type) { return 'e' + format(n.log(10), false, false, type) }
-function formatScience(n, type) { const mag = n.times(1.001).log(10).floor(); n = n.div(mag.pow_base(10)); return n.toStringWithDecimalPlaces(2) + 'e' + format(mag, true, false, type); }
+function commaFormat(num, precision) {
+    if (num === null || num === undefined) return "NaN"
+    if (num.mag < 0.001) return (0).toFixed(precision)
+    let init = num.toStringWithDecimalPlaces(precision)
+    let portions = init.split(".")
+    portions[0] = portions[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
+    if (portions.length == 1) return portions[0]
+    return portions[0] + "." + portions[1]
+}
 
-// Hopefully works
-function formatTime(n) {
-    n = new Decimal(n);
-    if(n.lt(60)) { return format(n) + 's' }
-    if(n.lt(3600)) { return format(n.div(60), true) + ':' + formatLength(modulo(n, 60), false, 5) }
-    if(n.lt(31536000)) { return format(n.div(3600), true) + ':' + formatLength(modulo(n.div(60), 60), true, 2) + ':' + formatLength(modulo(n, 60), false, 5) }
-    if(n.lt(315360000)) { return format(n.div(86400)) + ' days'  }
-    return format(n.div(31536000), true) + ' years'
+
+function regularFormat(num, precision) {
+    if (num === null || num === undefined) return "NaN"
+    if (num.mag < 0.0001) return (0).toFixed(precision)
+    return num.toStringWithDecimalPlaces(precision)
+}
+
+function fixValue(x, y = 0) {
+    return x || new Decimal(y)
+}
+
+function sumValues(x) {
+    x = Object.values(x)
+    if (!x[0]) return decimalZero
+    return x.reduce((a, b) => Decimal.add(a, b))
+}
+
+function format(num, precision = 2, small) {
+    small = small || modInfo.allowSmall
+    num = new Decimal(num)
+    if (isNaN(num.sign) || isNaN(num.layer) || isNaN(num.mag)) {
+        player.hasNaN = true;
+        return "NaN"
+    }
+    if (num.sign < 0) return "-" + format(num.neg(), precision, small)
+    if (num.mag == Number.POSITIVE_INFINITY) return "Infinity"
+    if (num.gte("eeee1000")) {
+        var slog = num.slog()
+        if (slog.gte(1e6)) return "F" + format(slog.floor())
+        else return Decimal.pow(10, slog.sub(slog.floor())).toStringWithDecimalPlaces(3) + "F" + commaFormat(slog.floor(), 0)
+    }
+    else if (num.gte("1e1000000")) return exponentialFormat(num, 0, false)
+    else if (num.gte('1e30003')) return exponentialFormat(num, precision)
+    else if (num.gte('1e9') && !options.standardNotate) return exponentialFormat(num, precision)
+    else if (num.gte(1e306) && options.standardNotate) return standardFormat(num, 0)
+    else if (num.gte(1e6) && options.standardNotate) return standardFormat(num, precision)
+    else if (num.gte(1e3)) return commaFormat(num, 0)
+    else if (num.gte(0.0001) || !small) return regularFormat(num, precision)
+    else if (num.eq(0)) return (0).toFixed(precision)
+
+    num = invertOOM(num)
+    let val = ""
+    if (num.lt("1e1000")){
+        val = exponentialFormat(num, precision)
+        return val.replace(/([^(?:e|F)]*)$/, '-$1')
+    }
+    else   
+        return format(num, precision) + "⁻¹"
+
+}
+
+function formatWhole(num) {
+    num = new Decimal(num)
+    if (num.gte(1e6)) return format(num, 2)
+    if (num.lte(0.99) && !num.eq(0)) return format(num, 2)
+    return format(num, 0)
+}
+
+function formatZero(num) {
+    num = new Decimal(num)
+    let number
+    if (num.gte(1e9)) number = format(num, 2)
+    if (num.lte(0.99) && !num.eq(0)) number = format(num, 2)
+    else number = format(num, 0)
+
+    if (number.length == 1) number = "0" + number
+    return number
+}
+
+function formatCost(num, layer) {
+    if(layer == 'cash') {
+        return '$' + format(num)
+    } else if(layer == 'rebirth') {
+        return formatWhole(num) + ' RP'
+    } else if(layer == 'super') {
+        return formatWhole(num) + ' SRP'
+    } else if(layer == 'power') {
+        return formatWhole(num) + ' Power'
+    } else if(layer == 'hyper') {
+        return formatWhole(num) + ' HRP'
+    }
+}
+
+function formatBoost(num, additive = true) {
+    num = new Decimal(num)
+    if(additive) {
+        if(num.lt(0.1)){return '+' + format(num.times(100)) + '%'}
+        if(num.lt(9)) {return '+' + formatWhole(num.times(100)) + '%'}
+        if(num.lt(100)){return '×' + format(num.add(1))}
+        else return '×' + formatWhole(num.add(1))
+    } else {
+        if(num.lt(0.1)){return format(num.times(100)) + '%'}
+        if(num.lt(9)) {return formatWhole(num.times(100)) + '%'}
+        if(num.lt(100)){return '×' + format(num)}
+        else return '×' + formatWhole(num)
+    }
+}
+
+function formatID(layer = 'cash', type = 'upgrades', id = 11) {
+    let text
+    if(layer == 'cash') { text = '$' }
+    if(layer == 'rebirth') { text = 'R' }
+    if(layer == 'super') { text = 'S' }
+    if(layer == 'power') { text = 'P' }
+    if(layer == 'hyper') { text = 'H' }
+
+    if(type == 'upgrades') { text = text + 'U' }
+    if(type == 'buyables') { text = text + 'B' }
+    if(type == 'milestones') { text = text + 'M' }
+    if(type == 'challenges') { text = text + 'C' }
+    if(type == 'pylons') { text = text + 'Py' }
+
+    if(type == 'upgrades' || type == 'buyables' || type == 'challenges') {
+        if(id == 11) { text = text + '1' }
+        if(id == 12) { text = text + '2' }
+        if(id == 13) { text = text + '3' }
+        if(id == 14) { text = text + '4' }
+        if(id == 15) { text = text + '5' }
+        if(id == 16) { text = text + '6' }
+        if(id == 21) { text = text + '7' }
+        if(id == 22) { text = text + '8' }
+        if(id == 23) { text = text + '9' }
+        if(id == 24) { text = text + '10' }
+        if(id == 25) { text = text + '11' }
+        if(id == 26) { text = text + '12' }
+        if(id == 31) { text = text + '13' }
+        if(id == 32) { text = text + '14' }
+        if(id == 33) { text = text + '15' }
+        if(id == 34) { text = text + '16' }
+        if(id == 35) { text = text + '17' }
+        if(id == 36) { text = text + '18' }
+    } else if(type == 'milestones') { id++; text = text + id }
+    else if(type == 'pylons') {
+        if(id == 21) { text = text + 'A' }
+        if(id == 22) { text = text + 'B' }
+        if(id == 23) { text = text + 'C' }
+        if(id == 24) { text = text + 'D' }
+        if(id == 25) { text = text + 'E' }
+        if(id == 26) { text = text + 'F' }
+    }
+
+    return text
+}
+
+function machineText() {
+    if(player.machine.state == 1) return 'active and set to Cash Mode'
+    if(player.machine.state == 2) return 'active and set to Neutral Mode'
+    if(player.machine.state == 3) return 'active and set to Rebirth Mode'
+    return 'inactive'
+}
+
+function formatLayer(layer) {
+    if(layer == 'cash') { return '$' }
+    if(layer == 'rebirth') { return 'R' }
+    if(layer == 'super') { return 'S' }
+    if(layer == 'power') { return 'P' }
+    if(layer == 'hyper') { return 'H' }
+}
+
+function formatZeroo(num) {
+    num = new Decimal(num)
+    let number
+    if (num.gte(1e9)) number = format(num, 2)
+    if (num.lte(0.99) && !num.eq(0)) number = format(num, 2)
+    else number = format(num, 0)
+
+    if (number.length == 1) number = "0" + number
+    if (number.length == 2) number = "0" + number
+    return number
+}
+
+function iDontWantToNameThis(num, precision) {
+    let number
+    if (precision !== 0) {
+        num = new Decimal(num)
+        number = format(num, precision)
+    
+        if(number.length == 2 + precision) number = "0" + number
+    } else {
+        num = new Decimal(num)
+        number = formatWhole(num)
+    
+        if(number.length == 1) number = "0" + number
+    }
+
+    return number
+}
+
+function formatTime(s, precision = 3) {
+    let sec = new Decimal(s)
+    if (sec.lt(60)) return format(sec, precision) + "s"
+    else if (sec.lt(3600)) return formatWhole(sec.div(60).floor()) + ":" + iDontWantToNameThis(sec.sub(sec.div(60).floor().mul(60)), precision)
+    else if (sec.lt(86400)) return formatWhole(sec.div(3600).floor()) + ":" + formatZero(sec.div(60).floor().sub(sec.div(3600).floor().mul(60))) + ":" + iDontWantToNameThis(sec.sub(sec.div(60).floor().mul(60)), precision)
+    else if (sec.lt(31536000)) return formatWhole(sec.div(86400).floor()) + "d " + formatZero(sec.div(3600).floor().sub(sec.div(86400).floor().mul(24))) + ":" + formatZero(sec.div(60).floor().sub(sec.div(3600).floor().mul(60))) + ":" + iDontWantToNameThis(sec.sub(sec.div(60).floor().mul(60)), precision)
+    else if (sec.lt(31536000000000)) return formatWhole(sec.div(31536000).floor()) + "y " + formatZeroo(sec.div(86400).floor().sub(sec.div(31536000).floor().mul(365))) + "d"
+    else return formatWhole(sec.div(31536000).floor()) + "y"
+}
+
+function toPlaces(x, precision, maxAccepted) {
+    x = new Decimal(x)
+    let result = x.toStringWithDecimalPlaces(precision)
+    if (new Decimal(result).gte(maxAccepted)) {
+        result = new Decimal(maxAccepted - Math.pow(0.1, precision)).toStringWithDecimalPlaces(precision)
+    }
+    return result
+}
+
+// Will also display very small numbers
+function formatSmall(x, precision=2) { 
+    return format(x, precision, true)    
+}
+
+function invertOOM(x){
+    let e = x.log10().ceil()
+    let m = x.div(Decimal.pow(10, e))
+    e = e.neg()
+    x = new Decimal(10).pow(e).times(m)
+
+    return x
 }

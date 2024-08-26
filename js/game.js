@@ -151,8 +151,9 @@ function layerDataReset(layer, keep = []) {
 	Vue.set(player[layer], "grid", getStartGrid(layer))
 
 	layOver(player[layer], getStartLayerData(layer))
-	player[layer].upgrades = 0
-	player[layer].milestones = 0
+	player[layer].upgrades = []
+	player[layer].milestones = []
+	player[layer].achievements = []
 
 	for (thing in storedData) {
 		player[layer][thing] =storedData[thing]
@@ -191,6 +192,7 @@ function doReset(layer, force=false) {
 		
 		addPoints(layer, gain)
 		updateMilestones(layer)
+		updateAchievements(layer)
 
 		if (!player[layer].unlocked) {
 			player[layer].unlocked = true;
@@ -307,6 +309,9 @@ function completeChallenge(layer, x) {
 	updateChallengeTemp(layer)
 }
 
+VERSION.withoutName = "v" + VERSION.num + (VERSION.pre ? " Pre-Release " + VERSION.pre : VERSION.pre ? " Beta " + VERSION.beta : "")
+VERSION.withName = VERSION.withoutName + (VERSION.name ? ": " + VERSION.name : "")
+
 
 function autobuyUpgrades(layer){
 	if (!tmp[layer].upgrades) return
@@ -400,12 +405,13 @@ var interval = setInterval(function() {
 	let diff = (now - player.time) / 1e3
 	let trueDiff = diff
 	if (player.offTime !== undefined) {
+		if (player.offTime.remain > modInfo.offlineLimit * 3600) player.offTime.remain = modInfo.offlineLimit * 3600
 		if (player.offTime.remain > 0) {
 			let offlineDiff = Math.max(player.offTime.remain / 10, diff)
 			player.offTime.remain -= offlineDiff
 			diff += offlineDiff
 		}
-		if (!player.options.offlineProd || player.offTime.remain <= 0) player.offTime = undefined
+		if (!options.offlineProd || player.offTime.remain <= 0) player.offTime = undefined
 	}
 	if (player.devSpeed) diff *= player.devSpeed
 	player.time = now
@@ -414,6 +420,7 @@ var interval = setInterval(function() {
 	}
 	tmp.scrolled = document.getElementById('treeTab') && document.getElementById('treeTab').scrollTop > 30
 	updateTemp();
+	updateOomps(diff);
 	updateWidth()
 	updateTabFormats()
 	gameLoop(diff)
