@@ -276,39 +276,3 @@ const UP = 0
 const DOWN = 1
 const LEFT = 2
 const RIGHT = 3
-
-
-addLayer("info-tab", {
-    tabFormat: {
-        "Credits": {
-            content: [
-                'discord-version-overlay',
-                'info-tab',
-            ],
-        },
-        "Help": {
-            content: [
-                'discord-version-overlay',
-                'help-tab',
-            ],
-        },
-        "Stats": {
-            content: [
-                'discord-version-overlay',
-                'stats-tab',
-            ],
-        },
-    },
-    row: "otherside"
-})
-
-addLayer("options-tab", {
-    tabFormat: [
-                'discord-version-overlay',"options-tab"],
-    row: "otherside"
-})
-
-addLayer("changelog-tab", {
-    tabFormat: ['changelog'],
-    row: "otherside"
-})

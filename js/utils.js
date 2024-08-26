@@ -340,7 +340,7 @@ function isPlainObject(obj) {
 	return (!!obj) && (obj.constructor === Object)
 }
 
-document.title = modInfo.name
+document.title = 'Create Incremental | ' + VERSION.name
 
 // Converts a string value to whatever it's supposed to be
 function toValue(value, oldValue) {
@@ -410,3 +410,5 @@ function gridRun(layer, func, data, id) {
 	else
 		return layers[layer].grid[func];
 }
+
+function modulo(num, base) { return num.sub(num.div(base).floor().mul(base)) }

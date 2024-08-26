@@ -4,36 +4,33 @@ let lastTime
 function save(force) {
 	NaNcheck(player)
 	if (NaNalert && !force) return
-	localStorage.setItem(modInfo.id, btoa(unescape(encodeURIComponent(JSON.stringify(player)))));
-	localStorage.setItem(modInfo.id+"_options", btoa(unescape(encodeURIComponent(JSON.stringify(options)))));
+	localStorage.setItem('createincrementalsave', btoa(unescape(encodeURIComponent(JSON.stringify(player)))));
 
 }
 function startPlayerBase() {
 	return {
-		tab: layoutInfo.startTab,
-		navTab: (layoutInfo.showTree ? layoutInfo.startNavTab : "none"),
+		tab: "cash",
 		time: Date.now(),
 		notify: {},
-		versionType: modInfo.id,
 		version: VERSION.num,
 		beta: VERSION.beta,
 		timePlayed: 0,
-		keepGoing: false,
 		hasNaN: false,
 
-		points: modInfo.initialStartPoints,
+		points: new Decimal(0),
 		subtabs: {},
-		lastSafeTab: (readData(layoutInfo.showTree) ? "none" : layoutInfo.startTab)
+		options: {
+			notation: 0,
+			offlineProd: true,
+			autosave: true,
+			credits: false,
+			tootlips: true,
+			theme: 'default',
+		}
 	};
 }
 function getStartPlayer() {
 	playerdata = startPlayerBase();
-
-	if (addedPlayerData) {
-		extradata = addedPlayerData();
-		for (thing in extradata)
-			playerdata[thing] = extradata[thing];
-	}
 
 	playerdata.infoboxes = {};
 	for (layer in layers) {
@@ -187,19 +184,17 @@ function fixData(defaultData, newData) {
 	}
 }
 function load() {
-	let get = localStorage.getItem(modInfo.id);
+	let get = localStorage.getItem('createincrementalsave');
 
 	if (get === null || get === undefined) {
 		player = getStartPlayer();
-		options = getStartOptions();
 	}
 	else {
 		player = Object.assign(getStartPlayer(), JSON.parse(decodeURIComponent(escape(atob(get)))));
 		fixSave();
-		loadOptions();
 	}
 
-	if (options.offlineProd) {
+	if (player.options.offlineProd) {
 		if (player.offTime === undefined)
 			player.offTime = { remain: 0 };
 		player.offTime.remain += (Date.now() - player.time) / 1000;
@@ -207,9 +202,7 @@ function load() {
 	player.time = Date.now();
 	versionCheck();
 	changeTheme();
-	changeTreeQuality();
 	updateLayers();
-	setupModInfo();
 
 	setupTemp();
 	updateTemp();
@@ -219,23 +212,6 @@ function load() {
 
 	const element = document.getElementById("loadingSection");
 	element.remove();
-}
-
-function loadOptions() {
-	let get2 = localStorage.getItem(modInfo.id+"_options");
-	if (get2) 
-		options = Object.assign(getStartOptions(), JSON.parse(decodeURIComponent(escape(atob(get2)))));
-	else 
-		options = getStartOptions()
-	if (themes.indexOf(options.theme) < 0) theme = "default"
-	fixData(options, getStartOptions())
-
-}
-
-function setupModInfo() {
-	modInfo.changelog = changelog;
-	modInfo.winText = winText ? winText : `Congratulations! You have reached the end and beaten this game, but for now...`;
-
 }
 function fixNaNs() {
 	NaNcheck(player);
@@ -278,15 +254,12 @@ function fixLayers() {
 	importSave(btoa(JSON.stringify(player)))
 }
 function importSave(imported = undefined, forced = false) {
-	if (imported === undefined)
+	if (imported === undefined && !forced)
 		imported = prompt("Paste your save here");
 
 	try {
 		tempPlr = Object.assign(getStartPlayer(), JSON.parse(atob(imported)));
-		if (tempPlr.versionType != modInfo.id && !forced && !confirm("This save appears to be for a different mod! Are you sure you want to import?")) // Wrong save (use "Forced" to force it to accept.)
-			return;
 		player = tempPlr;
-		player.versionType = modInfo.id;
 		fixSave();
 		versionCheck();
 		NaNcheck(save)
@@ -300,17 +273,14 @@ function versionCheck() {
 	let setVersion = true;
 
 	if (player.versionType === undefined || player.version === undefined) {
-		player.versionType = modInfo.id;
 		player.version = 0;
 	}
 
 	if (setVersion) {
-		if (player.versionType == modInfo.id && VERSION.num > player.version) {
-			player.keepGoing = false;
+		if (VERSION.num > player.version) {
 			if (fixOldSave)
 				fixOldSave(player.version);
 		}
-		player.versionType = getStartPlayer().versionType;
 		player.version = VERSION.num;
 		player.beta = VERSION.beta;
 	}
@@ -318,14 +288,12 @@ function versionCheck() {
 var saveInterval = setInterval(function () {
 	if (player === undefined)
 		return;
-	if (tmp.gameEnded && !player.keepGoing)
-		return;
-	if (options.autosave)
+	if (player.options.autosave)
 		save();
 }, 5000);
 
 window.onbeforeunload = () => {
-    if (player.autosave) {
+    if (player.options.autosave) {
         save();
     }
 };

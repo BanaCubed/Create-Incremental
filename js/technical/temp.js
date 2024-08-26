@@ -112,13 +112,6 @@ function updateTemp() {
 
 	tmp.pointGen = getPointGen()
 	tmp.backgroundStyle = readData(backgroundStyle)
-
-	tmp.displayThings = []
-	for (thing in displayThings){
-		let text = displayThings[thing]
-		if (isFunction(text)) text = text()
-		tmp.displayThings.push(text) 
-	}
 }
 
 function updateTempData(layerData, tmpData, funcsData, useThis) {
