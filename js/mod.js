@@ -1,6 +1,6 @@
 let modInfo = {
 	name: "Create Incremental",
-	id: "createIncremental",
+	id: "CreateIncremental",
 	author: "BanaCubed, with ideas from galaxy",
 	pointsName: "$",
 	modFiles: ["layers.js", "tree.js", "layers/cash.js", "layers/rebirth.js", "layers/rebirth2.js", "layers/rebirth3.js", "layers/matter.js", "layers/universe.js"],

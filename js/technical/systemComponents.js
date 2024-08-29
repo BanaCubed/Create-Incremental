@@ -110,7 +110,7 @@ var systemComponents = {
 			<br>Dev Speed: ×{{format(player.devSpeed)}}<br>
 		</span>	
 		<span class="overlayThing">
-			<br>BETA VERSION - CURRENTLY UNFINISHED<br>
+			<br><span class="betaWarning">BETA VERSION - CURRENTLY UNFINISHED - EXPECT CHANGES</span><br>
 		</span>
 		<span v-if="player.offTime !== undefined"  class="overlayThing">
 			<br>Offline Time: {{formatTime(player.offTime.remain)}}
@@ -133,23 +133,23 @@ var systemComponents = {
     'info-tab': {
         template: `
         <div>
-        <h2>{{modInfo.name}}</h2>
+        <h1>{{modInfo.name}}</h1>
         <br>
-        <h3>{{VERSION.withName}}</h3>
+        <h2>{{VERSION.withName}}</h2>
 		<br>
 		Coding by BanaCubed<br>
 		Ideas by adoplayzz, galaxyuser63274, EchoingLycanthrope, Shadow69420,<br>
 		BanaCubed, Create_Incremental_Boy, EdenGameMaster<br>
 		Artwork by BanaCubed, adoplayzz
         <br><br>
-        The Modding Tree <a v-bind:href="'https://github.com/Acamaeda/The-Modding-Tree/blob/master/changelog.md'" target="_blank" class="link" v-bind:style = "{'font-size': '14px', 'display': 'inline'}" >{{TMT_VERSION.tmtNum}}</a> by Acamaeda
+        The Modding Tree <a v-bind:href="'https://github.com/Acamaeda/The-Modding-Tree/blob/master/changelog.md'" target="_blank" class="link" v-bind:style = "{'display': 'inline'}" >{{TMT_VERSION.tmtNum}}</a> by Acamaeda
         <br>
         The Prestige Tree made by Jacorb and Aarex
 		<br><br>
 		<div class="link" onclick="showTab('changelog-tab')">Changelog</div><br>
         <span v-if="modInfo.discordLink"><a class="link" v-bind:href="modInfo.discordLink" target="_blank">{{modInfo.discordName}}</a><br></span>
-        <a class="link" href="https://discord.gg/F3xveHV" target="_blank" v-bind:style="modInfo.discordLink ? {'font-size': '16px'} : {}">The Modding Tree Discord</a><br>
-        <a class="link" href="http://discord.gg/wwQfgPa" target="_blank" v-bind:style="{'font-size': '16px'}">Main Prestige Tree server</a><br>
+        <a class="link" href="https://discord.gg/F3xveHV" target="_blank">The Modding Tree Discord</a><br>
+        <a class="link" href="http://discord.gg/wwQfgPa" target="_blank">Main Prestige Tree server</a><br>
 		<br><br></div>
     `
     },
@@ -181,11 +181,9 @@ var systemComponents = {
 				<ul id="discord-links">
 					<li v-if="modInfo.discordLink"><a class="link" v-bind:href="modInfo.discordLink"
 							target="_blank">{{modInfo.discordName}}</a><br></li>
-					<li><a class="link" href="https://discord.gg/F3xveHV" target="_blank"
-							v-bind:style="modInfo.discordLink ? {'font-size': '16px'} : {}">The Modding Tree
+					<li><a class="link" href="https://discord.gg/F3xveHV" target="_blank">The Modding Tree
 							Discord</a><br></li>
-					<li><a class="link" href="http://discord.gg/wwQfgPa" target="_blank"
-							v-bind:style="{'font-size': '16px'}">Main Prestige Tree server</a></li>
+					<li><a class="link" href="http://discord.gg/wwQfgPa" target="_blank">Main Prestige Tree server</a></li>
 				</ul>
 			</div>
 			<div id="version" onclick="showTab('changelog-tab')" class="overlayThing" style="margin-right: 13px" >
@@ -208,7 +206,7 @@ var systemComponents = {
 				<td><button class="optTitle">Visual -</button></td>
                 <td><button class="opt" onclick="adjustMSDisp()">Show Milestones: {{ MS_DISPLAYS[MS_SETTINGS.indexOf(options.msDisplay)]}}</button></td>
                 <td><button class="opt" onclick="toggleOpt('hideChallenges')">Completed Challenges: {{ options.hideChallenges?"HIDDEN":"SHOWN" }}</button></td>
-                <td><button class="opt" onclick="toggleOpt('standardNotate')">Standard Notation: {{ options.standardNotate?"ON":"OFF" }}</button></td>
+                <td><button class="opt" onclick="toggleOpt('compact')">Compact Mode: {{ options.compact?"ON":"OFF" }}</button></td>
                 <td><button class="opt" onclick="toggleOpt('upgID')">Display IDs: {{ options.upgID?"ON":"OFF" }}</button></td>
                 <td><button class="opt" onclick="toggleOpt('tooltipCredits')">Tooltips: {{ options.tooltipCredits?"Credits/ Oringial Formula":"Formula" }}</button></td>
             </tr>

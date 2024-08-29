@@ -12,9 +12,10 @@ function getStartOptions() {
 		hideChallenges: false,
 		forceOneTab: true,
 		forceTooltips: true,
-		standardNotate: true,
+		notation: 0,
 		upgID: false,
 		tooltipCredits: false,
+		compact: false,
 	}
 }
 
