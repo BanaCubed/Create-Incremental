@@ -583,4 +583,7 @@ addLayer('machine', {
         if(hasUpgrade('rebirth', 26) && hasUpgrade('cash', 26)) player.machine.state = 2
         if(hasUpgrade('cash', 26)) {player.machine.unlocked = true}
     },
+    doReset() {
+        layerDataReset('machine', ['main', 'power', 'matter'])
+    },
 })

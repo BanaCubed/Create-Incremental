@@ -106,7 +106,7 @@ var systemComponents = {
 			<br><h1 v-if="VERSION.beta" class="betaWarning">BETA VERSION - CURRENTLY UNFINISHED - EXPECT CHANGES AND BUGS</h1><h1 v-if="VERSION.pre" class="betaWarning">PRE-RELEASE VERSION - EXPECT BUGS</h1><br>
 		</span>
 		<span v-if="player.offTime !== undefined"  class="overlayThing">
-			<br>Offline Time: {{formatTime(player.offTime.remain)}}
+			<br>Offline Time: {{formatTime(player.offTime.remain)}}<br>
 		</span>	<br>
 		<div v-for="thing in tmp.displayThings" class="overlayThing"><span v-if="thing" v-html="thing"></span></div>
 		<bar :layer="'chall'" :data="'nextFeature'"></bar><br>
