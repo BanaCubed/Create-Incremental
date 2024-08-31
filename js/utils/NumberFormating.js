@@ -87,7 +87,11 @@ function format(n, int = false, small = false, type = options.notation) {
         return 'F' + format(n.slog())
     }
 
-    if(n.lt('10000')) { if(int) { return n.toStringWithDecimalPlaces(0) } return n.toStringWithDecimalPlaces(2); }
+    if(n.lt('10000')) {
+        if(int) { return n.toStringWithDecimalPlaces(0) }
+        if(n.lt('100')) { return n.toStringWithDecimalPlaces(2); }
+        return n.toStringWithDecimalPlaces(1);
+    }
     
     if(type == 8) { return formatInf(n, 8); }
 
@@ -149,11 +153,28 @@ function formatScience(n, type) { const mag = n.times(1.001).log(10).floor(); n 
 // Hopefully works
 function formatTime(n) {
     n = new Decimal(n);
-    if(n.lt(60)) { return format(n) + 's' }
-    if(n.lt(3600)) { return format(n.div(60), true) + ':' + formatLength(n.mod(60), false, 5) }
-    if(n.lt(31536000)) { return format(n.div(3600), true) + ':' + formatLength(n.mod(60).div(60), true, 2) + ':' + formatLength(n.mod(60), false, 5) }
+    if(n.lt(60)) { return format(n) + ' seconds' }
+    if(n.lt(3600)) { return format(n.div(60).floor(), true) + ':' + formatLength(n.mod(60), false, 5) }
+    if(n.lt(864000)) { return format(n.div(3600).floor(), true) + ':' + formatLength(n.div(60).mod(60).floor(), true, 2) + ':' + formatLength(n.mod(60), false, 5) }
     if(n.lt(315360000)) { return format(n.div(86400)) + ' days'  }
     return format(n.div(31536000), true) + ' years'
+}
+
+function formatBoost(n, mult=false) {
+    n = new Decimal(n)
+    if(mult) {
+        if(n.gte(100)) { return `×${format(n, true)}` }
+        if(n.gte(20)) { return `×${format(n)}` }
+        if(n.gte(1)) { return `${format(n.times(100), true)}%` }
+        if(n.gte(0.05)) { return `${format(n.times(100))}%` }
+        if(n.gte(0.0001)) { return `/${format(n.recip())}` }
+        return `/${format(n.recip(), true)}`
+    } else {
+        if(n.gte(100)) { return `×${format(n.add(1), true)}` }
+        if(n.gte(20)) { return `×${format(n.add(1))}` }
+        if(n.gte(1)) { return `+${format(n.times(100), true)}%` }
+        return `+${format(n.times(100))}%`
+    }
 }
 
 function formatID(layer = 'cash', type = 'upgrades', id = 11) {
@@ -163,6 +184,7 @@ function formatID(layer = 'cash', type = 'upgrades', id = 11) {
     if(layer == 'super') { text = 'S' }
     if(layer == 'power') { text = 'P' }
     if(layer == 'hyper') { text = 'H' }
+    if(layer == 'matter') { text = 'M' }
 
     if(type == 'upgrades') { text = text + 'U' }
     if(type == 'buyables') { text = text + 'B' }
@@ -171,6 +193,7 @@ function formatID(layer = 'cash', type = 'upgrades', id = 11) {
     if(type == 'pylons') { text = text + 'Py' }
 
     if(type == 'upgrades' || type == 'buyables' || type == 'challenges') {
+        if(id == 17) { text = text + '∞' }
         if(id == 11) { text = text + '1' }
         if(id == 12) { text = text + '2' }
         if(id == 13) { text = text + '3' }
@@ -209,23 +232,6 @@ function machineText() {
     return 'inactive'
 }
 
-function formatBoost(n, mult=false) {
-    n = new Decimal(n)
-    if(mult) {
-        if(n.gte(100)) { return `×${format(n, true)}` }
-        if(n.gte(20)) { return `×${format(n)}` }
-        if(n.gte(1)) { return `${format(n.times(100), true)}%` }
-        if(n.gte(0.01)) { return `${format(n.times(100))}%` }
-        if(n.gte(0.0001)) { return `/${format(n.recip(), )}` }
-        return `/${format(n.recip(), true)}`
-    } else {
-        if(n.gte(100)) { return `×${format(n.add(1), true)}` }
-        if(n.gte(20)) { return `×${format(n.add(1))}` }
-        if(n.gte(1)) { return `+${format(n.times(100), true)}%` }
-        return `+${format(n.times(100))}%`
-    }
-}
-
 function formatCost(n, layer) {
     if(layer == 'cash') {
         return '$' + format(n)
@@ -237,5 +243,7 @@ function formatCost(n, layer) {
         return formatWhole(n) + ' Power'
     } else if(layer == 'hyper') {
         return formatWhole(n) + ' HRP'
+    } else if(layer == 'matter') {
+        return formatWhole(n) + ' Matter'
     }
 }

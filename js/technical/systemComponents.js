@@ -49,16 +49,9 @@ var systemComponents = {
 			}"
 			v-bind:style="constructNodeStyle(layer)">
 			<span class="nodeLabel" v-html="(abb !== '' && tmp[layer].image === undefined) ? abb : '&nbsp;'"></span>
-			<tooltip
-      v-if="tmp[layer].tooltip != ''"
-			:text="(tmp[layer].isLayer) ? (
-				player[layer].unlocked ? (tmp[layer].tooltip ? tmp[layer].tooltip : formatWhole(player[layer].points) + ' ' + tmp[layer].resource)
-				: (tmp[layer].tooltipLocked ? tmp[layer].tooltipLocked : 'Reach ' + formatWhole(tmp[layer].requires) + ' ' + tmp[layer].baseResource + ' to unlock (You have ' + formatWhole(tmp[layer].baseAmount) + ' ' + tmp[layer].baseResource + ')')
-			)
-			: (
-				tmp[layer].canClick ? (tmp[layer].tooltip ? tmp[layer].tooltip : 'I am a button!')
-				: (tmp[layer].tooltipLocked ? tmp[layer].tooltipLocked : 'I am a button!')
-			)" style="min-width: 25rem;"></tooltip>
+			<div class="tooltip nodeTooltip" v-bind:style="{'font-size': '1rem', 'background-color': '#0f0f0f', 'width': '31rem'}">
+				<div v-bind:is="tmp[layer].tooltip"></div>
+			</div>
 			<node-mark :layer='layer' :data='tmp[layer].marked'></node-mark></span>
 		</button>
 		`

@@ -47,6 +47,7 @@ body {
 .machine.upg { background-color: var(--techBG); }
 .tax.upg     { background-color: var(--cursedBG); }
 .hyper.upg   { background-color: var(--hyperBG); }
+.matter.upg  { background-color: var(--matterBG); }
 .hcash.upg   { background-color: rgb(52, 235, 103, 0.25); }
 .universe.upg{ background-color: rgba(61, 3, 88, 0.25); }
 
@@ -62,6 +63,7 @@ body {
 .power.can   { background-color: var(--power); }
 .machine.can { background-color: var(--tech); }
 .hyper.can   { background-color: var(--hyper); }
+.matter.can  { background-color: var(--matter); }
 
 button {
 	border-style: solid;

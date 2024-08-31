@@ -3,16 +3,15 @@
 	height: 100px;
 	width: 100px;
 	border: var(--hqProperty1);
-	border-color: rgba(0, 0, 0, 0.125);
+	border-color: hsla(0, 0%, 100%, 25%);
 	border-radius: 50%;
-	box-shadow: var(--hqProperty2a), var(--hqProperty2b);
-	font-size: 40px;
-	font-family: "Lucida Console", "Courier New", monospace;
-	color: rgba(0, 0, 0, 0.5);
-	text-shadow: var(--hqProperty3);
+	font-size: 5rem;
+	/* font-family: "Lucida Console", "Courier New", monospace; */
+	color: hsla(0, 0%, 100%, 25%);
 	padding: 0;
 	margin: 0 10px 0 10px;
 	z-index: 100;
+	font-weight: 600;
 }
 
 .nodeLabel {
@@ -26,11 +25,9 @@
 	border: var(--hqProperty1);
 	border-color: rgba(0, 0, 0, 0.125);
 	border-radius: 33%;
-	box-shadow: var(--hqProperty2a), var(--hqProperty2b);
 	font-size: 40px;
-	font-family: "Lucida Console", "Courier New", monospace;
+	/* font-family: "Lucida Console", "Courier New", monospace; */
 	color: rgba(0, 0, 0, 0.5);
-	text-shadow: var(--hqProperty3);
 	padding: 0;
 }
 
@@ -40,18 +37,9 @@
 	font-size: 30px;
 }
 
-.resetNotify {
-	box-shadow: var(--hqProperty2a), 0 0 8px #ffffff;
-}
-
 .treeNode.can:hover {
 	transform: scale(1.05, 1.05);
 	box-shadow: 0 0 0.6rem 0.4rem #0f0f0f;
-}
-
-.notify {
-	border-color: rgba(0, 0, 0, 0.125);
-	box-shadow: var(--hqProperty2a), 0 0 20px #ff0000;
 }
 
 

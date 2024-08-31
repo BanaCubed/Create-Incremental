@@ -53,6 +53,7 @@ addLayer('hyper', {
     },
     gainMult() {
         let gain = new Decimal(1)
+        gain = gain.times(tmp.matter.ultimateEffect)
         return gain
     },
     update(diff) {
@@ -382,13 +383,13 @@ addLayer('hyper', {
         
         51: {
             cost: new Decimal(2500),
-            description: `Unlock the Matter Combustor in the machine<br>Yes I know you can't buy this, it's hardcoded that way`,
+            description: `Unlock the Matter Combustor in the machine`,
             canAfford() {
                 return hasUpgrade(this.layer, 14) && hasUpgrade(this.layer, 24) && hasUpgrade(this.layer, 34) && hasUpgrade(this.layer, 44)
             }
         },
         52: {
-            cost: new Decimal(1e6),
+            cost: new Decimal(250000),
             description: `Add an Antimatter Chamber to the Matter Combustor`,
             canAfford() {
                 return hasUpgrade(this.layer, this.id-1)

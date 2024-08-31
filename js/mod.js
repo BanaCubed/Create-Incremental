@@ -73,6 +73,8 @@ function getPointGen() {
 	if(hasUpgrade('hyper', 41)) { gain = gain.times(10) }
 	if(hasUpgrade('hyper', 44)) { gain = gain.times(tmp.hyper.effect[1]) }
 
+	gain = gain.times(tmp.matter.ultimateEffect)
+
 
 	gain = gain.times(tmp.chall.uTime)
 	return gain

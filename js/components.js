@@ -105,7 +105,7 @@ function loadVue() {
 	Vue.component('cash-display', {
 		template: `
 			<div class="currencyDisplayHeader cash upg">
-				<span v-if="player.points.lt('1e1000')"  class="overlayThing">You have </span>
+				<span class="overlayThing">You have </span>
 				<h2  class="overlayThing" id="points" style="color: var(--cash); text-shadow: var(--cash) 0px 0px 10px;">{{"$" + format(player.points.max(0))}}</h2>
 				<br>
 				<span v-if="canGenPoints()"  class="overlayThing">({{tmp.other.oompsMag != 0 ? format(tmp.other.oomps) + " OOM" + (tmp.other.oompsMag < 0 ? "^OOM" : tmp.other.oompsMag > 1 ? "^" + tmp.other.oompsMag : "") + "s" : formatSmall(getPointGen())}}/sec)</span>
@@ -115,7 +115,7 @@ function loadVue() {
 	Vue.component('rp-display', {
 		template: `
 			<div class="currencyDisplayHeader rebirth upg">
-				<span v-if="player.rebirth.points.lt('1e1000')"  class="overlayThing">You have </span>
+				<span class="overlayThing">You have </span>
 				<h2  class="overlayThing" id="points" style="color: var(--rebirth); text-shadow: var(--rebirth) 0px 0px 10px;">{{formatWhole(player.rebirth.points.max(0))}}</h2> RP
 				<br>
 				<span v-if="maxedChallenge('super', 11)"  class="overlayThing">({{formatSmall(tmp.rebirth.getResetGain.times(tmp.rebirth.passiveGeneration))}}/sec)</span>
@@ -125,7 +125,7 @@ function loadVue() {
 	Vue.component('rp-uhoh-display', {
 		template: `
 			<div class="currencyDisplayHeader rebirth upg uhoh" v-if="hasMilestone('chall', 1)">
-				<span v-if="player.rebirth.points.lt('1e1000')"  class="overlayThing">You have </span>
+				<span class="overlayThing">You have </span>
 				<h2  class="overlayThing" id="points" style="color: var(--rebirth); text-shadow: var(--rebirth) 0px 0px 10px;">{{formatWhole(player.rebirth.points.max(0))}}</h2> RP
 				<br>
 				<span v-if="maxedChallenge('super', 11)"  class="overlayThing">({{formatSmall(tmp.rebirth.getResetGain.times(tmp.rebirth.passiveGeneration))}}/sec)</span>
@@ -135,7 +135,7 @@ function loadVue() {
 	Vue.component('srp-display', {
 		template: `
 			<div class="currencyDisplayHeader super upg">
-				<span v-if="player.super.points.lt('1e1000')"  class="overlayThing">You have </span>
+				<span class="overlayThing">You have </span>
 				<h2  class="overlayThing" id="points" style="color: var(--super); text-shadow: var(--super) 0px 0px 10px;">{{formatWhole(player.super.points.max(0))}}</h2> SRP
 				<br>
 				<span v-if="hasMilestone('hyper', 0)"  class="overlayThing">({{formatSmall(tmp.super.getResetGain.times(tmp.super.passiveGeneration))}}/sec)</span>
@@ -145,7 +145,7 @@ function loadVue() {
 	Vue.component('srp-uhoh-display', {
 		template: `
 			<div class="currencyDisplayHeader super upg uhoh" v-if="false">
-				<span v-if="player.super.points.lt('1e1000')"  class="overlayThing">You have </span>
+				<span class="overlayThing">You have </span>
 				<h2  class="overlayThing" id="points" style="color: var(--super); text-shadow: var(--super) 0px 0px 10px;">{{formatWhole(player.super.points.max(0))}}</h2> SRP
 				<br>
 				<span v-if="hasMilestone('hyper', 0)"  class="overlayThing">({{formatSmall(tmp.super.getResetGain.times(tmp.super.passiveGeneration))}}/sec)</span>
@@ -155,7 +155,7 @@ function loadVue() {
 	Vue.component('power-display', {
 		template: `
 			<div class="currencyDisplayHeader power upg">
-				<span v-if="player.power.power.lt('1e1000')"  class="overlayThing">You have </span>
+				<span class="overlayThing">You have </span>
 				<h2  class="overlayThing" id="points" style="color: var(--power); text-shadow: var(--power) 0px 0px 10px;">{{formatWhole(player.power.power.max(0))}}</h2> Power
 				<br>
 				<span class="overlayThing" v-if="hasUpgrade('super', 14)">({{formatSmall(tmp.power.pylons.a.effect)}}/sec)</span>
@@ -165,7 +165,7 @@ function loadVue() {
 	Vue.component('power-uhoh-display', {
 		template: `
 			<div class="currencyDisplayHeader power upg uhoh" v-if="hasMilestone('chall', 1)">
-				<span v-if="player.power.power.lt('1e1000')"  class="overlayThing">You have </span>
+				<span class="overlayThing">You have </span>
 				<h2  class="overlayThing" id="points" style="color: var(--power); text-shadow: var(--power) 0px 0px 10px;">{{formatWhole(player.power.power.max(0))}}</h2> Power
 				<br>
 				<span class="overlayThing" v-if="hasUpgrade('super', 14)">({{formatSmall(tmp.power.pylons.a.effect)}}/sec)</span>
@@ -175,7 +175,7 @@ function loadVue() {
 	Vue.component('tax-display', {
 		template: `
 			<div class="currencyDisplayHeader tax upg">
-				<span v-if="player.super.tax.lte('1e1000')"  class="overlayThing">You have </span>
+				<span class="overlayThing">You have </span>
 				<h2  class="overlayThing" id="points" style="color: var(--cursed); text-shadow: var(--cursed) 0px 0px 10px;">{{formatWhole(player.super.tax.max(0))}}</h2> Tax
 				<br>
 				<span class="overlayThing">(×{{formatSmall(tmp.super.challenges[15].nerf)}}/sec)</span>
@@ -185,8 +185,8 @@ function loadVue() {
 	Vue.component('tax-uhoh-display', {
 		template: `
 			<div class="currencyDisplayHeader tax upg uhoh" v-if="hasMilestone('chall', 1) && inChallenge('super', 15)">
-				<span v-if="player.super.tax.lte('1e1000')"  class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: var(--cursed); text-shadow: var(--cursed) 0px 0px 10px;">{{formatWhole(player.super.tax.max(0))}}</h2> Tax
+				<span class="overlayThing">You have </span>
+				<h2 class="overlayThing" id="points" style="color: var(--cursed); text-shadow: var(--cursed) 0px 0px 10px;">{{formatWhole(player.super.tax.max(0))}}</h2> Tax
 				<br>
 				<span class="overlayThing">(×{{formatSmall(tmp.super.challenges[15].nerf)}}/sec)</span>
 			</div>
@@ -195,7 +195,7 @@ function loadVue() {
 	Vue.component('hyper-display', {
 		template: `
 			<div class="currencyDisplayHeader hyper upg">
-				<span v-if="player.hyper.points.lt('1e1000')"  class="overlayThing">You have </span>
+				<span class="overlayThing">You have </span>
 				<h2  class="overlayThing" id="points" style="color: var(--hyper); text-shadow: var(--hyper) 0px 0px 10px;">{{formatWhole(player.hyper.points.max(0))}}</h2> HRP
 				<br>
 			</div>
@@ -204,23 +204,32 @@ function loadVue() {
 	Vue.component('hcash-display', {
 		template: `
 			<div class="currencyDisplayHeader hcash upg uhoh">
-				<span v-if="player.hyper.cash.lt('1e1000')"  class="overlayThing">You have Hyper</span>
+				<span class="overlayThing">You have Hyper</span>
 				<h2  class="overlayThing" id="points" style="color: #34eb67; text-shadow: #34eb67 0px 0px 10px;">{{'$' + format(player.hyper.cash.max(0))}}</h2>
 				<br>
-				<span class="overlayThing">({{formatSmall(tmp.chall.uTime.times(tmp.hyper.cashGain))}}/sec)</span>
+				<span class="overlayThing" v-if="player.hyper.rebirths.gte(1)">({{formatSmall(tmp.chall.uTime.times(tmp.hyper.cashGain))}}/sec)</span>
 			</div>
 		`
 	})
 	Vue.component('utime-display', {
 		template: `
 			<div class="currencyDisplayHeader universe upg">
-				<span v-if="player.hyper.cash.lt('1e1000')"  class="overlayThing">Universal Time is </span>
+				<span class="overlayThing">Universal Time is </span>
 				<h2  class="overlayThing" id="points" style="color: rgba(122, 6, 176, 1); text-shadow: rgba(122, 6, 176, 1) 0px 0px 10px;">{{formatBoost(tmp.chall.uTime.max(0), true)}}</h2> as fast
 				<br><span>as real time</span>
 			</div>
 		`
 	})
-
+	Vue.component('matter-display', {
+		template: `
+			<div class="currencyDisplayHeader matter upg uhoh">
+				<span class="overlayThing">You have </span>
+				<h2  class="overlayThing" id="points" style="color: var(--matter); text-shadow: var(--matter) 0px 0px 10px;">{{format(player.matter.points.max(0))}}</h2> Matter
+				<br>
+				<span class="overlayThing" v-if="hasUpgrade('hyper', 51)">({{formatSmall(tmp.matter.matterGain)}}/sec)</span>
+			</div>
+		`
+	})
 
 	// Data = width in px, by default fills the full area
 	Vue.component('h-line', {
@@ -478,7 +487,9 @@ function loadVue() {
 		props: ['layer', 'data'],
 		template: `
 		<div v-if="player.matter.unlocked" class="hyper upg" style="width: 514px; max-width: calc(100vw - 40px); position: relative; min-height: 0;">
-			<h2>Matter Combustor</h2><br><br><br>
+			<h2>Matter Combustor</h2><br>
+			<span>{{ format(player.matter.points) }} Matter<span v-if="player.matter.umf.gte(1)"> | {{ formatWhole(player.matter.umf) }} UMF</span><br>
+			<span v-if="player.matter.umf.gte(1)">Ultimate Matter Fragments are boosting HRP, SRP, RP, $ and Power {{ formatBoost(tmp.matter.ultimateEffect, true) }}</span><br></span>
 			<tree :data="[['matter']]" v-if="player.machine.matter"></tree>
 			<button style="width: 4rem; height: 4rem; background-color: transparent; text-align: center; min-height: 2rem; position: absolute; top: -0.5rem; left: -0.5rem; border: none;" onclick="player.machine.matter = !player.machine.matter">{{player.machine.matter?'▼':'▶'}}</button>
 		</div>
@@ -585,7 +596,7 @@ function loadVue() {
 		<div v-if="tmp[layer].buyables" class="upgTable">
 			<respec-button v-if="tmp[layer].buyables.respec && !(tmp[layer].buyables.showRespec !== undefined && tmp[layer].buyables.showRespec == false)" :layer = "layer" v-bind:style="[{'margin-bottom': '12px'}, tmp[layer].componentStyles['respec-button']]"></respec-button>
 			<div v-for="row in (data === undefined ? tmp[layer].buyables.rows : data)" class="upgRow">
-				<div v-for="col in tmp[layer].buyables.cols"><div v-if="tmp[layer].buyables[row*10+col]!== undefined && tmp[layer].buyables[row*10+col].unlocked" class="upgAlign" v-bind:style="{'margin-left': '7px', 'margin-right': '7px',  'height': (data ? data : 'inherit'),}">
+				<div v-for="col in tmp[layer].buyables.cols"><div v-if="tmp[layer].buyables[row*10+col]!== undefined && tmp[layer].buyables[row*10+col].unlocked" class="upgAlign" v-bind:style="{'height': (data ? data : 'inherit'),}">
 					<buyable :layer = "layer" :data = "row*10+col"></buyable>
 				</div></div>
 				<br>

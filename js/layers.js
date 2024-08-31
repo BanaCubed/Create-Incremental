@@ -167,6 +167,8 @@ addLayer('chall', {
     },
     milestonePopups: false,
     uTime() {
-        return tmp.hyper.cashEffect
+        let time = tmp.hyper.cashEffect
+        if(hasUpgrade('matter', 12)) { time = time.times(tmp.matter.upgrades[12].effect) }
+        return time
     },
 })
