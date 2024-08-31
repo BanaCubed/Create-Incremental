@@ -30,12 +30,14 @@ body {
 	--superBG:   hsla(15, 70%, 50%, 25%);
 	--power:     hsla(60, 100%, 50%, 100%);
 	--powerBG:   hsla(60, 100%, 50%, 25%);
-	--tech:      hsla(0, 0%, 50%, 100%);
-	--techBG:    hsla(0, 0%, 50%, 25%);
+	--tech:      hsla(0, 0%, 40%, 100%);
+	--techBG:    hsla(0, 0%, 40%, 25%);
 	--cursed:    hsla(300, 100%, 75%, 100%);
 	--cursedBG:  hsla(300, 100%, 75%, 25%);
 	--hyper:     hsla(180, 100%, 30%, 100%);
 	--hyperBG:   hsla(180, 100%, 30%, 25%);
+	--matter:    hsla(195, 80%, 30%, 100%);
+	--matterBG:  hsla(195, 80%, 30%, 25%);
 }
 
 .cash.upg    { background-color: var(--cashBG); }

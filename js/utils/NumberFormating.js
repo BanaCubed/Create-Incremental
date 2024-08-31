@@ -46,8 +46,7 @@ type      - Formatting to use (see below key)
         Joke Notation
     
     8 - Infinity
-        Logarithmic but the initial exponent is divided by log10(2)*1024, and the leftmost 'e' is now an infinity at the right of the format
-        Currently Unimplemented
+        Logarithmic but scaled differently, and also more "impactful"
         Pseudo-Joke Notation
     
     9 - Binary
@@ -56,10 +55,10 @@ type      - Formatting to use (see below key)
         Joke Notation
 
 */
-const notations = [0, 1, 2, 5, 6, 7]
-const no_names = ['Mixed Scientific', 'Scientific', 'Logarithm', 'Mixed Logarithm', 'YES/NO', 'Blind']
+const notations = [0, 1, 2, 5, 6, 7, 8]
+const no_names = ['Mixed Scientific', 'Scientific', 'Logarithm', 'Mixed Logarithm', 'YES/NO', 'Blind', 'Infinity']
 function toggleNotation() {
-    if(options.notation == 7) { options.notation = 0; return }
+    if(options.notation == 8) { options.notation = 0; return }
     options.notation = notations[notations.indexOf(options.notation) + 1]
 }
 function viewNotation() {
@@ -89,6 +88,9 @@ function format(n, int = false, small = false, type = options.notation) {
     }
 
     if(n.lt('10000')) { if(int) { return n.toStringWithDecimalPlaces(0) } return n.toStringWithDecimalPlaces(2); }
+    
+    if(type == 8) { return formatInf(n, 8); }
+
     if(n.lt('1e9')) { return formatComma(n); }
 
     // Actual notations
@@ -141,6 +143,7 @@ function formatStandard(n) {
 // These should need no explanation, aside from type in formatLog() and formatScience(), which determine the notation for the exponent
 function formatComma(n) { return n.toStringWithDecimalPlaces(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") }
 function formatLog(n, type) { return 'e' + format(n.log(10), false, false, type) }
+function formatInf(n, type) { return format(n.log(10).div(Decimal.dTwo.log(10).mul(1024)), false, false, type) + '∞' }
 function formatScience(n, type) { const mag = n.times(1.001).log(10).floor(); n = n.div(mag.pow_base(10)); return n.toStringWithDecimalPlaces(2) + 'e' + format(mag, true, false, type); }
 
 // Hopefully works
@@ -207,6 +210,7 @@ function machineText() {
 }
 
 function formatBoost(n, mult=false) {
+    n = new Decimal(n)
     if(mult) {
         if(n.gte(100)) { return `×${format(n, true)}` }
         if(n.gte(20)) { return `×${format(n)}` }
@@ -218,7 +222,7 @@ function formatBoost(n, mult=false) {
         if(n.gte(100)) { return `×${format(n.add(1), true)}` }
         if(n.gte(20)) { return `×${format(n.add(1))}` }
         if(n.gte(1)) { return `+${format(n.times(100), true)}%` }
-        return `${format(n.times(100))}%`
+        return `+${format(n.times(100))}%`
     }
 }
 

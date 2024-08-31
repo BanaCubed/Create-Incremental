@@ -490,6 +490,7 @@ addLayer('machine', {
         ["row", [
             "machine-display",
             "power-pylons",
+            "matter-combustor",
         ]],
         "blank",
     ],

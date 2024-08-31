@@ -11,7 +11,7 @@ function getStartOptions() {
 		offlineProd: true,
 		hideChallenges: false,
 		forceOneTab: true,
-		forceTooltips: true,
+		forceTooltips: false,
 		notation: 0,
 		upgID: false,
 		tooltipCredits: false,

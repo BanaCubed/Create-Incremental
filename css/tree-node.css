@@ -45,8 +45,8 @@
 }
 
 .treeNode.can:hover {
-	transform: scale(1.15, 1.15);
-	box-shadow: var(--hqProperty2a), 0 0 20px var(--points);
+	transform: scale(1.05, 1.05);
+	box-shadow: 0 0 0.6rem 0.4rem #0f0f0f;
 }
 
 .notify {

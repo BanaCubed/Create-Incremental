@@ -411,8 +411,8 @@ function loadVue() {
 			<div>
 				<h2>The Machine</h2><br>
 				<span v-if="!options.compact && player.machine.main">The Machine is currently {{ machineText() }}<br></span>
-				$ {{ player.machine.state==1?formatBoost(tmp.machine.clickables[11].effect):player.machine.state==2?formatBoost(tmp.machine.clickables[11].effect.times(tmp.machine.clickables[12].effect)):'+0.00%' }},
-				RP {{ player.machine.state==3?formatBoost(tmp.machine.clickables[13].effect):player.machine.state==2?formatBoost(tmp.machine.clickables[13].effect.times(tmp.machine.clickables[12].effect)):'+0.00%' }}<br v-if="player.machine.main"><br v-if="player.machine.main">
+				$ {{ player.machine.state==1?formatBoost(tmp.machine.clickables[11].effect):player.machine.state==2?formatBoost(tmp.machine.clickables[11].effect.times(tmp.machine.clickables[12].effect)):formatBoost(0) }},
+				RP {{ player.machine.state==3?formatBoost(tmp.machine.clickables[13].effect):player.machine.state==2?formatBoost(tmp.machine.clickables[13].effect.times(tmp.machine.clickables[12].effect)):formatBoost(0) }}<br v-if="player.machine.main"><br v-if="player.machine.main">
 			</div>
 			<div style="display: flex; justify-content: space-evenly; flex-direction: row; width: 100%;" v-if="player.machine.main">
 				<clickable :layer="'machine'" :data="11" v-bind:class="{bought: player.machine.state == 1}"></clickable>
@@ -470,6 +470,17 @@ function loadVue() {
 			<power-pylon :layer="'power'" :data="26" :letter="'F'" v-if="player.machine.power"></power-pylon><br v-if="player.machine.power">
 			<milestones :layer="'power'" style="max-height: 300px; overflow-y: auto;" v-if="player.machine.power"></milestones>
 			<button style="width: 4rem; height: 4rem; background-color: transparent; text-align: center; min-height: 2rem; position: absolute; top: -0.5rem; left: -0.5rem; border: none;" onclick="player.machine.power = !player.machine.power">{{player.machine.power?'▼':'▶'}}</button>
+		</div>
+		`
+	})
+
+	Vue.component('matter-combustor', {
+		props: ['layer', 'data'],
+		template: `
+		<div v-if="player.matter.unlocked" class="hyper upg" style="width: 514px; max-width: calc(100vw - 40px); position: relative; min-height: 0;">
+			<h2>Matter Combustor</h2><br><br><br>
+			<tree :data="[['matter']]" v-if="player.machine.matter"></tree>
+			<button style="width: 4rem; height: 4rem; background-color: transparent; text-align: center; min-height: 2rem; position: absolute; top: -0.5rem; left: -0.5rem; border: none;" onclick="player.machine.matter = !player.machine.matter">{{player.machine.matter?'▼':'▶'}}</button>
 		</div>
 		`
 	})
