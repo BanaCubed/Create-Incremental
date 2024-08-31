@@ -7,29 +7,29 @@ Create Incremental is a game where all content was decided by _other_ people on 
 
 # Current Content
 
-The game currently has a total of 3 prestige layers:
+The game currently has a total of 4 prestige layers:
 - Rebirth
-    - The Machine
 - Super Rebirth
-    - Challenges
-    - Power
 - Hyper Rebirth
-    - Upgrade Tree
-    - Hyper Cash
-    - Matters
+- Universes
+
+And 6 cool and unique features:
+- The Machine
+- Power / Power Pylons
+- Hyper Paths
+- Matter Paths
+- Singularities
+- Universes
 
 # Planned Content
 
 Below is a list of features that aren't currently in the game, but are planned to be worked on as they are already in the forum
 
-## v0.4
+## v1.01
 
-Universes:
-- Something similar to Challenges
-    - Singularities
-- Ultimate Matter
-    - Upgrade Tree
-- Strange Matter
-- More Matter Paths
-    - Heavenly Matter
-    - Cursed Matter
+Multiversal Enhancements:
+- New variants of most pre-universe systems
+- More Universes
+- More Matters
+- More Currencies
+- More meaningless waiting
