@@ -22,7 +22,7 @@ addLayer('chall', {
         if(hasUpgrade('super', 11)) player.chall.unlocked = true
         player.chall.uTimePlayed = player.chall.uTimePlayed.add(Decimal.times(tmp.chall.uTime, diff))
     },
-    row: 99,
+    row: 9,
     bars: {
         nextFeature: {
             direction: RIGHT,
@@ -70,7 +70,7 @@ addLayer('chall', {
                 'background-color': 'var(--background)',
             },
             textStyle: {
-                'text-shadow': 'black 0 0 5px'
+                'text-shadow': 'black 0 0 0.5rem'
             },
             display() {
                 if(!player.rebirth.unlocked) {

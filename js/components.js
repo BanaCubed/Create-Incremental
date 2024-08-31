@@ -124,7 +124,7 @@ function loadVue() {
 	})
 	Vue.component('rp-uhoh-display', {
 		template: `
-			<div class="currencyDisplayHeader rebirth upg" v-if="hasMilestone('chall', 1)">
+			<div class="currencyDisplayHeader rebirth upg uhoh" v-if="hasMilestone('chall', 1)">
 				<span v-if="player.rebirth.points.lt('1e1000')"  class="overlayThing">You have </span>
 				<h2  class="overlayThing" id="points" style="color: var(--rebirth); text-shadow: var(--rebirth) 0px 0px 10px;">{{formatWhole(player.rebirth.points.max(0))}}</h2> RP
 				<br>
@@ -144,7 +144,7 @@ function loadVue() {
 	})
 	Vue.component('srp-uhoh-display', {
 		template: `
-			<div class="currencyDisplayHeader super upg" v-if="false">
+			<div class="currencyDisplayHeader super upg uhoh" v-if="false">
 				<span v-if="player.super.points.lt('1e1000')"  class="overlayThing">You have </span>
 				<h2  class="overlayThing" id="points" style="color: var(--super); text-shadow: var(--super) 0px 0px 10px;">{{formatWhole(player.super.points.max(0))}}</h2> SRP
 				<br>
@@ -164,7 +164,7 @@ function loadVue() {
 	})
 	Vue.component('power-uhoh-display', {
 		template: `
-			<div class="currencyDisplayHeader power upg" v-if="hasMilestone('chall', 1)">
+			<div class="currencyDisplayHeader power upg uhoh" v-if="hasMilestone('chall', 1)">
 				<span v-if="player.power.power.lt('1e1000')"  class="overlayThing">You have </span>
 				<h2  class="overlayThing" id="points" style="color: var(--power); text-shadow: var(--power) 0px 0px 10px;">{{formatWhole(player.power.power.max(0))}}</h2> Power
 				<br>
@@ -184,7 +184,7 @@ function loadVue() {
 	})
 	Vue.component('tax-uhoh-display', {
 		template: `
-			<div class="currencyDisplayHeader tax upg" v-if="hasMilestone('chall', 1) && inChallenge('super', 15)">
+			<div class="currencyDisplayHeader tax upg uhoh" v-if="hasMilestone('chall', 1) && inChallenge('super', 15)">
 				<span v-if="player.super.tax.lte('1e1000')"  class="overlayThing">You have </span>
 				<h2  class="overlayThing" id="points" style="color: var(--cursed); text-shadow: var(--cursed) 0px 0px 10px;">{{formatWhole(player.super.tax.max(0))}}</h2> Tax
 				<br>
@@ -203,7 +203,7 @@ function loadVue() {
 	})
 	Vue.component('hcash-display', {
 		template: `
-			<div class="currencyDisplayHeader hcash upg">
+			<div class="currencyDisplayHeader hcash upg uhoh">
 				<span v-if="player.hyper.cash.lt('1e1000')"  class="overlayThing">You have Hyper</span>
 				<h2  class="overlayThing" id="points" style="color: #34eb67; text-shadow: #34eb67 0px 0px 10px;">{{'$' + format(player.hyper.cash.max(0))}}</h2>
 				<br>
@@ -371,19 +371,35 @@ function loadVue() {
 	Vue.component('upgrade', {
 		props: ['layer', 'data'],
 		template: `
-		<div v-if="tmp[layer].upgrades && tmp[layer].upgrades[data]!== undefined && tmp[layer].upgrades[data].unlocked" :id='"upgrade-" + layer + "-" + data'  v-bind:class="{ [layer]: true, tooltipBox: true, upg: true}">
-			<div style="height: 75px;">
-				<h2 v-html="tmp[layer].upgrades[data].title"></h2><br><br>
-				<span class="upgDescription" v-html="tmp[layer].upgrades[data].fullDisplay()"></span>
+		<div>
+			<div v-if="tmp[layer].upgrades && tmp[layer].upgrades[data]!== undefined && tmp[layer].upgrades[data].unlocked && !options.compact" :id='"upgrade-" + layer + "-" + data'  v-bind:class="{ [layer]: true, tooltipBox: true, upg: true}">
+				<div style="height: 75px;">
+					<h2 v-html="tmp[layer].upgrades[data].title"></h2><br><br>
+					<span class="upgDescription" v-html="tmp[layer].upgrades[data].fullDisplay()"></span>
+				</div>
+				<div style="height: 35px; display: flex;">
+					<div style="width: 140px;" class="upgDescription">Cost: {{ formatCost(tmp[layer].upgrades[data].costa, layer) }}</div>
+					<button style="width: 90px; height: 35px; border-color: rgba(255, 255, 255, 0.25);"
+						v-bind:class="{ upgBuy: true, tooltipBox: true, can: tmp[layer].upgrades[data].canAfford && !hasUpgrade(layer, data), locked: !tmp[layer].upgrades[data].canAfford, bought: hasUpgrade(layer, data), [layer]: true}"
+						v-on:click="buyUpg(layer, data)">{{ hasUpgrade(layer, data)?'Bought':'Buy' }}</button>
+				</div>
+				<div style="position: absolute; bottom: 5px; left: 5px;" class="upgID" v-if="options.upgID">{{ formatID(layer, 'upgrades', data) }}</div>
+				<tooltip :text="tmp[layer].upgrades[data].tooltip" v-if="tmp[layer].upgrades[data].tooltip !== undefined"></tooltip>
 			</div>
-			<div style="height: 35px; display: flex;">
-				<div style="width: 140px;" class="upgDescription">Cost: {{ formatCost(tmp[layer].upgrades[data].costa, layer) }}</div>
-				<button style="width: 90px; height: 35px; border-color: rgba(255, 255, 255, 0.25);"
-					v-bind:class="{ upgBuy: true, tooltipBox: true, can: tmp[layer].upgrades[data].canAfford && !hasUpgrade(layer, data), locked: !tmp[layer].upgrades[data].canAfford, bought: hasUpgrade(layer, data), [layer]: true}"
-					v-on:click="buyUpg(layer, data)">{{ hasUpgrade(layer, data)?'Bought':'Buy' }}</button>
+			<div v-if="tmp[layer].upgrades && tmp[layer].upgrades[data]!== undefined && tmp[layer].upgrades[data].unlocked && options.compact" :id='"upgrade-" + layer + "-" + data'  v-bind:class="{ [layer]: true, tooltipBox: true, upg: true}" style="width: 13rem">
+				<div style="height: 14rem;">
+					<h2 v-html="tmp[layer].upgrades[data].title"></h2><br><br>
+					<span class="upgDescription" v-html="tmp[layer].upgrades[data].fullDisplay()"></span><br><br>
+					Cost: {{ formatCost(tmp[layer].upgrades[data].costa, layer) }}
+				</div>
+				<div style="height: 35px; display: flex;">
+					<button style="width: 13rem; height: 3.5rem; border-color: rgba(255, 255, 255, 0.25);"
+						v-bind:class="{ upgBuy: true, tooltipBox: true, can: tmp[layer].upgrades[data].canAfford && !hasUpgrade(layer, data), locked: !tmp[layer].upgrades[data].canAfford, bought: hasUpgrade(layer, data), [layer]: true}"
+						v-on:click="buyUpg(layer, data)">{{ hasUpgrade(layer, data)?'Bought':'Buy' }}</button>
+				</div>
+				<div style="position: absolute; bottom: 4.5rem; left: 5px;" class="upgID" v-if="options.upgID">{{ formatID(layer, 'upgrades', data) }}</div>
+				<tooltip :text="tmp[layer].upgrades[data].tooltip" v-if="tmp[layer].upgrades[data].tooltip !== undefined"></tooltip>
 			</div>
-			<div style="position: absolute; bottom: 5px; left: 5px;" class="upgID" v-if="options.upgID">{{ formatID(layer, 'upgrades', data) }}</div>
-			<tooltip :text="tmp[layer].upgrades[data].tooltip" v-if="tmp[layer].upgrades[data].tooltip !== undefined"></tooltip>
 		</div>
 		`
 	})
@@ -391,48 +407,48 @@ function loadVue() {
 	Vue.component('machine-display', {
 		props: ['layer', 'data'],
 		template: `
-		<div style="display: flex; flex-direction: column; width: 514px; max-width: calc(100vw - 40px);" class="upg machine">
+		<div style="display: flex; flex-direction: column; width: 514px; max-width: calc(100vw - 40px); position: relative; min-height: 0;" class="upg machine">
 			<div>
 				<h2>The Machine</h2><br>
-				The Machine is currently {{ machineText() }}<br>
-				($ {{ player.machine.state==1?formatBoost(tmp.machine.clickables[11].effect):player.machine.state==2?formatBoost(tmp.machine.clickables[11].effect.times(tmp.machine.clickables[12].effect)):'+0.00%' }},
-				RP {{ player.machine.state==3?formatBoost(tmp.machine.clickables[13].effect):player.machine.state==2?formatBoost(tmp.machine.clickables[13].effect.times(tmp.machine.clickables[12].effect)):'+0.00%' }})<br><br>
+				<span v-if="!options.compact && player.machine.main">The Machine is currently {{ machineText() }}<br></span>
+				$ {{ player.machine.state==1?formatBoost(tmp.machine.clickables[11].effect):player.machine.state==2?formatBoost(tmp.machine.clickables[11].effect.times(tmp.machine.clickables[12].effect)):'+0.00%' }},
+				RP {{ player.machine.state==3?formatBoost(tmp.machine.clickables[13].effect):player.machine.state==2?formatBoost(tmp.machine.clickables[13].effect.times(tmp.machine.clickables[12].effect)):'+0.00%' }}<br v-if="player.machine.main"><br v-if="player.machine.main">
 			</div>
-			<div style="display: flex; justify-content: space-evenly; flex-direction: row; width: 100%;">
+			<div style="display: flex; justify-content: space-evenly; flex-direction: row; width: 100%;" v-if="player.machine.main">
 				<clickable :layer="'machine'" :data="11" v-bind:class="{bought: player.machine.state == 1}"></clickable>
 				<clickable :layer="'machine'" :data="12" v-bind:class="{bought: player.machine.state == 2}"></clickable>
 				<clickable :layer="'machine'" :data="13" v-bind:class="{bought: player.machine.state == 3}"></clickable>
 			</div>
-			<div style="display: flex; justify-content: space-evenly; flex-direction: row; width: 100%; margin-top: 10px;">
+			<div style="display: flex; justify-content: space-evenly; flex-direction: row; width: 100%; margin-top: 10px;" v-if="player.machine.main">
 				<div style="width: 130px; margin-top: 0;">
-					Cash Mode increases cash gain by <span class="cash infoText">{{ formatBoost(tmp.machine.clickables[11].effect) }}</span>
+					Cash Mode increases cash <span v-if="!options.compact">gain by </span><span class="cash infoText">{{ formatBoost(tmp.machine.clickables[11].effect) }}</span>
 				</div>
 				<div style="width: 130px; margin-top: 0;">
-					Neutral Mode applies both Cash and Rebirth Modes at <span class="power infoText">{{ formatBoost(tmp.machine.clickables[12].effect, false) }}</span> efficiency
+					Neutral Mode applies both Cash and Rebirth Modes <span v-if="!options.compact">at </span><span class="power infoText">{{ formatBoost(tmp.machine.clickables[12].effect, false) }}</span><span v-if="!options.compact"> efficiency</span>
 				</div>
 				<div style="width: 130px; margin-top: 0;">
-					Rebirth Mode increases RP gain by <span class="rebirth infoText">{{ formatBoost(tmp.machine.clickables[13].effect) }}</span>
-				</div>
-			</div>
-			<h2 v-if="hasMilestone('power', 2)"><br>Power Allocation</h2><br>
-			<slider v-if="hasMilestone('power', 2) && !hasMilestone('chall', 1)" :layer="'chall'" :data="['pap', 1, 100]" :text="player.chall.pap + '%'" class="power"></slider>
-			<power-uhoh-display v-if="hasMilestone('chall', 1)"></power-uhoh-display><br>
-			<div v-if="hasMilestone('power', 2)" style="display: flex; justify-content: space-evenly; flex-direction: row; width: 100%; margin-top: 10px; min-height: 4em;">
-				<div style="width: 130px; margin-top: 0;">
-					Cash Mode has<br>{{ formatWhole(player.power.cashPower) }}<br>Power allocated
-				</div>
-				<div style="width: 130px; margin-top: 0;">
-					Neutral Mode has<br>{{ formatWhole(player.power.neutralPower) }}<br>Power allocated
-				</div>
-				<div style="width: 130px; margin-top: 0;">
-					Rebirth Mode has<br>{{ formatWhole(player.power.rebirthPower) }}<br>Power allocated
+					Rebirth Mode increases RP <span v-if="!options.compact">gain by </span><span class="rebirth infoText">{{ formatBoost(tmp.machine.clickables[13].effect) }}</span>
 				</div>
 			</div>
-			<div v-if="hasMilestone('power', 2) && !hasMilestone('chall', 1)" style="display: flex; justify-content: space-evenly; flex-direction: row; width: 100%; margin-top: 10px;">
+			<h2 v-if="hasMilestone('power', 2) && player.machine.main"><br>Power Allocation</h2><br>
+			<slider v-if="hasMilestone('power', 2) && !hasMilestone('chall', 1) && player.machine.main" :layer="'chall'" :data="['pap', 1, 100]" :text="player.chall.pap + '%'" class="power"></slider>
+			<div v-if="hasMilestone('power', 2) && player.machine.main" style="display: flex; justify-content: space-evenly; flex-direction: row; width: 100%; margin-top: 10px; min-height: 4em;">
+				<div style="width: 130px; margin-top: 0;">
+					Cash Mode has<br>{{ formatWhole(player.power.cashPower) }}<br>Power<span v-if="!options.compact"> allocated</span>
+				</div>
+				<div style="width: 130px; margin-top: 0;">
+					Neutral Mode has<br>{{ formatWhole(player.power.neutralPower) }}<br>Power<span v-if="!options.compact"> allocated</span>
+				</div>
+				<div style="width: 130px; margin-top: 0;">
+					Rebirth Mode has<br>{{ formatWhole(player.power.rebirthPower) }}<br>Power<span v-if="!options.compact"> allocated</span>
+				</div>
+			</div>
+			<div v-if="hasMilestone('power', 2) && !hasMilestone('chall', 1) && player.machine.main" style="display: flex; justify-content: space-evenly; flex-direction: row; width: 100%; margin-top: 10px;">
 				<clickable :layer="'power'" :data="11"></clickable>
 				<clickable :layer="'power'" :data="12"></clickable>
 				<clickable :layer="'power'" :data="13"></clickable>
 			</div>
+			<button style="width: 4rem; height: 4rem; background-color: transparent; text-align: center; min-height: 2rem; position: absolute; top: -0.5rem; left: -0.5rem; border: none;" onclick="player.machine.main = !player.machine.main">{{player.machine.main?'▼':'▶'}}</button>
 		</div>
 		`
 	})
@@ -440,17 +456,20 @@ function loadVue() {
 	Vue.component('power-pylons', {
 		props: ['layer', 'data'],
 		template: `
-		<div v-if="player.power.unlocked" class="power upg" style="width: 514px; max-width: calc(100vw - 40px);">
+		<div v-if="player.power.unlocked" class="power upg" style="width: 514px; max-width: calc(100vw - 40px); position: relative; min-height: 0;">
 			<h2>Power Pylons</h2><br>
-			Each Pylon produces the previous one (Power is Pylon 0)<br>
-			All Pylons cost Power<br><br>
-			<power-pylon :layer="'power'" :data="21" :letter="'A'"></power-pylon><br>
-			<power-pylon :layer="'power'" :data="22" :letter="'B'"></power-pylon><br>
-			<power-pylon :layer="'power'" :data="23" :letter="'C'"></power-pylon><br>
-			<power-pylon :layer="'power'" :data="24" :letter="'D'"></power-pylon><br>
-			<power-pylon :layer="'power'" :data="25" :letter="'E'"></power-pylon><br>
-			<power-pylon :layer="'power'" :data="26" :letter="'F'"></power-pylon><br>
-			<milestones :layer="'power'" style="max-height: 300px; overflow-y: auto;"></milestones>
+			<span v-if="!player.machine.power">{{ formatWhole(player.power.power) }} Power<br><br></span>
+			<span v-if="!options.compact && player.machine.power">Each Pylon produces the previous one (Power is Pylon 0)<br></span>
+			<span v-if="!options.compact && player.machine.power">All Pylons cost Power<br></span><br v-if="player.machine.power">
+			<power-uhoh-display v-if="hasMilestone('chall', 1) && player.machine.power"></power-uhoh-display><br v-if="player.machine.power">
+			<power-pylon :layer="'power'" :data="21" :letter="'A'" v-if="player.machine.power"></power-pylon><br v-if="player.machine.power">
+			<power-pylon :layer="'power'" :data="22" :letter="'B'" v-if="player.machine.power"></power-pylon><br v-if="player.machine.power">
+			<power-pylon :layer="'power'" :data="23" :letter="'C'" v-if="player.machine.power"></power-pylon><br v-if="player.machine.power">
+			<power-pylon :layer="'power'" :data="24" :letter="'D'" v-if="player.machine.power"></power-pylon><br v-if="player.machine.power">
+			<power-pylon :layer="'power'" :data="25" :letter="'E'" v-if="player.machine.power"></power-pylon><br v-if="player.machine.power">
+			<power-pylon :layer="'power'" :data="26" :letter="'F'" v-if="player.machine.power"></power-pylon><br v-if="player.machine.power">
+			<milestones :layer="'power'" style="max-height: 300px; overflow-y: auto;" v-if="player.machine.power"></milestones>
+			<button style="width: 4rem; height: 4rem; background-color: transparent; text-align: center; min-height: 2rem; position: absolute; top: -0.5rem; left: -0.5rem; border: none;" onclick="player.machine.power = !player.machine.power">{{player.machine.power?'▼':'▶'}}</button>
 		</div>
 		`
 	})
@@ -461,7 +480,7 @@ function loadVue() {
 		<div style="width: 100%; display: flex; flex-flow: row nowrap; justify-content: space-between;" v-if="tmp.power.clickables[data].unlocked">
 			<h2 style="margin: auto 0;">{{ tmp.power.clickables[data].title }}<br><span v-if="options.upgID" class="upgID" style="font-size: 15px">{{ formatID(layer, 'pylons', data) }}</span></h2><br>
 			<span style="margin: auto 0;">{{ formatWhole(player.power['pylon' + letter]) }} [{{ formatWhole(player.power['pylob' + letter]) }}]</span>
-			<span style="margin: auto 0;">+{{ format(tmp.power.pylons[letter.toLowerCase()].effect) }}/sec</span>
+			<span style="margin: auto 0;"><span v-if="!options.compact">Effect: </span>{{ format(tmp.power.pylons[letter.toLowerCase()].effect) }}/sec</span>
 			<clickable :layer="'power'" :data="data" style="margin: auto 0;"></clickable>
 		</div>
 		`
@@ -747,11 +766,11 @@ function loadVue() {
 			style() {return constructBarStyle(this.layer, this.data)}
 		},
 		template: `
-		<div v-if="tmp[layer].bars && tmp[layer].bars[data].unlocked" v-bind:style="{'position': 'relative'}"><div v-bind:style="[tmp[layer].bars[data].style, style.dims, {'display': 'table'}]">
-			<div class = "overlayTextContainer barBorder" v-bind:style="[tmp[layer].bars[data].borderStyle, style.dims]">
-				<span class = "overlayText" v-bind:style="[tmp[layer].bars[data].style, tmp[layer].bars[data].textStyle]" v-html="run(layers[layer].bars[data].display, layers[layer].bars[data])"></span>
+		<div v-if="tmp[layer].bars && tmp[layer].bars[data].unlocked" v-bind:style="{'position': 'relative', 'transition': 'none', 'overflow': 'clip'}"><div v-bind:style="[tmp[layer].bars[data].style, style.dims, {'display': 'table', 'transition': 'none'}]">
+			<div class = "overlayTextContainer barBorder" v-bind:style="[tmp[layer].bars[data].borderStyle, style.dims, {'transition': 'none'}]">
+				<h2 class = "overlayText" v-bind:style="[tmp[layer].bars[data].style, tmp[layer].bars[data].textStyle, {'transition': 'none'}]" v-html="run(layers[layer].bars[data].display, layers[layer].bars[data])"></h2>
 			</div>
-			<div class ="barBG barBorder" v-bind:style="[tmp[layer].bars[data].style, tmp[layer].bars[data].baseStyle, tmp[layer].bars[data].borderStyle,  style.dims]">
+			<div class ="barBG barBorder" v-bind:style="[tmp[layer].bars[data].style, tmp[layer].bars[data].baseStyle, tmp[layer].bars[data].borderStyle,  style.dims, {'transition': 'none'}]">
 				<div class ="fill" v-bind:style="[tmp[layer].bars[data].style, tmp[layer].bars[data].fillStyle, style.fillDims]"></div>
 			</div>
 		</div></div>

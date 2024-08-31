@@ -2,7 +2,7 @@ addLayer('rebirth', {
     tabFormat: {
         "Rebirth": {
             content: [
-                "prestige-button",
+                ['row', ["prestige-button"]],
                 'rp-uhoh-display',
                 'blank',
                 ['display-text', function() {return `Your RP is increasing cash gain by ${formatBoost(tmp.rebirth.effect.sub(1))}<br>You have rebirthed ${formatWhole(player.rebirth.rebirths)} times`}],
@@ -364,7 +364,7 @@ addLayer('rebirth', {
         if(hasUpgrade('hyper', 33)) { gain = gain.times(tmp.hyper.upgrades[33].effect) }
         if(hasUpgrade('hyper', 41)) { gain = gain.times(10) }
         if(hasUpgrade('hyper', 43)) { gain = gain.times(5) }
-        if(hasUpgrade('hyper', 44)) { gain = gain.times(3) }
+        if(hasUpgrade('hyper', 44)) { gain = gain.times(10) }
         return gain
     },
     buyables: {
@@ -485,7 +485,7 @@ addLayer('rebirth', {
 })
 
 addLayer('machine', {
-    color: "rgb(128, 128, 128)",
+    color: "var(--tech)",
     tabFormat: [
         ["row", [
             "machine-display",
@@ -497,6 +497,9 @@ addLayer('machine', {
         unlocked: false,
         points: new Decimal(0),
         state: 0,
+        main: true,
+        power: true,
+        matter: true,
     }},
     type: 'none',
     row: 0,

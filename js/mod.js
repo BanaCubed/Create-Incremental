@@ -16,6 +16,7 @@ let modInfo = {
 let VERSION = {
 	num: "1.0",
 	name: "Universe Update",
+	beta: '3'
 }
 
 let changelog = 
@@ -79,9 +80,7 @@ function getPointGen() {
 
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
 function addedPlayerData() { return {
-	SA14: false,
-	SA15: false,
-	MILK: false
+	
 }}
 
 // Display extra things at the top of the page

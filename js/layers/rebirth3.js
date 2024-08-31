@@ -53,8 +53,6 @@ addLayer('hyper', {
     },
     gainMult() {
         let gain = new Decimal(1)
-        if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
-        if(hasUpgrade('hyper', 44)) { gain = gain.times(3) }
         return gain
     },
     update(diff) {
@@ -334,7 +332,7 @@ addLayer('hyper', {
                 if(pos == -1) { pos = player.hyper.paths.length }
                 return Decimal.times(25, Decimal.pow(3, pos))
             },
-            description: `Hyper Cash's boost to Universal Time also applies directly to Power Pylons, Power Allocation, HRP, and HC, and improve HC's boost to Universal Time`,
+            description: `Hyper Cash's boost to Universal Time also applies directly to Power Pylons, Power Allocation, and HC, and improve HC's boost to Universal Time`,
             canAfford() { return hasUpgrade(this.layer, this.id-1) },
             title: `Hyper 4`,
         },
@@ -377,7 +375,7 @@ addLayer('hyper', {
                 if(pos == -1) { pos = player.hyper.paths.length }
                 return Decimal.times(25, Decimal.pow(3, pos))
             },
-            description: `Increase RP, SRP and HRP gain by ×3, and HRP's boost to RP now also applies to Cash and HC`,
+            description: `Increase RP and SRP ×10, and HRP's boost to RP now also applies to Cash and HC`,
             canAfford() { return hasUpgrade(this.layer, this.id-1) },
             title: `Combined 4`,
         },

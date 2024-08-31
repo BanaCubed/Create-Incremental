@@ -412,7 +412,7 @@ addLayer('cash', {
                 return state
             },
         },
-        "The Machine": {
+        "Machine": {
             unlocked(){return player.machine.unlocked},
             buttonStyle: {
                 "background-color": "var(--tech)",

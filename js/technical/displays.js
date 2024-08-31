@@ -94,7 +94,7 @@ function constructBarStyle(layer, id) {
 	progress = (1 -Math.min(Math.max(bar.progress, 0), 1)) * 100
 
 	style.dims = {'width': bar.width + "vw", 'height': bar.height + "px"}
-	let dir = bar.direction
+	bar.direction
 	style.fillDims = {'width': (bar.width + 0.5) + "vw", 'height': (bar.height + 0.5)  + "px"}
 
 	switch(bar.direction) {

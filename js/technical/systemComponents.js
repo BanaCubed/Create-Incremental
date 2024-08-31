@@ -109,8 +109,8 @@ var systemComponents = {
 		<span v-if="player.devSpeed && player.devSpeed != 1" class="overlayThing">
 			<br>Dev Speed: ×{{format(player.devSpeed)}}<br>
 		</span>	
-		<span class="overlayThing">
-			<br><span class="betaWarning">BETA VERSION - CURRENTLY UNFINISHED - EXPECT CHANGES</span><br>
+		<span class="overlayThing" v-if="VERSION.beta || VERSION.pre">
+			<br><h1 v-if="VERSION.beta" class="betaWarning">BETA VERSION - CURRENTLY UNFINISHED - EXPECT CHANGES AND BUGS</h1><h1 v-if="VERSION.pre" class="betaWarning">PRE-RELEASE VERSION - EXPECT BUGS</h1><br>
 		</span>
 		<span v-if="player.offTime !== undefined"  class="overlayThing">
 			<br>Offline Time: {{formatTime(player.offTime.remain)}}

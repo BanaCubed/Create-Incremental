@@ -16,19 +16,20 @@
 	cursor: pointer;
 	padding: 0.5rem 2rem;
 	border: 0.4rem solid;
-    min-width: 15rem;
+    min-width: 16rem;
     border-color: rgba(255, 255, 255, 0.25);
     font-size: 1.8rem;
+    margin: 0.25rem;
 }
 
 .tabButton:hover {
 	transform: scale(1.05, 1.05);
     z-index: 20;
-	box-shadow: 0 0 0.6rem 0.4rem #0f0f0f;
 }
 
 .upgID {
-    color: rgba(127, 127, 127, 0.5);
+    color: rgba(127, 127, 127, 0.75);
+    font-size: 2rem;
 }
 
 .tooltip { 
