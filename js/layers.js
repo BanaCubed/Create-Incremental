@@ -14,7 +14,7 @@ addLayer('chall', {
                 ]]],
             ],
             buttonStyle: {
-                "background-color": "#EA183D",
+                "background-color": "var(--super)",
             },
         },
     },
@@ -74,10 +74,10 @@ addLayer('chall', {
             },
             display() {
                 if(!player.rebirth.unlocked) {
-                    return `Purchase ${options.upgID?'$U6':'cash upgrade 6'} to unlock Rebirth<br>${format(player.points)}/$599.99`
+                    return `Purchase ${options.upgID?'$U6':'cash upgrade 6'} to unlock Rebirth<br>${format(player.points)}/$${format(599.99)}`
                 }
                 if(!player.super.unlocked) {
-                    return `Purchase ${options.upgID?'RU12':'Rebirth upgrade 12'} to unlock Super Rebirth<br>${formatWhole(player.rebirth.points)}/1250 RP`
+                    return `Purchase ${options.upgID?'RU12':'Rebirth upgrade 12'} to unlock Super Rebirth<br>${formatWhole(player.rebirth.points)}/${formatWhole(1250)} RP`
                 }
                 if(!player.hyper.unlocked) {
                     if(inChallenge('super', 11)) {
@@ -101,47 +101,47 @@ addLayer('chall', {
                         return `Reach ${formatWhole(1e13)} RP to complete<br>${format(player.rebirth.points)}/${formatWhole(1e13)} RP`
                     }
                     if(!player.power.unlocked) {
-                        return `Purchase ${options.upgID?'SU4':'Super Rebirth upgrade 4'} to unlock Power<br>${formatWhole(player.super.points)}/50 SRP`
+                        return `Purchase ${options.upgID?'SU4':'Super Rebirth upgrade 4'} to unlock Power<br>${formatWhole(player.super.points)}/${formatWhole(50)} SRP`
                     }
                     if(!hasMilestone('chall', 0)) {
                         return `Reach ${formatWhole(1e50)} Power to permanently improve the first three rows of cash upgrades<br>${format(player.power.power)}/${formatWhole(1e50)} Power`
                     }
-                    return `Reach 4 ${options.upgID?'PPyF':'Power Pylon F'} to unlock Hyper Rebirth<br>${formatWhole(player.power.pylonF)}/4 Pylons | ${formatWhole(player.power.power)}/${formatWhole(1e65)} Power`
+                    return `Reach ${formatWhole(4)} ${options.upgID?'PPyF':'Power Pylon F'} to unlock Hyper Rebirth<br>${formatWhole(player.power.pylonF)}/${formatWhole(4)} Pylons | ${formatWhole(player.power.power)}/${formatWhole(1e65)} Power`
                 }
                 if(true) {
                     if(player.hyper.subLayers < 1) {
-                        return `Reach 5 Hyper Rebirths to unlock Paths and compress the resources display<br>${formatWhole(player.hyper.rebirths)}/5 Hyper Rebirths`
+                        return `Reach ${formatWhole(5)} Hyper Rebirths to unlock Paths and compress the resources display<br>${formatWhole(player.hyper.rebirths)}/${formatWhole(5)} Hyper Rebirths`
                     }
                     if(true) {
-                        return `Unlock the Matter Combustor to, well, unlock the Matter Combustor`
+                        return `Unlock the Matter Combustor to unlock Matter`
                     }
                 }
             },
             nextColor() {
                 if(!player.rebirth.unlocked) {
-                    return `rgb(21, 115, 7)`
+                    return `var(--cash)`
                 }
                 if(!player.super.unlocked) {
-                    return `#BA0022`
+                    return `var(--rebirth)`
                 }
                 if(!player.hyper.unlocked) {
                     if(inChallenge('super', 11) || inChallenge('super', 12) || inChallenge('super', 13)) {
-                        return `rgb(21, 115, 7)`
+                        return `var(--cash)`
                     }
                     if(inChallenge('super', 14) || inChallenge('super', 15)) {
-                        return `#BA0022`
+                        return `var(--rebirth)`
                     }
                     if(!player.power.unlocked) {
-                        return `rgb(251, 26, 61)`
+                        return `var(--super)`
                     }
-                    return '#d6c611'
+                    return 'var(--power)'
                 }
                 if(true) {
                     if(player.hyper.subLayers < 1) {
-                        return '#2eb5c8'
+                        return 'var(--hyper)'
                     }
                     if(true) {
-                        return '#2eb5c8'
+                        return 'var(--hyper)'
                     }
                 }
             },

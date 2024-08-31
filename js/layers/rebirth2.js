@@ -1,5 +1,5 @@
 addLayer('super', {
-    color: "rgb(251, 26, 61)",
+    color: "var(--super)",
     tabFormat: [
         ['row', [
             "prestige-button",

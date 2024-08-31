@@ -197,18 +197,18 @@ var systemComponents = {
             <tr>
 				<td><button class="optTitle">Saving -</button></td>
                 <td><button class="opt" onclick="save()">Save</button></td>
-                <td><button class="opt" onclick="importSave()">Import Save</button></td>
+                <td><button class="opt tooltipBox" onclick="importSave()">Import Save<tooltip :text="'Will cause a prompt'"></tooltip></button></td>
                 <td><button class="opt" onclick="exportSave()">Export Save to clipboard</button></td>
-                <td><button class="opt" onclick="toggleOpt('autosave')">Autosave: {{ options.autosave?"ON":"OFF" }}</button></td>
+                <td><button class="opt tooltipBox" onclick="toggleOpt('autosave')">Autosave: {{ options.autosave?"ON":"OFF" }}<tooltip :text="'Highly reccommended to leave enabled'"></tooltip></button></td>
                 <td><button class="opt" onclick="hardReset()">HARD RESET</button></td>
             </tr>
             <tr>
 				<td><button class="optTitle">Visual -</button></td>
                 <td><button class="opt" onclick="adjustMSDisp()">Show Milestones: {{ MS_DISPLAYS[MS_SETTINGS.indexOf(options.msDisplay)]}}</button></td>
-                <td><button class="opt" onclick="toggleOpt('hideChallenges')">Completed Challenges: {{ options.hideChallenges?"HIDDEN":"SHOWN" }}</button></td>
+                <td><button class="opt tooltipBox" onclick="toggleNotation()">Notation: {{ viewNotation() }}<tooltip :text="'Tooltips are unaffected by notation'"></tooltip></button></td>
                 <td><button class="opt" onclick="toggleOpt('compact')">Compact Mode: {{ options.compact?"ON":"OFF" }}</button></td>
                 <td><button class="opt" onclick="toggleOpt('upgID')">Display IDs: {{ options.upgID?"ON":"OFF" }}</button></td>
-                <td><button class="opt" onclick="toggleOpt('tooltipCredits')">Tooltips: {{ options.tooltipCredits?"Credits/ Oringial Formula":"Formula" }}</button></td>
+                <td><button class="opt tooltipBox" onclick="toggleOpt('tooltipCredits')">Tooltips: {{ options.tooltipCredits?"Credits/ Oringial Formula":"Formula" }}<tooltip :text="'Original formulas follow balancing from forum, not actual formulas'"></tooltip></button></td>
             </tr>
             <tr>
 				<td><button class="optTitle">Gameplay -</button></td>
@@ -227,13 +227,6 @@ var systemComponents = {
 	'tooltip' : {
 		props: ['text'],
 		template: `<div class="tooltip" v-html="text" style="width: 100%;"></div>
-		`
-	},
-
-
-	'tooltipSide' : {
-		props: ['text'],
-		template: `<div class="tooltipSide" v-html="text" style="height: 100%;"></div>
 		`
 	},
 

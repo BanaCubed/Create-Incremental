@@ -24,16 +24,16 @@ body {
 	--cashBG:    hsla(115, 100%, 25%, 25%);
 	--rebirth:   hsla(345, 100%, 35%, 100%);
 	--rebirthBG: hsla(345, 100%, 35%, 25%);
-	--super:     hsla(330, 100%, 60%, 100%);
-	--superBG:   hsla(330, 100%, 60%, 25%);
+	--super:     hsl(0, 70%, 50%);
+	--superBG:   hsla(0, 70%, 50%, 25%);
 	--power:     hsla(60, 100%, 50%, 100%);
 	--powerBG:   hsla(60, 100%, 50%, 25%);
 	--tech:      hsla(0, 0%, 50%, 100%);
 	--techBG:    hsla(0, 0%, 50%, 25%);
 	--cursed:    hsla(300, 100%, 75%, 100%);
 	--cursedBG:  hsla(300, 100%, 75%, 25%);
-	--hyper:     hsla(165, 100%, 50%, 100%);
-	--hyperBG:   hsla(165, 100%, 50%, 25%);
+	--hyper:     hsla(180, 100%, 35%, 100%);
+	--hyperBG:   hsla(180, 100%, 35%, 25%);
 }
 
 .cash.upg    { background-color: var(--cashBG); }
@@ -64,6 +64,7 @@ button {
 	border-width: 0.4rem;
 	border-color: hsla(0, 0%, 100%, 25%);
 	color: white;
+	min-height: 3.5rem
 }
 
 .achievement {

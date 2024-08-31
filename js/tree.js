@@ -17,14 +17,14 @@ addLayer("tree-tab", {
     tabFormat: {
         "Cash": {
             buttonStyle: {
-                "background-color": "rgb(21, 115, 7)",
+                "background-color": "var(--cash)",
             },
             embedLayer: 'cash',
         },
         "Rebirths": {
             unlocked(){return player.rebirth.unlocked},
             buttonStyle: {
-                "background-color": "#BA0022",
+                "background-color": "var(--rebirth)",
             },
             embedLayer: 'rebirth',
         },

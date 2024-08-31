@@ -106,7 +106,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader cash upg">
 				<span v-if="player.points.lt('1e1000')"  class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: rgb(21, 115, 7); text-shadow: rgb(21, 115, 7) 0px 0px 10px;">{{"$" + format(player.points.max(0))}}</h2>
+				<h2  class="overlayThing" id="points" style="color: var(--cash); text-shadow: var(--cash) 0px 0px 10px;">{{"$" + format(player.points.max(0))}}</h2>
 				<br>
 				<span v-if="canGenPoints()"  class="overlayThing">({{tmp.other.oompsMag != 0 ? format(tmp.other.oomps) + " OOM" + (tmp.other.oompsMag < 0 ? "^OOM" : tmp.other.oompsMag > 1 ? "^" + tmp.other.oompsMag : "") + "s" : formatSmall(getPointGen())}}/sec)</span>
 			</div>
@@ -116,7 +116,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader rebirth upg">
 				<span v-if="player.rebirth.points.lt('1e1000')"  class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: #BA0022; text-shadow: #BA0022 0px 0px 10px;">{{formatWhole(player.rebirth.points.max(0))}}</h2> RP
+				<h2  class="overlayThing" id="points" style="color: var(--rebirth); text-shadow: var(--rebirth) 0px 0px 10px;">{{formatWhole(player.rebirth.points.max(0))}}</h2> RP
 				<br>
 				<span v-if="maxedChallenge('super', 11)"  class="overlayThing">({{formatSmall(tmp.rebirth.getResetGain.times(tmp.rebirth.passiveGeneration))}}/sec)</span>
 			</div>
@@ -126,7 +126,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader rebirth upg" v-if="hasMilestone('chall', 1)">
 				<span v-if="player.rebirth.points.lt('1e1000')"  class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: #BA0022; text-shadow: #BA0022 0px 0px 10px;">{{formatWhole(player.rebirth.points.max(0))}}</h2> RP
+				<h2  class="overlayThing" id="points" style="color: var(--rebirth); text-shadow: var(--rebirth) 0px 0px 10px;">{{formatWhole(player.rebirth.points.max(0))}}</h2> RP
 				<br>
 				<span v-if="maxedChallenge('super', 11)"  class="overlayThing">({{formatSmall(tmp.rebirth.getResetGain.times(tmp.rebirth.passiveGeneration))}}/sec)</span>
 			</div>
@@ -136,7 +136,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader super upg">
 				<span v-if="player.super.points.lt('1e1000')"  class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: rgb(251, 26, 61); text-shadow: rgb(251, 26, 61) 0px 0px 10px;">{{formatWhole(player.super.points.max(0))}}</h2> SRP
+				<h2  class="overlayThing" id="points" style="color: var(--super); text-shadow: var(--super) 0px 0px 10px;">{{formatWhole(player.super.points.max(0))}}</h2> SRP
 				<br>
 				<span v-if="hasMilestone('hyper', 0)"  class="overlayThing">({{formatSmall(tmp.super.getResetGain.times(tmp.super.passiveGeneration))}}/sec)</span>
 			</div>
@@ -146,7 +146,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader super upg" v-if="false">
 				<span v-if="player.super.points.lt('1e1000')"  class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: rgb(251, 26, 61); text-shadow: rgb(251, 26, 61) 0px 0px 10px;">{{formatWhole(player.super.points.max(0))}}</h2> SRP
+				<h2  class="overlayThing" id="points" style="color: var(--super); text-shadow: var(--super) 0px 0px 10px;">{{formatWhole(player.super.points.max(0))}}</h2> SRP
 				<br>
 				<span v-if="hasMilestone('hyper', 0)"  class="overlayThing">({{formatSmall(tmp.super.getResetGain.times(tmp.super.passiveGeneration))}}/sec)</span>
 			</div>
@@ -156,7 +156,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader power upg">
 				<span v-if="player.power.power.lt('1e1000')"  class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: #d6c611; text-shadow: #d6c611 0px 0px 10px;">{{formatWhole(player.power.power.max(0))}}</h2> Power
+				<h2  class="overlayThing" id="points" style="color: var(--power); text-shadow: var(--power) 0px 0px 10px;">{{formatWhole(player.power.power.max(0))}}</h2> Power
 				<br>
 				<span class="overlayThing" v-if="hasUpgrade('super', 14)">({{formatSmall(tmp.power.pylons.a.effect)}}/sec)</span>
 			</div>
@@ -166,7 +166,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader power upg" v-if="hasMilestone('chall', 1)">
 				<span v-if="player.power.power.lt('1e1000')"  class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: #d6c611; text-shadow: #d6c611 0px 0px 10px;">{{formatWhole(player.power.power.max(0))}}</h2> Power
+				<h2  class="overlayThing" id="points" style="color: var(--power); text-shadow: var(--power) 0px 0px 10px;">{{formatWhole(player.power.power.max(0))}}</h2> Power
 				<br>
 				<span class="overlayThing" v-if="hasUpgrade('super', 14)">({{formatSmall(tmp.power.pylons.a.effect)}}/sec)</span>
 			</div>
@@ -176,7 +176,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader tax upg">
 				<span v-if="player.super.tax.lte('1e1000')"  class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: rgb(241, 112, 255); text-shadow: rgb(241, 112, 255) 0px 0px 10px;">{{formatWhole(player.super.tax.max(0))}}</h2> Tax
+				<h2  class="overlayThing" id="points" style="color: var(--cursed); text-shadow: var(--cursed) 0px 0px 10px;">{{formatWhole(player.super.tax.max(0))}}</h2> Tax
 				<br>
 				<span class="overlayThing">(×{{formatSmall(tmp.super.challenges[15].nerf)}}/sec)</span>
 			</div>
@@ -186,7 +186,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader tax upg" v-if="hasMilestone('chall', 1) && inChallenge('super', 15)">
 				<span v-if="player.super.tax.lte('1e1000')"  class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: rgb(241, 112, 255); text-shadow: rgb(241, 112, 255) 0px 0px 10px;">{{formatWhole(player.super.tax.max(0))}}</h2> Tax
+				<h2  class="overlayThing" id="points" style="color: var(--cursed); text-shadow: var(--cursed) 0px 0px 10px;">{{formatWhole(player.super.tax.max(0))}}</h2> Tax
 				<br>
 				<span class="overlayThing">(×{{formatSmall(tmp.super.challenges[15].nerf)}}/sec)</span>
 			</div>
@@ -196,7 +196,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader hyper upg">
 				<span v-if="player.hyper.points.lt('1e1000')"  class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: #2eb5c8; text-shadow: #2eb5c8 0px 0px 10px;">{{formatWhole(player.hyper.points.max(0))}}</h2> HRP
+				<h2  class="overlayThing" id="points" style="color: var(--hyper); text-shadow: var(--hyper) 0px 0px 10px;">{{formatWhole(player.hyper.points.max(0))}}</h2> HRP
 				<br>
 			</div>
 		`
@@ -215,7 +215,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader universe upg">
 				<span v-if="player.hyper.cash.lt('1e1000')"  class="overlayThing">Universal Time is </span>
-				<h2  class="overlayThing" id="points" style="color: rgba(122, 6, 176, 1); text-shadow: rgba(122, 6, 176, 1) 0px 0px 10px;">{{formatBoost(tmp.chall.uTime.max(0), false)}}</h2> as fast
+				<h2  class="overlayThing" id="points" style="color: rgba(122, 6, 176, 1); text-shadow: rgba(122, 6, 176, 1) 0px 0px 10px;">{{formatBoost(tmp.chall.uTime.max(0), true)}}</h2> as fast
 				<br><span>as real time</span>
 			</div>
 		`
@@ -283,7 +283,7 @@ function loadVue() {
 			<h1>Changelog</h1><br><br>
 <span style="text-align: left; position: absolute; left: 30px;">
 	<h1>v1.0</h1><br>
-		- <span style="color: #9966BB">Remade the Entire Game</span><br>
+		- <span class="betaWarning">Remade the Entire Game</span><br>
 		- Improved <span style="color: #157307">Cash</span><br>
 		- Improved <span style="color: #ba0022">Rebirth</span><br>
 		- Improved <span style="color: #eb1a3d">Super Rebirth</span><br>
@@ -340,9 +340,9 @@ function loadVue() {
 		- Pylons: 6<br>
 		- Tabs: 5<br>
 		- Subtabs: 9<br>
-		- Things you can press in the machine: 12<br>
-		- Times the machine can be improved: 3<br>
-		- Max Ultimate Matter Fragments: 0<br>
+		- Buttons in the Machine: 12<br>
+		- Upgrades to the Machine: 3<br>
+		- Max UMF: 0<br>
 		- Max Singularities: 0<br>
 		- Settings: 11<br>
 		- Currencies: 5<br>

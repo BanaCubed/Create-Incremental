@@ -382,7 +382,7 @@ addLayer('cash', {
             },
         },
     },
-    color: "rgb(21, 115, 7)",
+    color: "var(--cash)",
     tabFormat: {
         "Main": {
             unlocked(){return player.machine.unlocked},
@@ -392,7 +392,7 @@ addLayer('cash', {
                 'upgrades'
             ],
             buttonStyle: {
-                "background-color": "rgb(21, 115, 7)",
+                "background-color": "var(--cash)",
                 "border-color": "rgba(255, 255, 255, 0.25)",
             },
             shouldNotify() {
@@ -415,7 +415,7 @@ addLayer('cash', {
         "The Machine": {
             unlocked(){return player.machine.unlocked},
             buttonStyle: {
-                "background-color": "#444444",
+                "background-color": "var(--tech)",
                 "border-color": "rgba(255, 255, 255, 0.25)",
             },
             embedLayer: 'machine',

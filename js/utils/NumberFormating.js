@@ -21,7 +21,7 @@ type      - Formatting to use (see below key)
         Scientific notation until ee6 (beyond this point the number before the e becomes meaningless)
         Logarithmic notation beyond ee6  (after ee9, will start to have notation in the exponent)
     
-    2 - Logarithmic
+    2 - Logarithm
         Logarithmic notation beyond ee6  (after ee9, will start to have notation in the exponent)
     
     3 - Standard
@@ -56,6 +56,15 @@ type      - Formatting to use (see below key)
         Joke Notation
 
 */
+const notations = [0, 1, 2, 5, 6, 7]
+const no_names = ['Mixed Scientific', 'Scientific', 'Logarithm', 'Mixed Logarithm', 'YES/NO', 'Blind']
+function toggleNotation() {
+    if(options.notation == 7) { options.notation = 0; return }
+    options.notation = notations[notations.indexOf(options.notation) + 1]
+}
+function viewNotation() {
+    return no_names[notations.indexOf(options.notation)]
+}
 
 function format(n, int = false, small = false, type = options.notation) {
     n = new Decimal(n);
@@ -96,7 +105,7 @@ function formatSmall(n) { return format(n, false, true) }
 // Useful for numbers that change length rapidly (has some issues with some formattings)
 function formatLength(n, int = false, minlength = 0) {
     let text = format(n, int);
-    if(text.length < minlength) {
+    if(text.length < minlength && options.notation != 6 && options.notation != 7) {
         let toAdd = minlength - text.length;
         while (toAdd > 0) {
             text = '0' + text;
@@ -199,8 +208,18 @@ function machineText() {
 
 function formatBoost(n, mult=false) {
     if(mult) {
-        return 'x'
-    } else return 'y'
+        if(n.gte(100)) { return `×${format(n, true)}` }
+        if(n.gte(20)) { return `×${format(n)}` }
+        if(n.gte(1)) { return `${format(n.times(100), true)}%` }
+        if(n.gte(0.01)) { return `${format(n.times(100))}%` }
+        if(n.gte(0.0001)) { return `/${format(n.recip(), )}` }
+        return `/${format(n.recip(), true)}`
+    } else {
+        if(n.gte(100)) { return `×${format(n.add(1), true)}` }
+        if(n.gte(20)) { return `×${format(n.add(1))}` }
+        if(n.gte(1)) { return `+${format(n.times(100), true)}%` }
+        return `${format(n.times(100))}%`
+    }
 }
 
 function formatCost(n, layer) {

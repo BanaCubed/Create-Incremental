@@ -14,7 +14,7 @@ addLayer('rebirth', {
                 "upgrades",
             ],
             buttonStyle: {
-                "background-color": "#BA0022",
+                "background-color": "var(--rebirth)",
                 "border-color": "rgba(255, 255, 255, 0.25)",
             },
             shouldNotify() {
@@ -40,7 +40,7 @@ addLayer('rebirth', {
         "Super": {
             unlocked(){return player.super.unlocked},
             buttonStyle: {
-                "background-color": "#EB1A3D",
+                "background-color": "var(--super)",
                 "border-color": "rgba(255, 255, 255, 0.25)",
             },
             embedLayer: 'super',
@@ -48,7 +48,7 @@ addLayer('rebirth', {
         "Hyper": {
             unlocked(){return player.hyper.unlocked},
             buttonStyle: {
-                "background-color": "#2eb5c8",
+                "background-color": "var(--hyper)",
                 "border-color": "rgba(255, 255, 255, 0.25)",
             },
             embedLayer: 'hyper',
@@ -112,7 +112,7 @@ addLayer('rebirth', {
         gain = gain.times(tmp.chall.uTime)
         return tmp.rebirth.canReset?gain:new Decimal(0)
     },
-    color: "#BA0022",
+    color: "var(--rebirth)",
     resource: "RP",
     prestigeButtonText() {
         return tmp.rebirth.canReset ? `Rebirth for ${formatWhole(tmp.rebirth.getResetGain)} Rebirth Points${tmp.rebirth.getResetGain.lte(100)?`<br>Next at $${formatWhole(tmp.rebirth.getNextAt)}`:''}`:`Reach $${format(tmp.rebirth.requires.times(tmp.rebirth.buyables[11].effect.pow(tmp.rebirth.buyables[11].nerfExpo)).times(tmp.cash.buyables[11].effect.pow(tmp.cash.buyables[11].nerfExpo)))} to rebirth`

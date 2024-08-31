@@ -1,5 +1,5 @@
 addLayer('hyper', {
-    color: "#2eb5c8",
+    color: "var(--hyper)",
     tabFormat: [
         ['row', [
             "prestige-button",
