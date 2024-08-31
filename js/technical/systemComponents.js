@@ -141,8 +141,9 @@ var systemComponents = {
 		<br><br>
 		<div class="link" onclick="showTab('changelog-tab')">Changelog</div><br>
         <span v-if="modInfo.discordLink"><a class="link" v-bind:href="modInfo.discordLink" target="_blank">{{modInfo.discordName}}</a><br></span>
+        <a class="link" href="https://galaxy.click/forum/thread/255" target="_blank">Original Forum Thread</a><br>
         <a class="link" href="https://discord.gg/F3xveHV" target="_blank">The Modding Tree Discord</a><br>
-        <a class="link" href="http://discord.gg/wwQfgPa" target="_blank">Main Prestige Tree server</a><br>
+        <a class="link" href="https://discord.gg/wwQfgPa" target="_blank">Main Prestige Tree server</a><br>
 		<br><br></div>
     `
     },

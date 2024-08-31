@@ -873,7 +873,7 @@ addLayer('hyper', {
             display(){return `<h2>?</h2>`},
             tooltip() {
                 if(options.tooltipCredits) return `Idea from adoplayzz<br><span style="font-size: 11px;">HRP upgrades are split into 4 categories: Basic, Machine, Hyper and Combined. Each time you buy the first upgrade in that category the other categories cost increases by *2<br><br>Basic: 1HRP: *100 Cash, 2HRP: *15 RP and *5 SRP, 3HRP: you start with 100 SRP, 5HRP: *10 cash and SRP<br>Machine: 1HRP: all modes are applied twice, 2HRP: *5 PPy generation, 3HRP: You start with 1 PPy3, 5HRP: decrease all cost scailing of PPy by -^0.2<br>Hyper: 1HRP: hyper cash boost cash by log3(HC), 2HRP: hyper cash *10, 3HRP: hyper cash boosts RP and SRP by log5(HC), 5HRP: hyper cash boosts HRP by log10(HC), also hyper cash *3<br>Combined: 2HRP: *5 Cash, *3 RP, *2 SRP, *5 Power, 3HRP: *2 Tickspeed, *2 PPy generation, *2 cash, 5HRP: HC,RP,SRP,Power *5, 10HRP: unlocks a new extension to the machine<br><br>The matter combustor:<br>in the matter combustor you generate Matter, Anti-Matter, Dark-Matter and Exotic-Matter or (M,AM,DM,EM) +1/s<br><br>Matter and Anti-Matter divide each others gain by sqrt(M)/sqrt(AM) Dark-Matter and Exotic-Matter do the same`
-                return `<h2>Hyper Paths</h2><br>Hyper Paths are basically sets of four upgrades<br>Starting a path increases the cost of all unstarted paths<br>Matter path is exempt from this` },
+                return `<h2>Hyper Paths</h2><br>Hyper Paths are sets of four upgrades.<br>Starting a path increases the cost of all unstarted paths.<br>The Matter Path is exempt from this.` },
             unlocked(){return hasMilestone('hyper', 4)},
         },
     },
