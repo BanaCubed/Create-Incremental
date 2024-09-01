@@ -55,8 +55,8 @@ type      - Formatting to use (see below key)
         Joke Notation
 
 */
-const notations = [0, 1, 2, 5, 6, 7, 8]
-const no_names = ['Mixed Scientific', 'Scientific', 'Logarithm', 'Mixed Logarithm', 'YES/NO', 'Blind', 'Infinity']
+const notations = [0, 1, 2, 4, 5, 6, 7, 8]
+const no_names = ['Mixed Scientific', 'Scientific', 'Logarithm', 'Letters', 'Mixed Logarithm', 'YES/NO', 'Blind', 'Infinity']
 function toggleNotation() {
     if(options.notation == 8) { options.notation = 0; return }
     options.notation = notations[notations.indexOf(options.notation) + 1]
@@ -93,6 +93,7 @@ function format(n, int = false, small = false, type = options.notation) {
         return n.toStringWithDecimalPlaces(1);
     }
     
+    if(type == 4) { return formatLetters(n); }
     if(type == 8) { return formatInf(n, 8); }
 
     if(n.lt('1e9')) { return formatComma(n); }
@@ -121,10 +122,20 @@ function formatLength(n, int = false, minlength = 0) {
     return text
 }
 
-// For use in the (unfinished/unstarted) letters notation option (4)
-const letters = 'abcdefghjklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+// This is hell
+const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 function formatLetters(n) {
-    return 'abcdefghjklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    let position = n.times(1.001).log(1000).floor();
+    n = n.div(position.pow_base(1000));
+    length = n.times(1.001).log(10).floor().toNumber();
+    let text = n.toStringWithDecimalPlaces(3-length)
+    let letters2
+    while(position.gte(1)) {
+        letters2 = letters[position.sub(1).mod(26).floor().toNumber()] + letters2
+        position = position.div(26)
+    }
+    letters2 = letters2.slice(0, letters2.length-9)
+    return text + ' ' + letters2
 }
 
 // For use in the Mixed Scientific and Standard notation options
@@ -157,7 +168,7 @@ function formatTime(n) {
     if(n.lt(3600)) { return format(n.div(60).floor(), true) + ':' + formatLength(n.mod(60), false, 5) }
     if(n.lt(864000)) { return format(n.div(3600).floor(), true) + ':' + formatLength(n.div(60).mod(60).floor(), true, 2) + ':' + formatLength(n.mod(60), false, 5) }
     if(n.lt(315360000)) { return format(n.div(86400)) + ' days'  }
-    return format(n.div(31536000), true) + ' years'
+    return format(n.div(31536000)) + ' years'
 }
 
 function formatBoost(n, mult=false) {
@@ -185,6 +196,7 @@ function formatID(layer = 'cash', type = 'upgrades', id = 11) {
     if(layer == 'power') { text = 'P' }
     if(layer == 'hyper') { text = 'H' }
     if(layer == 'matter') { text = 'M' }
+    if(layer == 'antimatter') { text = 'Am' }
 
     if(type == 'upgrades') { text = text + 'U' }
     if(type == 'buyables') { text = text + 'B' }
@@ -245,5 +257,7 @@ function formatCost(n, layer) {
         return formatWhole(n) + ' HRP'
     } else if(layer == 'matter') {
         return formatWhole(n) + ' Matter'
+    } else if(layer == 'antimatter') {
+        return formatWhole(n) + ' AM'
     }
 }

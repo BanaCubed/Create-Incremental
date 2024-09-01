@@ -22,7 +22,7 @@ addLayer('chall', {
         if(hasUpgrade('super', 11)) player.chall.unlocked = true
         player.chall.uTimePlayed = player.chall.uTimePlayed.add(Decimal.times(tmp.chall.uTime, diff))
     },
-    row: 9,
+    row: 99,
     bars: {
         nextFeature: {
             direction: RIGHT,
@@ -41,7 +41,8 @@ addLayer('chall', {
                 if(true) {
                     if(player.hyper.subLayers < 1) { return player.hyper.rebirths.div(5) }
                     if(!player.matter.unlocked) { return player.hyper.upgrades.length / 17 }
-                    if(true) { return player.hyper.points.div(250000) }
+                    if(!player.antimatter.unlocked) { return player.hyper.points.div(250000) }
+                    if(true) { return player.hyper.points.div(1e8) }
                 }
             },
             unlocked(){return true},
@@ -70,7 +71,8 @@ addLayer('chall', {
                 if(true) {
                     if(player.hyper.subLayers < 1) { return `Reach ${formatWhole(5)} Hyper Rebirths to unlock Paths and compress the resources display<br>${formatWhole(player.hyper.rebirths)}/${formatWhole(5)} Hyper Rebirths` }
                     if(!player.matter.unlocked) { return `Unlock the Matter Combustor to unlock Matter` }
-                    if(true) { return `Unlock the Antimatter Chamber to unlock Antimatter` }
+                    if(!player.antimatter.unlocked) { return `Unlock the Antimatter Chamber to unlock Antimatter` }
+                    if(true) { return `Unlock the Black Hole Container to unlock Dark Matter` }
                 }
             },
             nextColor() {
@@ -110,6 +112,7 @@ addLayer('chall', {
     uTime() {
         let time = tmp.hyper.cashEffect
         if(hasUpgrade('matter', 12)) { time = time.times(tmp.matter.upgrades[12].effect) }
+        if(hasUpgrade('antimatter', 12)) { time = time.times(tmp.antimatter.upgrades[12].effect) }
         return time
     },
 })

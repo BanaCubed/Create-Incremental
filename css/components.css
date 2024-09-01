@@ -38,18 +38,25 @@ body {
 	--hyperBG:   hsla(180, 100%, 30%, 25%);
 	--matter:    hsla(195, 80%, 30%, 100%);
 	--matterBG:  hsla(195, 80%, 30%, 25%);
+	--amatter:   hsla(0, 70%, 60%, 100%);
+	--amatterBG: hsla(0, 70%, 60%, 25%);
+	--hcash:     hsla(140, 80%, 55%, 100%);
+	--hcashBG:   hsla(140, 80%, 55%, 25%);
+	--universe:  hsla(280, 95%, 30%, 100%);
+	--universeBG:hsla(280, 95%, 30%, 25%);
 }
 
-.cash.upg    { background-color: var(--cashBG); }
-.rebirth.upg { background-color: var(--rebirthBG); }
-.super.upg   { background-color: var(--superBG); }
-.power.upg   { background-color: var(--powerBG); }
-.machine.upg { background-color: var(--techBG); }
-.tax.upg     { background-color: var(--cursedBG); }
-.hyper.upg   { background-color: var(--hyperBG); }
-.matter.upg  { background-color: var(--matterBG); }
-.hcash.upg   { background-color: rgb(52, 235, 103, 0.25); }
-.universe.upg{ background-color: rgba(61, 3, 88, 0.25); }
+.cash.upg       { background-color: var(--cashBG); }
+.rebirth.upg    { background-color: var(--rebirthBG); }
+.super.upg      { background-color: var(--superBG); }
+.power.upg      { background-color: var(--powerBG); }
+.machine.upg    { background-color: var(--techBG); }
+.tax.upg        { background-color: var(--cursedBG); }
+.hyper.upg      { background-color: var(--hyperBG); }
+.matter.upg     { background-color: var(--matterBG); }
+.antimatter.upg { background-color: var(--amatterBG); }
+.hcash.upg      { background-color: var(--hcashBG); }
+.universe.upg   { background-color: var(--universeBG); }
 
 .c           { color: var(--cash); }
 .r           { color: var(--rebirth); }
@@ -57,13 +64,14 @@ body {
 .p           { color: var(--power); }
 .m           { color: var(--tech); }
 
-.cash.can    { background-color: var(--cash); }
-.rebirth.can { background-color: var(--rebirth); }
-.super.can   { background-color: var(--super); }
-.power.can   { background-color: var(--power); }
-.machine.can { background-color: var(--tech); }
-.hyper.can   { background-color: var(--hyper); }
-.matter.can  { background-color: var(--matter); }
+.cash.can       { background-color: var(--cash); }
+.rebirth.can    { background-color: var(--rebirth); }
+.super.can      { background-color: var(--super); }
+.power.can      { background-color: var(--power); }
+.machine.can    { background-color: var(--tech); }
+.hyper.can      { background-color: var(--hyper); }
+.matter.can     { background-color: var(--matter); }
+.antimatter.can { background-color: var(--amatter); }
 
 button {
 	border-style: solid;

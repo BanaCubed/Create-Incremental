@@ -498,6 +498,7 @@ addLayer('power', {
                 if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
                 if(hasUpgrade('hyper', 42)) { gain = gain.times(100) }
                 if(hasUpgrade('hyper', 43)) { gain = gain.times(5) }
+                if(hasUpgrade('antimatter', 13)) { gain = gain.times(tmp.antimatter.upgrades[13].effect) }
                 gain = gain.times(tmp.matter.ultimateEffect)
                 gain = gain.times(tmp.chall.uTime)
                 return gain
@@ -517,6 +518,7 @@ addLayer('power', {
                 if(hasUpgrade('hyper', 24)) { gain = gain.times(Decimal.pow(1.08, player.power.pylobB.min(1000))) }
                 if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
                 if(hasUpgrade('hyper', 42)) { gain = gain.times(10) }
+                if(hasUpgrade('antimatter', 13)) { gain = gain.times(tmp.antimatter.upgrades[13].effect) }
                 gain = gain.times(tmp.matter.ultimateEffect)
 	            gain = gain.times(tmp.chall.uTime)
                 return gain
@@ -536,6 +538,7 @@ addLayer('power', {
                 if(hasUpgrade('hyper', 24)) { gain = gain.times(Decimal.pow(1.16, player.power.pylobC.min(1000))) }
                 if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
                 if(hasUpgrade('hyper', 42)) { gain = gain.times(10) }
+                if(hasUpgrade('antimatter', 13)) { gain = gain.times(tmp.antimatter.upgrades[13].effect) }
                 gain = gain.times(tmp.matter.ultimateEffect)
 	            gain = gain.times(tmp.chall.uTime)
                 return gain
@@ -555,6 +558,7 @@ addLayer('power', {
                 if(hasUpgrade('hyper', 24)) { gain = gain.times(Decimal.pow(1.32, player.power.pylobD.min(1000))) }
                 if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
                 if(hasUpgrade('hyper', 42)) { gain = gain.times(10) }
+                if(hasUpgrade('antimatter', 13)) { gain = gain.times(tmp.antimatter.upgrades[13].effect) }
                 gain = gain.times(tmp.matter.ultimateEffect)
 	            gain = gain.times(tmp.chall.uTime)
                 return gain
@@ -574,6 +578,7 @@ addLayer('power', {
                 if(hasUpgrade('hyper', 24)) { gain = gain.times(Decimal.pow(1.64, player.power.pylobE.min(1000))) }
                 if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
                 if(hasUpgrade('hyper', 42)) { gain = gain.times(10) }
+                if(hasUpgrade('antimatter', 13)) { gain = gain.times(tmp.antimatter.upgrades[13].effect) }
                 gain = gain.times(tmp.matter.ultimateEffect)
 	            gain = gain.times(tmp.chall.uTime)
                 return gain
@@ -593,6 +598,7 @@ addLayer('power', {
                 if(hasUpgrade('hyper', 24)) { gain = gain.times(Decimal.pow(2.28, player.power.pylobF.min(1000))) }
                 if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
                 if(hasUpgrade('hyper', 42)) { gain = gain.times(10) }
+                if(hasUpgrade('antimatter', 13)) { gain = gain.times(tmp.antimatter.upgrades[13].effect) }
                 gain = gain.times(tmp.matter.ultimateEffect)
 	            gain = gain.times(tmp.chall.uTime)
                 return gain

@@ -205,7 +205,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader hcash upg uhoh">
 				<span class="overlayThing">You have Hyper</span>
-				<h2  class="overlayThing" id="points" style="color: #34eb67; text-shadow: #34eb67 0px 0px 10px;">{{'$' + format(player.hyper.cash.max(0))}}</h2>
+				<h2  class="overlayThing" id="points" style="color: var(--hcash); text-shadow: var(--hcash) 0px 0px 10px;">{{'$' + format(player.hyper.cash.max(0))}}</h2>
 				<br>
 				<span class="overlayThing" v-if="player.hyper.rebirths.gte(1)">({{formatSmall(tmp.chall.uTime.times(tmp.hyper.cashGain))}}/sec)</span>
 			</div>
@@ -215,7 +215,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader universe upg">
 				<span class="overlayThing">Universal Time is </span>
-				<h2  class="overlayThing" id="points" style="color: rgba(122, 6, 176, 1); text-shadow: rgba(122, 6, 176, 1) 0px 0px 10px;">{{formatBoost(tmp.chall.uTime.max(0), true)}}</h2> as fast
+				<h2  class="overlayThing" id="points" style="color: var(--universe); text-shadow: var(--universe) 0px 0px 10px;">{{formatBoost(tmp.chall.uTime.max(0), true)}}</h2> as fast
 				<br><span>as real time</span>
 			</div>
 		`
@@ -227,6 +227,16 @@ function loadVue() {
 				<h2  class="overlayThing" id="points" style="color: var(--matter); text-shadow: var(--matter) 0px 0px 10px;">{{format(player.matter.points.max(0))}}</h2> Matter
 				<br>
 				<span class="overlayThing" v-if="hasUpgrade('hyper', 51)">({{formatSmall(tmp.matter.matterGain)}}/sec)</span>
+			</div>
+		`
+	})
+	Vue.component('antimatter-display', {
+		template: `
+			<div class="currencyDisplayHeader antimatter upg uhoh">
+				<span class="overlayThing">You have </span>
+				<h2  class="overlayThing" id="points" style="color: var(--amatter); text-shadow: var(--amatter) 0px 0px 10px;">{{format(player.antimatter.points.max(0))}}</h2> Antimatter
+				<br>
+				<span class="overlayThing" v-if="hasUpgrade('hyper', 51)">({{formatSmall(tmp.antimatter.matterGain)}}/sec)</span>
 			</div>
 		`
 	})
@@ -488,9 +498,9 @@ function loadVue() {
 		template: `
 		<div v-if="player.matter.unlocked" class="hyper upg" style="width: 514px; max-width: calc(100vw - 40px); position: relative; min-height: 0;">
 			<h2>Matter Combustor</h2><br>
-			<span>{{ format(player.matter.points) }} Matter<span v-if="player.matter.umf.gte(1)"> | {{ formatWhole(player.matter.umf) }} UMF</span><br>
+			<span>{{ format(player.matter.points) }} Matter<span v-if="player.antimatter.unlocked"> | {{ formatWhole(player.antimatter.points) }} Antimatter</span<span v-if="player.matter.umf.gte(1)"> | {{ formatWhole(player.matter.umf) }} UMF</span><br>
 			<span v-if="player.matter.umf.gte(1)">Ultimate Matter Fragments are boosting HRP, SRP, RP, $ and Power {{ formatBoost(tmp.matter.ultimateEffect, true) }}</span><br></span>
-			<tree :data="[['matter']]" v-if="player.machine.matter"></tree>
+			<br v-if="player.machine.matter"><br v-if="player.machine.matter"><tree :data="[['matter'],[],['antimatter']]" v-if="player.machine.matter"></tree>
 			<button style="width: 4rem; height: 4rem; background-color: transparent; text-align: center; min-height: 2rem; position: absolute; top: -0.5rem; left: -0.5rem; border: none;" onclick="player.machine.matter = !player.machine.matter">{{player.machine.matter?'▼':'▶'}}</button>
 		</div>
 		`
@@ -614,9 +624,9 @@ function loadVue() {
 				<span class="upgDescription" v-html="tmp[layer].buyables[data].display()"></span>
 			</div>
 			<div style="height: 35px; display: flex;">
-				<div style="width: 140px;" class="upgDescription">Count: {{ formatWhole(getBuyableAmount(layer, data)) }}<br>Cost: {{ formatCost(tmp[layer].buyables[data].cost, layer) }}</div>
+				<div style="width: 140px;" class="upgDescription">Count: {{ formatWhole(getBuyableAmount(layer, data)) }}<span v-if="tmp[layer].buyables[data].purchaseLimit.lt(Decimal.dLayerSafeMax)">/{{ formatWhole(tmp[layer].buyables[data].purchaseLimit) }}</span><br>Cost: {{ formatCost(tmp[layer].buyables[data].cost, layer) }}</div>
 				<button style="width: 90px; height: 35px; border-color: rgba(255, 255, 255, 0.25);"
-					v-bind:class="{ upgBuy: true, tooltipBox: true, can: tmp[layer].buyables[data].canAfford, locked: !tmp[layer].buyables[data].canAfford, [layer]: true}"
+					v-bind:class="{ upgBuy: true, tooltipBox: true, can: tmp[layer].buyables[data].canAfford, locked: !tmp[layer].buyables[data].canAfford, [layer]: true, bought: getBuyableAmount(layer, data).gte(tmp[layer].buyables[data].purchaseLimit)}"
 					v-on:click="if(!interval) buyBuyable(layer, data)">Buy</button>
 			</div>
 			<div style="position: absolute; bottom: 5px; left: 5px;" class="upgID" v-if="options.upgID">{{ formatID(layer, 'buyables', data) }}</div>

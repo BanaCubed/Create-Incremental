@@ -1,41 +1,29 @@
 function maxAffordable(layer, type, id) {
     if(layer === 'rebirth') {
         if(type === 'buyables') {
-            if(id === 11) {
-                return player.rebirth.points.max(2).log(3).floor()
-            }
-            if(id === 12) {
-                return player.rebirth.points.max(2).log(8).floor()
-            }
+            if(id === 11) { return player.rebirth.points.max(2).log(3).floor() }
+            if(id === 12) { return player.rebirth.points.max(2).log(8).floor() }
         }
     }
     if(layer === 'cash') {
         if(type === 'buyables') {
-            if(id === 11) {
-                return player.points.max(2).log(10).sub(5).floor()
-            }
+            if(id === 11) { return player.points.max(2).log(10).sub(5).floor() }
+        }
+    }
+    if(layer === 'matter') {
+        if(type === 'buyables') {
+            if(id === 11) { return player.matter.points.div(2000).div(tmp.matter.upgrades[15].effect).max(1).log(5).floor() }
+            if(id === 12) { return player.matter.points.div(1e10).max(1).log(3).max(1).log(2).floor() }
         }
     }
     if(layer === 'power') {
         if(type === 'pylons') {
-            if(id === 21) {
-                return player.power.power.max(1).log(2).add(1).floor()
-            }
-            if(id === 22) {
-                return player.power.power.max(1).div(50).log(5).add(1).floor()
-            }
-            if(id === 23) {
-                return player.power.power.max(1).div(1e5).log(10).add(1).floor()
-            }
-            if(id === 24) {
-                return player.power.power.max(1).div(1e15).log(100).add(1).floor()
-            }
-            if(id === 25) {
-                return player.power.power.max(1).div(1e21).log(1e3).add(1).floor()
-            }
-            if(id === 26) {
-                return player.power.power.max(1).div(1e50).log(1e5).add(1).floor()
-            }
+            if(id === 21) { return player.power.power.max(1).log(2).add(1).floor() }
+            if(id === 22) { return player.power.power.max(1).div(50).log(5).add(1).floor() }
+            if(id === 23) { return player.power.power.max(1).div(1e5).log(10).add(1).floor() }
+            if(id === 24) { return player.power.power.max(1).div(1e15).log(100).add(1).floor() }
+            if(id === 25) { return player.power.power.max(1).div(1e21).log(1e3).add(1).floor() }
+            if(id === 26) { return player.power.power.max(1).div(1e50).log(1e5).add(1).floor() }
         }
     }
 }

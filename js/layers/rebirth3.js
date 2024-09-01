@@ -396,7 +396,7 @@ addLayer('hyper', {
             },
         },
         53: {
-            cost: new Decimal(1e10),
+            cost: new Decimal(1e8),
             description: `Add a Black Hole Container to the Matter Combustor`,
             canAfford() {
                 return hasUpgrade(this.layer, this.id-1)
@@ -765,7 +765,7 @@ addLayer('hyper', {
             tooltip() {
                 return `Matter 1<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
             },
-            canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)},
+            canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasMilestone('hyper', 4)},
         },
         52: {
@@ -786,7 +786,7 @@ addLayer('hyper', {
             tooltip() {
                 return `Matter 2<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
             },
-            canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)},
+            canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasUpgrade(this.layer, this.id-1)},
         },
         53: {
@@ -807,7 +807,7 @@ addLayer('hyper', {
             tooltip() {
                 return `Matter 3<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
             },
-            canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)},
+            canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasUpgrade(this.layer, this.id-1)},
         },
         54: {
@@ -828,7 +828,7 @@ addLayer('hyper', {
             tooltip() {
                 return `Matter 4<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
             },
-            canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)},
+            canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasUpgrade(this.layer, this.id-1)},
         },
 
