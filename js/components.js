@@ -106,117 +106,117 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader cash upg">
 				<span class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: var(--cash); text-shadow: var(--cash) 0px 0px 10px;">{{"$" + format(player.points.max(0))}}</h2>
+				<h2 class="overlayThing" id="points" style="color: var(--cash); text-shadow: var(--cash) 0px 0px 10px;" v-html="'$' + format(player.points.max(0))"></h2>
 				<br>
-				<span v-if="canGenPoints()"  class="overlayThing">({{tmp.other.oompsMag != 0 ? format(tmp.other.oomps) + " OOM" + (tmp.other.oompsMag < 0 ? "^OOM" : tmp.other.oompsMag > 1 ? "^" + tmp.other.oompsMag : "") + "s" : formatSmall(getPointGen())}}/sec)</span>
+				<span v-if="canGenPoints()" class="overlayThing" v-html="'(' + formatSmall(getPointGen()) + '/sec)'"></span>
 			</div>
 		`
-	})
+	});
 	Vue.component('rp-display', {
 		template: `
 			<div class="currencyDisplayHeader rebirth upg">
 				<span class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: var(--rebirth); text-shadow: var(--rebirth) 0px 0px 10px;">{{formatWhole(player.rebirth.points.max(0))}}</h2> RP
+				<h2 class="overlayThing" id="points" style="color: var(--rebirth); text-shadow: var(--rebirth) 0px 0px 10px;" v-html="formatWhole(player.rebirth.points.max(0))"></h2> RP
 				<br>
-				<span v-if="maxedChallenge('super', 11)"  class="overlayThing">({{formatSmall(tmp.rebirth.getResetGain.times(tmp.rebirth.passiveGeneration))}}/sec)</span>
+				<span v-if="maxedChallenge('super', 11)" class="overlayThing" v-html="'(' + formatSmall(tmp.rebirth.getResetGain.times(tmp.rebirth.passiveGeneration)) + '/sec)'"></span>
 			</div>
 		`
-	})
+	});
 	Vue.component('rp-uhoh-display', {
 		template: `
 			<div class="currencyDisplayHeader rebirth upg uhoh" v-if="hasMilestone('chall', 1)">
 				<span class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: var(--rebirth); text-shadow: var(--rebirth) 0px 0px 10px;">{{formatWhole(player.rebirth.points.max(0))}}</h2> RP
+				<h2 class="overlayThing" id="points" style="color: var(--rebirth); text-shadow: var(--rebirth) 0px 0px 10px;" v-html="formatWhole(player.rebirth.points.max(0))"></h2> RP
 				<br>
-				<span v-if="maxedChallenge('super', 11)"  class="overlayThing">({{formatSmall(tmp.rebirth.getResetGain.times(tmp.rebirth.passiveGeneration))}}/sec)</span>
+				<span v-if="maxedChallenge('super', 11)" class="overlayThing" v-html="'(' + formatSmall(tmp.rebirth.getResetGain.times(tmp.rebirth.passiveGeneration)) + '/sec)'"></span>
 			</div>
 		`
-	})
+	});
 	Vue.component('srp-display', {
 		template: `
 			<div class="currencyDisplayHeader super upg">
 				<span class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: var(--super); text-shadow: var(--super) 0px 0px 10px;">{{formatWhole(player.super.points.max(0))}}</h2> SRP
+				<h2 class="overlayThing" id="points" style="color: var(--super); text-shadow: var(--super) 0px 0px 10px;" v-html="formatWhole(player.super.points.max(0))"></h2> SRP
 				<br>
-				<span v-if="hasMilestone('hyper', 0)"  class="overlayThing">({{formatSmall(tmp.super.getResetGain.times(tmp.super.passiveGeneration))}}/sec)</span>
+				<span v-if="hasMilestone('hyper', 0)" class="overlayThing" v-html="'(' + formatSmall(tmp.super.getResetGain.times(tmp.super.passiveGeneration)) + '/sec)'"></span>
 			</div>
 		`
-	})
+	});
 	Vue.component('srp-uhoh-display', {
 		template: `
 			<div class="currencyDisplayHeader super upg uhoh" v-if="false">
 				<span class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: var(--super); text-shadow: var(--super) 0px 0px 10px;">{{formatWhole(player.super.points.max(0))}}</h2> SRP
+				<h2 class="overlayThing" id="points" style="color: var(--super); text-shadow: var(--super) 0px 0px 10px;" v-html="formatWhole(player.super.points.max(0))"></h2> SRP
 				<br>
-				<span v-if="hasMilestone('hyper', 0)"  class="overlayThing">({{formatSmall(tmp.super.getResetGain.times(tmp.super.passiveGeneration))}}/sec)</span>
+				<span v-if="hasMilestone('hyper', 0)" class="overlayThing" v-html="'(' + formatSmall(tmp.super.getResetGain.times(tmp.super.passiveGeneration)) + '/sec)'"></span>
 			</div>
 		`
-	})
+	});
 	Vue.component('power-display', {
 		template: `
 			<div class="currencyDisplayHeader power upg">
 				<span class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: var(--power); text-shadow: var(--power) 0px 0px 10px;">{{formatWhole(player.power.power.max(0))}}</h2> Power
+				<h2 class="overlayThing" id="points" style="color: var(--power); text-shadow: var(--power) 0px 0px 10px;" v-html="formatWhole(player.power.power.max(0))"></h2> Power
 				<br>
-				<span class="overlayThing" v-if="hasUpgrade('super', 14)">({{formatSmall(tmp.power.pylons.a.effect)}}/sec)</span>
+				<span class="overlayThing" v-if="hasUpgrade('super', 14)" v-html="'(' + formatSmall(tmp.power.pylons.a.effect) + '/sec)'"></span>
 			</div>
 		`
-	})
+	});
 	Vue.component('power-uhoh-display', {
 		template: `
 			<div class="currencyDisplayHeader power upg uhoh" v-if="hasMilestone('chall', 1)">
 				<span class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: var(--power); text-shadow: var(--power) 0px 0px 10px;">{{formatWhole(player.power.power.max(0))}}</h2> Power
+				<h2 class="overlayThing" id="points" style="color: var(--power); text-shadow: var(--power) 0px 0px 10px;" v-html="formatWhole(player.power.power.max(0))"></h2> Power
 				<br>
-				<span class="overlayThing" v-if="hasUpgrade('super', 14)">({{formatSmall(tmp.power.pylons.a.effect)}}/sec)</span>
+				<span class="overlayThing" v-if="hasUpgrade('super', 14)" v-html="'(' + formatSmall(tmp.power.pylons.a.effect) + '/sec)'"></span>
 			</div>
 		`
-	})
+	});
 	Vue.component('tax-display', {
 		template: `
 			<div class="currencyDisplayHeader tax upg">
 				<span class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: var(--cursed); text-shadow: var(--cursed) 0px 0px 10px;">{{formatWhole(player.super.tax.max(0))}}</h2> Tax
+				<h2 class="overlayThing" id="points" style="color: var(--cursed); text-shadow: var(--cursed) 0px 0px 10px;" v-html="formatWhole(player.super.tax.max(0))"></h2> Tax
 				<br>
-				<span class="overlayThing">(×{{formatSmall(tmp.super.challenges[15].nerf)}}/sec)</span>
+				<span class="overlayThing" v-html="'(×' + formatSmall(tmp.super.challenges[15].nerf) + '/sec)'"></span>
 			</div>
 		`
-	})
+	});
 	Vue.component('tax-uhoh-display', {
 		template: `
 			<div class="currencyDisplayHeader tax upg uhoh" v-if="hasMilestone('chall', 1) && inChallenge('super', 15)">
 				<span class="overlayThing">You have </span>
-				<h2 class="overlayThing" id="points" style="color: var(--cursed); text-shadow: var(--cursed) 0px 0px 10px;">{{formatWhole(player.super.tax.max(0))}}</h2> Tax
+				<h2 class="overlayThing" id="points" style="color: var(--cursed); text-shadow: var(--cursed) 0px 0px 10px;" v-html="formatWhole(player.super.tax.max(0))"></h2> Tax
 				<br>
-				<span class="overlayThing">(×{{formatSmall(tmp.super.challenges[15].nerf)}}/sec)</span>
+				<span class="overlayThing" v-html="'(×' + formatSmall(tmp.super.challenges[15].nerf) + '/sec)'"></span>
 			</div>
 		`
-	})
+	});
 	Vue.component('hyper-display', {
 		template: `
 			<div class="currencyDisplayHeader hyper upg">
 				<span class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: var(--hyper); text-shadow: var(--hyper) 0px 0px 10px;">{{formatWhole(player.hyper.points.max(0))}}</h2> HRP
+				<h2 class="overlayThing" id="points" style="color: var(--hyper); text-shadow: var(--hyper) 0px 0px 10px;" v-html="formatWhole(player.hyper.points.max(0))"></h2> HRP
 				<br>
 			</div>
 		`
-	})
+	});
 	Vue.component('hcash-display', {
 		template: `
 			<div class="currencyDisplayHeader hcash upg uhoh">
 				<span class="overlayThing">You have Hyper</span>
-				<h2  class="overlayThing" id="points" style="color: var(--hcash); text-shadow: var(--hcash) 0px 0px 10px;">{{'$' + format(player.hyper.cash.max(0))}}</h2>
+				<h2 class="overlayThing" id="points" style="color: var(--hcash); text-shadow: var(--hcash) 0px 0px 10px;" v-html="'$' + format(player.hyper.cash.max(0))"></h2>
 				<br>
-				<span class="overlayThing" v-if="player.hyper.rebirths.gte(1)">({{formatSmall(tmp.chall.uTime.times(tmp.hyper.cashGain))}}/sec)</span>
+				<span class="overlayThing" v-if="player.hyper.rebirths.gte(1)" v-html="formatSmall(tmp.chall.uTime.times(tmp.hyper.cashGain)) + '/sec'"></span>
 			</div>
 		`
-	})
+	});
 	Vue.component('utime-display', {
 		template: `
 			<div class="currencyDisplayHeader universe upg">
 				<span class="overlayThing">Universal Time is </span>
-				<h2  class="overlayThing" id="points" style="color: var(--universe); text-shadow: var(--universe) 0px 0px 10px;">{{formatBoost(tmp.chall.uTime.max(0), true)}}</h2> as fast
-				<br><span>as real time</span>
+				<h2  class="overlayThing" id="points" style="color: var(--universe); text-shadow: var(--universe) 0px 0px 10px;" v-html="formatBoost(tmp.chall.uTime.max(0), true)"></h2>
+				<br><span>faster than real time</span>
 			</div>
 		`
 	})
@@ -224,9 +224,9 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader matter upg uhoh">
 				<span class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: var(--matter); text-shadow: var(--matter) 0px 0px 10px;">{{format(player.matter.points.max(0))}}</h2> Matter
+				<h2  class="overlayThing" id="points" style="color: var(--matter); text-shadow: var(--matter) 0px 0px 10px;" v-html="format(player.matter.points.max(0))"></h2> Matter
 				<br>
-				<span class="overlayThing" v-if="hasUpgrade('hyper', 51)">({{formatSmall(tmp.matter.matterGain)}}/sec)</span>
+				<span class="overlayThing" v-if="hasUpgrade('hyper', 51)">(<span v-html="formatSmall(tmp.matter.matterGain)"></span>/sec)</span>
 			</div>
 		`
 	})
@@ -234,9 +234,29 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader antimatter upg uhoh">
 				<span class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: var(--amatter); text-shadow: var(--amatter) 0px 0px 10px;">{{format(player.antimatter.points.max(0))}}</h2> Antimatter
+				<h2  class="overlayThing" id="points" style="color: var(--amatter); text-shadow: var(--amatter) 0px 0px 10px;" v-html="format(player.antimatter.points.max(0))"></h2> Antimatter
 				<br>
-				<span class="overlayThing" v-if="hasUpgrade('hyper', 51)">({{formatSmall(tmp.antimatter.matterGain)}}/sec)</span>
+				<span class="overlayThing" v-if="hasUpgrade('hyper', 52)">(<span v-html="formatSmall(tmp.antimatter.matterGain)"></span>/sec)</span>
+			</div>
+		`
+	})
+	Vue.component('darkmatter-display', {
+		template: `
+			<div class="currencyDisplayHeader darkmatter upg uhoh">
+				<span class="overlayThing">You have </span>
+				<h2  class="overlayThing" id="points" style="color: var(--dmatter); text-shadow: var(--dmatter) 0px 0px 10px;" v-html="format(player.darkmatter.points.max(0))"></h2> Dark Matter
+				<br>
+				<span class="overlayThing" v-if="hasUpgrade('hyper', 53)">(<span v-html="formatSmall(tmp.darkmatter.matterGain)"></span>/sec)</span>
+			</div>
+		`
+	})
+	Vue.component('blackhole-display', {
+		template: `
+			<div class="currencyDisplayHeader universe upg uhoh" v-if="player.blackhole.unlocked" style="height: 60px">
+				<span class="overlayThing">You have </span>
+				<h2  class="overlayThing" id="points" style="color: var(--universe); text-shadow: var(--universe) 0px 0px 10px;" v-html="format(player.blackhole.points.max(0))"></h2>
+				<br>
+				Planck Volumes of Black Hole<br><span class="overlayThing" v-if="hasUpgrade('darkmatter', 15)">(<span v-html="formatSmall(tmp.blackhole.matterGain)"></span>/sec)</span>
 			</div>
 		`
 	})
@@ -300,56 +320,50 @@ function loadVue() {
 		template: `
 		<div>
 			<h1>Changelog</h1><br><br>
-<span style="text-align: left; position: absolute; left: 30px;">
+<span style="text-align: left; position: absolute; left: 30px;" id="creds">
 	<h1>v1.0</h1><br>
 		- <span class="betaWarning">Remade the Entire Game</span><br>
-		- Improved <span style="color: #157307">Cash</span><br>
-		- Improved <span style="color: #ba0022">Rebirth</span><br>
-		- Improved <span style="color: #eb1a3d">Super Rebirth</span><br>
-		- Improved <span style="color: #2ed5e8">Hyper Rebirth</span><br>
-		- Improved <span style="color: rgb(241, 112, 255)">Tax Display</span><br>
-		- Added <span style="color: #d6c611">Power Allocation</span><br>
-		- Improved <span style="color: #d6c611">Power Pylons</span><br>
-		- Added <span style="color: rgba(122, 6, 176, 1)">Universal Time</span><br>
-		- Added <span style="color: #2ed5e8">Hyper Paths Icons</span><br>
-		- Added <span style="color: #9966BB">Standard Notation</span><br>
-		- Improved <span style="color: #9966BB">Credits</span><br>
-		- Actually Added <span style="color: #9966BB">The Changelog</span><br><br>
+		- Added <span style="color: var(--power)">Power Allocation</span><br>
+		- Added <span style="color: var(--universe)">Universal Time</span><br>
+		- Added <span style="color: var(--hyper)">Hyper Paths Icons</span><br>
+		- Added <span style="color: var(--blessed)">Many Notations</span><br>
+		- Improved <span style="color: var(--cursed)">Credits</span><br>
+		- Actually Added <span style="color: var(--cursed)">The Changelog</span><br><br>
 	<h3>v0.3.2</h3><br>
-		- Added <span style="color: #2ed5e8">Matter Paths</span><br>
-		- Added <span style="color: #2dc0d6">Matter</span><br>
-		- Added <span style="color: #d6442d">Antimatter</span><br>
-		- Added <span style="color: #303030">Dark Matter</span> and <span style="color: #4b0f75">Black Hole</span><br>
-		- Added <span style="color: #cc59de">Exotic Matter</span>, <span style="color: #8c617e">Hypothetical Particles</span>, and <span style="color: #7bff00">Unstable Matter</span><br>
-		- Added <span style="color: #472961">Ultimate Matter Fragments</span><br>
-		- Added <span style="color: #9966BB">Softlock Prevention</span><br>
-		Endgame <span style="color: #472961">4 UMF</span><br><br>
+		- Added <span style="color: var(--matter)">Matter Paths</span><br>
+		- Added <span style="color: var(--matter)">Matter</span><br>
+		- Added <span style="color: var(--amatter)">Antimatter</span><br>
+		- Added <span style="color: var(--dmatter)">Dark Matter</span> and <span style="color: var(--dmatter)">Black Hole</span><br>
+		- Added <span style="color: var(--ematter)">Exotic Matter</span>, <span style="color: var(--ematter)">Hypothetical Particles</span>, and <span style="color: var(--radio)">Unstable Matter</span><br>
+		- Added <span style="color: var(--universe)">Ultimate Matter Fragments</span><br>
+		- Added <span style="color: var(--cursed)">Softlock Prevention</span><br>
+		Endgame <span style="color: var(--universe)">4 UMF</span><br><br>
 	<h3>v0.3.0.1 - v0.3.0.5</h3><br>
-		- Added <span style="color: #9966BB">Hotkeys</span><br>
-		- Added <span style="color: #2ed5e8">Hyper Paths Respec</span><br><br>
+		- Added <span style="color: var(--blessed)">Hotkeys</span><br>
+		- Added <span style="color: var(--hyper)">Hyper Paths Respec</span><br><br>
 	<h2>v0.3</h2><br>
-		- Added <span style="color: #2ed5e8">Hyper Rebirth</span><br>
-		- Added <span style="color: #2ed5e8">Hyper Paths</span><br>
-		- Added <span style="color: #34eb67">Hyper Cash</span><br>
-		Endgame <span style="color: #157307">e10,000 $</span> (wait, it went down?), <span style="color: #2ed5e8">130 HRP</span><br><br>
+		- Added <span style="color: var(--hyper)">Hyper Rebirth</span><br>
+		- Added <span style="color: var(--hyper)">Hyper Paths</span><br>
+		- Added <span style="color: var(--hcash)">Hyper Cash</span><br>
+		Endgame <span style="color: var(--cash)">e10,000 $</span>, <span style="color: var(--hyper)">130 HRP</span><br><br>
 	<h3>v0.2.1</h3><br>
-		- Added <span style="color: #d6c611">Power</span><br>
-		- Added <span style="color: #d6c611">Power Pylons</span><br>
-		- Added More <span style="color: #eb1a3d">Super Rebirth Challenges</span><br>
-		Endgame <span style="color: #157307">e12,000 $</span>, <span style="color: #ba0022">e5,000 RP</span>, <span style="color: #eb1a3d">100,000 SRP</span><br><br>
+		- Added <span style="color: var(--power)">Power</span><br>
+		- Added <span style="color: var(--power)">Power Pylons</span><br>
+		- Added More <span style="color: var(--super)">Super Rebirth Challenges</span><br>
+		Endgame <span style="color: var(--cash)">e12,000 $</span>, <span style="color: var(--rebirth)">e5,000 RP</span>, <span style="color: var(--super)">100,000 SRP</span><br><br>
 	<h2>v0.2</h2><br>
-		- Added <span style="color: #eb1a3d">Super Rebirth</span><br>
-		- Added <span style="color: #eb1a3d">Super Rebirth Challenge 1</span><br>
-		- Added <span style="color: #eb1a3d">Super Rebirth Milestones</span><br>
-		- Added <span style="color: #9966BB">Secret Achievements</span><br>
-		- Added <span style="color: #9966BB">More Themes</span><br>
-		Endgame <span style="color: #eb1a3d">8 SRP, Challenge Completed</span><br><br>
+		- Added <span style="color: var(--super)">Super Rebirth</span><br>
+		- Added <span style="color: var(--super)">Super Rebirth Challenge 1</span><br>
+		- Added <span style="color: var(--super)">Super Rebirth Milestones</span><br>
+		- Added <span style="color: var(--cursed)">Secret Achievements</span><br>
+		- Added <span style="color: var(--cursed)">More Themes</span><br>
+		Endgame <span style="color: var(--super)">8 SRP, Challenge Completed</span><br><br>
 	<h3>v0.1.3</h3><br>
-		- Added <span style="color: #157307">Money</span><br>
-		- Added <span style="color: #ba0022">Rebirth</span><br>
-		- Added <span style="color: #157307">The Machine</span><br>
-		- Added <span style="color: #FFEE88">Achievements</span><br>
-		Endgame <span style="color: #9966BB">Unkown</span><br><br>
+		- Added <span style="color: var(--cash)">Money</span><br>
+		- Added <span style="color: var(--rebirth)">Rebirth</span><br>
+		- Added <span style="color: var(--tech)">The Machine</span><br>
+		- Added <span style="color: var(--blessed)">Achievements</span><br>
+		Endgame <span style="color: var(--cursed)">Unkown</span><br><br>
 	<h3>Game Stats</h3><br>
 		- Reset Layers: 3<br>
 		- Upgrades: 92<br>
@@ -397,7 +411,7 @@ function loadVue() {
 					<span class="upgDescription" v-html="tmp[layer].upgrades[data].fullDisplay()"></span>
 				</div>
 				<div style="height: 35px; display: flex;">
-					<div style="width: 140px;" class="upgDescription">Cost: {{ formatCost(tmp[layer].upgrades[data].costa, layer) }}</div>
+					<div style="width: 140px;" class="upgDescription">Cost: <span v-html="formatCost(tmp[layer].upgrades[data].costa, layer)"></span></div>
 					<button style="width: 90px; height: 35px; border-color: rgba(255, 255, 255, 0.25);"
 						v-bind:class="{ upgBuy: true, tooltipBox: true, can: tmp[layer].upgrades[data].canAfford && !hasUpgrade(layer, data), locked: !tmp[layer].upgrades[data].canAfford, bought: hasUpgrade(layer, data), [layer]: true}"
 						v-on:click="buyUpg(layer, data)">{{ hasUpgrade(layer, data)?'Bought':'Buy' }}</button>
@@ -409,7 +423,7 @@ function loadVue() {
 				<div style="height: 14rem;">
 					<h2 v-html="tmp[layer].upgrades[data].title"></h2><br><br>
 					<span class="upgDescription" v-html="tmp[layer].upgrades[data].fullDisplay()"></span><br><br>
-					Cost: {{ formatCost(tmp[layer].upgrades[data].costa, layer) }}
+					Cost: <span v-html="formatCost(tmp[layer].upgrades[data].costa, layer)"></span>
 				</div>
 				<div style="height: 35px; display: flex;">
 					<button style="width: 13rem; height: 3.5rem; border-color: rgba(255, 255, 255, 0.25);"
@@ -430,8 +444,8 @@ function loadVue() {
 			<div>
 				<h2>The Machine</h2><br>
 				<span v-if="!options.compact && player.machine.main">The Machine is currently {{ machineText() }}<br></span>
-				$ {{ player.machine.state==1?formatBoost(tmp.machine.clickables[11].effect):player.machine.state==2?formatBoost(tmp.machine.clickables[11].effect.times(tmp.machine.clickables[12].effect)):formatBoost(0) }},
-				RP {{ player.machine.state==3?formatBoost(tmp.machine.clickables[13].effect):player.machine.state==2?formatBoost(tmp.machine.clickables[13].effect.times(tmp.machine.clickables[12].effect)):formatBoost(0) }}<br v-if="player.machine.main"><br v-if="player.machine.main">
+				$ <span v-html="player.machine.state==1?formatBoost(tmp.machine.clickables[11].effect):player.machine.state==2?formatBoost(tmp.machine.clickables[11].effect.times(tmp.machine.clickables[12].effect)):formatBoost(0)"></span>,
+				RP <span v-html="player.machine.state==3?formatBoost(tmp.machine.clickables[13].effect):player.machine.state==2?formatBoost(tmp.machine.clickables[13].effect.times(tmp.machine.clickables[12].effect)):formatBoost(0)"></span><br v-if="player.machine.main"><br v-if="player.machine.main">
 			</div>
 			<div style="display: flex; justify-content: space-evenly; flex-direction: row; width: 100%;" v-if="player.machine.main">
 				<clickable :layer="'machine'" :data="11" v-bind:class="{bought: player.machine.state == 1}"></clickable>
@@ -440,26 +454,26 @@ function loadVue() {
 			</div>
 			<div style="display: flex; justify-content: space-evenly; flex-direction: row; width: 100%; margin-top: 10px;" v-if="player.machine.main">
 				<div style="width: 130px; margin-top: 0;">
-					Cash Mode increases cash <span v-if="!options.compact">gain by </span><span class="cash infoText">{{ formatBoost(tmp.machine.clickables[11].effect) }}</span>
+					Cash Mode increases cash <span v-if="!options.compact">gain by </span><span class="cash infoText" v-html="formatBoost(tmp.machine.clickables[11].effect)"></span>
 				</div>
 				<div style="width: 130px; margin-top: 0;">
-					Neutral Mode applies both Cash and Rebirth Modes <span v-if="!options.compact">at </span><span class="power infoText">{{ formatBoost(tmp.machine.clickables[12].effect, false) }}</span><span v-if="!options.compact"> efficiency</span>
+					Neutral Mode applies both Cash and Rebirth Modes <span v-if="!options.compact">at </span><span class="power infoText" v-html="formatBoost(tmp.machine.clickables[12].effect, false)"></span><span v-if="!options.compact"> efficiency</span>
 				</div>
 				<div style="width: 130px; margin-top: 0;">
-					Rebirth Mode increases RP <span v-if="!options.compact">gain by </span><span class="rebirth infoText">{{ formatBoost(tmp.machine.clickables[13].effect) }}</span>
+					Rebirth Mode increases RP <span v-if="!options.compact">gain by </span><span class="rebirth infoText" v-html="formatBoost(tmp.machine.clickables[13].effect)"></span>
 				</div>
 			</div>
 			<h2 v-if="hasMilestone('power', 2) && player.machine.main"><br>Power Allocation</h2><br>
 			<slider v-if="hasMilestone('power', 2) && !hasMilestone('chall', 1) && player.machine.main" :layer="'chall'" :data="['pap', 1, 100]" :text="player.chall.pap + '%'" class="power"></slider>
 			<div v-if="hasMilestone('power', 2) && player.machine.main" style="display: flex; justify-content: space-evenly; flex-direction: row; width: 100%; margin-top: 10px; min-height: 4em;">
 				<div style="width: 130px; margin-top: 0;">
-					Cash Mode has<br>{{ formatWhole(player.power.cashPower) }}<br>Power<span v-if="!options.compact"> allocated</span>
+					Cash Mode has<br><span v-html="formatWhole(player.power.cashPower)"></span><br>Power<span v-if="!options.compact"> allocated</span>
 				</div>
 				<div style="width: 130px; margin-top: 0;">
-					Neutral Mode has<br>{{ formatWhole(player.power.neutralPower) }}<br>Power<span v-if="!options.compact"> allocated</span>
+					Neutral Mode has<br><span v-html="formatWhole(player.power.neutralPower)"></span><br>Power<span v-if="!options.compact"> allocated</span>
 				</div>
 				<div style="width: 130px; margin-top: 0;">
-					Rebirth Mode has<br>{{ formatWhole(player.power.rebirthPower) }}<br>Power<span v-if="!options.compact"> allocated</span>
+					Rebirth Mode has<br><span v-html="formatWhole(player.power.rebirthPower)"></span><br>Power<span v-if="!options.compact"> allocated</span>
 				</div>
 			</div>
 			<div v-if="hasMilestone('power', 2) && !hasMilestone('chall', 1) && player.machine.main" style="display: flex; justify-content: space-evenly; flex-direction: row; width: 100%; margin-top: 10px;">
@@ -477,7 +491,7 @@ function loadVue() {
 		template: `
 		<div v-if="player.power.unlocked" class="power upg" style="width: 514px; max-width: calc(100vw - 40px); position: relative; min-height: 0;">
 			<h2>Power Pylons</h2><br>
-			<span v-if="!player.machine.power">{{ formatWhole(player.power.power) }} Power<br><br></span>
+			<span v-if="!player.machine.power"><span v-html="formatWhole(player.power.power)"></span> Power<br><br></span>
 			<span v-if="!options.compact && player.machine.power">Each Pylon produces the previous one (Power is Pylon 0)<br></span>
 			<span v-if="!options.compact && player.machine.power">All Pylons cost Power<br></span><br v-if="player.machine.power">
 			<power-uhoh-display v-if="hasMilestone('chall', 1) && player.machine.power"></power-uhoh-display><br v-if="player.machine.power">
@@ -498,9 +512,9 @@ function loadVue() {
 		template: `
 		<div v-if="player.matter.unlocked" class="hyper upg" style="width: 514px; max-width: calc(100vw - 40px); position: relative; min-height: 0;">
 			<h2>Matter Combustor</h2><br>
-			<span>{{ format(player.matter.points) }} Matter<span v-if="player.antimatter.unlocked"> | {{ formatWhole(player.antimatter.points) }} Antimatter</span<span v-if="player.matter.umf.gte(1)"> | {{ formatWhole(player.matter.umf) }} UMF</span><br>
-			<span v-if="player.matter.umf.gte(1)">Ultimate Matter Fragments are boosting HRP, SRP, RP, $ and Power {{ formatBoost(tmp.matter.ultimateEffect, true) }}</span><br></span>
-			<br v-if="player.machine.matter"><br v-if="player.machine.matter"><tree :data="[['matter'],[],['antimatter']]" v-if="player.machine.matter"></tree>
+			<span><span v-html="format(player.matter.points)"></span> Matter<span v-if="player.antimatter.unlocked"> | <span v-html="formatWhole(player.antimatter.points)"></span> AM</span><span v-if="player.darkmatter.unlocked"> | <span v-html="formatWhole(player.darkmatter.points)"></span> DM</span><span v-if="player.matter.umf.gte(1)"> | <span v-html="formatWhole(player.matter.umf)"></span> UMF</span><br>
+			<span v-if="player.matter.umf.gte(1)">Ultimate Matter Fragments are boosting HRP, SRP, RP, $ and Power <span v-html="formatBoost(tmp.matter.ultimateEffect, true)"></span></span><br></span>
+			<br v-if="player.machine.matter"><br v-if="player.machine.matter"><tree :data="[['matter', 'antimatter', 'darkmatter']]" v-if="player.machine.matter"></tree>
 			<button style="width: 4rem; height: 4rem; background-color: transparent; text-align: center; min-height: 2rem; position: absolute; top: -0.5rem; left: -0.5rem; border: none;" onclick="player.machine.matter = !player.machine.matter">{{player.machine.matter?'▼':'▶'}}</button>
 		</div>
 		`
@@ -511,8 +525,8 @@ function loadVue() {
 		template: `
 		<div style="width: 100%; display: flex; flex-flow: row nowrap; justify-content: space-between;" v-if="tmp.power.clickables[data].unlocked">
 			<h2 style="margin: auto 0;">{{ tmp.power.clickables[data].title }}<br><span v-if="options.upgID" class="upgID" style="font-size: 15px">{{ formatID(layer, 'pylons', data) }}</span></h2><br>
-			<span style="margin: auto 0;">{{ formatWhole(player.power['pylon' + letter]) }} [{{ formatWhole(player.power['pylob' + letter]) }}]</span>
-			<span style="margin: auto 0;"><span v-if="!options.compact">Effect: </span>{{ format(tmp.power.pylons[letter.toLowerCase()].effect) }}/sec</span>
+			<span style="margin: auto 0;"><span v-html="formatWhole(player.power['pylon' + letter])"></span> [<span v-html="formatWhole(player.power['pylob' + letter])"></span>]</span>
+			<span style="margin: auto 0;"><span v-if="!options.compact">Effect: </span><span v-html="format(tmp.power.pylons[letter.toLowerCase()].effect)"></span>/sec
 			<clickable :layer="'power'" :data="data" style="margin: auto 0;"></clickable>
 		</div>
 		`
@@ -624,7 +638,7 @@ function loadVue() {
 				<span class="upgDescription" v-html="tmp[layer].buyables[data].display()"></span>
 			</div>
 			<div style="height: 35px; display: flex;">
-				<div style="width: 140px;" class="upgDescription">Count: {{ formatWhole(getBuyableAmount(layer, data)) }}<span v-if="tmp[layer].buyables[data].purchaseLimit.lt(Decimal.dLayerSafeMax)">/{{ formatWhole(tmp[layer].buyables[data].purchaseLimit) }}</span><br>Cost: {{ formatCost(tmp[layer].buyables[data].cost, layer) }}</div>
+				<div style="width: 140px;" class="upgDescription">Count: <span v-html="formatWhole(getBuyableAmount(layer, data))"></span><span v-if="tmp[layer].buyables[data].purchaseLimit.lt(Decimal.dLayerSafeMax)">/<span v-html="formatWhole(tmp[layer].buyables[data].purchaseLimit)"></span></span><br>Cost: <span v-html="formatCost(tmp[layer].buyables[data].cost, layer)"></span></div>
 				<button style="width: 90px; height: 35px; border-color: rgba(255, 255, 255, 0.25);"
 					v-bind:class="{ upgBuy: true, tooltipBox: true, can: tmp[layer].buyables[data].canAfford, locked: !tmp[layer].buyables[data].canAfford, [layer]: true, bought: getBuyableAmount(layer, data).gte(tmp[layer].buyables[data].purchaseLimit)}"
 					v-on:click="if(!interval) buyBuyable(layer, data)">Buy</button>

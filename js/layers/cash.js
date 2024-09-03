@@ -478,7 +478,7 @@ addLayer('cash', {
                 return x.add(6).pow_base(10)
             },
             effect(x) {
-                return x.add(1).pow(0.5)
+                return x.add(1).pow(hasUpgrade('darkmatter', 13)?1:0.5)
             },
             unlocked(){return hasMilestone('super', 1)},
             canAfford(){return player.points.gte(layers[this.layer].buyables[this.id].cost(getBuyableAmount(this.layer, this.id)))},
@@ -496,7 +496,7 @@ addLayer('cash', {
             tooltip() {
                 if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>$ Buyable 1: Increase RP gain.<br>Price formula: [Times Bought]<sup>6</sup><br>Effect formula: 1.1<sup>[Times bought]</sup>`
                 
-                return `Effect: (x+1)<sup>0.5</sup><br>Cost: 10<sup>x+6</sup>${maxedChallenge('super', 12)?'':`<br>Nerf: (x+1)<sup>${tmp.cash.buyables[11].nerfExpo.times(0.5)}</sup>`}`
+                return `Effect: (x+1)<sup>${hasUpgrade('darkmatter', 13)?'1':'0.5'}</sup><br>Cost: 10<sup>x+6</sup>${maxedChallenge('super', 12)?'':`<br>Nerf: (x+1)<sup>${tmp.cash.buyables[11].nerfExpo.times(0.5)}</sup>`}`
             },
         },
     },

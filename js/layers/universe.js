@@ -5,4 +5,6 @@ addLayer('uni', {
         points: new Decimal(0),
     }},
     row: 10,
+    layerShown: 'ghost',
+    symbol: '',
 })

@@ -34,16 +34,24 @@ body {
 	--techBG:    hsla(0, 0%, 40%, 25%);
 	--cursed:    hsla(300, 100%, 75%, 100%);
 	--cursedBG:  hsla(300, 100%, 75%, 25%);
+	--blessed:   hsla(60, 100%, 75%, 100%);
+	--blessedBG: hsla(60, 100%, 75%, 25%);
+	--radio:     hsla(120, 100%, 75%, 100%);
+	--radioBG:   hsla(120, 100%, 75%, 25%);
 	--hyper:     hsla(180, 100%, 30%, 100%);
 	--hyperBG:   hsla(180, 100%, 30%, 25%);
 	--matter:    hsla(195, 80%, 30%, 100%);
 	--matterBG:  hsla(195, 80%, 30%, 25%);
 	--amatter:   hsla(0, 70%, 60%, 100%);
 	--amatterBG: hsla(0, 70%, 60%, 25%);
+	--dmatter:   hsl(0, 0%, 25%);
+	--dmatterBG: hsla(0, 0%, 25%, 25%);
+	--ematter:   hsl(290, 70%, 60%);
+	--ematterBG: hsla(290, 70%, 60%, 25%);
 	--hcash:     hsla(140, 80%, 55%, 100%);
 	--hcashBG:   hsla(140, 80%, 55%, 25%);
-	--universe:  hsla(280, 95%, 30%, 100%);
-	--universeBG:hsla(280, 95%, 30%, 25%);
+	--universe:  hsla(280, 95%, 40%, 100%);
+	--universeBG:hsla(280, 95%, 40%, 25%);
 }
 
 .cash.upg       { background-color: var(--cashBG); }
@@ -55,8 +63,11 @@ body {
 .hyper.upg      { background-color: var(--hyperBG); }
 .matter.upg     { background-color: var(--matterBG); }
 .antimatter.upg { background-color: var(--amatterBG); }
+.darkmatter.upg { background-color: var(--dmatterBG); }
+.exomatter.upg  { background-color: var(--ematterBG); }
 .hcash.upg      { background-color: var(--hcashBG); }
 .universe.upg   { background-color: var(--universeBG); }
+.blackhole.upg  { background-color: var(--universeBG); }
 
 .c           { color: var(--cash); }
 .r           { color: var(--rebirth); }
@@ -72,6 +83,9 @@ body {
 .hyper.can      { background-color: var(--hyper); }
 .matter.can     { background-color: var(--matter); }
 .antimatter.can { background-color: var(--amatter); }
+.darkmatter.can { background-color: var(--dmatter); }
+.exomatter.can  { background-color: var(--ematter); }
+.blackhole.can  { background-color: var(--universe); }
 
 button {
 	border-style: solid;

@@ -378,7 +378,7 @@ addLayer('rebirth', {
                 return x.add(1).pow_base(3)
             },
             effect(x) {
-                return x.times(tmp.rebirth.buyables[12].effect).add(1).pow(0.6)
+                return x.times(tmp.rebirth.buyables[12].effect).add(1).pow(hasUpgrade('darkmatter', 13)?1:0.6)
             },
             unlocked(){return hasUpgrade('rebirth', 15)},
             canAfford(){return player[this.layer].points.gte(layers[this.layer].buyables[this.id].cost(getBuyableAmount(this.layer, this.id)))},
@@ -396,7 +396,7 @@ addLayer('rebirth', {
             tooltip() {
                 if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>RP Buyable 1: Increase RP gain.<br>Price formula: [Times Bought]<sup>4</sup><br>Effect formula: 1.5<sup>[Times bought]</sup>`
                 
-                return `Effect: (x+1)<sup>0.6</sup><br>Cost: 3<sup>x+1</sup>${maxedChallenge('super', 12)?'':`<br>Nerf: (x+1)<sup>${tmp.rebirth.buyables[11].nerfExpo.times(0.6)}</sup>`}`
+                return `Effect: (x+1)<sup>${hasUpgrade('darkmatter', 13)?'1':'0.6'}</sup><br>Cost: 3<sup>x+1</sup>${maxedChallenge('super', 12)?'':`<br>Nerf: (x+1)<sup>${tmp.rebirth.buyables[11].nerfExpo.times(0.6)}</sup>`}`
             },
         },
         12: {

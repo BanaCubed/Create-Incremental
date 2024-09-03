@@ -396,7 +396,7 @@ addLayer('hyper', {
             },
         },
         53: {
-            cost: new Decimal(1e8),
+            cost: new Decimal(2.5e8),
             description: `Add a Black Hole Container to the Matter Combustor`,
             canAfford() {
                 return hasUpgrade(this.layer, this.id-1)

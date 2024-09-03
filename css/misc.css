@@ -54,6 +54,10 @@
     content: attr(tooltip);
 }
 
+.tooltip * {
+    pointer-events: none;
+}
+
 .tooltip::after {
     content: " ";
     position: absolute;
@@ -100,4 +104,8 @@
 .overlayThing {
     width: fit-content;
     height: fit-content;
+}
+
+#creds>span {
+    font-weight: 700;
 }

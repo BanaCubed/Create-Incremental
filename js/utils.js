@@ -1,5 +1,89 @@
 // ************ Big Feature related ************
 
+function formatID(layer = 'cash', type = 'upgrades', id = 11) {
+    let text
+    if(layer == 'cash') { text = '$' }
+    if(layer == 'rebirth') { text = 'R' }
+    if(layer == 'super') { text = 'S' }
+    if(layer == 'power') { text = 'P' }
+    if(layer == 'hyper') { text = 'H' }
+    if(layer == 'matter') { text = 'M' }
+    if(layer == 'antimatter') { text = 'Am' }
+    if(layer == 'darkmatter') { text = 'Dm' }
+    if(layer == 'blackhole') { text = 'Bh' }
+    if(layer == 'exomatter') { text = 'Em' }
+    if(layer == 'unstable') { text = 'Um' }
+
+    if(type == 'upgrades') { text = text + 'U' }
+    if(type == 'buyables') { text = text + 'B' }
+    if(type == 'milestones') { text = text + 'M' }
+    if(type == 'challenges') { text = text + 'C' }
+    if(type == 'pylons') { text = text + 'Py' }
+
+    if(type == 'upgrades' || type == 'buyables' || type == 'challenges') {
+        if(id == 17) { text = text + '∞' }
+        if(id == 11) { text = text + '1' }
+        if(id == 12) { text = text + '2' }
+        if(id == 13) { text = text + '3' }
+        if(id == 14) { text = text + '4' }
+        if(id == 15) { text = text + '5' }
+        if(id == 16) { text = text + '6' }
+        if(id == 21) { text = text + '7' }
+        if(id == 22) { text = text + '8' }
+        if(id == 23) { text = text + '9' }
+        if(id == 24) { text = text + '10' }
+        if(id == 25) { text = text + '11' }
+        if(id == 26) { text = text + '12' }
+        if(id == 31) { text = text + '13' }
+        if(id == 32) { text = text + '14' }
+        if(id == 33) { text = text + '15' }
+        if(id == 34) { text = text + '16' }
+        if(id == 35) { text = text + '17' }
+        if(id == 36) { text = text + '18' }
+    } else if(type == 'milestones') { id++; text = text + id }
+    else if(type == 'pylons') {
+        if(id == 21) { text = text + 'A' }
+        if(id == 22) { text = text + 'B' }
+        if(id == 23) { text = text + 'C' }
+        if(id == 24) { text = text + 'D' }
+        if(id == 25) { text = text + 'E' }
+        if(id == 26) { text = text + 'F' }
+    }
+
+    return text
+}
+
+function machineText() {
+    if(player.machine.state == 1) return 'active and set to Cash Mode'
+    if(player.machine.state == 2) return 'active and set to Neutral Mode'
+    if(player.machine.state == 3) return 'active and set to Rebirth Mode'
+    return 'inactive'
+}
+
+function formatCost(n, layer) {
+    if(layer == 'cash') {
+        return '$' + format(n)
+    } else if(layer == 'rebirth') {
+        return formatWhole(n) + ' RP'
+    } else if(layer == 'super') {
+        return formatWhole(n) + ' SRP'
+    } else if(layer == 'power') {
+        return formatWhole(n) + ' Power'
+    } else if(layer == 'hyper') {
+        return formatWhole(n) + ' HRP'
+    } else if(layer == 'matter') {
+        return formatWhole(n) + ' Matter'
+    } else if(layer == 'antimatter') {
+        return formatWhole(n) + ' AM'
+    } else if(layer == 'darkmatter') {
+        return formatWhole(n) + ' DM'
+    } else if(layer == 'exomatter') {
+        return formatWhole(n) + ' EM'
+    } else if(layer == 'blackhole') {
+        return formatWhole(n) + ' BHV'
+    }
+}
+
 function respecBuyables(layer) {
 	if (!layers[layer].buyables) return
 	if (!layers[layer].buyables.respec) return

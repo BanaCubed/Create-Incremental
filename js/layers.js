@@ -42,7 +42,7 @@ addLayer('chall', {
                     if(player.hyper.subLayers < 1) { return player.hyper.rebirths.div(5) }
                     if(!player.matter.unlocked) { return player.hyper.upgrades.length / 17 }
                     if(!player.antimatter.unlocked) { return player.hyper.points.div(250000) }
-                    if(true) { return player.hyper.points.div(1e8) }
+                    if(true) { return player.hyper.points.div(2.5e8) }
                 }
             },
             unlocked(){return true},

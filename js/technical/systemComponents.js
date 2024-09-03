@@ -117,7 +117,7 @@ var systemComponents = {
 			<srp-display v-if="player.super.unlocked"></srp-display>
 			<power-display v-if="player.power.unlocked && !hasMilestone('chall', 1)"></power-display>
 			<hyper-display v-if="player.hyper.unlocked"></hyper-display>
-			<utime-display v-if="player.hyper.unlocked"></utime-display>
+			<utime-display v-if="tmp.chall.uTime.gt(1)"></utime-display>
 		</div>
 		</div>
 	`
@@ -151,8 +151,8 @@ var systemComponents = {
     'stats-tab': {
         template: `
         <div>
-		<span v-if="player.hyper.unlocked">Real </span>Playtime<br>{{ formatTime(player.timePlayed) }}<br><br>
-		<span v-if="player.hyper.unlocked">Universal Playtime<br>{{ formatTime(player.chall.uTimePlayed) }}<br><br></span>
+		<span v-if="player.hyper.unlocked">Real </span>Playtime<br><span v-html="formatTime(player.timePlayed)"></span><br><br>
+		<span v-if="player.hyper.unlocked">Universal Playtime<br><span v-html="formatTime(player.chall.uTimePlayed)"></span><br><br></span>
 		<br><br></div>
     `
     },

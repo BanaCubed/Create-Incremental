@@ -218,6 +218,25 @@ ul {
 	z-index: 30000
 }
 
+.cowR { text-shadow: red 0px 0px 10px; }
+.cowO { text-shadow: orange 0px 0px 10px; }
+.cowY { text-shadow: yellow 0px 0px 10px; }
+.cowG { text-shadow: lime 0px 0px 10px; }
+.cowC { text-shadow: cyan 0px 0px 10px; }
+.cowB { text-shadow: blue 0px 0px 10px; }
+.cowP { text-shadow: purple 0px 0px 10px; }
+.cowM { text-shadow: magenta 0px 0px 10px; }
+
+.cow.anim { animation: cow 360s linear 0s infinite; display: inline-block; }
+
+@keyframes cow {
+	0% { transform: rotate(0deg); }
+	25% { transform: rotate(90deg); }
+	50% { transform: rotate(180deg); }
+	75% { transform: rotate(270deg); }
+	100% { transform: rotate(360deg); }
+}
+
 .overlayThing {
 	z-index: 10000;
 	pointer-events:auto;
