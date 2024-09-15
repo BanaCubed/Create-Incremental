@@ -599,6 +599,7 @@ addLayer('power', {
                 if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
                 if(hasUpgrade('hyper', 42)) { gain = gain.times(10) }
                 if(hasUpgrade('antimatter', 13)) { gain = gain.times(tmp.antimatter.upgrades[13].effect) }
+                if(hasUpgrade('darkmatter', 15)) { gain = gain.times(tmp.blackhole.effect.pow(11)) }
                 gain = gain.times(tmp.matter.ultimateEffect)
 	            gain = gain.times(tmp.chall.uTime)
                 return gain

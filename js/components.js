@@ -365,22 +365,23 @@ function loadVue() {
 		- Added <span style="color: var(--blessed)">Achievements</span><br>
 		Endgame <span style="color: var(--cursed)">Unkown</span><br><br>
 	<h3>Game Stats</h3><br>
-		- Reset Layers: 3<br>
-		- Upgrades: 92<br>
-		- Challenges: 5<br>
-		- Buyables: 3<br>
-		- Milestones: 26<br>
-		- Pylons: 6<br>
+		- Prestige Layers: 3<br>
+		- Unique Prestiges: 3<br>
+		- Upgrades: {{ 18+12+6+20+7+9+6 }}<br>
+		- Challenges: {{ 5 }}<br>
+		- Buyables: {{ 1+2+2+3+4 }}<br>
+		- Milestones: {{ 8+11+7+2 }}<br>
+		- Pylons: {{ 6 }}<br>
 		- Tabs: 5<br>
-		- Subtabs: 9<br>
-		- Buttons in the Machine: 12<br>
+		- Subtabs: {{ 2+3+3+3+1 }}<br>
+		- Buttons in the Machine: {{ 6+6+3 }}<br>
 		- Upgrades to the Machine: 3<br>
-		- Max UMF: 0<br>
+		- Max UMF: 2<br>
 		- Max Singularities: 0<br>
 		- Settings: 11<br>
-		- Currencies: 5<br>
-		- Resources: 7<br>
-		- Random Number: 17.742<br><br>
+		- Currencies: 8<br>
+		- Resources: 10<br>
+		- Random Number: {{  format(Decimal.div(1, Math.random()).pow(25)) }}<br><br>
 </span>
 		</div>
 		`
@@ -408,7 +409,7 @@ function loadVue() {
 			<div v-if="tmp[layer].upgrades && tmp[layer].upgrades[data]!== undefined && tmp[layer].upgrades[data].unlocked && !options.compact" :id='"upgrade-" + layer + "-" + data'  v-bind:class="{ [layer]: true, tooltipBox: true, upg: true}">
 				<div style="height: 75px;">
 					<h2 v-html="tmp[layer].upgrades[data].title"></h2><br><br>
-					<span class="upgDescription" v-html="tmp[layer].upgrades[data].fullDisplay()"></span>
+					<span class="upgDescription" v-html="run(tmp[layer].upgrades[data].fullDisplay, tmp[layer].upgrades[data])"></span>
 				</div>
 				<div style="height: 35px; display: flex;">
 					<div style="width: 140px;" class="upgDescription">Cost: <span v-html="formatCost(tmp[layer].upgrades[data].costa, layer)"></span></div>
@@ -419,11 +420,12 @@ function loadVue() {
 				<div style="position: absolute; bottom: 5px; left: 5px;" class="upgID" v-if="options.upgID">{{ formatID(layer, 'upgrades', data) }}</div>
 				<tooltip :text="tmp[layer].upgrades[data].tooltip" v-if="tmp[layer].upgrades[data].tooltip !== undefined"></tooltip>
 			</div>
+
 			<div v-if="tmp[layer].upgrades && tmp[layer].upgrades[data]!== undefined && tmp[layer].upgrades[data].unlocked && options.compact" :id='"upgrade-" + layer + "-" + data'  v-bind:class="{ [layer]: true, tooltipBox: true, upg: true}" style="width: 13rem">
 				<div style="height: 14rem;">
 					<h2 v-html="tmp[layer].upgrades[data].title"></h2><br><br>
-					<span class="upgDescription" v-html="tmp[layer].upgrades[data].fullDisplay()"></span><br><br>
-					Cost: <span v-html="formatCost(tmp[layer].upgrades[data].costa, layer)"></span>
+					<span class="upgDescription" v-html="run(tmp[layer].upgrades[data].fullDisplay, tmp[layer].upgrades[data])"></span><br><br>
+					Cost: <span v-html="formatCost(tmp[layer].upgrades[data].costa?tmp[layer].upgrades[data].costa:tmp[layer].upgrades[data].cost, layer)"></span>
 				</div>
 				<div style="height: 35px; display: flex;">
 					<button style="width: 13rem; height: 3.5rem; border-color: rgba(255, 255, 255, 0.25);"
@@ -481,7 +483,7 @@ function loadVue() {
 				<clickable :layer="'power'" :data="12"></clickable>
 				<clickable :layer="'power'" :data="13"></clickable>
 			</div>
-			<button style="width: 4rem; height: 4rem; background-color: transparent; text-align: center; min-height: 2rem; position: absolute; top: -0.5rem; left: -0.5rem; border: none;" onclick="player.machine.main = !player.machine.main">{{player.machine.main?'▼':'▶'}}</button>
+			<button style="width: 4rem; height: 4rem; background-color: transparent; text-align: center; min-height: 2rem; position: absolute; top: -0.5rem; left: -0.5rem; border: none;" onclick="player.machine.main = !player.machine.main" class="minButton">{{player.machine.main?'▼':'▶'}}</button>
 		</div>
 		`
 	})
@@ -502,7 +504,7 @@ function loadVue() {
 			<power-pylon :layer="'power'" :data="25" :letter="'E'" v-if="player.machine.power"></power-pylon><br v-if="player.machine.power">
 			<power-pylon :layer="'power'" :data="26" :letter="'F'" v-if="player.machine.power"></power-pylon><br v-if="player.machine.power">
 			<milestones :layer="'power'" style="max-height: 300px; overflow-y: auto;" v-if="player.machine.power"></milestones>
-			<button style="width: 4rem; height: 4rem; background-color: transparent; text-align: center; min-height: 2rem; position: absolute; top: -0.5rem; left: -0.5rem; border: none;" onclick="player.machine.power = !player.machine.power">{{player.machine.power?'▼':'▶'}}</button>
+			<button style="width: 4rem; height: 4rem; background-color: transparent; text-align: center; min-height: 2rem; position: absolute; top: -0.5rem; left: -0.5rem; border: none;" onclick="player.machine.power = !player.machine.power" class="minButton">{{player.machine.power?'▼':'▶'}}</button>
 		</div>
 		`
 	})
@@ -515,7 +517,7 @@ function loadVue() {
 			<span><span v-html="format(player.matter.points)"></span> Matter<span v-if="player.antimatter.unlocked"> | <span v-html="formatWhole(player.antimatter.points)"></span> AM</span><span v-if="player.darkmatter.unlocked"> | <span v-html="formatWhole(player.darkmatter.points)"></span> DM</span><span v-if="player.matter.umf.gte(1)"> | <span v-html="formatWhole(player.matter.umf)"></span> UMF</span><br>
 			<span v-if="player.matter.umf.gte(1)">Ultimate Matter Fragments are boosting HRP, SRP, RP, $ and Power <span v-html="formatBoost(tmp.matter.ultimateEffect, true)"></span></span><br></span>
 			<br v-if="player.machine.matter"><br v-if="player.machine.matter"><tree :data="[['matter', 'antimatter', 'darkmatter']]" v-if="player.machine.matter"></tree>
-			<button style="width: 4rem; height: 4rem; background-color: transparent; text-align: center; min-height: 2rem; position: absolute; top: -0.5rem; left: -0.5rem; border: none;" onclick="player.machine.matter = !player.machine.matter">{{player.machine.matter?'▼':'▶'}}</button>
+			<button style="width: 4rem; height: 4rem; background-color: transparent; text-align: center; min-height: 2rem; position: absolute; top: -0.5rem; left: -0.5rem; border: none;" onclick="player.machine.matter = !player.machine.matter" class="minButton">{{player.machine.matter?'▼':'▶'}}</button>
 		</div>
 		`
 	})
@@ -536,6 +538,17 @@ function loadVue() {
 		props: ['layer', 'data'],
 		template: `
 		<div v-if="tmp[layer].milestones" style="width: fit-content; display: flex; flex-direction: column; overflow-x: clip;">
+			<h2>Milestones</h2><h3>of {{ tmp[layer].resetName }}</h3><br><br>
+			<milestone :layer = "layer" :data = "id" v-bind:style="tmp[layer].componentStyles.milestone" v-for="id in (data === undefined ? Object.keys(tmp[layer].milestones) : data)" v-if="tmp[layer].milestones[id]!== undefined && tmp[layer].milestones[id].unlocked && milestoneShown(layer, id)">
+				</milestone>
+		</div>
+		`
+	})
+
+	Vue.component('milestones-upgbox', {
+		props: ['layer', 'data'],
+		template: `
+		<div v-if="tmp[layer].milestones" style="width: fit-content; display: flex; flex-direction: column; overflow-x: clip;" v-bind:class="{upg: true, [layer]: true}">
 			<h2>Milestones</h2><h3>of {{ tmp[layer].resetName }}</h3><br><br>
 			<milestone :layer = "layer" :data = "id" v-bind:style="tmp[layer].componentStyles.milestone" v-for="id in (data === undefined ? Object.keys(tmp[layer].milestones) : data)" v-if="tmp[layer].milestones[id]!== undefined && tmp[layer].milestones[id].unlocked && milestoneShown(layer, id)">
 				</milestone>
@@ -875,9 +888,14 @@ function loadVue() {
 		computed: {
 			key() {return this.$vnode.key}
 		},
-		template: `<div>
-		<clickable-tree :layer='layer' :data = "[[11], [12], [13], [14], [21], [22], [23], [24], [31], [32], [33], [34], [41], [42], [43], [44], [51], [52], [53], [54], [99]]"></clickable-tree>
+		template: `
+		<div>
+		<div v-if="!options.compact">
+		<clickable-tree :layer="'hyper'" :data = "[[11], [12], [13], [14], [21], [22], [23], [24], [31], [32], [33], [34], [41], [42], [43], [44], [51], [52], [53], [54], [99]]"></clickable-tree>
 		</div>
+		<div v-if="options.compact">
+		<upgrades :layer="'hyper'" :data = "5"></upgrades>
+		</div></div>
 
 	`
 	})

@@ -140,12 +140,12 @@ function formatLetters(n, str=letters, base=1000, hasNumber=true) {
     n = n.div(position.pow_base(base));
     length = n.times(1.001).log(10).floor().toNumber();
     let text = hasNumber?n.toStringWithDecimalPlaces(3-length):''
-    let suffix
+    let suffix = ''
     while(position.gte(1)) {
-        suffix = str[position.sub(1).mod(str.length).floor().toNumber()] + suffix
-        position = position.div(str.length)
+        suffix = str[position.sub(1).mod(str.length).toNumber()] + suffix
+        position = position.div(str.length).floor()
     }
-    suffix = suffix.slice(0, suffix.length-9)
+    // suffix = suffix.slice(0, suffix.length-9)
     return text + (hasNumber?' ':'') + suffix
 }
 

@@ -1,12 +1,12 @@
-// ************ Big Feature related ************
+// this file really shouldn't exist, but TMT has it ¯\_(ツ)_/¯
 
 function formatID(layer = 'cash', type = 'upgrades', id = 11) {
     let text
     if(layer == 'cash') { text = '$' }
     if(layer == 'rebirth') { text = 'R' }
-    if(layer == 'super') { text = 'S' }
+    if(layer == 'super') { text = 'Sr' }
     if(layer == 'power') { text = 'P' }
-    if(layer == 'hyper') { text = 'H' }
+    if(layer == 'hyper') { text = 'Hr' }
     if(layer == 'matter') { text = 'M' }
     if(layer == 'antimatter') { text = 'Am' }
     if(layer == 'darkmatter') { text = 'Dm' }
@@ -20,7 +20,7 @@ function formatID(layer = 'cash', type = 'upgrades', id = 11) {
     if(type == 'challenges') { text = text + 'C' }
     if(type == 'pylons') { text = text + 'Py' }
 
-    if(type == 'upgrades' || type == 'buyables' || type == 'challenges') {
+    if((type == 'upgrades' || type == 'buyables' || type == 'challenges') && layer != 'hyper') {
         if(id == 17) { text = text + '∞' }
         if(id == 11) { text = text + '1' }
         if(id == 12) { text = text + '2' }
@@ -48,7 +48,28 @@ function formatID(layer = 'cash', type = 'upgrades', id = 11) {
         if(id == 24) { text = text + 'D' }
         if(id == 25) { text = text + 'E' }
         if(id == 26) { text = text + 'F' }
-    }
+    } else if(type == 'upgrades' && layer == 'hyper') {
+        if(id == 11) { text = text + '1-1' }
+        if(id == 12) { text = text + '1-2' }
+        if(id == 13) { text = text + '1-3' }
+        if(id == 14) { text = text + '1-4' }
+        if(id == 21) { text = text + '2-1' }
+        if(id == 22) { text = text + '2-2' }
+        if(id == 23) { text = text + '2-3' }
+        if(id == 24) { text = text + '2-4' }
+        if(id == 31) { text = text + '3-1' }
+        if(id == 32) { text = text + '3-2' }
+        if(id == 33) { text = text + '3-3' }
+        if(id == 34) { text = text + '3-4' }
+        if(id == 41) { text = text + '4-1' }
+        if(id == 42) { text = text + '4-2' }
+        if(id == 43) { text = text + '4-3' }
+        if(id == 44) { text = text + '4-4' }
+        if(id == 51) { text = text + '5-1' }
+        if(id == 52) { text = text + '5-2' }
+        if(id == 53) { text = text + '5-3' }
+        if(id == 54) { text = text + '5-4' }
+	}
 
     return text
 }
@@ -97,7 +118,7 @@ function canAffordUpgrade(layer, id) {
 	let upg = tmp[layer].upgrades[id]
 	if(tmp[layer].deactivated) return false
 	if (tmp[layer].upgrades[id].canAfford === false) return false
-	let cost = tmp[layer].upgrades[id].cost
+	let cost = tmp[layer].upgrades[id].costa
 	if (cost !== undefined) 
 		return canAffordPurchase(layer, upg, cost)
 

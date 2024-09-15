@@ -94,7 +94,7 @@ addLayer('hyper', {
     hotkeys: [
         {
             key: "h", // What the hotkey button is. Use uppercase if it's combined with shift, or "ctrl+x" for holding down ctrl.
-            description: "H: Hyper Rebirth", // The description of the hotkey that is displayed in the game's How To Play tab
+            description: "H: Hyper Rebirth", // The fullDisplay of the hotkey that is displayed in the game's How To Play tab
             onPress() { if (player.hyper.unlocked) doReset("hyper") },
             unlocked() {return player.hyper.unlocked} // Determines if you can use the hotkey, optional
         }
@@ -167,7 +167,7 @@ addLayer('hyper', {
         },
         4: {
             requirementDescription: "5 Hyper Rebirths",
-            effectDescription: "Unlock Paths and start each Hyper Rebirth with 10 Power Pylon E",
+            effectDescription() {return `Unlock Paths and start each Hyper Rebirth with 10 ${options.upgID?'PPyE':'Power Pylon E'}`},
             done() { return player.hyper.rebirths.gte(5) },
             unlocked() {return hasMilestone(this.layer, this.id - 1)},
             tooltip() {
@@ -204,7 +204,7 @@ addLayer('hyper', {
     },
     upgrades: {
         11: {
-            cost() {
+            costa() {
                 let pos = player.hyper.paths.indexOf(1)
                 if(pos == -1) { pos = player.hyper.paths.length }
                 return Decimal.times(1, Decimal.pow(3, pos))
@@ -212,42 +212,43 @@ addLayer('hyper', {
             onPurchase() {
                 player.hyper.paths.push(1)
             },
-            description: `Increase cash gain by ×1,000`,
+            fullDisplay: `Increase cash gain by ×1,000`,
+            canAfford() { return player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
             title: `Basic 1`,
         },
         12: {
-            cost() {
+            costa() {
                 let pos = player.hyper.paths.indexOf(1)
                 if(pos == -1) { pos = player.hyper.paths.length }
                 return Decimal.times(4, Decimal.pow(3, pos))
             },
-            description: `Increase RP gain by ×500`,
-            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            fullDisplay: `Increase RP gain by ×500`,
+            canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
             title: `Basic 2`,
         },
         13: {
-            cost() {
+            costa() {
                 let pos = player.hyper.paths.indexOf(1)
                 if(pos == -1) { pos = player.hyper.paths.length }
                 return Decimal.times(10, Decimal.pow(3, pos))
             },
-            description: `Increase SRP gain by ×50`,
-            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            fullDisplay: `Increase SRP gain by ×50`,
+            canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
             title: `Basic 3`,
         },
         14: {
-            cost() {
+            costa() {
                 let pos = player.hyper.paths.indexOf(1)
                 if(pos == -1) { pos = player.hyper.paths.length }
                 return Decimal.times(25, Decimal.pow(3, pos))
             },
-            description: `Increase Power gain by ×1,000`,
-            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            fullDisplay: `Increase Power gain by ×1,000`,
+            canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
             title: `Basic 4`,
         },
         
         21: {
-            cost() {
+            costa() {
                 let pos = player.hyper.paths.indexOf(2)
                 if(pos == -1) { pos = player.hyper.paths.length }
                 return Decimal.times(1, Decimal.pow(3, pos))
@@ -255,42 +256,43 @@ addLayer('hyper', {
             onPurchase() {
                 player.hyper.paths.push(2)
             },
-            description: `Neutral mode is ×25 as effective`,
+            fullDisplay: `Neutral mode is ×25 as effective`,
+            canAfford() { return player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
             title: `Machine 1`,
         },
         22: {
-            cost() {
+            costa() {
                 let pos = player.hyper.paths.indexOf(2)
                 if(pos == -1) { pos = player.hyper.paths.length }
                 return Decimal.times(4, Decimal.pow(3, pos))
             },
-            description: `Power Pylons are ×10 as effective`,
-            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            fullDisplay: `Power Pylons are ×10 as effective`,
+            canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
             title: `Machine 2`,
         },
         23: {
-            cost() {
+            costa() {
                 let pos = player.hyper.paths.indexOf(2)
                 if(pos == -1) { pos = player.hyper.paths.length }
                 return Decimal.times(10, Decimal.pow(3, pos))
             },
-            description: `Start all Hyper Rebirths with 10 Power Pylon F, and automate Power Pylon E`,
-            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            fullDisplay() {return `Start all Hyper Rebirths with 10 ${options.upgID?'PPyF':'Power Pylon F'}, and automate ${options.upgID?'PPyE':'Power Pylon E'}`},
+            canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
             title: `Machine 3`,
         },
         24: {
-            cost() {
+            costa() {
                 let pos = player.hyper.paths.indexOf(2)
                 if(pos == -1) { pos = player.hyper.paths.length }
                 return Decimal.times(25, Decimal.pow(3, pos))
             },
-            description: `Add another Power Pylon self-boost that's exponential, but has 10% as much of an individual boost<br>Boost caps at 1000 Pylons`,
-            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            fullDisplay: `Add another Power Pylon self-boost that's exponential, but caps at 1000 Pylons`,
+            canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
             title: `Machine 4`,
         },
         
         31: {
-            cost() {
+            costa() {
                 let pos = player.hyper.paths.indexOf(3)
                 if(pos == -1) { pos = player.hyper.paths.length }
                 return Decimal.times(1, Decimal.pow(3, pos))
@@ -298,48 +300,49 @@ addLayer('hyper', {
             onPurchase() {
                 player.hyper.paths.push(3)
             },
-            description() {return `Hyper Cash gain is boosted based on hyper cash<br>log<sub>3</sub>(HC)+1<br>Currently ${formatBoost(tmp[this.layer].upgrades[this.id].effect.sub(1))}`},
+            fullDisplay() {return `Hyper Cash gain is boosted based on hyper cash<br>log<sub>3</sub>(HC)+1<br>Currently: ${formatBoost(tmp.hyper.upgrades[31].effect.sub(1))}`},
             effect() {
                 return player.hyper.cash.max(1).log(3).add(1)
             },
+            canAfford() { return player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
             title: `Hyper 1`,
         },
         32: {
-            cost() {
+            costa() {
                 let pos = player.hyper.paths.indexOf(3)
                 if(pos == -1) { pos = player.hyper.paths.length }
                 return Decimal.times(4, Decimal.pow(3, pos))
             },
-            description: `Increase Hyper Cash gain by ×10`,
-            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            fullDisplay: `Increase Hyper Cash gain by ×10`,
+            canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
             title: `Hyper 2`,
         },
         33: {
-            cost() {
+            costa() {
                 let pos = player.hyper.paths.indexOf(3)
                 if(pos == -1) { pos = player.hyper.paths.length }
                 return Decimal.times(10, Decimal.pow(3, pos))
             },
-            description() {return `Hyper Cash's boost to Universal Time also applies directly to Cash, RP, and SRP, at ^3 efficiency<br>Currently: ${formatBoost(tmp[this.layer].upgrades[this.id].effect.sub(1))}`},
-            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            fullDisplay() {return `Hyper Cash's boost to Universal Time also applies directly to Cash, RP, and SRP, at ^3 efficiency<br>Currently: ${formatBoost(tmp.hyper.upgrades[33].effect.sub(1))}`},
+            canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
             title: `Hyper 3`,
             effect() {
                 return tmp.hyper.cashEffect.pow(3)
             },
         },
         34: {
-            cost() {
+            costa() {
                 let pos = player.hyper.paths.indexOf(3)
                 if(pos == -1) { pos = player.hyper.paths.length }
                 return Decimal.times(25, Decimal.pow(3, pos))
             },
-            description: `Hyper Cash's boost to Universal Time also applies directly to Power Pylons, Power Allocation, and HC, and improve HC's boost to Universal Time`,
-            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            fullDisplay: `Hyper Cash's boost to Universal Time also applies directly to Power, and HC, and improve HC's boost to Universal Time`,
+            canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
             title: `Hyper 4`,
         },
         
         41: {
-            cost() {
+            costa() {
                 let pos = player.hyper.paths.indexOf(4)
                 if(pos == -1) { pos = player.hyper.paths.length }
                 return Decimal.times(1, Decimal.pow(3, pos))
@@ -347,67 +350,64 @@ addLayer('hyper', {
             onPurchase() {
                 player.hyper.paths.push(4)
             },
-            description: `Increase Cash, RP, and SRP gain by ×10`,
+            fullDisplay: `Increase Cash, RP, and SRP gain by ×10`,
+            canAfford() { return player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
             title: `Combined 1`,
         },
         42: {
-            cost() {
+            costa() {
                 let pos = player.hyper.paths.indexOf(4)
                 if(pos == -1) { pos = player.hyper.paths.length }
                 return Decimal.times(4, Decimal.pow(3, pos))
             },
-            description: `Increase Power, Power Pylons, and Power Allocation by ×10`,
-            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            fullDisplay: `Increase Power, Power Pylons, and Power Allocation by ×10`,
+            canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
             title: `Combined 2`,
         },
         43: {
-            cost() {
+            costa() {
                 let pos = player.hyper.paths.indexOf(4)
                 if(pos == -1) { pos = player.hyper.paths.length }
                 return Decimal.times(10, Decimal.pow(3, pos))
             },
-            description: `Increase Hyper Cash, Power, RP, and SRP gain by ×5`,
-            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            fullDisplay: `Increase Hyper Cash, Power, RP, and SRP gain by ×5`,
+            canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
             title: `Combined 3`,
         },
         44: {
-            cost() {
+            costa() {
                 let pos = player.hyper.paths.indexOf(4)
                 if(pos == -1) { pos = player.hyper.paths.length }
                 return Decimal.times(25, Decimal.pow(3, pos))
             },
-            description: `Increase RP and SRP ×10, and HRP's boost to RP now also applies to Cash and HC`,
-            canAfford() { return hasUpgrade(this.layer, this.id-1) },
+            fullDisplay: `Increase RP and SRP ×10, and HRP's boost to RP now also applies to Cash and HC`,
+            canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
             title: `Combined 4`,
         },
         
         51: {
-            cost: new Decimal(2500),
-            description: `Unlock the Matter Combustor in the machine`,
-            canAfford() {
-                return hasUpgrade(this.layer, 14) && hasUpgrade(this.layer, 24) && hasUpgrade(this.layer, 34) && hasUpgrade(this.layer, 44)
-            }
+            costa: new Decimal(2500),
+            fullDisplay: `Unlock the Matter Combustor in the machine`,
+            canAfford() { return hasUpgrade(this.layer, 14) && hasUpgrade(this.layer, 24) && hasUpgrade(this.layer, 34) && hasUpgrade(this.layer, 44) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
+            title: `Matter`,
         },
         52: {
-            cost: new Decimal(250000),
-            description: `Add an Antimatter Chamber to the Matter Combustor`,
-            canAfford() {
-                return hasUpgrade(this.layer, this.id-1)
-            },
+            costa: new Decimal(250000),
+            fullDisplay: `Add an Antimatter Chamber to the Matter Combustor`,
+            canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
+            title: `Antimatter`,
         },
         53: {
-            cost: new Decimal(2.5e8),
-            description: `Add a Black Hole Container to the Matter Combustor`,
-            canAfford() {
-                return hasUpgrade(this.layer, this.id-1)
-            },
+            costa: new Decimal(2.5e8),
+            fullDisplay: `Add a Black Hole Container to the Matter Combustor`,
+            canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
+            title: `Dark Matter`,
         },
         54: {
-            cost: new Decimal(1e15),
-            description: `Add a Matter Stabiliser to the Matter Combustor`,
-            canAfford() {
-                return hasUpgrade(this.layer, this.id-1)
-            },
+            costa: new Decimal(1e15),
+            fullDisplay: `Add a Matter Stabiliser to the Matter Combustor`,
+            canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
+            title: `Exotic Matter`,
         },
     },
     clickables: {
@@ -426,7 +426,7 @@ addLayer('hyper', {
                 'border-radius': '50%',
             },
             tooltip() {
-                return `Basic 1<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
+                return `Basic 1<br>${tmp[this.layer].upgrades[this.id].fullDisplay}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} HRP`
             },
             canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasMilestone('hyper', 4)},
@@ -447,7 +447,7 @@ addLayer('hyper', {
             },
             branches: [11],
             tooltip() {
-                return `Basic 2<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
+                return `Basic 2<br>${tmp[this.layer].upgrades[this.id].fullDisplay}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} HRP`
             },
             canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasMilestone('hyper', 4)},
@@ -468,7 +468,7 @@ addLayer('hyper', {
             },
             branches: [12],
             tooltip() {
-                return `Basic 3<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
+                return `Basic 3<br>${tmp[this.layer].upgrades[this.id].fullDisplay}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} HRP`
             },
             canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasMilestone('hyper', 4)},
@@ -489,7 +489,7 @@ addLayer('hyper', {
             },
             branches: [13],
             tooltip() {
-                return `Basic 4<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
+                return `Basic 4<br>${tmp[this.layer].upgrades[this.id].fullDisplay}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} HRP`
             },
             canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasMilestone('hyper', 4)},
@@ -510,7 +510,7 @@ addLayer('hyper', {
                 'border-radius': '50%',
             },
             tooltip() {
-                return `Machine 1<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
+                return `Machine 1<br>${tmp[this.layer].upgrades[this.id].fullDisplay}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} HRP`
             },
             canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasMilestone('hyper', 4)},
@@ -531,7 +531,7 @@ addLayer('hyper', {
             },
             branches: [21],
             tooltip() {
-                return `Machine 2<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
+                return `Machine 2<br>${tmp[this.layer].upgrades[this.id].fullDisplay}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} HRP`
             },
             canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasMilestone('hyper', 4)},
@@ -552,7 +552,7 @@ addLayer('hyper', {
             },
             branches: [22],
             tooltip() {
-                return `Machine 3<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
+                return `Machine 3<br>${tmp[this.layer].upgrades[this.id].fullDisplay}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} HRP`
             },
             canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasMilestone('hyper', 4)},
@@ -573,7 +573,7 @@ addLayer('hyper', {
             },
             branches: [23],
             tooltip() {
-                return `Machine 4<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
+                return `Machine 4<br>${tmp[this.layer].upgrades[this.id].fullDisplay}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} HRP`
             },
             canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasMilestone('hyper', 4)},
@@ -594,7 +594,7 @@ addLayer('hyper', {
                 'border-radius': '50%',
             },
             tooltip() {
-                return `Hyper 1<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
+                return `Hyper 1<br>${tmp[this.layer].upgrades[this.id].fullDisplay}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} HRP`
             },
             canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasMilestone('hyper', 4)},
@@ -615,7 +615,7 @@ addLayer('hyper', {
             },
             branches: [31],
             tooltip() {
-                return `Hyper 2<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
+                return `Hyper 2<br>${tmp[this.layer].upgrades[this.id].fullDisplay}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} HRP`
             },
             canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasMilestone('hyper', 4)},
@@ -636,7 +636,7 @@ addLayer('hyper', {
             },
             branches: [32],
             tooltip() {
-                return `Hyper 3<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
+                return `Hyper 3<br>${tmp[this.layer].upgrades[this.id].fullDisplay}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} HRP`
             },
             canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasMilestone('hyper', 4)},
@@ -657,7 +657,7 @@ addLayer('hyper', {
             },
             branches: [33],
             tooltip() {
-                return `Hyper 4<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
+                return `Hyper 4<br>${tmp[this.layer].upgrades[this.id].fullDisplay}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} HRP`
             },
             canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasMilestone('hyper', 4)},
@@ -678,7 +678,7 @@ addLayer('hyper', {
                 'border-radius': '50%',
             },
             tooltip() {
-                return `Combined 1<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
+                return `Combined 1<br>${tmp[this.layer].upgrades[this.id].fullDisplay}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} HRP`
             },
             canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasMilestone('hyper', 4)},
@@ -699,7 +699,7 @@ addLayer('hyper', {
             },
             branches: [41],
             tooltip() {
-                return `Combined 2<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
+                return `Combined 2<br>${tmp[this.layer].upgrades[this.id].fullDisplay}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} HRP`
             },
             canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasMilestone('hyper', 4)},
@@ -720,7 +720,7 @@ addLayer('hyper', {
             },
             branches: [42],
             tooltip() {
-                return `Combined 3<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
+                return `Combined 3<br>${tmp[this.layer].upgrades[this.id].fullDisplay}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} HRP`
             },
             canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasMilestone('hyper', 4)},
@@ -741,7 +741,7 @@ addLayer('hyper', {
             },
             branches: [43],
             tooltip() {
-                return `Combined 4<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
+                return `Combined 4<br>${tmp[this.layer].upgrades[this.id].fullDisplay}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} HRP`
             },
             canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasMilestone('hyper', 4)},
@@ -763,7 +763,7 @@ addLayer('hyper', {
             },
             branches: [14, 24, 34, 44],
             tooltip() {
-                return `Matter 1<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
+                return `Matter 1<br>${tmp[this.layer].upgrades[this.id].fullDisplay}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} HRP`
             },
             canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasMilestone('hyper', 4)},
@@ -784,7 +784,7 @@ addLayer('hyper', {
             },
             branches: [51],
             tooltip() {
-                return `Matter 2<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
+                return `Matter 2<br>${tmp[this.layer].upgrades[this.id].fullDisplay}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} HRP`
             },
             canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasUpgrade(this.layer, this.id-1)},
@@ -805,7 +805,7 @@ addLayer('hyper', {
             },
             branches: [52],
             tooltip() {
-                return `Matter 3<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
+                return `Matter 3<br>${tmp[this.layer].upgrades[this.id].fullDisplay}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} HRP`
             },
             canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasUpgrade(this.layer, this.id-1)},
@@ -826,7 +826,7 @@ addLayer('hyper', {
             },
             branches: [53],
             tooltip() {
-                return `Matter 4<br>${tmp[this.layer].upgrades[this.id].description}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].cost)} HRP`
+                return `Matter 4<br>${tmp[this.layer].upgrades[this.id].fullDisplay}<br>Cost: ${formatWhole(tmp[this.layer].upgrades[this.id].costa)} HRP`
             },
             canClick(){return canAffordUpgrade(this.layer, this.id) && !hasUpgrade(this.layer, this.id)}, has(){return hasUpgrade(this.layer, this.id)}, onClick() { buyUpg(this.layer, this.id) },
             unlocked(){return hasUpgrade(this.layer, this.id-1)},
@@ -872,8 +872,8 @@ addLayer('hyper', {
             canClick(){return false},
             display(){return `<h2>?</h2>`},
             tooltip() {
-                if(options.tooltipCredits) return `Idea from adoplayzz<br><span style="font-size: 11px;">HRP upgrades are split into 4 categories: Basic, Machine, Hyper and Combined. Each time you buy the first upgrade in that category the other categories cost increases by *2<br><br>Basic: 1HRP: *100 Cash, 2HRP: *15 RP and *5 SRP, 3HRP: you start with 100 SRP, 5HRP: *10 cash and SRP<br>Machine: 1HRP: all modes are applied twice, 2HRP: *5 PPy generation, 3HRP: You start with 1 PPy3, 5HRP: decrease all cost scailing of PPy by -^0.2<br>Hyper: 1HRP: hyper cash boost cash by log3(HC), 2HRP: hyper cash *10, 3HRP: hyper cash boosts RP and SRP by log5(HC), 5HRP: hyper cash boosts HRP by log10(HC), also hyper cash *3<br>Combined: 2HRP: *5 Cash, *3 RP, *2 SRP, *5 Power, 3HRP: *2 Tickspeed, *2 PPy generation, *2 cash, 5HRP: HC,RP,SRP,Power *5, 10HRP: unlocks a new extension to the machine<br><br>The matter combustor:<br>in the matter combustor you generate Matter, Anti-Matter, Dark-Matter and Exotic-Matter or (M,AM,DM,EM) +1/s<br><br>Matter and Anti-Matter divide each others gain by sqrt(M)/sqrt(AM) Dark-Matter and Exotic-Matter do the same`
-                return `<h2>Hyper Paths</h2><br>Hyper Paths are sets of four upgrades.<br>Starting a path increases the cost of all unstarted paths.<br>The Matter Path is exempt from this.` },
+                if(options.tooltipCredits) return `Idea from adoplayzz<br><span style="font-size: 11px;">HRP upgrades are split into 4 categories: Basic, Machine, Hyper and Combined. Each time you buy the first upgrade in that category the other categories costa increases by *2<br><br>Basic: 1HRP: *100 Cash, 2HRP: *15 RP and *5 SRP, 3HRP: you start with 100 SRP, 5HRP: *10 cash and SRP<br>Machine: 1HRP: all modes are applied twice, 2HRP: *5 PPy generation, 3HRP: You start with 1 PPy3, 5HRP: decrease all costa scailing of PPy by -^0.2<br>Hyper: 1HRP: hyper cash boost cash by log3(HC), 2HRP: hyper cash *10, 3HRP: hyper cash boosts RP and SRP by log5(HC), 5HRP: hyper cash boosts HRP by log10(HC), also hyper cash *3<br>Combined: 2HRP: *5 Cash, *3 RP, *2 SRP, *5 Power, 3HRP: *2 Tickspeed, *2 PPy generation, *2 cash, 5HRP: HC,RP,SRP,Power *5, 10HRP: unlocks a new extension to the machine<br><br>The matter combustor:<br>in the matter combustor you generate Matter, Anti-Matter, Dark-Matter and Exotic-Matter or (M,AM,DM,EM) +1/s<br><br>Matter and Anti-Matter divide each others gain by sqrt(M)/sqrt(AM) Dark-Matter and Exotic-Matter do the same`
+                return `<h2>Hyper Paths</h2><br>Hyper Paths are sets of four upgrades.<br>Starting a path increases the costa of all unstarted paths.<br>The Matter Path is exempt from this.` },
             unlocked(){return hasMilestone('hyper', 4)},
         },
     },

@@ -402,7 +402,7 @@ addLayer('rebirth', {
         12: {
             title: "Anti-Sins",
             display() {
-                return `Increase functional amount of ${options.upgID?'RB11':'Virtues'}<br>Currently: ×${formatWhole(tmp.rebirth.buyables[12].effect)}`
+                return `Increase functional amount of ${options.upgID?'RB1':'Virtues'}<br>Currently: ×${formatWhole(tmp.rebirth.buyables[12].effect)}`
             },
             cost(x) {
                 return x.add(1).pow_base(8)

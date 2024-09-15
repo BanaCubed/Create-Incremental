@@ -113,6 +113,7 @@ addLayer('chall', {
         let time = tmp.hyper.cashEffect
         if(hasUpgrade('matter', 12)) { time = time.times(tmp.matter.upgrades[12].effect) }
         if(hasUpgrade('antimatter', 12)) { time = time.times(tmp.antimatter.upgrades[12].effect) }
+        if(hasUpgrade('darkmatter', 15)) { time = time.times(tmp.blackhole.effect) }
         return time
     },
 })
