@@ -19,6 +19,7 @@ addLayer('super', {
         resetTime: 0,
         total: new Decimal(0),
         tax: new Decimal(1),
+        uResetTime: new Decimal(0),
     }},
     shouldNotify() {
         let state = false
@@ -52,6 +53,7 @@ addLayer('super', {
             player.super.tax = player.super.tax.times(tmp.super.challenges[15].nerf.pow(diff))
         }
         if(hasMilestone('hyper', 6)) { player.super.rebirths = player.super.rebirths.add(Decimal.times(25, diff).times(tmp.chall.uTime)) }
+        player.super.uResetTime = player.super.uResetTime.add(Decimal.times(diff, tmp.chall.uTime))
     },
     resource: "SRP",
     prestigeButtonText() {
@@ -389,6 +391,8 @@ addLayer('super', {
         if(hasUpgrade('hyper', 43)) { gain = gain.times(5) }
         if(hasUpgrade('hyper', 44)) { gain = gain.times(10) }
         gain = gain.times(tmp.matter.ultimateEffect)
+        if(getBuyableAmount('darkmatter', 14).gte(3)) { gain = gain.times(tmp.blackhole.effect.times(10).pow(2.5)) }
+        if(hasMilestone('blackhole', 4)) { gain = gain.times(tmp.blackhole.milestones[4].effect[1]) }
         return gain
     },
     passiveGeneration() {

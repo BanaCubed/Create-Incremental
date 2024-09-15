@@ -365,6 +365,8 @@ addLayer('rebirth', {
         if(hasUpgrade('hyper', 41)) { gain = gain.times(10) }
         if(hasUpgrade('hyper', 43)) { gain = gain.times(5) }
         if(hasUpgrade('hyper', 44)) { gain = gain.times(10) }
+        if(getBuyableAmount('darkmatter', 14).gte(3)) { gain = gain.times(tmp.blackhole.effect.times(10).pow(2.5)) }
+        if(hasMilestone('blackhole', 4)) { gain = gain.times(tmp.blackhole.milestones[4].effect[0]) }
         gain = gain.times(tmp.matter.ultimateEffect)
         return gain
     },

@@ -26,6 +26,7 @@ addLayer('matter', {
         gain = gain.times(tmp.matter.buyables[11].effect)
         if(hasUpgrade('darkmatter', 12)) { gain = gain.times(tmp.darkmatter.upgrades[12].effect) }
         if(getBuyableAmount('darkmatter', 14).gte(1)) { gain = gain.times(tmp.blackhole.effect.times(5).pow(2)) }
+        if(hasMilestone('blackhole', 3)) { gain = gain.times(tmp.blackhole.milestones[3].effect[1]) }
         return gain.times(tmp.chall.uTime)
     },
     tabFormat: [
@@ -231,6 +232,7 @@ addLayer('antimatter', {
         if(hasUpgrade('antimatter', 23)) { gain = gain.times(tmp.matter.buyables[11].effect.pow(0.5)) }
         if(hasUpgrade('darkmatter', 12)) { gain = gain.times(tmp.darkmatter.upgrades[12].effect) }
         if(getBuyableAmount('darkmatter', 14).gte(1)) { gain = gain.times(tmp.blackhole.effect.times(5).pow(2)) }
+        if(hasMilestone('blackhole', 3)) { gain = gain.times(tmp.blackhole.milestones[3].effect[0]) }
         return gain.times(tmp.chall.uTime)
     },
     tabFormat: [
@@ -489,6 +491,8 @@ addLayer('darkmatter', {
         if(hasUpgrade('darkmatter', 12)) { gain = gain.times(tmp.darkmatter.upgrades[12].effect) }
         if(hasUpgrade('darkmatter', 14)) { gain = gain.times(tmp.darkmatter.upgrades[14].effect) }
         if(hasUpgrade('darkmatter', 15)) { gain = gain.times(tmp.blackhole.effect.div(3).pow(tmp.blackhole.dmExpo)) }
+        if(hasMilestone('blackhole', 2)) { gain = gain.times(tmp.blackhole.milestones[2].effect) }
+        if(hasMilestone('blackhole', 4)) { gain = gain.times(tmp.blackhole.milestones[4].effect[3]) }
         return gain.times(tmp.chall.uTime)
     },
     tabFormat: [
@@ -508,13 +512,14 @@ addLayer('darkmatter', {
             ${getBuyableAmount('darkmatter', 14).gte(1)?`<br>Antimatter & Matter Gain ${formatBoost(tmp.blackhole.effect.times(5).pow(2).sub(1))}`:''}
             ${getBuyableAmount('darkmatter', 14).gte(2)?`<br>Hyper Cash Gain ${formatBoost(tmp.blackhole.effect.times(2).pow(3).sub(1))}`:''}
             ${getBuyableAmount('darkmatter', 14).gte(3)?`<br>$, RP, SRP Gain ${formatBoost(tmp.blackhole.effect.times(10).pow(2.5).sub(1))}`:''}
-            ${getBuyableAmount('darkmatter', 14).gte(4)?`<br>HRP Gain ${formatBoost(tmp.blackhole.effect.pow(0.5).sub(1))}`:''}
+            ${getBuyableAmount('darkmatter', 14).gte(4)?`<br>HRP Gain ${formatBoost(tmp.blackhole.effect.pow(1.5).sub(1))}`:''}
             ${getBuyableAmount('darkmatter', 14).gte(5)?`<br>Exotic Matter Gain ${formatBoost(tmp.blackhole.effect.times(5).pow(0.66).sub(1))}`:''}</div>`:``}
         ],
         'blank',
         ['layer-proxy', ['blackhole', [
             "milestones-upgbox",
         ]]],
+        'blank',
     ],
     row: 3,
     upgrades: {
@@ -611,6 +616,18 @@ addLayer('darkmatter', {
                 return
             },
         },
+        17: {
+            title: 'Embrace the Void',
+            fullDisplay() {
+                return `Gain a third Ultimate Matter Fragment`
+            },
+            costa: new Decimal(1e38),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa); player.matter.umf = player.matter.umf.add(1)},
+            tooltip() {
+                return `Can someone make a game called Dark Matter Dimensions and upload it to galaxy`
+            },
+        },
     },
     buyables: {
         11: {
@@ -645,11 +662,14 @@ addLayer('darkmatter', {
                 return `Increase the base of Dark Matter Galaxies<br>Currently: ${format(tmp[this.layer].buyables[this.id].effect.add(1).times(1.5))}`
             },
             cost(x) {
-                return x.pow(2).times(3).pow_base(10).times(1e13)
+                let ef = x.pow(2).times(3).pow_base(10).times(1e13)
+                return ef
             },
             effect(x) {
                 if(hasMilestone('blackhole', 1)) { x = x.times(tmp.blackhole.milestones[1].effect) }
-                return x.pow_base(1.125).sub(1)
+                let ef = x.pow_base(1.125).sub(1)
+                if(ef.gte(2.5)) { ef = ef.log(2.5).times(2.5) }
+                return ef
             },
             canAfford(){return player[this.layer].points.gte(layers[this.layer].buyables[this.id].cost(getBuyableAmount(this.layer, this.id))) && getBuyableAmount(this.layer, this.id).lt(tmp[this.layer].buyables[this.id].purchaseLimit)},
             buy() {
@@ -660,7 +680,7 @@ addLayer('darkmatter', {
             tooltip() {
                 if(options.tooltipCredits) return `DM buy1: increase the multiplicative gain of BH by ×1.5 (Cost: 100DM (×2 per buy))`
 
-                return `Effect: 1.125<sup>x</sup><br>Cost: 1e13×10<sup>3x<sup>2</sup></sup>`
+                return `Effect: 1.125<sup>x</sup><br>Cost: 1e13×10<sup>3x<sup>2</sup></sup><br>Softcaps at 2.5`
             },
             unlocked(){return player.blackhole.unlocked},
         },
@@ -694,7 +714,7 @@ addLayer('darkmatter', {
                 return `Add another effect to the Black Hole<br>Currently: +${formatWhole(getBuyableAmount('darkmatter', 14))}`
             },
             cost(x) {
-                let costs = [new Decimal('1e15'), new Decimal('1e25'), new Decimal('1e100'), new Decimal('1e308'), new Decimal('1e5000')]
+                let costs = [new Decimal('1e15'), new Decimal('1e23'), new Decimal('1e30'), new Decimal('1e38'), new Decimal('1e5000')]
                 return costs[x.toNumber()]
             },
             effect(x) {
@@ -767,6 +787,48 @@ addLayer('blackhole', {
             },
             effect() {
                 return Decimal.div(player.blackhole.milestones.length, 8).add(1)
+            }
+        },
+        2: {
+            requirementDescription() {return `${format(5e17)} BHV`},
+            effectDescription() {return `Dark Matter boosts itself, a lot<br>Currently ${formatBoost(tmp[this.layer].milestones[this.id].effect.sub(1))}`},
+            done() { return player.blackhole.points.gte(5e17)&&hasUpgrade('darkmatter', 16) },
+            unlocked() {return hasUpgrade('darkmatter', 16)},
+            tooltip() {
+                if(options.tooltipCredits) return `BH ms2<br>Requierment: 10<sup>18</sup> plank length<br>Effect: up1,up2,up3 and up4 are aplied twice`
+        
+                return `log<sub>100</sub>(DM)<sup>10</sup>`
+            },
+            effect() {
+                return player.darkmatter.points.max(1).log(100).pow(10).add(1)
+            }
+        },
+        3: {
+            requirementDescription() {return `${format(1e29)} BHV`},
+            effectDescription() {return `Dark Matter boosts Antimatter gain, Antimatter boosts Matter gain, and Matter boosts Cash Gain<br>Currently ${formatBoost(tmp[this.layer].milestones[this.id].effect[0].sub(1))}, ${formatBoost(tmp[this.layer].milestones[this.id].effect[1].sub(1))}, ${formatBoost(tmp[this.layer].milestones[this.id].effect[2].sub(1))}`},
+            done() { return player.blackhole.points.gte(1e29)&&hasUpgrade('darkmatter', 16) },
+            unlocked() {return hasUpgrade('darkmatter', 16)},
+            tooltip() {
+                if(options.tooltipCredits) return `Uninspired`
+        
+                return `log<sub>100</sub>(DM)<sup>10</sup><br>log<sub>1e4</sub>(AM)<sup>10</sup><br>log<sub>1e8</sub>(M)<sup>10</sup>`
+            },
+            effect() {
+                return [player.darkmatter.points.max(1).log(100).pow(10).add(1), player.antimatter.points.max(1).log(1e4).pow(10).add(1), player.matter.points.max(1).log(1e8).pow(10).add(1)]
+            }
+        },
+        4: {
+            requirementDescription() {return `${format(1e33)} BHV`},
+            effectDescription() {return `Cash boosts RP gain, RP boosts SRP gain, SRP boosts HRP gain, and HRP boosts Dark Matter gain<br>Currently ${formatBoost(tmp[this.layer].milestones[this.id].effect[0].sub(1))}, ${formatBoost(tmp[this.layer].milestones[this.id].effect[1].sub(1))}, ${formatBoost(tmp[this.layer].milestones[this.id].effect[2].sub(1))}, ${formatBoost(tmp[this.layer].milestones[this.id].effect[3].sub(1))}`},
+            done() { return player.blackhole.points.gte(1e33)&&hasUpgrade('darkmatter', 16) },
+            unlocked() {return hasUpgrade('darkmatter', 16)},
+            tooltip() {
+                if(options.tooltipCredits) return `Uninspired`
+        
+                return `log<sub>2</sub>($)<sup>3</sup><br>log<sub>10</sub>(RP)<sup>3</sup><br>log<sub>10</sub>(SRP)<sup>2.5</sup><br>log<sub>10</sub>(HRP)<sup>5</sup>`
+            },
+            effect() {
+                return [player.points.max(1).log(2).pow(3).add(1), player.rebirth.points.max(1).log(10).pow(3).add(1), player.super.points.max(1).log(10).pow(2.5).add(1), player.hyper.points.max(1).log(10).pow(5).add(1)]
             }
         },
     },

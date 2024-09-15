@@ -151,6 +151,8 @@ var systemComponents = {
     'stats-tab': {
         template: `
         <div>
+		Time Since:<br>Rebirth - <span v-html="formatTime(player.rebirth.resetTime)"></span><br>Super Rebirth - <span v-html="formatTime(player.super.resetTime)"></span><br>Hyper Rebirth - <span v-html="formatTime(player.hyper.resetTime)"></span><br><br>
+		<span v-if="player.hyper.unlocked">Universal Time Since:<br>Rebirth - <span v-html="formatTime(player.rebirth.uResetTime)"></span><br>Super Rebirth - <span v-html="formatTime(player.super.uResetTime)"></span><br>Hyper Rebirth - <span v-html="formatTime(player.hyper.uResetTime)"></span><br><br></span>
 		<span v-if="player.hyper.unlocked">Real </span>Playtime<br><span v-html="formatTime(player.timePlayed)"></span><br><br>
 		<span v-if="player.hyper.unlocked">Universal Playtime<br><span v-html="formatTime(player.chall.uTimePlayed)"></span><br><br></span>
 		<br><br></div>

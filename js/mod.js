@@ -72,6 +72,9 @@ function getPointGen() {
 	if(hasUpgrade('hyper', 33)) { gain = gain.times(tmp.hyper.upgrades[33].effect) }
 	if(hasUpgrade('hyper', 41)) { gain = gain.times(10) }
 	if(hasUpgrade('hyper', 44)) { gain = gain.times(tmp.hyper.effect[1]) }
+	
+	if(hasMilestone('blackhole', 3)) { gain = gain.times(tmp.blackhole.milestones[3].effect[2]) }
+	if(getBuyableAmount('darkmatter', 14).gte(3)) { gain = gain.times(tmp.blackhole.effect.times(10).pow(2.5)) }
 
 	gain = gain.times(tmp.matter.ultimateEffect)
 

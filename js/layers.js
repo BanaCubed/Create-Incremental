@@ -42,7 +42,8 @@ addLayer('chall', {
                     if(player.hyper.subLayers < 1) { return player.hyper.rebirths.div(5) }
                     if(!player.matter.unlocked) { return player.hyper.upgrades.length / 17 }
                     if(!player.antimatter.unlocked) { return player.hyper.points.div(250000) }
-                    if(true) { return player.hyper.points.div(2.5e8) }
+                    if(!player.darkmatter.unlocked) { return player.hyper.points.div(2.5e8) }
+                    if(true) { return player.hyper.points.div(1e18) }
                 }
             },
             unlocked(){return true},
@@ -72,7 +73,8 @@ addLayer('chall', {
                     if(player.hyper.subLayers < 1) { return `Reach ${formatWhole(5)} Hyper Rebirths to unlock Paths and compress the resources display<br>${formatWhole(player.hyper.rebirths)}/${formatWhole(5)} Hyper Rebirths` }
                     if(!player.matter.unlocked) { return `Unlock the Matter Combustor to unlock Matter` }
                     if(!player.antimatter.unlocked) { return `Unlock the Antimatter Chamber to unlock Antimatter` }
-                    if(true) { return `Unlock the Black Hole Container to unlock Dark Matter` }
+                    if(!player.darkmatter.unlocked) { return `Unlock the Black Hole Container to unlock Dark Matter` }
+                    if(true) { return `Unlock the Matter Stabiliser to unlock Exotic Matter` }
                 }
             },
             nextColor() {

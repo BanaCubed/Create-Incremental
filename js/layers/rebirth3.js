@@ -25,6 +25,7 @@ addLayer('hyper', {
         cash: new Decimal(0),
         paths: [],
         subLayers: 0,
+        uResetTime: new Decimal(0),
     }},
     shouldNotify() {
         let state = false
@@ -54,6 +55,8 @@ addLayer('hyper', {
     gainMult() {
         let gain = new Decimal(1)
         gain = gain.times(tmp.matter.ultimateEffect)
+        if(hasMilestone('blackhole', 4)) { gain = gain.times(tmp.blackhole.milestones[4].effect[2]) }
+        if(getBuyableAmount('darkmatter', 14).gte(4)) { gain = gain.times(tmp.blackhole.effect.pow(1.5)) }
         return gain
     },
     update(diff) {
@@ -62,6 +65,7 @@ addLayer('hyper', {
             player.hyper.cash = player.hyper.cash.add(tmp.hyper.cashGain.times(tmp.chall.uTime).times(diff))
         }
         if(hasMilestone('hyper', 4) && player.hyper.subLayers < 1) { player.hyper.subLayers = 1 }
+        player.hyper.uResetTime = player.hyper.uResetTime.add(Decimal.times(diff, tmp.chall.uTime))
     },
     resetTooltip() {
         if(options.tooltipCredits) return `Idea from galaxyuser63274<br>HYPER REBIRTH<br>resets everything up until this point except automation to gain hyper rebirth points (HRP). Numbers are about to get big.<br>First HRP at 1.00e110$, 5.00e8 SRP, and 5.00e7 Power<br>Cost formulas:<br>Cash: sqrt(2×log<sub>10</sub>(cash)-220)<br>SRP: log<sub>2</sub>(SRP/2.50e8)<br>Power: log<sub>2</sub>(Power/2.50e7)<br><br>HRP boosts to:<br>Cash: ×3<sup>HRP</sup><br>SRP: ×(1+HRP)<br>Power: ×2<sup>(HRP/2)</sup>`
@@ -118,6 +122,7 @@ addLayer('hyper', {
         if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
         if(hasUpgrade('hyper', 43)) { gain = gain.times(5) }
         if(hasUpgrade('hyper', 44)) { gain = gain.times(tmp.hyper.effect[1]) }
+        if(getBuyableAmount('darkmatter', 14).gte(2)) { gain = gain.times(tmp.blackhole.effect.times(2).pow(3)) }
         return gain
     },
     milestones: {
@@ -404,7 +409,7 @@ addLayer('hyper', {
             title: `Dark Matter`,
         },
         54: {
-            costa: new Decimal(1e15),
+            costa: new Decimal(1e18),
             fullDisplay: `Add a Matter Stabiliser to the Matter Combustor`,
             canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
             title: `Exotic Matter`,
