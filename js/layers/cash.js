@@ -1,13 +1,13 @@
 addLayer('cash', {
     startData() { return {
         unlocked: true,
-        points: new Decimal(0),
+        points: Decimal.dZero,
     }},
     row: 0,
     costFactor() {
-        let factor = new Decimal(1)
-        if(inChallenge('super', 13)) { factor = factor.times(tmp.super.challenges[13].nerf.add(1)) }
-        if(inChallenge('super', 14)) { factor = factor.times('1e1.79e308') }
+        let factor = Decimal.dOne
+        if(inChallenge('super', 13)) { factor = factor.mul(tmp.super.challenges[13].nerf.add(1)) }
+        if(inChallenge('super', 14)) { factor = factor.mul('1e1.79e308') }
         if(hasUpgrade('super', 16)) { factor = factor.div(tmp.super.effect[1]) }
         return factor
     },
@@ -17,11 +17,11 @@ addLayer('cash', {
             fullDisplay() {
                 return `Start passively earning $${format(tmp[this.layer].upgrades[this.id].effect)} per second`
             },
-            costa: new Decimal(0),
+            costa: Decimal.dZero,
             canAfford() {return true},
             effect() {
-                let effect = new Decimal(1)
-                if(hasMilestone('chall', 0)) { effect = effect.times(5) }
+                let effect = Decimal.dOne
+                if(hasMilestone('chall', 0)) { effect = effect.mul(5) }
                 return effect
             },
             pay() {},
@@ -35,12 +35,12 @@ addLayer('cash', {
             fullDisplay() {
                 return `${hasMilestone('chall', 0)?'Quadruple':'Double'} cash gain`
             },
-            costa() {return Decimal.times(9.99, tmp.cash.costFactor)},
+            costa() {return Decimal.mul(9.99, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(!hasMilestone('super', 0)) {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)}},
             effect() {
                 let effect = new Decimal(2)
-                if(hasMilestone('chall', 0)) { effect = effect.times(2) }
+                if(hasMilestone('chall', 0)) { effect = effect.mul(2) }
                 return effect
             },
             tooltip() {
@@ -54,21 +54,21 @@ addLayer('cash', {
                 return `Increase <span class="cash infoText">cash</span> gain based on current <span class="cash infoText">cash</span><br>
                 Currently: <span class="cash infoText">×${format(tmp[this.layer].upgrades[this.id].effect)}</span>`
             },
-            costa() {return Decimal.times(24.99, tmp.cash.costFactor)},
+            costa() {return Decimal.mul(24.99, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(!hasMilestone('super', 0)) {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)}},
             effect() {
-                let exponent = new Decimal(1)
-                if(hasUpgrade('cash', 23)) exponent = exponent.times(tmp.cash.upgrades[23].effect)
-                if(hasMilestone('chall', 0)) { exponent = exponent.times(1.5) }
+                let exponent = Decimal.dOne
+                if(hasUpgrade('cash', 23)) exponent = exponent.mul(tmp.cash.upgrades[23].effect)
+                if(hasMilestone('chall', 0)) { exponent = exponent.mul(1.5) }
                 return player.points.max(1).log(10).add(1).pow(exponent)
             },
             tooltip() {
                 if(options.tooltipCredits) return `Idea from adoplayzz<br>50$: boost cash by log<sub>5</sub>(cash)`
                 
-                let exponent = new Decimal(1)
-                if(hasUpgrade('cash', 23)) exponent = exponent.times(tmp.cash.upgrades[23].effect)
-                if(hasMilestone('chall', 0)) { exponent = exponent.times(1.5) }
+                let exponent = Decimal.dOne
+                if(hasUpgrade('cash', 23)) exponent = exponent.mul(tmp.cash.upgrades[23].effect)
+                if(hasMilestone('chall', 0)) { exponent = exponent.mul(1.5) }
                 return `${exponent.neq(1)?'(':''}log<sub>10</sub>(cash)+1${exponent.neq(1)?`)<sup>${format(exponent)}</sup>`:''}`
             },
         },
@@ -78,7 +78,7 @@ addLayer('cash', {
                 return `Increase <span class="cash infoText">cash</span> gain based on current <span class="cash infoText">cash</span> again<br>
                 Currently: <span class="cash infoText">×${format(tmp[this.layer].upgrades[this.id].effect)}</span>`
             },
-            costa() {return Decimal.times(99.99, tmp.cash.costFactor)},
+            costa() {return Decimal.mul(99.99, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(!hasMilestone('super', 0)) {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)}},
             effect() {
@@ -90,7 +90,7 @@ addLayer('cash', {
                 if(options.tooltipCredits) return `Idea from adoplayzz<br>2,000$: boost cash by log<sub>8</sub>(cash<sup>1.5</sup>)<sup>0.5</sup>`
                 
                 let exponent = new Decimal(0.4)
-                if(hasMilestone('chall', 0)) { exponent = exponent.times(2) }
+                if(hasMilestone('chall', 0)) { exponent = exponent.mul(2) }
                 return `${exponent.neq(1)?'(':''}log<sub>1.5</sub>(cash)+1${exponent.neq(1)?`)<sup>${format(exponent)}</sup>`:''}`
             },
         },
@@ -99,12 +99,12 @@ addLayer('cash', {
             fullDisplay() {
                 return `${hasMilestone('chall', 0)?'Quadruple':'Double'} <span class="cash infoText">cash</span> gain again`
             },
-            costa() {return Decimal.times(249.99, tmp.cash.costFactor)},
+            costa() {return Decimal.mul(249.99, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(!hasMilestone('super', 0)) {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)}},
             effect() {
                 let effect = new Decimal(2)
-                if(hasMilestone('chall', 0)) { effect = effect.times(2) }
+                if(hasMilestone('chall', 0)) { effect = effect.mul(2) }
                 return effect
             },
             tooltip() {
@@ -118,12 +118,12 @@ addLayer('cash', {
             fullDisplay() {
                 return `${hasMilestone('chall', 0)?'Quadruple':'Double'} <span class="cash infoText">cash</span> gain yet again`
             },
-            costa() {return Decimal.times(599.99, tmp.cash.costFactor)},
+            costa() {return Decimal.mul(599.99, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(!hasMilestone('super', 0)) {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)}},
             effect() {
                 let effect = new Decimal(2)
-                if(hasMilestone('chall', 0)) { effect = effect.times(2) }
+                if(hasMilestone('chall', 0)) { effect = effect.mul(2) }
                 return effect
             },
             tooltip() {
@@ -138,7 +138,7 @@ addLayer('cash', {
                 return `Increase <span class="cash infoText">cash</span> gain absed on time in current <span class="rebirth infoText">rebirth</span><br>
                 Currently: <span class="cash infoText">×${format(tmp[this.layer].upgrades[this.id].effect)}</span>`
             },
-            costa() {return Decimal.times(2500, tmp.cash.costFactor)},
+            costa() {return Decimal.mul(2500, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(challengeCompletions('super', 11) < 1)player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             effect() {
@@ -150,8 +150,8 @@ addLayer('cash', {
             tooltip() {
                 if(options.tooltipCredits) return `Uninspired`
                 
-                let exponent = new Decimal(1)
-                if(hasMilestone('chall', 0)) { exponent = exponent.times(2) }
+                let exponent = Decimal.dOne
+                if(hasMilestone('chall', 0)) { exponent = exponent.mul(2) }
                 return `${exponent.neq(1)?'(':''}log<sub>10</sub>(seconds)+1${exponent.neq(1)?`)<sup>${format(exponent)}</sup>`:''}`
             },
         },
@@ -161,7 +161,7 @@ addLayer('cash', {
                 return `Increase <span class="cash infoText">cash</span> gain based on amount of <span class="cash infoText">cash</span> upgrades<br>
                 Currently: <span class="cash infoText">×${format(tmp[this.layer].upgrades[this.id].effect)}</span>`
             },
-            costa() {return Decimal.times(1e4, tmp.cash.costFactor)},
+            costa() {return Decimal.mul(1e4, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(challengeCompletions('super', 11) < 2)player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             effect() {
@@ -174,7 +174,7 @@ addLayer('cash', {
                 if(options.tooltipCredits) return `Uninspired`
                 
                 let exponent = new Decimal(0.5)
-                if(hasMilestone('chall', 0)) { exponent = exponent.times(3) }
+                if(hasMilestone('chall', 0)) { exponent = exponent.mul(3) }
                 return `upgrades${exponent.neq(1)?`<sup>${format(exponent)}</sup>`:''}`
             },
         },
@@ -183,7 +183,7 @@ addLayer('cash', {
             fullDisplay() {
                 return `Increase <span class="cash infoText">${options.upgID?"$U3s":"Get a Promotion's"}</span> effect`
             },
-            costa() {return Decimal.times(1e5, tmp.cash.costFactor)},
+            costa() {return Decimal.mul(1e5, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(challengeCompletions('super', 11) < 3)player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             effect() {
@@ -195,10 +195,10 @@ addLayer('cash', {
             tooltip() {
                 if(options.tooltipCredits) return `Idea from galaxyuser63274<br>20,000$: change the 50$ upgrade (${options.upgID?'$U3':'Get a Promotion'}) log to log<sub>3</sub>(cash)`
                 
-                let exponent = new Decimal(1)
+                let exponent = Decimal.dOne
                 let boost = new Decimal(1.3)
-                if(hasMilestone('chall', 0)) { exponent = exponent.times(1.5); boost = boost.add(0.3) }
-                return `${exponent.neq(1)?'(':''}log<sub>10</sub>(cash)+1${exponent.neq(1)?`)<sup>${format(exponent)}</sup>`:''} to (log<sub>10</sub>(cash)+1)<sup>${format(exponent.times(boost))}</sup>`
+                if(hasMilestone('chall', 0)) { exponent = exponent.mul(1.5); boost = boost.add(0.3) }
+                return `${exponent.neq(1)?'(':''}log<sub>10</sub>(cash)+1${exponent.neq(1)?`)<sup>${format(exponent)}</sup>`:''} to (log<sub>10</sub>(cash)+1)<sup>${format(exponent.mul(boost))}</sup>`
             },
         },
         24: {
@@ -206,7 +206,7 @@ addLayer('cash', {
             fullDisplay() {
                 return `Increase <span class="rebirth infoText">RP</span> gain base`
             },
-            costa() {return Decimal.times(5e5, tmp.cash.costFactor)},
+            costa() {return Decimal.mul(5e5, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(challengeCompletions('super', 11) < 4)player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             effect() {
@@ -218,7 +218,7 @@ addLayer('cash', {
             tooltip() {
                 if(options.tooltipCredits) return `Idea from galaxyuser63274<br>80,000,000$: improve rp gain formula x<sup>0.5</sup> to x<sup>0.7</sup>`
                 
-                return `3<sup>x</sup> to ${format(tmp[this.layer].upgrades[this.id].effect.times(3))}<sup>x</sup>`
+                return `3<sup>x</sup> to ${format(tmp[this.layer].upgrades[this.id].effect.mul(3))}<sup>x</sup>`
             },
         },
         25: {
@@ -226,7 +226,7 @@ addLayer('cash', {
             fullDisplay() {
                 return `Improve <span class="rebirth infoText">RP</span> effect base`
             },
-            costa() {return Decimal.times(2.5e6, tmp.cash.costFactor)},
+            costa() {return Decimal.mul(2.5e6, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(challengeCompletions('super', 11) < 5)player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             effect() {
@@ -246,7 +246,7 @@ addLayer('cash', {
             fullDisplay() {
                 return `Unlock <span class="machine infoText">The Machine</span>`
             },
-            costa() {return Decimal.times(8e6, tmp.cash.costFactor)},
+            costa() {return Decimal.mul(8e6, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {if(challengeCompletions('super', 11) < 6)player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             unlocked(){return hasUpgrade('rebirth', 13)},
@@ -268,7 +268,7 @@ addLayer('cash', {
                 return `Increase <span class="cash infoText">cash</span> gain based on <span class="rebirth infoText">RP</span> gain on <span class="rebirth infoText">Rebirth</span><br>
                 Currently: <span class="cash infoText">×${format(tmp[this.layer].upgrades[this.id].effect)}</span>`
             },
-            costa() {return Decimal.times(1e10, tmp.cash.costFactor)},
+            costa() {return Decimal.mul(1e10, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             unlocked(){return hasUpgrade('super', 13)},
@@ -280,8 +280,8 @@ addLayer('cash', {
             tooltip() {
                 if(options.tooltipCredits) return `Split from idea from galaxyuser63274<br>4.00e15$: Create a synergy boost between cash and RP<br>RP: log<sub>10</sub>(log<sub>10</sub>(cash)), cash: log<sub>10</sub>(RP)`
                 
-                let exponent = new Decimal(1)
-                if(hasMilestone('chall', 0)) { exponent = exponent.times(1.5) }
+                let exponent = Decimal.dOne
+                if(hasMilestone('chall', 0)) { exponent = exponent.mul(1.5) }
                 return `${exponent.neq(1)?'(':''}log<sub>150</sub>(RP)${exponent.neq(1)?')<sup>'+format(exponent)+'</sup>':''}`
             },
         },
@@ -291,7 +291,7 @@ addLayer('cash', {
                 return `Increase <span class="rebirth infoText">RP</span> gain based on <span class="cash infoText">cash</span> upgrades<br>
                 Currently: <span class="rebirth infoText">×${format(tmp[this.layer].upgrades[this.id].effect)}</span>`
             },
-            costa() {return Decimal.times(1e11, tmp.cash.costFactor)},
+            costa() {return Decimal.mul(1e11, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             unlocked(){return hasUpgrade('super', 13)},
@@ -303,8 +303,8 @@ addLayer('cash', {
             tooltip() {
                 if(options.tooltipCredits) return `Split from idea from galaxyuser63274<br>4.00e15$: Create a synergy boost between cash and RP<br>RP: log<sub>10</sub>(log<sub>10</sub>(cash)), cash: log<sub>10</sub>(RP)`
                 
-                let exponent = new Decimal(1)
-                if(hasMilestone('chall', 0)) { exponent = exponent.times(1.5) }
+                let exponent = Decimal.dOne
+                if(hasMilestone('chall', 0)) { exponent = exponent.mul(1.5) }
                 return `${exponent.neq(1)?'(':''}(upgrades + 3)/3${exponent.neq(1)?')<sup>'+format(exponent)+'</sup>':''}`
             },
         },
@@ -313,13 +313,13 @@ addLayer('cash', {
             fullDisplay() {
                 return `${hasMilestone('chall', 0)?'If RP on Rebirth ×300 is greater than current RP, set current RP to RP on Rebirth ×300':'If RP on Rebirth is greater than current RP, set current RP to RP on Rebirth'}`
             },
-            costa() {return Decimal.times(1e12, tmp.cash.costFactor)},
+            costa() {return Decimal.mul(1e12, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             unlocked(){return hasUpgrade('super', 13)},
             effect() {
-                let effect = new Decimal(1)
-                if(hasMilestone('chall', 0)) { effect = effect.times(300) }
+                let effect = Decimal.dOne
+                if(hasMilestone('chall', 0)) { effect = effect.mul(300) }
                 return effect
             },
             tooltip() {
@@ -333,7 +333,7 @@ addLayer('cash', {
             fullDisplay() {
                 return `Reduce Rebirth requirement to $1000`
             },
-            costa() {return Decimal.times(1e13, tmp.cash.costFactor)},
+            costa() {return Decimal.mul(1e13, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             unlocked(){return hasUpgrade('super', 13)},
@@ -348,7 +348,7 @@ addLayer('cash', {
             fullDisplay() {
                 return `Reduce Super Rebirth requirement to 1500 RP`
             },
-            costa() {return Decimal.times(1e14, tmp.cash.costFactor)},
+            costa() {return Decimal.mul(1e14, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             unlocked(){return hasUpgrade('super', 13)},
@@ -364,7 +364,7 @@ addLayer('cash', {
                 return `Neutral Mode's effect also boosts SRP gain at a reduced rate<br>
                 Currently: ×${format(tmp[this.layer].upgrades[this.id].effect)}`
             },
-            costa() {return Decimal.times(1.0001e15, tmp.cash.costFactor)},
+            costa() {return Decimal.mul(1.0001e15, tmp.cash.costFactor)},
             canAfford() {return player.points.gte(tmp.cash.upgrades[this.id].costa)},
             pay() {player.points = player.points.sub(tmp.cash.upgrades[this.id].costa)},
             unlocked(){return hasUpgrade('super', 13)},
@@ -377,7 +377,7 @@ addLayer('cash', {
                 if(options.tooltipCredits) return `Uninspired`
                 
                 let exponent = new Decimal(0.5)
-                if(hasMilestone('chall', 0)) { exponent = exponent.times(1.25) }
+                if(hasMilestone('chall', 0)) { exponent = exponent.mul(1.25) }
                 return `(effect+1)<sup>${format(exponent)}</sup>`
             },
         },
@@ -422,7 +422,7 @@ addLayer('cash', {
         },
     },
     doReset(layer) {
-        if(tmp[layer].row == tmp[this.layer].row) { return }
+        if(tmp[layer].row == tmp[this.layer].row || layer == 'exomatter') { return }
         let keep = []
         if(hasMilestone('super', 7) && (layer == 'rebirth' || layer == 'super')) keep.push('upgrades')
         layerDataReset('cash', keep)
@@ -489,14 +489,14 @@ addLayer('cash', {
             auto(){return hasMilestone('super', 3)},
             nerfExpo() {
                 let base = new Decimal(5)
-                base = base.sub(Decimal.times(0.5, challengeCompletions('super', 12)))
+                base = base.sub(Decimal.mul(0.5, challengeCompletions('super', 12)))
                 if(hasMilestone('super', 4)){base = base.div(2)}
                 return base
             },
             tooltip() {
                 if(options.tooltipCredits) return `Idea from EchoingLycanthrope<br>$ Buyable 1: Increase RP gain.<br>Price formula: [Times Bought]<sup>6</sup><br>Effect formula: 1.1<sup>[Times bought]</sup>`
                 
-                return `Effect: (x+1)<sup>${hasUpgrade('darkmatter', 13)?'1':'0.5'}</sup><br>Cost: 10<sup>x+6</sup>${maxedChallenge('super', 12)?'':`<br>Nerf: (x+1)<sup>${tmp.cash.buyables[11].nerfExpo.times(0.5)}</sup>`}`
+                return `Effect: (x+1)<sup>${hasUpgrade('darkmatter', 13)?'1':'0.5'}</sup><br>Cost: 10<sup>x+6</sup>${maxedChallenge('super', 12)?'':`<br>Nerf: (x+1)<sup>${tmp.cash.buyables[11].nerfExpo.mul(0.5)}</sup>`}`
             },
         },
     },

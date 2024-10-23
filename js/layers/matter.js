@@ -3,7 +3,7 @@ addLayer('matter', {
     symbol: 'M',
     layerShown(){return player.matter.unlocked},
     update(diff) {
-        if(hasUpgrade('hyper', 51)) { player.matter.unlocked = true; player.matter.points = player.matter.points.add(tmp.matter.matterGain.times(diff)) }
+        if(hasUpgrade('hyper', 51)) { player.matter.unlocked = true; player.matter.points = player.matter.points.add(tmp.matter.matterGain.mul(diff)) }
     },
     automate() {
         if(hasUpgrade('antimatter', 17)) {
@@ -13,21 +13,21 @@ addLayer('matter', {
     },
     startData() { return {
         unlocked: false,
-        points: new Decimal(0),
-        umf: new Decimal(0),
+        points: Decimal.dZero,
+        umf: Decimal.dZero,
     }},
     resource: 'matter',
     tooltip: 'matter-display',
     matterGain() {
         let gain =  Decimal.dOne
-        if(hasUpgrade('matter', 11)) { gain = gain.times(2) }
-        if(hasUpgrade('matter', 13)) { gain = gain.times(tmp.matter.upgrades[13].effect) }
-        if(hasUpgrade('matter', 14)) { gain = gain.times(tmp.matter.upgrades[14].effect) }
-        gain = gain.times(tmp.matter.buyables[11].effect)
-        if(hasUpgrade('darkmatter', 12)) { gain = gain.times(tmp.darkmatter.upgrades[12].effect) }
-        if(getBuyableAmount('darkmatter', 14).gte(1)) { gain = gain.times(tmp.blackhole.effect.times(5).pow(2)) }
-        if(hasMilestone('blackhole', 3)) { gain = gain.times(tmp.blackhole.milestones[3].effect[1]) }
-        return gain.times(tmp.chall.uTime)
+        if(hasUpgrade('matter', 11)) { gain = gain.mul(2) }
+        if(hasUpgrade('matter', 13)) { gain = gain.mul(tmp.matter.upgrades[13].effect) }
+        if(hasUpgrade('matter', 14)) { gain = gain.mul(tmp.matter.upgrades[14].effect) }
+        gain = gain.mul(tmp.matter.buyables[11].effect)
+        if(hasUpgrade('darkmatter', 12)) { gain = gain.mul(tmp.darkmatter.upgrades[12].effect) }
+        if(getBuyableAmount('darkmatter', 14).gte(1)) { gain = gain.mul(tmp.blackhole.effect.mul(5).pow(2)) }
+        if(hasMilestone('blackhole', 3)) { gain = gain.mul(tmp.blackhole.milestones[3].effect[1]) }
+        return gain.mul(tmp.chall.uTime)
     },
     tabFormat: [
         ['row', [
@@ -116,7 +116,7 @@ addLayer('matter', {
             canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
             pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
             effect() {
-                return getBuyableAmount('matter', 11).add(1).pow(0.75).sub(1).pow_base(5).add(1).pow(0.5).times(2).recip()
+                return getBuyableAmount('matter', 11).add(1).pow(0.75).sub(1).pow_base(5).add(1).pow(0.5).mul(2).recip()
             },
             tooltip() {
                 if(options.tooltipCredits) return `Idea from Shadow69420<br>Matter mile1:<br>Matter mile2:<br>Name: I need more matter!<br>Req:1000 matter<br>Effect:Antimatter divides itself by Antim/5 + 1`
@@ -133,7 +133,7 @@ addLayer('matter', {
             canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
             pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
             effect() {
-                return tmp.matter.buyables[11].effect.add(1).pow(0.5).times(2).recip()
+                return tmp.matter.buyables[11].effect.add(1).pow(0.5).mul(2).recip()
             },
             tooltip() {
                 if(options.tooltipCredits) return `Idea from Shadow69420<br>Matter mile1:<br>Matter mile2:<br>Name: I need more matter!<br>Req:1000 matter<br>Effect:Antimatter divides itself by Antim/5 + 1`
@@ -162,7 +162,7 @@ addLayer('matter', {
                 return `Increase Matter gain<br>Currently: ${formatBoost(tmp[this.layer].buyables[this.id].effect.sub(1))}`
             },
             cost(x) {
-                let cost = x.add(1).pow_base(5).times(2000)
+                let cost = x.add(1).pow_base(5).mul(2000)
                 if(hasUpgrade('matter', 15)) { cost = cost.mul(tmp.matter.upgrades[15].effect) }
                 return cost
             },
@@ -187,7 +187,7 @@ addLayer('matter', {
                 return `Increase ${options.upgID?'MB1s':"Quark's"} effect exponent<br>Currently: +${format(tmp[this.layer].buyables[this.id].effect)}`
             },
             cost(x) {
-                let cost = x.add(1).pow_base(2).pow_base(3).times(1e10)
+                let cost = x.add(1).pow_base(2).pow_base(3).mul(1e10)
                 return cost
             },
             effect(x) {
@@ -217,23 +217,23 @@ addLayer('antimatter', {
     symbol: 'AM',
     layerShown(){return player.antimatter.unlocked},
     update(diff) {
-        if(hasUpgrade('hyper', 52)) { player.antimatter.unlocked = true; player.antimatter.points = player.antimatter.points.add(tmp.antimatter.matterGain.times(diff)) }
+        if(hasUpgrade('hyper', 52)) { player.antimatter.unlocked = true; player.antimatter.points = player.antimatter.points.add(tmp.antimatter.matterGain.mul(diff)) }
     },
     startData() { return {
         unlocked: false,
-        points: new Decimal(0),
+        points: Decimal.dZero,
     }},
     resource: 'antimatter',
     tooltip: 'antimatter-display',
     matterGain() {
         let gain =  Decimal.dOne
-        if(hasUpgrade('antimatter', 11)) { gain = gain.times(tmp.antimatter.upgrades[11].effect) }
-        if(hasUpgrade('antimatter', 14)) { gain = gain.times(tmp.antimatter.upgrades[14].effect) }
-        if(hasUpgrade('antimatter', 23)) { gain = gain.times(tmp.matter.buyables[11].effect.pow(0.5)) }
-        if(hasUpgrade('darkmatter', 12)) { gain = gain.times(tmp.darkmatter.upgrades[12].effect) }
-        if(getBuyableAmount('darkmatter', 14).gte(1)) { gain = gain.times(tmp.blackhole.effect.times(5).pow(2)) }
-        if(hasMilestone('blackhole', 3)) { gain = gain.times(tmp.blackhole.milestones[3].effect[0]) }
-        return gain.times(tmp.chall.uTime)
+        if(hasUpgrade('antimatter', 11)) { gain = gain.mul(tmp.antimatter.upgrades[11].effect) }
+        if(hasUpgrade('antimatter', 14)) { gain = gain.mul(tmp.antimatter.upgrades[14].effect) }
+        if(hasUpgrade('antimatter', 23)) { gain = gain.mul(tmp.matter.buyables[11].effect.pow(0.5)) }
+        if(hasUpgrade('darkmatter', 12)) { gain = gain.mul(tmp.darkmatter.upgrades[12].effect) }
+        if(getBuyableAmount('darkmatter', 14).gte(1)) { gain = gain.mul(tmp.blackhole.effect.mul(5).pow(2)) }
+        if(hasMilestone('blackhole', 3)) { gain = gain.mul(tmp.blackhole.milestones[3].effect[0]) }
+        return gain.mul(tmp.chall.uTime)
     },
     tabFormat: [
         ['row', [
@@ -396,7 +396,7 @@ addLayer('antimatter', {
                 return `Increase ${options.upgID?'AmU2':"Tickspeed'"}s base<br>Currently: ${formatBoost(tmp[this.layer].buyables[this.id].effect)}`
             },
             cost(x) {
-                return x.pow_base(1e2).times(1e6)
+                return x.pow_base(1e2).mul(1e6)
             },
             effect(x) {
                 if(hasUpgrade('antimatter', 21)) { x = x.mul(1.5) }
@@ -422,7 +422,7 @@ addLayer('antimatter', {
                 return `Raise the effect of ${options.upgID?'AmU1':"8th Dimension"}<br>Currently: ^${format(tmp[this.layer].buyables[this.id].effect)}`
             },
             cost(x) {
-                return x.pow_base(50).times(2e6)
+                return x.pow_base(50).mul(2e6)
             },
             effect(x) {
                 if(hasUpgrade('antimatter', 21)) { x = x.mul(1.5) }
@@ -448,7 +448,7 @@ addLayer('antimatter', {
                 return `Increase Matter gain<br>Currently: ${formatBoost(tmp[this.layer].buyables[this.id].effect.sub(1))}`
             },
             cost(x) {
-                return x.pow_base(2).times(5e7)
+                return x.pow_base(2).mul(5e7)
             },
             effect(x) {
                 if(hasUpgrade('antimatter', 21)) { x = x.mul(1.5) }
@@ -477,23 +477,29 @@ addLayer('darkmatter', {
     symbol: 'DM',
     layerShown(){return player.darkmatter.unlocked},
     update(diff) {
-        if(hasUpgrade('hyper', 53)) { player.darkmatter.unlocked = true; player.darkmatter.points = player.darkmatter.points.add(tmp.darkmatter.matterGain.times(diff)) }
+        if(hasUpgrade('hyper', 53)) { player.darkmatter.unlocked = true; player.darkmatter.points = player.darkmatter.points.add(tmp.darkmatter.matterGain.mul(diff)) }
+        if(hasChallenge('exomatter', 11)) {
+            buyMax('darkmatter', 'buyables', 11)
+            buyMax('darkmatter', 'buyables', 12)
+            buyMax('darkmatter', 'buyables', 13)
+            buyBuyable('darkmatter', 14)
+        }
     },
     startData() { return {
         unlocked: false,
-        points: new Decimal(0),
+        points: Decimal.dZero,
     }},
     resource: 'dark matter',
     tooltip: 'darkmatter-display',
     matterGain() {
         let gain =  Decimal.dOne
-        if(hasUpgrade('darkmatter', 11)) { gain = gain.times(tmp.darkmatter.upgrades[11].effect) }
-        if(hasUpgrade('darkmatter', 12)) { gain = gain.times(tmp.darkmatter.upgrades[12].effect) }
-        if(hasUpgrade('darkmatter', 14)) { gain = gain.times(tmp.darkmatter.upgrades[14].effect) }
-        if(hasUpgrade('darkmatter', 15)) { gain = gain.times(tmp.blackhole.effect.div(3).pow(tmp.blackhole.dmExpo)) }
-        if(hasMilestone('blackhole', 2)) { gain = gain.times(tmp.blackhole.milestones[2].effect) }
-        if(hasMilestone('blackhole', 4)) { gain = gain.times(tmp.blackhole.milestones[4].effect[3]) }
-        return gain.times(tmp.chall.uTime)
+        if(hasUpgrade('darkmatter', 11)) { gain = gain.mul(tmp.darkmatter.upgrades[11].effect) }
+        if(hasUpgrade('darkmatter', 12)) { gain = gain.mul(tmp.darkmatter.upgrades[12].effect) }
+        if(hasUpgrade('darkmatter', 14)) { gain = gain.mul(tmp.darkmatter.upgrades[14].effect) }
+        if(hasUpgrade('darkmatter', 15)) { gain = gain.mul(tmp.blackhole.effect.div(3).pow(tmp.blackhole.dmExpo)) }
+        if(hasMilestone('blackhole', 2)) { gain = gain.mul(tmp.blackhole.milestones[2].effect) }
+        if(hasMilestone('blackhole', 4)) { gain = gain.mul(tmp.blackhole.milestones[4].effect[3]) }
+        return gain.mul(tmp.chall.uTime)
     },
     tabFormat: [
         ['row', [
@@ -509,11 +515,11 @@ addLayer('darkmatter', {
             Universal Time ${formatBoost(tmp.blackhole.effect.sub(1))}<br>
             Dark Matter ${formatBoost(tmp.blackhole.effect.div(3).pow(tmp.blackhole.dmExpo).sub(1))}<br>
             Power Pylon F Effect ${formatBoost(tmp.blackhole.effect.pow(11).sub(1))}
-            ${getBuyableAmount('darkmatter', 14).gte(1)?`<br>Antimatter & Matter Gain ${formatBoost(tmp.blackhole.effect.times(5).pow(2).sub(1))}`:''}
-            ${getBuyableAmount('darkmatter', 14).gte(2)?`<br>Hyper Cash Gain ${formatBoost(tmp.blackhole.effect.times(2).pow(3).sub(1))}`:''}
-            ${getBuyableAmount('darkmatter', 14).gte(3)?`<br>$, RP, SRP Gain ${formatBoost(tmp.blackhole.effect.times(10).pow(2.5).sub(1))}`:''}
+            ${getBuyableAmount('darkmatter', 14).gte(1)?`<br>Antimatter & Matter Gain ${formatBoost(tmp.blackhole.effect.mul(5).pow(2).sub(1))}`:''}
+            ${getBuyableAmount('darkmatter', 14).gte(2)?`<br>Hyper Cash Gain ${formatBoost(tmp.blackhole.effect.mul(2).pow(3).sub(1))}`:''}
+            ${getBuyableAmount('darkmatter', 14).gte(3)?`<br>$, RP, SRP Gain ${formatBoost(tmp.blackhole.effect.mul(10).pow(2.5).sub(1))}`:''}
             ${getBuyableAmount('darkmatter', 14).gte(4)?`<br>HRP Gain ${formatBoost(tmp.blackhole.effect.pow(1.5).sub(1))}`:''}
-            ${getBuyableAmount('darkmatter', 14).gte(5)?`<br>Exotic Matter Gain ${formatBoost(tmp.blackhole.effect.times(5).pow(0.66).sub(1))}`:''}</div>`:``}
+            ${getBuyableAmount('darkmatter', 14).gte(5)?`<br>Exotic Matter Gain ${formatBoost(tmp.blackhole.effect.mul(5).pow(0.66).sub(1))}`:''}</div>`:``}
         ],
         'blank',
         ['layer-proxy', ['blackhole', [
@@ -636,11 +642,11 @@ addLayer('darkmatter', {
                 return `Increase Black Hole's Volume's gain<br>Currently: ${formatBoost(tmp[this.layer].buyables[this.id].effect.sub(1))}`
             },
             cost(x) {
-                return x.pow_base(5).times(5e12)
+                return x.pow_base(5).mul(5e12)
             },
             effect(x) {
                 let base = new Decimal(1.5)
-                base = base.times(tmp.darkmatter.buyables[12].effect.add(1))
+                base = base.mul(tmp.darkmatter.buyables[12].effect.add(1))
                 return x.pow_base(base)
             },
             canAfford(){return player[this.layer].points.gte(layers[this.layer].buyables[this.id].cost(getBuyableAmount(this.layer, this.id))) && getBuyableAmount(this.layer, this.id).lt(tmp[this.layer].buyables[this.id].purchaseLimit)},
@@ -659,16 +665,16 @@ addLayer('darkmatter', {
         12: {
             title: "Dark Matter Dimensions",
             display() {
-                return `Increase the base of Dark Matter Galaxies<br>Currently: ${format(tmp[this.layer].buyables[this.id].effect.add(1).times(1.5))}`
+                return `Increase the base of Dark Matter Galaxies<br>Currently: ${format(tmp[this.layer].buyables[this.id].effect.add(1).mul(1.5))}`
             },
             cost(x) {
-                let ef = x.pow(2).times(3).pow_base(10).times(1e13)
+                let ef = x.pow(2).mul(3).pow_base(10).mul(1e13)
                 return ef
             },
             effect(x) {
-                if(hasMilestone('blackhole', 1)) { x = x.times(tmp.blackhole.milestones[1].effect) }
+                if(hasMilestone('blackhole', 1)) { x = x.mul(tmp.blackhole.milestones[1].effect) }
                 let ef = x.pow_base(1.125).sub(1)
-                if(ef.gte(2.5)) { ef = ef.log(2.5).times(2.5) }
+                if(ef.gte(2.5)) { ef = ef.log(2.5).mul(2.5) }
                 return ef
             },
             canAfford(){return player[this.layer].points.gte(layers[this.layer].buyables[this.id].cost(getBuyableAmount(this.layer, this.id))) && getBuyableAmount(this.layer, this.id).lt(tmp[this.layer].buyables[this.id].purchaseLimit)},
@@ -690,7 +696,7 @@ addLayer('darkmatter', {
                 return `Increase the exponent of Black Hole's boost to Dark Matter<br>Currently: +${format(tmp[this.layer].buyables[this.id].effect)}`
             },
             cost(x) {
-                return x.pow_base(1e6).times(1e14)
+                return x.pow_base(1e6).mul(1e14)
             },
             effect(x) {
                 return x.div(2)
@@ -714,7 +720,7 @@ addLayer('darkmatter', {
                 return `Add another effect to the Black Hole<br>Currently: +${formatWhole(getBuyableAmount('darkmatter', 14))}`
             },
             cost(x) {
-                let costs = [new Decimal('1e15'), new Decimal('1e23'), new Decimal('1e30'), new Decimal('1e38'), new Decimal('1e5000')]
+                let costs = [new Decimal('1e15'), new Decimal('1e23'), new Decimal('1e30'), new Decimal('1e38'), Decimal.dInf]
                 return costs[x.toNumber()]
             },
             effect(x) {
@@ -732,7 +738,7 @@ addLayer('darkmatter', {
                 return 
             },
             unlocked(){return player.blackhole.unlocked},
-            purchaseLimit: new Decimal(5),
+            purchaseLimit: new Decimal(4),
         },
     },
 })
@@ -740,24 +746,25 @@ addLayer('darkmatter', {
 addLayer('blackhole', {
     color: 'var(--universe)',
     update(diff) {
-        if(hasUpgrade('darkmatter', 15)) { player.blackhole.unlocked = true; player.blackhole.points = player.blackhole.points.add(tmp.blackhole.matterGain.times(diff)) }
+        if(hasUpgrade('darkmatter', 15)) { player.blackhole.unlocked = true; player.blackhole.points = player.blackhole.points.add(tmp.blackhole.matterGain.mul(diff)) }
     },
     startData() { return {
         unlocked: false,
-        points: new Decimal(0),
+        points: Decimal.dZero,
     }},
     resource: 'Planck Volumes of Black Hole',
     matterGain() {
         let gain =  Decimal.dOne
-        gain = gain.times(tmp.darkmatter.buyables[11].effect)
-        if(hasMilestone('blackhole', 0)) { gain = gain.times(tmp.blackhole.milestones[0].effect) }
-        return gain.times(tmp.chall.uTime)
+        gain = gain.mul(tmp.darkmatter.buyables[11].effect)
+        if(hasMilestone('blackhole', 0)) { gain = gain.mul(tmp.blackhole.milestones[0].effect) }
+        if(hasUpgrade('exomatter', 13)) { gain = gain.mul(tmp.exomatter.unstableEffect) }
+        return gain.mul(tmp.chall.uTime)
     },
     dmExpo() {
         return Decimal.add(2.5, tmp.darkmatter.buyables[13].effect)
     },
     effect() {
-        return player.blackhole.points.max(0).add(1).log(1e3).add(1).pow(1.25)
+        return player.blackhole.points.max(0).add(1).log(500).add(1).pow(1.35)
     },
     resetName: 'the Void',
     milestones: {
@@ -804,9 +811,9 @@ addLayer('blackhole', {
             }
         },
         3: {
-            requirementDescription() {return `${format(1e29)} BHV`},
+            requirementDescription() {return `${format(1e26)} BHV`},
             effectDescription() {return `Dark Matter boosts Antimatter gain, Antimatter boosts Matter gain, and Matter boosts Cash Gain<br>Currently ${formatBoost(tmp[this.layer].milestones[this.id].effect[0].sub(1))}, ${formatBoost(tmp[this.layer].milestones[this.id].effect[1].sub(1))}, ${formatBoost(tmp[this.layer].milestones[this.id].effect[2].sub(1))}`},
-            done() { return player.blackhole.points.gte(1e29)&&hasUpgrade('darkmatter', 16) },
+            done() { return player.blackhole.points.gte(1e26)&&hasUpgrade('darkmatter', 16) },
             unlocked() {return hasUpgrade('darkmatter', 16)},
             tooltip() {
                 if(options.tooltipCredits) return `Uninspired`
@@ -818,9 +825,9 @@ addLayer('blackhole', {
             }
         },
         4: {
-            requirementDescription() {return `${format(1e33)} BHV`},
+            requirementDescription() {return `${format(1e27)} BHV`},
             effectDescription() {return `Cash boosts RP gain, RP boosts SRP gain, SRP boosts HRP gain, and HRP boosts Dark Matter gain<br>Currently ${formatBoost(tmp[this.layer].milestones[this.id].effect[0].sub(1))}, ${formatBoost(tmp[this.layer].milestones[this.id].effect[1].sub(1))}, ${formatBoost(tmp[this.layer].milestones[this.id].effect[2].sub(1))}, ${formatBoost(tmp[this.layer].milestones[this.id].effect[3].sub(1))}`},
-            done() { return player.blackhole.points.gte(1e33)&&hasUpgrade('darkmatter', 16) },
+            done() { return player.blackhole.points.gte(1e27)&&hasUpgrade('darkmatter', 16) },
             unlocked() {return hasUpgrade('darkmatter', 16)},
             tooltip() {
                 if(options.tooltipCredits) return `Uninspired`
@@ -833,4 +840,536 @@ addLayer('blackhole', {
         },
     },
     row: 3,
+})
+
+addLayer('exomatter', {
+    color: 'var(--ematter)',
+    symbol: 'EM',
+    layerShown(){return player.exomatter.unlocked},
+    update(diff) {
+        if(hasUpgrade('hyper', 54)) { player.exomatter.unlocked = true; player.exomatter.points = player.exomatter.points.add(tmp.exomatter.matterGain.mul(diff)) }
+        if(hasUpgrade('exomatter', 13)) { player.exomatter.hypo = player.exomatter.hypo.add(tmp.exomatter.hypoGain.mul(diff)); player.exomatter.unstable = player.exomatter.unstable.add(tmp.exomatter.unstableGain.mul(diff)); }
+    },
+    startData() { return {
+        unlocked: false,
+        points: Decimal.dZero,
+        hypo: Decimal.dZero,
+        unstable: Decimal.dZero,
+    }},
+    resource: 'exotic matter',
+    tooltip: 'exomatter-display',
+    matterGain() {
+        let gain = Decimal.dOne
+        if(hasUpgrade('exomatter', 11)) { gain = gain.mul(tmp.exomatter.upgrades[11].effect) }
+        if(hasUpgrade('exomatter', 13)) { gain = gain.mul(tmp.exomatter.unstableEffect) }
+        if(hasUpgrade('exomatter', 14)) { gain = gain.mul(tmp.exomatter.upgrades[14].effect) }
+        if(hasUpgrade('exomatter', 21)) { gain = gain.mul(tmp.exomatter.upgrades[21].effect) }
+        if(hasUpgrade('exomatter', 22)) { gain = gain.mul(tmp.exomatter.upgrades[22].effect) }
+        if(hasUpgrade('exomatter', 23)) { gain = gain.mul(tmp.exomatter.upgrades[23].effect) }
+        if(hasUpgrade('exomatter', 24)) { gain = gain.mul(tmp.exomatter.upgrades[24].effect) }
+        if(hasUpgrade('exomatter', 25)) { gain = gain.mul(tmp.exomatter.upgrades[25].effect) }
+        if(hasUpgrade('exomatter', 26)) { gain = gain.mul(tmp.exomatter.upgrades[26].effect) }
+        return gain.mul(tmp.chall.uTime)
+    },
+    hypoGain() {
+        let gain = Decimal.dOne.div(1e9)
+        if(hasUpgrade('exomatter', 15)) { gain = gain.mul(tmp.exomatter.upgrades[15].effect) }
+        if(hasMilestone('exomatter', 0)) { gain = gain.mul(tmp.exomatter.milestones[0].effect) }
+        if(inChallenge('exomatter', 11)) { gain = Decimal.dZero }
+        gain = gain.mul(tmp.chall.uTime)
+        if(inChallenge('exomatter', 12)) { gain = gain.pow(0.4) }
+        return gain
+    },
+    hypoEffect() {
+        let gain = player.exomatter.hypo.max(0).add(1).log(2).add(1).pow(2.25)
+        return gain.mul(tmp.chall.uTime).div(1e10)
+    },
+    unstableGain() {
+        let gain = tmp.exomatter.hypoEffect.div(tmp.exomatter.unstableEffect).min(player.exomatter.unstable.add(1).pow(2))
+        if(hasMilestone('exomatter', 1)) { gain = gain.mul(tmp.exomatter.milestones[1].effect) }
+        if(inChallenge('exomatter', 11)) { gain = Decimal.dZero }
+        if(hasUpgrade('exomatter', 26)) { gain = gain.mul(tmp.exomatter.upgrades[26].effect) }
+        return gain
+    },
+    unstableEffect() {
+        let gain = player.exomatter.unstable.max(0).add(10).log(10).pow(3)
+        return gain
+    },
+    tabFormat: {
+        "Resources": {
+            content: [
+                ['row', [
+                    'exomatter-display',
+                ]],
+                "buyables",
+                'upgrades',
+                ['raw-html', function(){return hasUpgrade('exomatter', 13)?`<div class="upg exomatter" id="theorization">
+
+                    <h2>Hypotheorizer</h2><br>
+
+                    <div class="currencyDisplayHeader exomatter upg uhoh" style="height: 60px;">
+                        <span class="overlayThing">You have </span>
+                        <h2 id="points" style="color: var(--ematter); text-shadow: var(--ematter) 0px 0px 10px;">${format(player.exomatter.hypo.max(0))}</h2><br>Hypothetical Particles
+                        <br>
+                        ${hasUpgrade('exomatter', 13)?`<span class="overlayThing">(<span>${formatSmall(tmp.exomatter.hypoGain)}</span>/sec)</span>`:''}
+                    </div><br>
+
+                    Your Hypothetical Particles are producing ${format(tmp.exomatter.hypoEffect)} Unstable Matter per second<br><br>
+
+                    <div class="currencyDisplayHeader radio upg uhoh">
+                        <span class="overlayThing">You have </span>
+                        <h2 id="points" style="color: var(--radio); text-shadow: var(--radio) 0px 0px 10px;">${format(player.exomatter.unstable.max(0))}</h2> Unstable Matter
+                        <br>
+                        ${hasUpgrade('exomatter', 13)?`<span class="overlayThing">(<span>${formatSmall(tmp.exomatter.unstableGain)}</span>/sec)</span>`:''}
+                    </div><br>
+
+                    Your Unstable Matter is boosting EM, H$, BHV gain by ${formatBoost(tmp.exomatter.unstableEffect.sub(1), false)}, but reducing it's own gain by the same amount<br><br>
+
+                </div>`:''}],
+                function(){return hasUpgrade('exomatter', 16)?['raw-html', '<div style="height: 2px;"></div>']:'blank'},
+                function(){return hasUpgrade('exomatter', 16)?'milestones-upgbox-unst':'blank'},
+                'blank',
+            ],
+            buttonStyle: {
+                "background-color": "var(--ematter)",
+                "border-color": "rgba(255, 255, 255, 0.25)",
+            },
+            name() {
+                if(!inChallenge('exomatter', 11) && !inChallenge('exomatter', 12)) { return 'Resources' }
+                let text = (Math.random()>0.25?'R':letters[Math.floor(Math.random()*letters.length)])
+                text = text + (Math.random()>0.25?'e':letters[Math.floor(Math.random()*letters.length)])
+                text = text + (Math.random()>0.25?'s':letters[Math.floor(Math.random()*letters.length)])
+                text = text + (Math.random()>0.25?'o':letters[Math.floor(Math.random()*letters.length)])
+                text = text + (Math.random()>0.25?'u':letters[Math.floor(Math.random()*letters.length)])
+                text = text + (Math.random()>0.25?'r':letters[Math.floor(Math.random()*letters.length)])
+                text = text + (Math.random()>0.25?'c':letters[Math.floor(Math.random()*letters.length)])
+                text = text + (Math.random()>0.25?'e':letters[Math.floor(Math.random()*letters.length)])
+                text = text + (Math.random()>0.25?'s':letters[Math.floor(Math.random()*letters.length)])
+                return text
+            },
+        },
+        "Challenges": {
+            content: [
+                'challenges',
+                'blank',
+            ],
+            buttonStyle: {
+                "background-color": "var(--radio)",
+                "border-color": "rgba(255, 255, 255, 0.25)",
+            },
+            unlocked(){return hasMilestone('exomatter', 2)},
+            name() {
+                if(!inChallenge('exomatter', 11) && !inChallenge('exomatter', 12)) { return 'Challenges' }
+                let text = (Math.random()>0.25?'C':letters[Math.floor(Math.random()*letters.length)])
+                text = text + (Math.random()>0.25?'h':letters[Math.floor(Math.random()*letters.length)])
+                text = text + (Math.random()>0.25?'a':letters[Math.floor(Math.random()*letters.length)])
+                text = text + (Math.random()>0.25?'l':letters[Math.floor(Math.random()*letters.length)])
+                text = text + (Math.random()>0.25?'l':letters[Math.floor(Math.random()*letters.length)])
+                text = text + (Math.random()>0.25?'e':letters[Math.floor(Math.random()*letters.length)])
+                text = text + (Math.random()>0.25?'n':letters[Math.floor(Math.random()*letters.length)])
+                text = text + (Math.random()>0.25?'g':letters[Math.floor(Math.random()*letters.length)])
+                text = text + (Math.random()>0.25?'e':letters[Math.floor(Math.random()*letters.length)])
+                text = text + (Math.random()>0.25?'s':letters[Math.floor(Math.random()*letters.length)])
+                return text
+            },
+        },
+    },
+    row: 3,
+    upgrades: {
+        11: {
+            title: 'X',
+            fullDisplay() {
+                return `Product of all previous resources multiplies Exotic Matter gain<br>Currently: ${formatBoost(tmp[this.layer].upgrades[this.id].effect.sub(1), false)}`
+            },
+            costa: new Decimal(1e10),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            effect() {
+                let x = Decimal.dOne
+                x = x.mul(player.cash.points.max(1))
+                x = x.mul(player.rebirth.points.max(1))
+                x = x.mul(player.super.points.max(1))
+                x = x.mul(player.power.power.max(1))
+                x = x.mul(player.hyper.points.max(1))
+                x = x.mul(player.matter.points.max(1))
+                x = x.mul(player.antimatter.points.max(1))
+                x = x.mul(player.darkmatter.points.max(1))
+                return x.max(1).log(2).pow(0.35).add(1)
+            },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from Shadow69420<br>EM upgrade 1:Triple EM gain (5 EM)`
+                
+                return `log<sub>2</sub>($×RP×SRP×Power<br>×HRP×M×AM×DM)<sup>0.35</sup>`
+            },
+        },
+        12: {
+            title: 'Y',
+            fullDisplay() {
+                return `Product of all Matters boosts Universal Time<br>Currently: ${formatBoost(tmp[this.layer].upgrades[this.id].effect.sub(1), false)}`
+            },
+            costa: new Decimal(1e11),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            effect() {
+                let x = Decimal.dOne
+                x = x.mul(player.matter.points.max(1))
+                x = x.mul(player.antimatter.points.max(1))
+                x = x.mul(player.darkmatter.points.max(1))
+                x = x.mul(player.exomatter.points.max(1))
+                return x.max(1).log(2).pow(0.5).add(1)
+            },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from Shadow69420<br>EM upgrade 2:Dark matter effect is weakened: /DM<sup>0.5</sup> -> /DM<sup>0.3</sup> (25 EM)`
+                
+                return `log<sub>2</sub>(M×AM×DM×EM)<sup>0.5</sup>`
+            },
+        },
+        13: {
+            title: 'Z',
+            fullDisplay() {
+                return `Unlock the Hypotheorizer`
+            },
+            costa: new Decimal(3e12),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from Shadow69420<br>EM buyable 1:Start to produce hypothetical particles: [purchases] per second (10 EM, ×1,5 cost)<br>Hypothetical particles divide DM gain by log<sub>2</sub>(HP)+1<br>They also produce unstable matter: log<sub>1e5</sub>(HP) per second<br>Which decays at a rate of 0.1 per 1/1000 of a second<br>But they exponentiate EM gain by (UM×2)+1`
+                
+                return
+            },
+        },
+        14: {
+            title: 'W',
+            fullDisplay() {
+                return `Cash and Hyper Cash multiply Exotic Matter gain<br>Currently: ${formatBoost(tmp[this.layer].upgrades[this.id].effect.sub(1), false)}`
+            },
+            costa: new Decimal(5e13),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            effect() {
+                let x = Decimal.dOne
+                x = x.mul(player.points.max(1))
+                x = x.mul(player.hyper.cash.max(1).pow(3))
+                return x.max(1).log(100).pow(1.5).div(100).add(1)
+            },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from Shadow69420<br>EM upgrade 3:Matter and antimatter multiply EM gain by:<br>log<sub>2</sub>(M×AM) (100 EM)`
+                
+                return `log<sub>100</sub>($×H$<sup>3</sup>)<sup>1.5</sup>/100`
+            },
+        },
+        15: {
+            title: 'V',
+            fullDisplay() {
+                return `Multiply Hypothetical Particles gain by it's effect<br>Currently: ${formatBoost(tmp[this.layer].upgrades[this.id].effect.sub(1), false)}`
+            },
+            costa: new Decimal(3e14),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            effect() {
+                return tmp.exomatter.hypoEffect
+            },
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from Shadow69420<br>HP upgrade 1:Hypothetical particles production is now:<br>[Purchases<sup>1.5</sup>] per second (1k HP)`
+                
+                return 
+            },
+        },
+        16: {
+            title: 'U',
+            fullDisplay() {
+                return `Unlock Milestones of Instability`
+            },
+            costa: new Decimal(1.5e15),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from Shadow69420 (the existence of milestones)`
+                
+                return 
+            },
+        },
+        21: {
+            title: 'T',
+            fullDisplay() {
+                return `Product of all current resources multiplies Exotic Matter gain<br>Currently: ${formatBoost(tmp[this.layer].upgrades[this.id].effect.sub(1), false)}`
+            },
+            costa: new Decimal(3e15),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            effect() {
+                let x = Decimal.dOne
+                x = x.mul(player.cash.points.max(1))
+                x = x.mul(player.rebirth.points.max(1))
+                x = x.mul(player.super.points.max(1))
+                x = x.mul(player.power.power.max(1))
+                x = x.mul(player.hyper.points.max(1))
+                x = x.mul(player.matter.points.max(1))
+                x = x.mul(player.antimatter.points.max(1))
+                x = x.mul(player.darkmatter.points.max(1))
+                x = x.mul(player.exomatter.points.max(1))
+                x = x.mul(player.exomatter.hypo.max(1))
+                x = x.mul(player.exomatter.unstable.max(1))
+                return x.max(1).log(2).pow(0.35).add(1)
+            },
+            tooltip() {
+                if(options.tooltipCredits) return `Uninspired`
+                
+                return `log<sub>2</sub>($×RP×SRP×Power<br>×HRP×M×AM×DM×EM×HP<br>×UnM)<sup>0.35</sup>`
+            },
+            unlocked(){return hasChallenge('exomatter', 11)}
+        },
+        22: {
+            title: 'S',
+            fullDisplay() {
+                return `Probugt f al curment rezomres muitidlias Ezotoc Mvttqr galn<br>Curntley: ${formatBoost(tmp[this.layer].upgrades[this.id].effect.sub(1), false)}`
+            },
+            costa: new Decimal(4.5e16),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            effect() {
+                let x = Decimal.dOne
+                x = x.mul(player.cash.points.max(1))
+                x = x.mul(player.rebirth.points.max(1))
+                x = x.mul(player.super.points.max(1))
+                x = x.mul(player.power.power.max(1))
+                x = x.mul(player.hyper.points.max(1))
+                x = x.mul(player.matter.points.max(1))
+                x = x.mul(player.antimatter.points.max(1))
+                x = x.mul(player.darkmatter.points.max(1))
+                x = x.mul(player.exomatter.points.max(1))
+                x = x.mul(player.exomatter.hypo.max(1))
+                x = x.mul(player.exomatter.unstable.max(1))
+                return x.max(1).log(2).pow(0.35).add(1)
+            },
+            tooltip() {
+                if(options.tooltipCredits) return `Umisplreb`
+                
+                return `lg<sub>2.000</sub>(S×PR×ZRP×Povar<br>×HPR×N×AM×OM×3M×HR<br>×StM)<sup>0.350000000</sup>`
+            },
+            unlocked(){return hasChallenge('exomatter', 11)}
+        },
+        23: {
+            title: 'R',
+            fullDisplay() {
+                return `Rp0bugk fffffffff ai cement rezoMses muItipas ERtoc Nv1tQr caln<br>cRnl3y: ${formatBoost(tmp[this.layer].upgrades[this.id].effect.sub(1), false)}`
+            },
+            costa: new Decimal(7e17),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            effect() {
+                let x = Decimal.dOne
+                x = x.mul(player.cash.points.max(1))
+                x = x.mul(player.rebirth.points.max(1))
+                x = x.mul(player.super.points.max(1))
+                x = x.mul(player.power.power.max(1))
+                x = x.mul(player.hyper.points.max(1))
+                x = x.mul(player.matter.points.max(1))
+                x = x.mul(player.antimatter.points.max(1))
+                x = x.mul(player.darkmatter.points.max(1))
+                x = x.mul(player.exomatter.points.max(1))
+                x = x.mul(player.exomatter.hypo.max(1))
+                x = x.mul(player.exomatter.unstable.max(1))
+                return x.max(1).log(2).pow(0.35).add(1)
+            },
+            tooltip() {
+                if(options.tooltipCredits) return `UmilResEb`
+                
+                return `lb<sub>2.00100-0.0010000</sub>(Z×P×ZP×PvAr<br>xHP×nxA×N×4m×HHR<br>×UMF)<sup>(92/368)+0.1</sup>`
+            },
+            unlocked(){return hasChallenge('exomatter', 11)}
+        },
+        24: {
+            title: 'Q',
+            fullDisplay() {
+                return `Rrrrrrp0bak offff a1 cEnenmT rEz0Mss wuItiBaz ERtO Nu1t0r cA-n<br>cRUlaaa:3z ${formatBoost(tmp[this.layer].upgrades[this.id].effect.sub(1), false)}`
+            },
+            costa: new Decimal(1e19),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            effect() {
+                let x = Decimal.dOne
+                x = x.mul(player.cash.points.max(1))
+                x = x.mul(player.rebirth.points.max(1))
+                x = x.mul(player.super.points.max(1))
+                x = x.mul(player.power.power.max(1))
+                x = x.mul(player.hyper.points.max(1))
+                x = x.mul(player.matter.points.max(1))
+                x = x.mul(player.antimatter.points.max(1))
+                x = x.mul(player.darkmatter.points.max(1))
+                x = x.mul(player.exomatter.points.max(1))
+                x = x.mul(player.exomatter.hypo.max(1))
+                x = x.mul(player.exomatter.unstable.max(1))
+                return x.max(1).log(2).pow(0.35).add(1)
+            },
+            tooltip() {
+                if(options.tooltipCredits) return `Error: Credits.exe not found`
+                
+                return `<div style="overflow-x: clip;">let x=Decimal.dOne;x=x.mul(player.cash.points.max(1));x=x.mul(player.rebirth.points.max(1));x=x.mul(player.super.points.max(1));x=x.mul(player.power.power.max(1));x=x.mul(player.hyper.points.max(1));x=x.mul(player.matter.points.max(1));x=x.mul(player.antimatter.points.max(1));x=x.mul(player.darkmatter.points.max(1));x=x.mul(player.exomatter.points.max(1));x=x.mul(player.exomatter.hypo.max(1));x=x.mul(player.exomatter.unstable.max(1));return x.max(1).log(2).pow(0.35).add(1);</div>`
+            },
+            unlocked(){return hasChallenge('exomatter', 11)}
+        },
+        25: {
+            title: 'P',
+            fullDisplay() {
+                return `${formatBoost(tmp[this.layer].upgrades[this.id].effect.sub(1), false)}`
+            },
+            costa: new Decimal(2e20),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            effect() {
+                let x = Decimal.dOne
+                x = x.mul(player.cash.points.max(1))
+                x = x.mul(player.rebirth.points.max(1))
+                x = x.mul(player.super.points.max(1))
+                x = x.mul(player.power.power.max(1))
+                x = x.mul(player.hyper.points.max(1))
+                x = x.mul(player.matter.points.max(1))
+                x = x.mul(player.antimatter.points.max(1))
+                x = x.mul(player.darkmatter.points.max(1))
+                x = x.mul(player.exomatter.points.max(1))
+                x = x.mul(player.exomatter.hypo.max(1))
+                x = x.mul(player.exomatter.unstable.max(1))
+                return x.max(1).log(2).pow(0.35).add(1)
+            },
+            tooltip() {
+                if(options.tooltipCredits) return `<tree :data="[['matter']]">`
+                
+                return `<tree :data="[['matter']]">`
+            },
+            unlocked(){return hasChallenge('exomatter', 11)}
+        },
+        26: {
+            title: 'O',
+            fullDisplay() {
+                return ``
+            },
+            costa: new Decimal(4e21),
+            canAfford() {return player[this.layer].points.gte(tmp[this.layer].upgrades[this.id].costa)},
+            pay() {player[this.layer].points = player[this.layer].points.sub(tmp[this.layer].upgrades[this.id].costa)},
+            effect() {
+                let x = Decimal.dOne
+                x = x.mul(player.cash.points.max(1))
+                x = x.mul(player.rebirth.points.max(1))
+                x = x.mul(player.super.points.max(1))
+                x = x.mul(player.power.power.max(1))
+                x = x.mul(player.hyper.points.max(1))
+                x = x.mul(player.matter.points.max(1))
+                x = x.mul(player.antimatter.points.max(1))
+                x = x.mul(player.darkmatter.points.max(1))
+                x = x.mul(player.exomatter.points.max(1))
+                x = x.mul(player.exomatter.hypo.max(1))
+                x = x.mul(player.exomatter.unstable.max(1))
+                return x.max(1).log(2).pow(0.35).add(1)
+            },
+            tooltip() {
+                return `this one also boosts unstable matter`
+            },
+            unlocked(){return hasChallenge('exomatter', 11)}
+        },
+    },
+    resetName: 'Instability',
+    milestones: {
+        0: {
+            requirementDescription() {return `${formatWhole(2000)} Unstable Matter`},
+            effectDescription() {return `Exotic Matter boosts Hypothetical Particles gain<br>Currently ${formatBoost(tmp[this.layer].milestones[this.id].effect.sub(1))}`},
+            done() { return hasUpgrade('exomatter', 16)&&player.exomatter.unstable.gte(2000) },
+            unlocked() {return true},
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from Shadow69420<br>HP milestone 2:<br>Name:No existence<br>Goal:2m HP<br>Reward:Unstable matter production gets boosted by EM:<br>log<sub>100,000</sub>(HP3)<sup>(EM^0.05+1.05)</sup>`
+        
+                return `log<sub>2</sub>(EM)<sup>0.8</sup>+1`
+            },
+            effect() {
+                return player.exomatter.points.max(1).log(2).pow(0.8).add(1)
+            },
+            style: {
+                'background-color': 'var(--radioBG)',
+            },
+        },
+        1: {
+            requirementDescription() {return `${formatWhole(4200)} Unstable Matter`},
+            effectDescription() {return `Exotic Matter boosts Unstable Matter gain<br>Currently ${formatBoost(tmp[this.layer].milestones[this.id].effect.sub(1))}`},
+            done() { return hasUpgrade('exomatter', 16)&&player.exomatter.unstable.gte(4200) },
+            unlocked() {return hasMilestone(this.layer, this.id-1)},
+            tooltip() {
+                if(options.tooltipCredits) return `Idea from Shadow69420<br>HP milestone 2:<br>Name:No existence<br>Goal:2m HP<br>Reward:Unstable matter production gets boosted by EM:<br>log<sub>100,000</sub>(HP3)<sup>(EM^0.05+1.05)</sup>`
+        
+                return `log<sub>2</sub>(EM)<sup>0.4</sup>+1`
+            },
+            effect() {
+                return player.exomatter.points.max(1).log(2).pow(0.4).add(1)
+            },
+            style: {
+                'background-color': 'var(--radioBG)',
+            },
+        },
+        2: {
+            requirementDescription() {return `${formatWhole(2.5e4)} Unstable Matter`},
+            effectDescription() {return hasMilestone(this.layer, this.id)?`Unlock Exotic Challenges`:`Gain the final UMF? Already?`},
+            done() { return hasUpgrade('exomatter', 16)&&player.exomatter.unstable.gte(2.5e4) },
+            unlocked() {return hasMilestone(this.layer, this.id-1)},
+            tooltip() {
+                return hasMilestone(this.layer, this.id)?null:`No, that's too easy, surely there's something more to it...`
+            },
+            style: {
+                'background-color': 'var(--radioBG)',
+            },
+        },
+        3: {
+            requirementDescription() {return `${formatWhole(133337)} Unstable Matter`},
+            effectDescription() {return hasMilestone(this.layer, this.id)?`Unlock another challenge`:`Reach this to find out`},
+            done() { return hasUpgrade('exomatter', 16)&&player.exomatter.unstable.gte(133337) },
+            unlocked() {return hasMilestone(this.layer, this.id-1)},
+            tooltip() {
+                return hasMilestone(this.layer, this.id)?null:`Shouldn't be too hard to guess`
+            },
+            style: {
+                'background-color': 'var(--radioBG)',
+            },
+        },
+    },
+    challenges: {
+        11: {
+            name: "<h2>No No Existence</h2><br>",
+            fullDisplay(){return `Entering resets Exotic Matter progression except for milestones and challenges<br>Hypothetical Particles and Unstable Matter no longer get produced<br>Reach ${formatWhole(1e13)} Exotic Matter to complete<br><br>On completion automate DM buyables, and unlock another row of EM upgrades`},
+            canComplete(){return player.exomatter.points.gte('1e13')},
+            completionLimit: 1,
+            unlocked(){return hasMilestone('exomatter', 2)},
+            onEnter() {
+                layerDataReset('exomatter', ['milestones', 'challenges'])
+                player.exomatter.upgrades.push(16)
+            },
+            style: {
+                'background-color': 'var(--radioBG)'
+            },
+        },
+        12: {
+            name: "<h2>Yes Yes Existence</h2><br>",
+            fullDisplay(){return `Entering resets Exotic Matter progression except for milestones and challenges<br>Hypothetical Particles gain is n<sup>0.4</sup><br>Reach ${formatWhole(3000)} Unstable Matter to complete<br><br>On completion decuple Universal Time and unlock another row of EM upgrades`},
+            canComplete(){return player.exomatter.unstable.gte(3000)},
+            completionLimit: 1,
+            unlocked(){return hasMilestone('exomatter', 3)},
+            tooltip: `<div style="overflow-x: clip; text-align: center;">
+                YesesYesYesYesYesYYesYesYesYesYesYesYesYesYesYesYesYsYesYesYesYsYesYesYesYesYesYesYesYes 
+                YeYYesYesYesYesYsesYesYesYesYesYesYesYesYesYesesYsYesYesesYesesYesYesYesYesYesYesYesYes 
+                YesesYesYesYesYessYYYesYesYesYesYesYesYesYesYsYesYesYesesesYsYesYesYesYesYesYes 
+                YesesYesYesYesYsYeesYesesYesYesYesYesYesYesYeYesesYesYsYeseesYesYesYesYesYesYesYes 
+                YeYesYesYesYesYsYsYesYsYesYYesYesYesYesYesYeYesYeYesYeYesYesYesesYesYesYesYes 
+                YeYYesYesYesYesYeYseYesYYesYesYesYesYesYessYesYeYesYsYesYesYesYeYesYsYesYesYes 
+                YesYesesYessYesYesYesesYesYeYesYsYesYesYeesYesYesYeYesYesYesYesYeYsYsesYesYesYesYes 
+                YesesYYeYsYesYesYesesYesYessYesYesYesYesYeYsYesYesYsYesYesYesYesYsesYeYesYesYesYes 
+                YYesYessYeYesYesYeYsYesYesYeYsYesYesYesYesYeYesYesesYesYesYesYesYesYesYsesYYesYesYes 
+                YsesYesYesYesesYesYeYesYesYesYessYesYesYesYesesYsYesYesYesYesYesYesYesYesYYeYsYesYes 
+                YesesYesYesYesYssYesYesYesYessYesYesYesYesYesYsYsYesYesYesYesYesYesYesYesYesYssYes 
+                YesYesYesYesYesYesesYesYesYesYesYesYesYesYesYesesYesYesYesYesYesYesYesYesYesYeYesYesYesYes </div>`,
+            onEnter() {
+                layerDataReset('exomatter', ['milestones', 'challenges'])
+                player.exomatter.upgrades.push(16)
+            },
+            style: {
+                'background-color': 'var(--radioBG)'
+            },
+        },
+    },
 })

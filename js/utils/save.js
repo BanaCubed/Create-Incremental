@@ -216,6 +216,7 @@ function load() {
 	updateTemp();
 	updateTabFormats()
 	loadVue();
+	mainLoop();
 
 	const element = document.getElementById("loadingSection");
 	element.remove();

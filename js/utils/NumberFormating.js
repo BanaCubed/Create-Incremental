@@ -69,6 +69,7 @@ type      - Formatting to use (see below key)
 
 function format(n, int = false, small = false, type = options.notation) {
     n = new Decimal(n);
+
     // NaNCheck
     if (isNaN(n.sign) || isNaN(n.layer) || isNaN(n.mag)) {
         player.hasNaN = true;
@@ -82,13 +83,13 @@ function format(n, int = false, small = false, type = options.notation) {
 
     // Default formatting (unnaffected by notations)
     if(n.lt(0.01)) {
-        if(small) {
-            // TODO
+        if(small && !int && n.neq(0)) {
+            return format(n.recip(), false, false, type) + '<sup>-1</sup>'
         } else return int?'0':'0.00';
     }
 
-    if(n.gte('(e^5)1')) {
-        return 'F' + format(n.slog())
+    if(n.gte('(e^1000)1')) {
+        return 'Infinity'
     }
 
     if(n.lt('10000')) {
@@ -229,7 +230,6 @@ function formatOrdinalExponent(n, b=Decimal.dTen, i=0) {
     return text;
 }
 
-function formatCowSpin(n, base=10) {
-    n = n.max(1).log(base).max(1).floor().times(200).pow(0.33).pow_base(1.15)
-    return `<span class="cow anim" style="animation-duration: calc(360s/${n.toNumber()});">🐄</span>`
+function formatCowSpin(n) {
+    return `<span class="cow anim" style="animation-duration: calc(360s/${n.log(10).floor().mod(3600).toNumber()});">🐄</span>${n.gte('1e3600')?formatCowSpin(n.log(10).div(3600).pow_base(10)):''}`
 }

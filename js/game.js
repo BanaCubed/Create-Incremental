@@ -396,7 +396,7 @@ function hardReset(resetOptions) {
 
 var ticking = false
 
-var interval = setInterval(function() {
+function mainLoop() {
 	if (player===undefined||tmp===undefined) return;
 	if (ticking) return;
 	if (tmp.gameEnded&&!player.keepGoing) return;
@@ -415,9 +415,7 @@ var interval = setInterval(function() {
 	}
 	if (player.devSpeed) diff *= player.devSpeed
 	player.time = now
-	if (needCanvasUpdate){ resizeCanvas();
-		needCanvasUpdate = false;
-	}
+	resizeCanvas();
 	tmp.scrolled = document.getElementById('treeTab') && document.getElementById('treeTab').scrollTop > 30
 	updateTemp();
 	updateOomps(diff);
@@ -428,6 +426,5 @@ var interval = setInterval(function() {
 	adjustPopupTime(trueDiff)
 	updateParticles(trueDiff)
 	ticking = false
-}, 50/3)
-
-setInterval(function() {needCanvasUpdate = true}, 500)
+	setTimeout(mainLoop, 50/3)
+}

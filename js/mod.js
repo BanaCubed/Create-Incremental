@@ -7,16 +7,16 @@ let modInfo = {
 
 	discordName: "Create Incremental Server",
 	discordLink: "https://discord.gg/wt5XyPRtte",
-	initialStartPoints: new Decimal(0), // Used for hard resets and new players
+	initialStartPoints: Decimal.dZero, // Used for hard resets and new players
 	offlineLimit: 240,  // In hours
 	forumClone: ``,
 }
 
 // Set your version in num and name
 let VERSION = {
-	num: "1.0",
+	num: 1.0,
 	name: "Universe Update",
-	beta: '3'
+	beta: 3,
 }
 
 let changelog = 
@@ -40,46 +40,46 @@ function canGenPoints(){
 // Calculate points/sec!
 function getPointGen() {
 	if(!canGenPoints())
-		return new Decimal(0)
+		return Decimal.dZero
 
-	let gain = new Decimal(1)
+	let gain = Decimal.dOne
 
-	if(hasUpgrade('cash', 11)) { gain = gain.times(tmp.cash.upgrades[11].effect) }
-	if(hasUpgrade('cash', 12)) { gain = gain.times(tmp.cash.upgrades[12].effect) }
-	if(hasUpgrade('cash', 13)) { gain = gain.times(tmp.cash.upgrades[13].effect) }
-	if(hasUpgrade('cash', 14)) { gain = gain.times(tmp.cash.upgrades[14].effect) }
-	if(hasUpgrade('cash', 15)) { gain = gain.times(tmp.cash.upgrades[15].effect) }
-	if(hasUpgrade('cash', 16)) { gain = gain.times(tmp.cash.upgrades[16].effect) }
-	if(hasUpgrade('cash', 21)) { gain = gain.times(tmp.cash.upgrades[21].effect) }
-	if(hasUpgrade('cash', 22)) { gain = gain.times(tmp.cash.upgrades[22].effect) }
-	if(hasUpgrade('cash', 31)) { gain = gain.times(tmp.cash.upgrades[31].effect) }
-	if(player.machine.state === 1) { gain = gain.times(tmp.machine.clickables[11].effect.add(1)) }
-	if(player.machine.state === 2) { gain = gain.times(tmp.machine.clickables[11].effect.times(tmp.machine.clickables[12].effect).add(1)) }
+	if(hasUpgrade('cash', 11)) { gain = gain.mul(tmp.cash.upgrades[11].effect) }
+	if(hasUpgrade('cash', 12)) { gain = gain.mul(tmp.cash.upgrades[12].effect) }
+	if(hasUpgrade('cash', 13)) { gain = gain.mul(tmp.cash.upgrades[13].effect) }
+	if(hasUpgrade('cash', 14)) { gain = gain.mul(tmp.cash.upgrades[14].effect) }
+	if(hasUpgrade('cash', 15)) { gain = gain.mul(tmp.cash.upgrades[15].effect) }
+	if(hasUpgrade('cash', 16)) { gain = gain.mul(tmp.cash.upgrades[16].effect) }
+	if(hasUpgrade('cash', 21)) { gain = gain.mul(tmp.cash.upgrades[21].effect) }
+	if(hasUpgrade('cash', 22)) { gain = gain.mul(tmp.cash.upgrades[22].effect) }
+	if(hasUpgrade('cash', 31)) { gain = gain.mul(tmp.cash.upgrades[31].effect) }
+	if(player.machine.state === 1) { gain = gain.mul(tmp.machine.clickables[11].effect.add(1)) }
+	if(player.machine.state === 2) { gain = gain.mul(tmp.machine.clickables[11].effect.mul(tmp.machine.clickables[12].effect).add(1)) }
 
-	gain = gain.times(tmp.rebirth.effect)
-	if(hasUpgrade('rebirth', 11)) { gain = gain.times(tmp.rebirth.upgrades[11].effect) }
+	gain = gain.mul(tmp.rebirth.effect)
+	if(hasUpgrade('rebirth', 11)) { gain = gain.mul(tmp.rebirth.upgrades[11].effect) }
 
-	gain = gain.times(tmp.super.effect[1])
-	if(hasMilestone('power', 4)) { gain = gain.times(tmp.power.milestones[4].effect) }
-	if(hasChallenge('super', 14)) { gain = gain.times(tmp.super.challenges[14].effect) }
+	gain = gain.mul(tmp.super.effect[1])
+	if(hasMilestone('power', 4)) { gain = gain.mul(tmp.power.milestones[4].effect) }
+	if(hasChallenge('super', 14)) { gain = gain.mul(tmp.super.challenges[14].effect) }
 
 	if(inChallenge('super', 12)) { gain = gain.div(tmp.super.challenges[12].nerf)}
 	if(inChallenge('super', 15)) { gain = gain.div(player.super.tax) }
 
-	gain = gain.times(tmp.hyper.effect[0])
+	gain = gain.mul(tmp.hyper.effect[0])
 
-	if(hasUpgrade('hyper', 11)) { gain = gain.times(1000) }
-	if(hasUpgrade('hyper', 33)) { gain = gain.times(tmp.hyper.upgrades[33].effect) }
-	if(hasUpgrade('hyper', 41)) { gain = gain.times(10) }
-	if(hasUpgrade('hyper', 44)) { gain = gain.times(tmp.hyper.effect[1]) }
+	if(hasUpgrade('hyper', 11)) { gain = gain.mul(1000) }
+	if(hasUpgrade('hyper', 33)) { gain = gain.mul(tmp.hyper.upgrades[33].effect) }
+	if(hasUpgrade('hyper', 41)) { gain = gain.mul(10) }
+	if(hasUpgrade('hyper', 44)) { gain = gain.mul(tmp.hyper.effect[1]) }
 	
-	if(hasMilestone('blackhole', 3)) { gain = gain.times(tmp.blackhole.milestones[3].effect[2]) }
-	if(getBuyableAmount('darkmatter', 14).gte(3)) { gain = gain.times(tmp.blackhole.effect.times(10).pow(2.5)) }
+	if(hasMilestone('blackhole', 3)) { gain = gain.mul(tmp.blackhole.milestones[3].effect[2]) }
+	if(getBuyableAmount('darkmatter', 14).gte(3)) { gain = gain.mul(tmp.blackhole.effect.mul(10).pow(2.5)) }
 
-	gain = gain.times(tmp.matter.ultimateEffect)
+	gain = gain.mul(tmp.matter.ultimateEffect)
 
 
-	gain = gain.times(tmp.chall.uTime)
+	gain = gain.mul(tmp.chall.uTime)
 	return gain
 }
 

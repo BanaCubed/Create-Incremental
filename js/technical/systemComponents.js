@@ -5,8 +5,8 @@ var systemComponents = {
 			<div class="upgRow">
 				<div v-for="tab in Object.keys(data)">
 					<button v-if="data[tab].unlocked == undefined || data[tab].unlocked" v-bind:class="{tabButton: true, tooltipBox: true}"
-					v-bind:style="[{'border-color': tmp[layer].color}, tmp[layer].componentStyles['tab-button'], data[tab].buttonStyle]"
-						v-on:click="function(){player.subtabs[layer][name] = tab; updateTabFormats(); needCanvasUpdate = true;}">{{tab}}
+					v-bind:style="[{'background-color': tmp[layer].color}, tmp[layer].componentStyles['tab-button'], data[tab].buttonStyle]"
+						v-on:click="function(){player.subtabs[layer][name] = tab; updateTabFormats(); needCanvasUpdate = true;}">{{data[tab].name?data[tab].name:tab}}
 						</button>
 				</div>
 			</div>
@@ -99,9 +99,6 @@ var systemComponents = {
 	'overlay-head': {
 		template: `	
 		<div>	
-		<span v-if="player.devSpeed && player.devSpeed != 1" class="overlayThing">
-			<br>Dev Speed: ×{{format(player.devSpeed)}}<br>
-		</span>	
 		<span class="overlayThing" v-if="VERSION.beta || VERSION.pre">
 			<br><h1 v-if="VERSION.beta" class="betaWarning">BETA VERSION - CURRENTLY UNFINISHED - EXPECT CHANGES AND BUGS</h1><h1 v-if="VERSION.pre" class="betaWarning">PRE-RELEASE VERSION - EXPECT BUGS</h1><br>
 		</span>
@@ -117,7 +114,7 @@ var systemComponents = {
 			<srp-display v-if="player.super.unlocked"></srp-display>
 			<power-display v-if="player.power.unlocked && !hasMilestone('chall', 1)"></power-display>
 			<hyper-display v-if="player.hyper.unlocked"></hyper-display>
-			<utime-display v-if="tmp.chall.uTime.gt(1)"></utime-display>
+			<utime-display v-if="tmp.chall.uTime.neq(1)"></utime-display>
 		</div>
 		</div>
 	`

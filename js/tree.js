@@ -34,10 +34,6 @@ addLayer("tree-tab", {
         "Info": {
             embedLayer: 'info-tab',
         },
-        "Challenges": {
-            unlocked(){return player.chall.unlocked},
-            embedLayer: 'chall',
-        },
     },
     previousTab: "",
     leftTab: true,

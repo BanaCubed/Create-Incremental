@@ -1,25 +1,36 @@
 addLayer('super', {
     color: "var(--super)",
-    tabFormat: [
-        ['row', [
-            "prestige-button",
-            "milestones-scroll",
-        ]],
-        'srp-uhoh-display',
-        "blank",
-        ['display-text', function() {return `Your total SRP is increasing cash gain by ${formatBoost(tmp.super.effect[1].sub(1))}, and RP gain by ${formatBoost(tmp.super.effect[0].sub(1))}<br>You have super rebirthed ${formatWhole(player.super.rebirths)} times, and have ${formatWhole(player.super.total)} total SRP`}],
-        "blank",
-        "upgrades",
-        "blank",
-    ],
+    tabFormat: {
+        "Main": {
+            content:  [
+                ['row', [
+                    "prestige-button",
+                    "milestones-scroll",
+                ]],
+                'srp-uhoh-display',
+                "blank",
+                ['display-text', function() {return `Your total SRP is increasing cash gain by ${formatBoost(tmp.super.effect[1].sub(1))}, and RP gain by ${formatBoost(tmp.super.effect[0].sub(1))}<br>You have super rebirthed ${formatWhole(player.super.rebirths)} times, and have ${formatWhole(player.super.total)} total SRP`}],
+                "blank",
+                "upgrades",
+                "blank",
+            ],
+        },
+        "Challenges": {
+            content: [
+                'challenges',
+                'blank',
+            ],
+            unlocked(){return player.chall.unlocked},
+        },
+    },
     startData() { return {
         unlocked: false,
-        points: new Decimal(0),
-        rebirths: new Decimal(0),
+        points: Decimal.dZero,
+        rebirths: Decimal.dZero,
         resetTime: 0,
-        total: new Decimal(0),
-        tax: new Decimal(1),
-        uResetTime: new Decimal(0),
+        total: Decimal.dZero,
+        tax: Decimal.dOne,
+        uResetTime: Decimal.dZero,
     }},
     shouldNotify() {
         let state = false
@@ -34,13 +45,13 @@ addLayer('super', {
     type: 'custom',
     getNextAt() {
         let base = new Decimal(3.14)
-        let has = tmp.super.baseAmount.max(1).log(tmp.super.requires).sub(1).pow_base(base).times(tmp.super.gainMult).floor()
+        let has = tmp.super.baseAmount.max(1).log(tmp.super.requires).sub(1).pow_base(base).mul(tmp.super.gainMult).floor()
         has = has.add(1)
         return has.div(tmp.super.gainMult).log(base).add(1).pow_base(tmp.super.requires).max(1)
     },
     getResetGain() {
         let base = new Decimal(3.14)
-        return tmp.super.baseAmount.max(1).log(tmp.super.requires).sub(1).pow_base(base).times(tmp.super.gainMult).floor()
+        return tmp.super.baseAmount.max(1).log(tmp.super.requires).sub(1).pow_base(base).mul(tmp.super.gainMult).floor()
     },
     requires() {
         let base = new Decimal(2500)
@@ -50,10 +61,10 @@ addLayer('super', {
     update(diff) {
         if(hasUpgrade('rebirth', 26)) player.super.unlocked = true
         if(inChallenge('super', 15)) {
-            player.super.tax = player.super.tax.times(tmp.super.challenges[15].nerf.pow(diff))
+            player.super.tax = player.super.tax.mul(tmp.super.challenges[15].nerf.pow(diff))
         }
-        if(hasMilestone('hyper', 6)) { player.super.rebirths = player.super.rebirths.add(Decimal.times(25, diff).times(tmp.chall.uTime)) }
-        player.super.uResetTime = player.super.uResetTime.add(Decimal.times(diff, tmp.chall.uTime))
+        if(hasMilestone('hyper', 6)) { player.super.rebirths = player.super.rebirths.add(Decimal.mul(25, diff).mul(tmp.chall.uTime)) }
+        player.super.uResetTime = player.super.uResetTime.add(Decimal.mul(diff, tmp.chall.uTime))
     },
     resource: "SRP",
     prestigeButtonText() {
@@ -64,7 +75,7 @@ addLayer('super', {
     },
     effect() {
         let base = new Decimal(2)
-        return [player.super.total.max(0).add(base).log(base), player.super.total.max(0).times(3).add(1).log(2).pow(1.25).add(1)]
+        return [player.super.total.max(0).add(base).log(base), player.super.total.max(0).mul(3).add(1).log(2).pow(1.25).add(1)]
     },
     row: 2,
     prestigeNotify() {
@@ -79,7 +90,7 @@ addLayer('super', {
         if(options.tooltipCredits) return `Idea from galaxyuser63274<br>Super Rebirth resets everything rebirth points do including rebirth points, all upgrades, THE MACHINE, and RP buyables, but you gain super rebirth points (SRP)<br>1st SRP at 1.00e10RP<br>SRP gain formula: 1+log<sub>2</sub>(RP/1.00e10)<br>SRP boost to cash: 1+0.1x<br>SRP boost to RP: 1+x<sup>0.5</sup>`
 
         let base = new Decimal(3)
-        if(hasUpgrade('cash', 24)) base = base.times(tmp.cash.upgrades[24].effect)
+        if(hasUpgrade('cash', 24)) base = base.mul(tmp.cash.upgrades[24].effect)
         
         let effbase = new Decimal(2)
         if(hasUpgrade('cash', 25)) effbase = effbase.pow(tmp.cash.upgrades[25].effect)
@@ -158,7 +169,7 @@ addLayer('super', {
             done() { return player.super.rebirths.gte(15) },
             unlocked() {return hasMilestone('super', 5)},
             effect() {
-                return player.super.rebirths.max(1).log(5).times(2).floor()
+                return player.super.rebirths.max(1).log(5).mul(2).floor()
             },
             tooltip() {
                 if(options.tooltipCredits) return `Uninspired`
@@ -286,8 +297,8 @@ addLayer('super', {
             canComplete(){return hasUpgrade('cash', 26)},
             nerf(x = challengeCompletions(this.layer, this.id)) {
                 x = new Decimal(x)
-                if(x.gte(6)) return new Decimal(0)
-                return x.pow_base(0.5).times(100)
+                if(x.gte(6)) return Decimal.dZero
+                return x.pow_base(0.5).mul(100)
             },
             completionLimit: 7,
             unlocked(){return hasUpgrade('super', 11)},
@@ -368,7 +379,7 @@ addLayer('super', {
             unlocked(){return hasMilestone('power', 8)},
             onEnter() {
                 player.cash.upgrades = []
-                player.super.tax = new Decimal(1)
+                player.super.tax = Decimal.dOne
             },
             nerf(x = challengeCompletions('super', 15)) {
                 return Decimal.pow(2, x+1).pow(tmp.chall.uTime)
@@ -381,28 +392,28 @@ addLayer('super', {
         },
     },
     gainMult() {
-        let gain = new Decimal(1)
-        if(hasUpgrade('cash', 36)) { gain = gain.times(tmp.cash.upgrades[36].effect) }
-        if(hasChallenge('super', 14)) { gain = gain.times(tmp.super.challenges[14].effect) }
-        gain = gain.times(tmp.hyper.effect[2])
-        if(hasUpgrade('hyper', 13)) { gain = gain.times(50) }
-        if(hasUpgrade('hyper', 33)) { gain = gain.times(tmp.hyper.upgrades[33].effect) }
-        if(hasUpgrade('hyper', 41)) { gain = gain.times(10) }
-        if(hasUpgrade('hyper', 43)) { gain = gain.times(5) }
-        if(hasUpgrade('hyper', 44)) { gain = gain.times(10) }
-        gain = gain.times(tmp.matter.ultimateEffect)
-        if(getBuyableAmount('darkmatter', 14).gte(3)) { gain = gain.times(tmp.blackhole.effect.times(10).pow(2.5)) }
-        if(hasMilestone('blackhole', 4)) { gain = gain.times(tmp.blackhole.milestones[4].effect[1]) }
+        let gain = Decimal.dOne
+        if(hasUpgrade('cash', 36)) { gain = gain.mul(tmp.cash.upgrades[36].effect) }
+        if(hasChallenge('super', 14)) { gain = gain.mul(tmp.super.challenges[14].effect) }
+        gain = gain.mul(tmp.hyper.effect[2])
+        if(hasUpgrade('hyper', 13)) { gain = gain.mul(50) }
+        if(hasUpgrade('hyper', 33)) { gain = gain.mul(tmp.hyper.upgrades[33].effect) }
+        if(hasUpgrade('hyper', 41)) { gain = gain.mul(10) }
+        if(hasUpgrade('hyper', 43)) { gain = gain.mul(5) }
+        if(hasUpgrade('hyper', 44)) { gain = gain.mul(10) }
+        gain = gain.mul(tmp.matter.ultimateEffect)
+        if(getBuyableAmount('darkmatter', 14).gte(3)) { gain = gain.mul(tmp.blackhole.effect.mul(10).pow(2.5)) }
+        if(hasMilestone('blackhole', 4)) { gain = gain.mul(tmp.blackhole.milestones[4].effect[1]) }
         return gain
     },
     passiveGeneration() {
-        let gain = new Decimal(0)
+        let gain = Decimal.dZero
         if(hasMilestone('hyper', 0)) { gain = gain.add(0.05) }
-        gain = gain.times(tmp.chall.uTime)
-        return tmp.super.canReset?gain:new Decimal(0)
+        gain = gain.mul(tmp.chall.uTime)
+        return tmp.super.canReset?gain:Decimal.dZero
     },
     doReset(layer) {
-        if(tmp[layer].row == tmp[this.layer].row) { return; }
+        if(tmp[layer].row == tmp[this.layer].row || layer == 'exomatter') { return; }
         let keep = [];
         if(hasMilestone('hyper', 1) && layer == 'hyper') {
             keep.push('challenges');
@@ -432,39 +443,39 @@ addLayer('power', {
     color: '#d6c611',
     startData() { return {
         unlocked: false,
-        points: new Decimal(0),
-        power: new Decimal(0),
-        pylonA: new Decimal(0),
-        pylonB: new Decimal(0),
-        pylonC: new Decimal(0),
-        pylonD: new Decimal(0),
-        pylonE: new Decimal(0),
-        pylonF: new Decimal(0),
-        pylobA: new Decimal(0),
-        pylobB: new Decimal(0),
-        pylobC: new Decimal(0),
-        pylobD: new Decimal(0),
-        pylobE: new Decimal(0),
-        pylobF: new Decimal(0),
-        cashPower: new Decimal(0),
-        rebirthPower: new Decimal(0),
-        neutralPower: new Decimal(0),
+        points: Decimal.dZero,
+        power: Decimal.dZero,
+        pylonA: Decimal.dZero,
+        pylonB: Decimal.dZero,
+        pylonC: Decimal.dZero,
+        pylonD: Decimal.dZero,
+        pylonE: Decimal.dZero,
+        pylonF: Decimal.dZero,
+        pylobA: Decimal.dZero,
+        pylobB: Decimal.dZero,
+        pylobC: Decimal.dZero,
+        pylobD: Decimal.dZero,
+        pylobE: Decimal.dZero,
+        pylobF: Decimal.dZero,
+        cashPower: Decimal.dZero,
+        rebirthPower: Decimal.dZero,
+        neutralPower: Decimal.dZero,
     }},
     resetName: 'Power',
     doReset(layer) {
-        if(tmp[layer].row == tmp[this.layer].row) { return }
+        if(tmp[layer].row == tmp[this.layer].row || layer == 'exomatter') { return }
         let keep = []
         layerDataReset('power', keep)
         if(hasMilestone('hyper', 4)) { player.power.pylonE = player.power.pylonE.max(10); player.power.pylobE = player.power.pylobE.max(10) }
         if(hasUpgrade('hyper', 23)) { player.power.pylonF = player.power.pylonF.max(10); player.power.pylobF = player.power.pylobF.max(10) }
     },
     update(diff) {
-        player.power.pylonE = player.power.pylonE.add(tmp.power.pylons.f.effect.times(diff))
-        player.power.pylonD = player.power.pylonD.add(tmp.power.pylons.e.effect.times(diff))
-        player.power.pylonC = player.power.pylonC.add(tmp.power.pylons.d.effect.times(diff))
-        player.power.pylonB = player.power.pylonB.add(tmp.power.pylons.c.effect.times(diff))
-        player.power.pylonA = player.power.pylonA.add(tmp.power.pylons.b.effect.times(diff))
-        player.power.power = player.power.power.add(tmp.power.pylons.a.effect.times(diff))
+        player.power.pylonE = player.power.pylonE.add(tmp.power.pylons.f.effect.mul(diff))
+        player.power.pylonD = player.power.pylonD.add(tmp.power.pylons.e.effect.mul(diff))
+        player.power.pylonC = player.power.pylonC.add(tmp.power.pylons.d.effect.mul(diff))
+        player.power.pylonB = player.power.pylonB.add(tmp.power.pylons.c.effect.mul(diff))
+        player.power.pylonA = player.power.pylonA.add(tmp.power.pylons.b.effect.mul(diff))
+        player.power.power = player.power.power.add(tmp.power.pylons.a.effect.mul(diff))
 
         if(hasUpgrade('super', 14)) {
             player.power.unlocked = true
@@ -472,13 +483,13 @@ addLayer('power', {
         }
         if(hasMilestone('power', 6)) {
             let gain = new Decimal(0.01)
-            if(hasMilestone('power', 10)) { gain = gain.times(100) }
-            if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
-            if(hasUpgrade('hyper', 42)) { gain = gain.times(10) }
-            gain = gain.times(tmp.chall.uTime)
-            player.power.cashPower = player.power.cashPower.add(player.power.power.times(gain).times(diff))
-            player.power.rebirthPower = player.power.rebirthPower.add(player.power.power.times(gain).times(diff))
-            player.power.neutralPower = player.power.neutralPower.add(player.power.power.times(gain).times(diff))
+            if(hasMilestone('power', 10)) { gain = gain.mul(100) }
+            if(hasUpgrade('hyper', 34)) { gain = gain.mul(tmp.hyper.cashEffect) }
+            if(hasUpgrade('hyper', 42)) { gain = gain.mul(10) }
+            gain = gain.mul(tmp.chall.uTime)
+            player.power.cashPower = player.power.cashPower.add(player.power.power.mul(gain).mul(diff))
+            player.power.rebirthPower = player.power.rebirthPower.add(player.power.power.mul(gain).mul(diff))
+            player.power.neutralPower = player.power.neutralPower.add(player.power.power.mul(gain).mul(diff))
         }
     },
     automate() {
@@ -490,21 +501,21 @@ addLayer('power', {
         a: {
             effect() {
                 let gain = player.power.pylonA
-                if(hasMilestone('power', 1)) { gain = gain.times(player.power.pylobA.div(2.5).add(1)) }
-                gain = gain.times(tmp.super.challenges[13].effect)
-                if(hasUpgrade('super', 15)) { gain = gain.times(tmp.machine.clickables[12].effect.add(1)) }
-                if(hasChallenge('super', 14)) { gain = gain.times(tmp.super.challenges[14].effect) }
-                gain = gain.times(player.power.power.max(10).log(10).pow(challengeCompletions('super', 15)))
-                gain = gain.times(tmp.hyper.effect[2])
-                if(hasUpgrade('hyper', 14)) { gain = gain.times(1000) }
-                if(hasUpgrade('hyper', 22)) { gain = gain.times(10) }
-                if(hasUpgrade('hyper', 24)) { gain = gain.times(Decimal.pow(1.04, player.power.pylobA.min(1000))) }
-                if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
-                if(hasUpgrade('hyper', 42)) { gain = gain.times(100) }
-                if(hasUpgrade('hyper', 43)) { gain = gain.times(5) }
-                if(hasUpgrade('antimatter', 13)) { gain = gain.times(tmp.antimatter.upgrades[13].effect) }
-                gain = gain.times(tmp.matter.ultimateEffect)
-                gain = gain.times(tmp.chall.uTime)
+                if(hasMilestone('power', 1)) { gain = gain.mul(player.power.pylobA.div(2.5).add(1)) }
+                gain = gain.mul(tmp.super.challenges[13].effect)
+                if(hasUpgrade('super', 15)) { gain = gain.mul(tmp.machine.clickables[12].effect.add(1)) }
+                if(hasChallenge('super', 14)) { gain = gain.mul(tmp.super.challenges[14].effect) }
+                gain = gain.mul(player.power.power.max(10).log(10).pow(challengeCompletions('super', 15)))
+                gain = gain.mul(tmp.hyper.effect[2])
+                if(hasUpgrade('hyper', 14)) { gain = gain.mul(1000) }
+                if(hasUpgrade('hyper', 22)) { gain = gain.mul(10) }
+                if(hasUpgrade('hyper', 24)) { gain = gain.mul(Decimal.pow(1.04, player.power.pylobA.min(1000))) }
+                if(hasUpgrade('hyper', 34)) { gain = gain.mul(tmp.hyper.cashEffect) }
+                if(hasUpgrade('hyper', 42)) { gain = gain.mul(100) }
+                if(hasUpgrade('hyper', 43)) { gain = gain.mul(5) }
+                if(hasUpgrade('antimatter', 13)) { gain = gain.mul(tmp.antimatter.upgrades[13].effect) }
+                gain = gain.mul(tmp.matter.ultimateEffect)
+                gain = gain.mul(tmp.chall.uTime)
                 return gain
             },
             cost(x = player.power.pylobA) {
@@ -514,102 +525,102 @@ addLayer('power', {
         b: {
             effect() {
                 let gain = player.power.pylonB
-                if(hasMilestone('power', 1)) { gain = gain.times(player.power.pylobB.div(1.25).add(1)) }
-                gain = gain.times(tmp.super.challenges[13].effect)
-                gain = gain.times(player.power.pylonA.max(10).log(10).pow(challengeCompletions('super', 15)))
-                gain = gain.times(tmp.hyper.effect[2])
-                if(hasUpgrade('hyper', 22)) { gain = gain.times(10) }
-                if(hasUpgrade('hyper', 24)) { gain = gain.times(Decimal.pow(1.08, player.power.pylobB.min(1000))) }
-                if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
-                if(hasUpgrade('hyper', 42)) { gain = gain.times(10) }
-                if(hasUpgrade('antimatter', 13)) { gain = gain.times(tmp.antimatter.upgrades[13].effect) }
-                gain = gain.times(tmp.matter.ultimateEffect)
-	            gain = gain.times(tmp.chall.uTime)
+                if(hasMilestone('power', 1)) { gain = gain.mul(player.power.pylobB.div(1.25).add(1)) }
+                gain = gain.mul(tmp.super.challenges[13].effect)
+                gain = gain.mul(player.power.pylonA.max(10).log(10).pow(challengeCompletions('super', 15)))
+                gain = gain.mul(tmp.hyper.effect[2])
+                if(hasUpgrade('hyper', 22)) { gain = gain.mul(10) }
+                if(hasUpgrade('hyper', 24)) { gain = gain.mul(Decimal.pow(1.08, player.power.pylobB.min(1000))) }
+                if(hasUpgrade('hyper', 34)) { gain = gain.mul(tmp.hyper.cashEffect) }
+                if(hasUpgrade('hyper', 42)) { gain = gain.mul(10) }
+                if(hasUpgrade('antimatter', 13)) { gain = gain.mul(tmp.antimatter.upgrades[13].effect) }
+                gain = gain.mul(tmp.matter.ultimateEffect)
+	            gain = gain.mul(tmp.chall.uTime)
                 return gain
             },
             cost(x = player.power.pylobB) {
-                return x.pow_base(5).times(50)
+                return x.pow_base(5).mul(50)
             },
         },
         c: {
             effect() {
                 let gain = player.power.pylonC
-                if(hasMilestone('power', 1)) { gain = gain.times(player.power.pylobC.times(1.6).add(1)) }
-                gain = gain.times(tmp.super.challenges[13].effect)
-                gain = gain.times(player.power.pylonB.max(10).log(10).pow(challengeCompletions('super', 15)))
-                gain = gain.times(tmp.hyper.effect[2])
-                if(hasUpgrade('hyper', 22)) { gain = gain.times(10) }
-                if(hasUpgrade('hyper', 24)) { gain = gain.times(Decimal.pow(1.16, player.power.pylobC.min(1000))) }
-                if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
-                if(hasUpgrade('hyper', 42)) { gain = gain.times(10) }
-                if(hasUpgrade('antimatter', 13)) { gain = gain.times(tmp.antimatter.upgrades[13].effect) }
-                gain = gain.times(tmp.matter.ultimateEffect)
-	            gain = gain.times(tmp.chall.uTime)
+                if(hasMilestone('power', 1)) { gain = gain.mul(player.power.pylobC.mul(1.6).add(1)) }
+                gain = gain.mul(tmp.super.challenges[13].effect)
+                gain = gain.mul(player.power.pylonB.max(10).log(10).pow(challengeCompletions('super', 15)))
+                gain = gain.mul(tmp.hyper.effect[2])
+                if(hasUpgrade('hyper', 22)) { gain = gain.mul(10) }
+                if(hasUpgrade('hyper', 24)) { gain = gain.mul(Decimal.pow(1.16, player.power.pylobC.min(1000))) }
+                if(hasUpgrade('hyper', 34)) { gain = gain.mul(tmp.hyper.cashEffect) }
+                if(hasUpgrade('hyper', 42)) { gain = gain.mul(10) }
+                if(hasUpgrade('antimatter', 13)) { gain = gain.mul(tmp.antimatter.upgrades[13].effect) }
+                gain = gain.mul(tmp.matter.ultimateEffect)
+	            gain = gain.mul(tmp.chall.uTime)
                 return gain
             },
             cost(x = player.power.pylobC) {
-                return x.pow_base(10).times(100000)
+                return x.pow_base(10).mul(100000)
             },
         },
         d: {
             effect() {
                 let gain = player.power.pylonD
-                if(hasMilestone('power', 1)) { gain = gain.times(player.power.pylobD.times(3.2).add(1)) }
-                gain = gain.times(tmp.super.challenges[13].effect)
-                gain = gain.times(player.power.pylonC.max(10).log(10).pow(challengeCompletions('super', 15)))
-                gain = gain.times(tmp.hyper.effect[2])
-                if(hasUpgrade('hyper', 22)) { gain = gain.times(10) }
-                if(hasUpgrade('hyper', 24)) { gain = gain.times(Decimal.pow(1.32, player.power.pylobD.min(1000))) }
-                if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
-                if(hasUpgrade('hyper', 42)) { gain = gain.times(10) }
-                if(hasUpgrade('antimatter', 13)) { gain = gain.times(tmp.antimatter.upgrades[13].effect) }
-                gain = gain.times(tmp.matter.ultimateEffect)
-	            gain = gain.times(tmp.chall.uTime)
+                if(hasMilestone('power', 1)) { gain = gain.mul(player.power.pylobD.mul(3.2).add(1)) }
+                gain = gain.mul(tmp.super.challenges[13].effect)
+                gain = gain.mul(player.power.pylonC.max(10).log(10).pow(challengeCompletions('super', 15)))
+                gain = gain.mul(tmp.hyper.effect[2])
+                if(hasUpgrade('hyper', 22)) { gain = gain.mul(10) }
+                if(hasUpgrade('hyper', 24)) { gain = gain.mul(Decimal.pow(1.32, player.power.pylobD.min(1000))) }
+                if(hasUpgrade('hyper', 34)) { gain = gain.mul(tmp.hyper.cashEffect) }
+                if(hasUpgrade('hyper', 42)) { gain = gain.mul(10) }
+                if(hasUpgrade('antimatter', 13)) { gain = gain.mul(tmp.antimatter.upgrades[13].effect) }
+                gain = gain.mul(tmp.matter.ultimateEffect)
+	            gain = gain.mul(tmp.chall.uTime)
                 return gain
             },
             cost(x = player.power.pylobD) {
-                return x.pow_base(100).times(1e15)
+                return x.pow_base(100).mul(1e15)
             },
         },
         e: {
             effect() {
                 let gain = player.power.pylonE
-                if(hasMilestone('power', 1)) { gain = gain.times(player.power.pylobE.times(6.4).add(1)) }
-                gain = gain.times(tmp.super.challenges[13].effect)
-                gain = gain.times(player.power.pylonD.max(10).log(10).pow(challengeCompletions('super', 15)))
-                gain = gain.times(tmp.hyper.effect[2])
-                if(hasUpgrade('hyper', 22)) { gain = gain.times(10) }
-                if(hasUpgrade('hyper', 24)) { gain = gain.times(Decimal.pow(1.64, player.power.pylobE.min(1000))) }
-                if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
-                if(hasUpgrade('hyper', 42)) { gain = gain.times(10) }
-                if(hasUpgrade('antimatter', 13)) { gain = gain.times(tmp.antimatter.upgrades[13].effect) }
-                gain = gain.times(tmp.matter.ultimateEffect)
-	            gain = gain.times(tmp.chall.uTime)
+                if(hasMilestone('power', 1)) { gain = gain.mul(player.power.pylobE.mul(6.4).add(1)) }
+                gain = gain.mul(tmp.super.challenges[13].effect)
+                gain = gain.mul(player.power.pylonD.max(10).log(10).pow(challengeCompletions('super', 15)))
+                gain = gain.mul(tmp.hyper.effect[2])
+                if(hasUpgrade('hyper', 22)) { gain = gain.mul(10) }
+                if(hasUpgrade('hyper', 24)) { gain = gain.mul(Decimal.pow(1.64, player.power.pylobE.min(1000))) }
+                if(hasUpgrade('hyper', 34)) { gain = gain.mul(tmp.hyper.cashEffect) }
+                if(hasUpgrade('hyper', 42)) { gain = gain.mul(10) }
+                if(hasUpgrade('antimatter', 13)) { gain = gain.mul(tmp.antimatter.upgrades[13].effect) }
+                gain = gain.mul(tmp.matter.ultimateEffect)
+	            gain = gain.mul(tmp.chall.uTime)
                 return gain
             },
             cost(x = player.power.pylobE) {
-                return x.pow_base(1e3).times(1e21)
+                return x.pow_base(1e3).mul(1e21)
             },
         },
         f: {
             effect() {
                 let gain = player.power.pylonF
-                if(hasMilestone('power', 1)) { gain = gain.times(player.power.pylobF.times(128).add(1)) }
-                gain = gain.times(tmp.super.challenges[13].effect)
-                gain = gain.times(player.power.pylonE.max(10).log(10).pow(challengeCompletions('super', 15)))
-                gain = gain.times(tmp.hyper.effect[2])
-                if(hasUpgrade('hyper', 22)) { gain = gain.times(10) }
-                if(hasUpgrade('hyper', 24)) { gain = gain.times(Decimal.pow(2.28, player.power.pylobF.min(1000))) }
-                if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
-                if(hasUpgrade('hyper', 42)) { gain = gain.times(10) }
-                if(hasUpgrade('antimatter', 13)) { gain = gain.times(tmp.antimatter.upgrades[13].effect) }
-                if(hasUpgrade('darkmatter', 15)) { gain = gain.times(tmp.blackhole.effect.pow(11)) }
-                gain = gain.times(tmp.matter.ultimateEffect)
-	            gain = gain.times(tmp.chall.uTime)
+                if(hasMilestone('power', 1)) { gain = gain.mul(player.power.pylobF.mul(128).add(1)) }
+                gain = gain.mul(tmp.super.challenges[13].effect)
+                gain = gain.mul(player.power.pylonE.max(10).log(10).pow(challengeCompletions('super', 15)))
+                gain = gain.mul(tmp.hyper.effect[2])
+                if(hasUpgrade('hyper', 22)) { gain = gain.mul(10) }
+                if(hasUpgrade('hyper', 24)) { gain = gain.mul(Decimal.pow(2.28, player.power.pylobF.min(1000))) }
+                if(hasUpgrade('hyper', 34)) { gain = gain.mul(tmp.hyper.cashEffect) }
+                if(hasUpgrade('hyper', 42)) { gain = gain.mul(10) }
+                if(hasUpgrade('antimatter', 13)) { gain = gain.mul(tmp.antimatter.upgrades[13].effect) }
+                if(hasUpgrade('darkmatter', 15)) { gain = gain.mul(tmp.blackhole.effect.pow(11)) }
+                gain = gain.mul(tmp.matter.ultimateEffect)
+	            gain = gain.mul(tmp.chall.uTime)
                 return gain
             },
             cost(x = player.power.pylobF) {
-                return x.pow_base(1e5).times(1e50)
+                return x.pow_base(1e5).mul(1e50)
             },
         },
     },
@@ -736,8 +747,8 @@ addLayer('power', {
                 return true
             },
             onClick() {
-                player.power.cashPower = player.power.cashPower.add(player.power.power.times(player.chall.pap/100))
-                player.power.power = player.power.power.times(1-(player.chall.pap/100))
+                player.power.cashPower = player.power.cashPower.add(player.power.power.mul(player.chall.pap/100))
+                player.power.power = player.power.power.mul(1-(player.chall.pap/100))
             },
             unlocked(){return hasMilestone('power', 2)},
             style: {
@@ -754,8 +765,8 @@ addLayer('power', {
                 return true
             },
             onClick() {
-                player.power.neutralPower = player.power.neutralPower.add(player.power.power.times(player.chall.pap/100))
-                player.power.power = player.power.power.times(1-(player.chall.pap/100))
+                player.power.neutralPower = player.power.neutralPower.add(player.power.power.mul(player.chall.pap/100))
+                player.power.power = player.power.power.mul(1-(player.chall.pap/100))
             },
             unlocked(){return hasMilestone('power', 2)},
             style: {
@@ -772,8 +783,8 @@ addLayer('power', {
                 return true
             },
             onClick() {
-                player.power.rebirthPower = player.power.rebirthPower.add(player.power.power.times(player.chall.pap/100))
-                player.power.power = player.power.power.times(1-(player.chall.pap/100))
+                player.power.rebirthPower = player.power.rebirthPower.add(player.power.power.mul(player.chall.pap/100))
+                player.power.power = player.power.power.mul(1-(player.chall.pap/100))
             },
             unlocked(){return hasMilestone('power', 2)},
             style: {

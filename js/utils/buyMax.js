@@ -16,6 +16,13 @@ function maxAffordable(layer, type, id) {
             if(id === 12) { return player.matter.points.div(1e10).max(1).log(3).max(1).log(2).floor() }
         }
     }
+    if(layer === 'darkmatter') {
+        if(type === 'buyables') {
+            if(id === 11) { return player.darkmatter.points.div(5e12).max(0.2).log(5).add(1).floor() }
+            if(id === 12) { return player.darkmatter.points.div(1e13).max(0.1).log(10).div(3).pow(0.5).add(1).floor() }
+            if(id === 13) { return player.darkmatter.points.div(1e14).max(1e-100).log(1e6).add(1).floor() }
+        }
+    }
     if(layer === 'power') {
         if(type === 'pylons') {
             if(id === 21) { return player.power.power.max(1).log(2).add(1).floor() }

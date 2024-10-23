@@ -18,14 +18,14 @@ addLayer('hyper', {
     ],
     startData() { return {
         unlocked: false,
-        points: new Decimal(0),
-        rebirths: new Decimal(0),
+        points: Decimal.dZero,
+        rebirths: Decimal.dZero,
         resetTime: 0,
-        total: new Decimal(0),
-        cash: new Decimal(0),
+        total: Decimal.dZero,
+        cash: Decimal.dZero,
         paths: [],
         subLayers: 0,
-        uResetTime: new Decimal(0),
+        uResetTime: Decimal.dZero,
     }},
     shouldNotify() {
         let state = false
@@ -40,32 +40,32 @@ addLayer('hyper', {
     type: 'custom',
     getNextAt() {
         let base = new Decimal(19)
-        let has = tmp.hyper.baseAmount.max(1).log(tmp.hyper.requires).sub(1).pow_base(base).times(tmp.hyper.gainMult).pow(0.8).floor()
+        let has = tmp.hyper.baseAmount.max(1).log(tmp.hyper.requires).sub(1).pow_base(base).mul(tmp.hyper.gainMult).pow(0.8).floor()
         has = has.add(1)
         return has.pow(1.25).div(tmp.hyper.gainMult).log(base).add(1).pow_base(tmp.hyper.requires).max(1)
     },
     getResetGain() {
         let base = new Decimal(19)
-        return tmp.hyper.baseAmount.max(1).log(tmp.hyper.requires).sub(1).pow_base(base).times(tmp.hyper.gainMult).pow(0.8).floor()
+        return tmp.hyper.baseAmount.max(1).log(tmp.hyper.requires).sub(1).pow_base(base).mul(tmp.hyper.gainMult).pow(0.8).floor()
     },
     requires() {
         let base = new Decimal(1e6)
         return base
     },
     gainMult() {
-        let gain = new Decimal(1)
-        gain = gain.times(tmp.matter.ultimateEffect)
-        if(hasMilestone('blackhole', 4)) { gain = gain.times(tmp.blackhole.milestones[4].effect[2]) }
-        if(getBuyableAmount('darkmatter', 14).gte(4)) { gain = gain.times(tmp.blackhole.effect.pow(1.5)) }
+        let gain = Decimal.dOne
+        gain = gain.mul(tmp.matter.ultimateEffect)
+        if(hasMilestone('blackhole', 4)) { gain = gain.mul(tmp.blackhole.milestones[4].effect[2]) }
+        if(getBuyableAmount('darkmatter', 14).gte(4)) { gain = gain.mul(tmp.blackhole.effect.pow(1.5)) }
         return gain
     },
     update(diff) {
         if(hasMilestone('power', 10)) { player.hyper.unlocked = true }
         if(player.hyper.rebirths.gte(1)) {
-            player.hyper.cash = player.hyper.cash.add(tmp.hyper.cashGain.times(tmp.chall.uTime).times(diff))
+            player.hyper.cash = player.hyper.cash.add(tmp.hyper.cashGain.mul(tmp.chall.uTime).mul(diff))
         }
         if(hasMilestone('hyper', 4) && player.hyper.subLayers < 1) { player.hyper.subLayers = 1 }
-        player.hyper.uResetTime = player.hyper.uResetTime.add(Decimal.times(diff, tmp.chall.uTime))
+        player.hyper.uResetTime = player.hyper.uResetTime.add(Decimal.mul(diff, tmp.chall.uTime))
     },
     resetTooltip() {
         if(options.tooltipCredits) return `Idea from galaxyuser63274<br>HYPER REBIRTH<br>resets everything up until this point except automation to gain hyper rebirth points (HRP). Numbers are about to get big.<br>First HRP at 1.00e110$, 5.00e8 SRP, and 5.00e7 Power<br>Cost formulas:<br>Cash: sqrt(2×log<sub>10</sub>(cash)-220)<br>SRP: log<sub>2</sub>(SRP/2.50e8)<br>Power: log<sub>2</sub>(Power/2.50e7)<br><br>HRP boosts to:<br>Cash: ×3<sup>HRP</sup><br>SRP: ×(1+HRP)<br>Power: ×2<sup>(HRP/2)</sup>`
@@ -81,9 +81,9 @@ addLayer('hyper', {
     },
     effect() {
         return [
-            player.hyper.total.max(0).add(1).log(10).times(1.5).add(1).pow(4),
+            player.hyper.total.max(0).add(1).log(10).mul(1.5).add(1).pow(4),
             player.hyper.total.max(0).add(1).log(1.25).add(1),
-            player.hyper.total.max(0).add(1).log(25).times(3).add(1),
+            player.hyper.total.max(0).add(1).log(25).mul(3).add(1),
         ]
     },
     row: 3,
@@ -114,15 +114,16 @@ addLayer('hyper', {
         return effect
     },
     cashGain() {
-        let gain = new Decimal(1)
-        if(hasMilestone('hyper', 5)) { gain = gain.times(player.hyper.rebirths.div(10).add(1).max(1)) }
-        if(hasMilestone('hyper', 6)) { gain = gain.times(tmp.hyper.milestones[6].effect) }
-        if(hasUpgrade('hyper', 31)) { gain = gain.times(tmp.hyper.upgrades[31].effect) }
-        if(hasUpgrade('hyper', 32)) { gain = gain.times(10) }
-        if(hasUpgrade('hyper', 34)) { gain = gain.times(tmp.hyper.cashEffect) }
-        if(hasUpgrade('hyper', 43)) { gain = gain.times(5) }
-        if(hasUpgrade('hyper', 44)) { gain = gain.times(tmp.hyper.effect[1]) }
-        if(getBuyableAmount('darkmatter', 14).gte(2)) { gain = gain.times(tmp.blackhole.effect.times(2).pow(3)) }
+        let gain = Decimal.dOne
+        if(hasMilestone('hyper', 5)) { gain = gain.mul(player.hyper.rebirths.div(10).add(1).max(1)) }
+        if(hasMilestone('hyper', 6)) { gain = gain.mul(tmp.hyper.milestones[6].effect) }
+        if(hasUpgrade('hyper', 31)) { gain = gain.mul(tmp.hyper.upgrades[31].effect) }
+        if(hasUpgrade('hyper', 32)) { gain = gain.mul(10) }
+        if(hasUpgrade('hyper', 34)) { gain = gain.mul(tmp.hyper.cashEffect) }
+        if(hasUpgrade('hyper', 43)) { gain = gain.mul(5) }
+        if(hasUpgrade('hyper', 44)) { gain = gain.mul(tmp.hyper.effect[1]) }
+        if(getBuyableAmount('darkmatter', 14).gte(2)) { gain = gain.mul(tmp.blackhole.effect.mul(2).pow(3)) }
+        if(hasUpgrade('exomatter', 13)) { gain = gain.mul(tmp.exomatter.unstableEffect) }
         return gain
     },
     milestones: {
@@ -198,7 +199,7 @@ addLayer('hyper', {
             done() { return player.hyper.rebirths.gte(10) },
             unlocked() {return hasMilestone(this.layer, this.id - 1)},
             effect() {
-                return player.rebirth.rebirths.times(player.super.rebirths).times(player.hyper.rebirths).max(1).log(100).add(1)
+                return player.rebirth.rebirths.mul(player.super.rebirths).mul(player.hyper.rebirths).max(1).log(100).add(1)
             },
             tooltip() {
                 if(options.tooltipCredits) return `Uninspired`
@@ -212,7 +213,7 @@ addLayer('hyper', {
             costa() {
                 let pos = player.hyper.paths.indexOf(1)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(1, Decimal.pow(3, pos))
+                return Decimal.mul(1, Decimal.pow(3, pos))
             },
             onPurchase() {
                 player.hyper.paths.push(1)
@@ -225,7 +226,7 @@ addLayer('hyper', {
             costa() {
                 let pos = player.hyper.paths.indexOf(1)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(4, Decimal.pow(3, pos))
+                return Decimal.mul(4, Decimal.pow(3, pos))
             },
             fullDisplay: `Increase RP gain by ×500`,
             canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
@@ -235,7 +236,7 @@ addLayer('hyper', {
             costa() {
                 let pos = player.hyper.paths.indexOf(1)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(10, Decimal.pow(3, pos))
+                return Decimal.mul(10, Decimal.pow(3, pos))
             },
             fullDisplay: `Increase SRP gain by ×50`,
             canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
@@ -245,7 +246,7 @@ addLayer('hyper', {
             costa() {
                 let pos = player.hyper.paths.indexOf(1)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(25, Decimal.pow(3, pos))
+                return Decimal.mul(25, Decimal.pow(3, pos))
             },
             fullDisplay: `Increase Power gain by ×1,000`,
             canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
@@ -256,7 +257,7 @@ addLayer('hyper', {
             costa() {
                 let pos = player.hyper.paths.indexOf(2)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(1, Decimal.pow(3, pos))
+                return Decimal.mul(1, Decimal.pow(3, pos))
             },
             onPurchase() {
                 player.hyper.paths.push(2)
@@ -269,7 +270,7 @@ addLayer('hyper', {
             costa() {
                 let pos = player.hyper.paths.indexOf(2)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(4, Decimal.pow(3, pos))
+                return Decimal.mul(4, Decimal.pow(3, pos))
             },
             fullDisplay: `Power Pylons are ×10 as effective`,
             canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
@@ -279,7 +280,7 @@ addLayer('hyper', {
             costa() {
                 let pos = player.hyper.paths.indexOf(2)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(10, Decimal.pow(3, pos))
+                return Decimal.mul(10, Decimal.pow(3, pos))
             },
             fullDisplay() {return `Start all Hyper Rebirths with 10 ${options.upgID?'PPyF':'Power Pylon F'}, and automate ${options.upgID?'PPyE':'Power Pylon E'}`},
             canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
@@ -289,7 +290,7 @@ addLayer('hyper', {
             costa() {
                 let pos = player.hyper.paths.indexOf(2)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(25, Decimal.pow(3, pos))
+                return Decimal.mul(25, Decimal.pow(3, pos))
             },
             fullDisplay: `Add another Power Pylon self-boost that's exponential, but caps at 1000 Pylons`,
             canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
@@ -300,7 +301,7 @@ addLayer('hyper', {
             costa() {
                 let pos = player.hyper.paths.indexOf(3)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(1, Decimal.pow(3, pos))
+                return Decimal.mul(1, Decimal.pow(3, pos))
             },
             onPurchase() {
                 player.hyper.paths.push(3)
@@ -316,7 +317,7 @@ addLayer('hyper', {
             costa() {
                 let pos = player.hyper.paths.indexOf(3)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(4, Decimal.pow(3, pos))
+                return Decimal.mul(4, Decimal.pow(3, pos))
             },
             fullDisplay: `Increase Hyper Cash gain by ×10`,
             canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
@@ -326,7 +327,7 @@ addLayer('hyper', {
             costa() {
                 let pos = player.hyper.paths.indexOf(3)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(10, Decimal.pow(3, pos))
+                return Decimal.mul(10, Decimal.pow(3, pos))
             },
             fullDisplay() {return `Hyper Cash's boost to Universal Time also applies directly to Cash, RP, and SRP, at ^3 efficiency<br>Currently: ${formatBoost(tmp.hyper.upgrades[33].effect.sub(1))}`},
             canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
@@ -339,7 +340,7 @@ addLayer('hyper', {
             costa() {
                 let pos = player.hyper.paths.indexOf(3)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(25, Decimal.pow(3, pos))
+                return Decimal.mul(25, Decimal.pow(3, pos))
             },
             fullDisplay: `Hyper Cash's boost to Universal Time also applies directly to Power, and HC, and improve HC's boost to Universal Time`,
             canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
@@ -350,7 +351,7 @@ addLayer('hyper', {
             costa() {
                 let pos = player.hyper.paths.indexOf(4)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(1, Decimal.pow(3, pos))
+                return Decimal.mul(1, Decimal.pow(3, pos))
             },
             onPurchase() {
                 player.hyper.paths.push(4)
@@ -363,7 +364,7 @@ addLayer('hyper', {
             costa() {
                 let pos = player.hyper.paths.indexOf(4)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(4, Decimal.pow(3, pos))
+                return Decimal.mul(4, Decimal.pow(3, pos))
             },
             fullDisplay: `Increase Power, Power Pylons, and Power Allocation by ×10`,
             canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
@@ -373,7 +374,7 @@ addLayer('hyper', {
             costa() {
                 let pos = player.hyper.paths.indexOf(4)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(10, Decimal.pow(3, pos))
+                return Decimal.mul(10, Decimal.pow(3, pos))
             },
             fullDisplay: `Increase Hyper Cash, Power, RP, and SRP gain by ×5`,
             canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
@@ -383,7 +384,7 @@ addLayer('hyper', {
             costa() {
                 let pos = player.hyper.paths.indexOf(4)
                 if(pos == -1) { pos = player.hyper.paths.length }
-                return Decimal.times(25, Decimal.pow(3, pos))
+                return Decimal.mul(25, Decimal.pow(3, pos))
             },
             fullDisplay: `Increase RP and SRP ×10, and HRP's boost to RP now also applies to Cash and HC`,
             canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
@@ -409,7 +410,7 @@ addLayer('hyper', {
             title: `Dark Matter`,
         },
         54: {
-            costa: new Decimal(1e18),
+            costa: new Decimal(5e16),
             fullDisplay: `Add a Matter Stabiliser to the Matter Combustor`,
             canAfford() { return hasUpgrade(this.layer, this.id-1) && player.hyper.points.gte(tmp.hyper.upgrades[this.id].costa) },
             title: `Exotic Matter`,

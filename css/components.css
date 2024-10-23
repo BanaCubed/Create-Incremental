@@ -65,6 +65,7 @@ body {
 .antimatter.upg { background-color: var(--amatterBG); }
 .darkmatter.upg { background-color: var(--dmatterBG); }
 .exomatter.upg  { background-color: var(--ematterBG); }
+.radio.upg      { background-color: var(--radioBG); }
 .hcash.upg      { background-color: var(--hcashBG); }
 .universe.upg   { background-color: var(--universeBG); }
 .blackhole.upg  { background-color: var(--universeBG); }
@@ -231,3 +232,14 @@ button {
 	border-color: rgba(0, 0, 0, 0.125);
 }
 
+#theorization {
+	margin: auto; width: 514px; max-width: calc(100vw - 40px);
+	background-image: linear-gradient(0deg, var(--radioBG), var(--ematterBG));
+	background-color: transparent;
+	transition: none;
+	background-clip: padding-box;
+	border: none;
+	margin-top: -0.9rem;
+	box-shadow: inset 0 0 0 0.4rem rgba(0, 0, 0, 0.25);
+	padding: 0.9rem;
+}

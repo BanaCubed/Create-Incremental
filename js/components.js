@@ -106,7 +106,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader cash upg">
 				<span class="overlayThing">You have </span>
-				<h2 class="overlayThing" id="points" style="color: var(--cash); text-shadow: var(--cash) 0px 0px 10px;" v-html="'$' + format(player.points.max(0))"></h2>
+				<h2 id="points" style="color: var(--cash); text-shadow: var(--cash) 0px 0px 10px;" v-html="'$' + format(player.points.max(0))"></h2>
 				<br>
 				<span v-if="canGenPoints()" class="overlayThing" v-html="'(' + formatSmall(getPointGen()) + '/sec)'"></span>
 			</div>
@@ -116,7 +116,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader rebirth upg">
 				<span class="overlayThing">You have </span>
-				<h2 class="overlayThing" id="points" style="color: var(--rebirth); text-shadow: var(--rebirth) 0px 0px 10px;" v-html="formatWhole(player.rebirth.points.max(0))"></h2> RP
+				<h2 id="points" style="color: var(--rebirth); text-shadow: var(--rebirth) 0px 0px 10px;" v-html="formatWhole(player.rebirth.points.max(0))"></h2> RP
 				<br>
 				<span v-if="maxedChallenge('super', 11)" class="overlayThing" v-html="'(' + formatSmall(tmp.rebirth.getResetGain.times(tmp.rebirth.passiveGeneration)) + '/sec)'"></span>
 			</div>
@@ -126,7 +126,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader rebirth upg uhoh" v-if="hasMilestone('chall', 1)">
 				<span class="overlayThing">You have </span>
-				<h2 class="overlayThing" id="points" style="color: var(--rebirth); text-shadow: var(--rebirth) 0px 0px 10px;" v-html="formatWhole(player.rebirth.points.max(0))"></h2> RP
+				<h2 id="points" style="color: var(--rebirth); text-shadow: var(--rebirth) 0px 0px 10px;" v-html="formatWhole(player.rebirth.points.max(0))"></h2> RP
 				<br>
 				<span v-if="maxedChallenge('super', 11)" class="overlayThing" v-html="'(' + formatSmall(tmp.rebirth.getResetGain.times(tmp.rebirth.passiveGeneration)) + '/sec)'"></span>
 			</div>
@@ -136,7 +136,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader super upg">
 				<span class="overlayThing">You have </span>
-				<h2 class="overlayThing" id="points" style="color: var(--super); text-shadow: var(--super) 0px 0px 10px;" v-html="formatWhole(player.super.points.max(0))"></h2> SRP
+				<h2 id="points" style="color: var(--super); text-shadow: var(--super) 0px 0px 10px;" v-html="formatWhole(player.super.points.max(0))"></h2> SRP
 				<br>
 				<span v-if="hasMilestone('hyper', 0)" class="overlayThing" v-html="'(' + formatSmall(tmp.super.getResetGain.times(tmp.super.passiveGeneration)) + '/sec)'"></span>
 			</div>
@@ -146,7 +146,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader super upg uhoh" v-if="false">
 				<span class="overlayThing">You have </span>
-				<h2 class="overlayThing" id="points" style="color: var(--super); text-shadow: var(--super) 0px 0px 10px;" v-html="formatWhole(player.super.points.max(0))"></h2> SRP
+				<h2 id="points" style="color: var(--super); text-shadow: var(--super) 0px 0px 10px;" v-html="formatWhole(player.super.points.max(0))"></h2> SRP
 				<br>
 				<span v-if="hasMilestone('hyper', 0)" class="overlayThing" v-html="'(' + formatSmall(tmp.super.getResetGain.times(tmp.super.passiveGeneration)) + '/sec)'"></span>
 			</div>
@@ -156,7 +156,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader power upg">
 				<span class="overlayThing">You have </span>
-				<h2 class="overlayThing" id="points" style="color: var(--power); text-shadow: var(--power) 0px 0px 10px;" v-html="formatWhole(player.power.power.max(0))"></h2> Power
+				<h2 id="points" style="color: var(--power); text-shadow: var(--power) 0px 0px 10px;" v-html="formatWhole(player.power.power.max(0))"></h2> Power
 				<br>
 				<span class="overlayThing" v-if="hasUpgrade('super', 14)" v-html="'(' + formatSmall(tmp.power.pylons.a.effect) + '/sec)'"></span>
 			</div>
@@ -166,7 +166,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader power upg uhoh" v-if="hasMilestone('chall', 1)">
 				<span class="overlayThing">You have </span>
-				<h2 class="overlayThing" id="points" style="color: var(--power); text-shadow: var(--power) 0px 0px 10px;" v-html="formatWhole(player.power.power.max(0))"></h2> Power
+				<h2 id="points" style="color: var(--power); text-shadow: var(--power) 0px 0px 10px;" v-html="formatWhole(player.power.power.max(0))"></h2> Power
 				<br>
 				<span class="overlayThing" v-if="hasUpgrade('super', 14)" v-html="'(' + formatSmall(tmp.power.pylons.a.effect) + '/sec)'"></span>
 			</div>
@@ -176,7 +176,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader tax upg">
 				<span class="overlayThing">You have </span>
-				<h2 class="overlayThing" id="points" style="color: var(--cursed); text-shadow: var(--cursed) 0px 0px 10px;" v-html="formatWhole(player.super.tax.max(0))"></h2> Tax
+				<h2 id="points" style="color: var(--cursed); text-shadow: var(--cursed) 0px 0px 10px;" v-html="formatWhole(player.super.tax.max(0))"></h2> Tax
 				<br>
 				<span class="overlayThing" v-html="'(×' + formatSmall(tmp.super.challenges[15].nerf) + '/sec)'"></span>
 			</div>
@@ -186,7 +186,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader tax upg uhoh" v-if="hasMilestone('chall', 1) && inChallenge('super', 15)">
 				<span class="overlayThing">You have </span>
-				<h2 class="overlayThing" id="points" style="color: var(--cursed); text-shadow: var(--cursed) 0px 0px 10px;" v-html="formatWhole(player.super.tax.max(0))"></h2> Tax
+				<h2 id="points" style="color: var(--cursed); text-shadow: var(--cursed) 0px 0px 10px;" v-html="formatWhole(player.super.tax.max(0))"></h2> Tax
 				<br>
 				<span class="overlayThing" v-html="'(×' + formatSmall(tmp.super.challenges[15].nerf) + '/sec)'"></span>
 			</div>
@@ -196,7 +196,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader hyper upg">
 				<span class="overlayThing">You have </span>
-				<h2 class="overlayThing" id="points" style="color: var(--hyper); text-shadow: var(--hyper) 0px 0px 10px;" v-html="formatWhole(player.hyper.points.max(0))"></h2> HRP
+				<h2 id="points" style="color: var(--hyper); text-shadow: var(--hyper) 0px 0px 10px;" v-html="formatWhole(player.hyper.points.max(0))"></h2> HRP
 				<br>
 			</div>
 		`
@@ -205,7 +205,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader hcash upg uhoh">
 				<span class="overlayThing">You have Hyper</span>
-				<h2 class="overlayThing" id="points" style="color: var(--hcash); text-shadow: var(--hcash) 0px 0px 10px;" v-html="'$' + format(player.hyper.cash.max(0))"></h2>
+				<h2 id="points" style="color: var(--hcash); text-shadow: var(--hcash) 0px 0px 10px;" v-html="'$' + format(player.hyper.cash.max(0))"></h2>
 				<br>
 				<span class="overlayThing" v-if="player.hyper.rebirths.gte(1)" v-html="formatSmall(tmp.chall.uTime.times(tmp.hyper.cashGain)) + '/sec'"></span>
 			</div>
@@ -215,7 +215,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader universe upg">
 				<span class="overlayThing">Universal Time is </span>
-				<h2  class="overlayThing" id="points" style="color: var(--universe); text-shadow: var(--universe) 0px 0px 10px;" v-html="formatBoost(tmp.chall.uTime.max(0), true)"></h2>
+				<h2 id="points" style="color: var(--universe); text-shadow: var(--universe) 0px 0px 10px;" v-html="formatBoost(tmp.chall.uTime.max(0), true)"></h2>
 				<br><span>faster than real time</span>
 			</div>
 		`
@@ -224,7 +224,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader matter upg uhoh">
 				<span class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: var(--matter); text-shadow: var(--matter) 0px 0px 10px;" v-html="format(player.matter.points.max(0))"></h2> Matter
+				<h2 id="points" style="color: var(--matter); text-shadow: var(--matter) 0px 0px 10px;" v-html="format(player.matter.points.max(0))"></h2> Matter
 				<br>
 				<span class="overlayThing" v-if="hasUpgrade('hyper', 51)">(<span v-html="formatSmall(tmp.matter.matterGain)"></span>/sec)</span>
 			</div>
@@ -234,7 +234,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader antimatter upg uhoh">
 				<span class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: var(--amatter); text-shadow: var(--amatter) 0px 0px 10px;" v-html="format(player.antimatter.points.max(0))"></h2> Antimatter
+				<h2 id="points" style="color: var(--amatter); text-shadow: var(--amatter) 0px 0px 10px;" v-html="format(player.antimatter.points.max(0))"></h2> Antimatter
 				<br>
 				<span class="overlayThing" v-if="hasUpgrade('hyper', 52)">(<span v-html="formatSmall(tmp.antimatter.matterGain)"></span>/sec)</span>
 			</div>
@@ -244,7 +244,7 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader darkmatter upg uhoh">
 				<span class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: var(--dmatter); text-shadow: var(--dmatter) 0px 0px 10px;" v-html="format(player.darkmatter.points.max(0))"></h2> Dark Matter
+				<h2 id="points" style="color: var(--dmatter); text-shadow: var(--dmatter) 0px 0px 10px;" v-html="format(player.darkmatter.points.max(0))"></h2> Dark Matter
 				<br>
 				<span class="overlayThing" v-if="hasUpgrade('hyper', 53)">(<span v-html="formatSmall(tmp.darkmatter.matterGain)"></span>/sec)</span>
 			</div>
@@ -254,9 +254,19 @@ function loadVue() {
 		template: `
 			<div class="currencyDisplayHeader universe upg uhoh" v-if="player.blackhole.unlocked" style="height: 60px">
 				<span class="overlayThing">You have </span>
-				<h2  class="overlayThing" id="points" style="color: var(--universe); text-shadow: var(--universe) 0px 0px 10px;" v-html="format(player.blackhole.points.max(0))"></h2>
+				<h2 id="points" style="color: var(--universe); text-shadow: var(--universe) 0px 0px 10px;" v-html="format(player.blackhole.points.max(0))"></h2>
 				<br>
 				Planck Volumes of Black Hole<br><span class="overlayThing" v-if="hasUpgrade('darkmatter', 15)">(<span v-html="formatSmall(tmp.blackhole.matterGain)"></span>/sec)</span>
+			</div>
+		`
+	})
+	Vue.component('exomatter-display', {
+		template: `
+			<div class="currencyDisplayHeader exomatter upg uhoh">
+				<span class="overlayThing">You have </span>
+				<h2 id="points" style="color: var(--ematter); text-shadow: var(--ematter) 0px 0px 10px;" v-html="format(player.exomatter.points.max(0))"></h2> Exotic Matter
+				<br>
+				<span class="overlayThing" v-if="hasUpgrade('hyper', 54)">(<span v-html="formatSmall(tmp.exomatter.matterGain)"></span>/sec)</span>
 			</div>
 		`
 	})
@@ -514,9 +524,9 @@ function loadVue() {
 		template: `
 		<div v-if="player.matter.unlocked" class="hyper upg" style="width: 514px; max-width: calc(100vw - 40px); position: relative; min-height: 0;">
 			<h2>Matter Combustor</h2><br>
-			<span><span v-html="format(player.matter.points)"></span> Matter<span v-if="player.antimatter.unlocked"> | <span v-html="formatWhole(player.antimatter.points)"></span> AM</span><span v-if="player.darkmatter.unlocked"> | <span v-html="formatWhole(player.darkmatter.points)"></span> DM</span><span v-if="player.matter.umf.gte(1)"> | <span v-html="formatWhole(player.matter.umf)"></span> UMF</span><br>
+			<span><span v-html="format(player.matter.points)"></span> Matter<span v-if="player.antimatter.unlocked"> | <span v-html="formatWhole(player.antimatter.points)"></span> AM</span><span v-if="player.darkmatter.unlocked"> | <span v-html="formatWhole(player.darkmatter.points)"></span> DM</span><span v-if="player.exomatter.unlocked"> | <span v-html="formatWhole(player.exomatter.points)"></span> EM</span><span v-if="player.matter.umf.gte(1)"> | <span v-html="formatWhole(player.matter.umf)"></span> UMF</span><br>
 			<span v-if="player.matter.umf.gte(1)">Ultimate Matter Fragments are boosting HRP, SRP, RP, $ and Power <span v-html="formatBoost(tmp.matter.ultimateEffect, true)"></span></span><br></span>
-			<br v-if="player.machine.matter"><br v-if="player.machine.matter"><tree :data="[['matter', 'antimatter', 'darkmatter']]" v-if="player.machine.matter"></tree>
+			<br v-if="player.machine.matter"><br v-if="player.machine.matter"><tree :data="[['matter', 'antimatter', 'darkmatter', 'exomatter']]" v-if="player.machine.matter"></tree>
 			<button style="width: 4rem; height: 4rem; background-color: transparent; text-align: center; min-height: 2rem; position: absolute; top: -0.5rem; left: -0.5rem; border: none;" onclick="player.machine.matter = !player.machine.matter" class="minButton">{{player.machine.matter?'▼':'▶'}}</button>
 		</div>
 		`
@@ -548,7 +558,18 @@ function loadVue() {
 	Vue.component('milestones-upgbox', {
 		props: ['layer', 'data'],
 		template: `
-		<div v-if="tmp[layer].milestones" style="width: fit-content; display: flex; flex-direction: column; overflow-x: clip;" v-bind:class="{upg: true, [layer]: true}">
+		<div v-if="tmp[layer].milestones" style="width: fit-content; display: flex; flex-direction: column; overflow-x: clip; margin-left: auto; margin-right: auto;" v-bind:class="{upg: true, [layer]: true}">
+			<h2>Milestones</h2><h3>of {{ tmp[layer].resetName }}</h3><br><br>
+			<milestone :layer = "layer" :data = "id" v-bind:style="tmp[layer].componentStyles.milestone" v-for="id in (data === undefined ? Object.keys(tmp[layer].milestones) : data)" v-if="tmp[layer].milestones[id]!== undefined && tmp[layer].milestones[id].unlocked && milestoneShown(layer, id)">
+				</milestone>
+		</div>
+		`
+	})
+
+	Vue.component('milestones-upgbox-unst', {
+		props: ['layer', 'data'],
+		template: `
+		<div v-if="tmp[layer].milestones" style="width: fit-content; display: flex; flex-direction: column; overflow-x: clip; margin-left: auto; margin-right: auto;" v-bind:class="{upg: true, radio: true}">
 			<h2>Milestones</h2><h3>of {{ tmp[layer].resetName }}</h3><br><br>
 			<milestone :layer = "layer" :data = "id" v-bind:style="tmp[layer].componentStyles.milestone" v-for="id in (data === undefined ? Object.keys(tmp[layer].milestones) : data)" v-if="tmp[layer].milestones[id]!== undefined && tmp[layer].milestones[id].unlocked && milestoneShown(layer, id)">
 				</milestone>

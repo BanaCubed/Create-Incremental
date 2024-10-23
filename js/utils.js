@@ -12,7 +12,6 @@ function formatID(layer = 'cash', type = 'upgrades', id = 11) {
     if(layer == 'darkmatter') { text = 'Dm' }
     if(layer == 'blackhole') { text = 'Bh' }
     if(layer == 'exomatter') { text = 'Em' }
-    if(layer == 'unstable') { text = 'Um' }
 
     if(type == 'upgrades') { text = text + 'U' }
     if(type == 'buyables') { text = text + 'B' }
@@ -20,7 +19,7 @@ function formatID(layer = 'cash', type = 'upgrades', id = 11) {
     if(type == 'challenges') { text = text + 'C' }
     if(type == 'pylons') { text = text + 'Py' }
 
-    if((type == 'upgrades' || type == 'buyables' || type == 'challenges') && layer != 'hyper') {
+    if((type == 'upgrades' || type == 'buyables' || type == 'challenges') && layer != 'hyper' && layer != 'antimatter') {
         if(id == 17) { text = text + '∞' }
         if(id == 11) { text = text + '1' }
         if(id == 12) { text = text + '2' }
@@ -69,6 +68,16 @@ function formatID(layer = 'cash', type = 'upgrades', id = 11) {
         if(id == 52) { text = text + '5-2' }
         if(id == 53) { text = text + '5-3' }
         if(id == 54) { text = text + '5-4' }
+	} else if(type == 'upgrades' && layer == 'antimatter') {
+        if(id == 11) { text = text + '1' }
+        if(id == 12) { text = text + '2' }
+        if(id == 13) { text = text + '3' }
+        if(id == 14) { text = text + '4' }
+        if(id == 15) { text = text + '5' }
+        if(id == 21) { text = text + '6' }
+        if(id == 22) { text = text + '7' }
+        if(id == 23) { text = text + '8' }
+        if(id == 17) { text = text + '∞' }
 	}
 
     return text

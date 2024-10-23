@@ -43,7 +43,9 @@ addLayer('chall', {
                     if(!player.matter.unlocked) { return player.hyper.upgrades.length / 17 }
                     if(!player.antimatter.unlocked) { return player.hyper.points.div(250000) }
                     if(!player.darkmatter.unlocked) { return player.hyper.points.div(2.5e8) }
-                    if(true) { return player.hyper.points.div(1e18) }
+                    if(!player.exomatter.unlocked) { return player.hyper.points.div(5e16) }
+                    if(!hasMilestone('exomatter', 2)) { return player.exomatter.unstable.div(2.5e4) }
+                    return Math.random()
                 }
             },
             unlocked(){return true},
@@ -53,9 +55,10 @@ addLayer('chall', {
             baseStyle: {
                 'background-color': 'var(--background)',
             },
-            textStyle: {
-                'text-shadow': 'black 0 0 0.5rem'
-            },
+            textStyle() { return {
+                'text-shadow': 'black 0 0 0.5rem',
+                'color': hasMilestone('exomatter', 2)?`rgb(${Math.floor(Math.random()*100)+155}, ${Math.floor(Math.random()*100)+155}, ${Math.floor(Math.random()*100)+155})`:'white',
+            }},
             display() {
                 if(!player.rebirth.unlocked) { return `Purchase ${options.upgID?'$U6':'cash upgrade 6'} to unlock Rebirth<br>${format(player.points)}/$${format(599.99)}` }
                 if(!player.super.unlocked) { return `Purchase ${options.upgID?'RU12':'Rebirth upgrade 12'} to unlock Super Rebirth<br>${formatWhole(player.rebirth.points)}/${formatWhole(1250)} RP` }
@@ -74,7 +77,9 @@ addLayer('chall', {
                     if(!player.matter.unlocked) { return `Unlock the Matter Combustor to unlock Matter` }
                     if(!player.antimatter.unlocked) { return `Unlock the Antimatter Chamber to unlock Antimatter` }
                     if(!player.darkmatter.unlocked) { return `Unlock the Black Hole Container to unlock Dark Matter` }
-                    if(true) { return `Unlock the Matter Stabiliser to unlock Exotic Matter` }
+                    if(!player.exomatter.unlocked) { return `Unlock the Matter Stabiliser to unlock Exotic Matter` }
+                    if(!hasMilestone('exomatter', 2)) { return `Reach ${formatWhole(2.5e4)} Unstable Matter to reach the fourth and final UMF<br>${format(player.exomatter.unstable)}/${formatWhole(2.5e4)}` }
+                    if(true) { return `WARNING: Universal Complexity rising to unstable levels` }
                 }
             },
             nextColor() {
@@ -88,6 +93,8 @@ addLayer('chall', {
                 if(true) {
                     if(player.hyper.subLayers < 1) { return 'var(--hyper)' }
                     if(!hasUpgrade('hyper', 54)) { return 'var(--hyper)' }
+                    if(!hasMilestone('exomatter', 2)) { return 'var(--radio)' }
+                    return `rgb(${Math.floor(Math.random()*100)+55}, ${Math.floor(Math.random()*100)+55}, ${Math.floor(Math.random()*100)+55})`
                 }
             },
             fillStyle() { return {
@@ -116,6 +123,7 @@ addLayer('chall', {
         if(hasUpgrade('matter', 12)) { time = time.times(tmp.matter.upgrades[12].effect) }
         if(hasUpgrade('antimatter', 12)) { time = time.times(tmp.antimatter.upgrades[12].effect) }
         if(hasUpgrade('darkmatter', 15)) { time = time.times(tmp.blackhole.effect) }
+        if(hasUpgrade('exomatter', 12)) { time = time.times(tmp.exomatter.upgrades[12].effect) }
         return time
     },
 })
