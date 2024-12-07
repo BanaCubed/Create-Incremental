@@ -27,25 +27,45 @@ let winText = `Congratulations! You have reached the end and beaten this game, b
 // (The ones here are examples, all official functions are already taken care of)
 var doNotCallTheseFunctionsEveryTick = ["blowUpEverything"]
 
+/**
+ * Returns the initial amount of "points".
+ * 
+ * This can be based off of conditions, but is only read on a reset of row >=1.
+ * @returns {Decimal}
+ */
 function getStartPoints(){
     return new Decimal(modInfo.initialStartPoints)
 }
 
-// Determines if it should show points/sec
+/**
+ * Determines whether the points/sec should appear and whether points are generated (see {@link getPointGen}).
+ * @returns {boolean}
+ */
 function canGenPoints(){
 	return true
 }
 
-// Calculate points/sec!
+/**
+ * Calculates points/sec.
+ * @returns {Decimal}
+ */
 function getPointGen() {
 	if(!canGenPoints())
 		return new Decimal(0)
 
-	let gain = new Decimal(1)
+	let gain = new Decimal(1) // <-- Change this if you want point gain to default to something other than 1
+	// v Put calculations here v
+
+
+
+	// ^ Put calculations here ^
 	return gain
 }
 
-// You can add non-layer related variables that should to into "player" and be saved here, along with default values
+/**
+ * Adds additional save data into the `player` object. Data cannot share a name with a layer, or any default TMT savedata.
+ * @returns {Object.<string, any>}
+ */
 function addedPlayerData() { return {
 }}
 
@@ -53,7 +73,12 @@ function addedPlayerData() { return {
 var displayThings = [
 ]
 
-// Determines when the game "ends"
+/**
+ * Returns true when the game has been beaten.
+ * 
+ * Default to checking if points are above some arbitrary value.
+ * @returns {boolean}
+ */
 function isEndgame() {
 	return player.points.gte(new Decimal("e280000000"))
 }
