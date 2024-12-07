@@ -7,6 +7,12 @@ const TMT_VERSION = {
 	tmtName: "Δ"
 }
 
+/**
+ * Checks the potential reset gain that a layer would gain. Uses the variables defined within a layer to calculate.
+ * @param {string} layer The layer to check.
+ * @param {string} useType Can be "none", "normal", "static", "custom" or left undefined (undefined is recommended).
+ * @returns {Decimal} Amount of reset gain.
+ */
 function getResetGain(layer, useType = null) {
 	let type = useType
 	if (!useType){ 
@@ -15,7 +21,7 @@ function getResetGain(layer, useType = null) {
 			return layers[layer].getResetGain()
 	} 
 	if(tmp[layer].type == "none")
-		return new Decimal (0)
+		return new Decimal(0)
 	if (tmp[layer].gainExp.eq(0)) return decimalZero
 	if (type=="static") {
 		if ((!tmp[layer].canBuyMax) || tmp[layer].baseAmount.lt(tmp[layer].requires)) return decimalOne
@@ -35,6 +41,13 @@ function getResetGain(layer, useType = null) {
 	}
 }
 
+/**
+ * Checks the amount of a layer's `baseAmount` value required to either increase {@link getResetGain} or get anything depending on `canMax`.
+ * @param {string} layer The layer to check.
+ * @param {boolean} canMax Determines whether a "static" or "custom" reset type should check the amount for the next gain or any gain.
+ * @param {string} useType Can be "none", "normal", "static", "custom" or left undefined (undefined is recommended).
+ * @returns {Decimal} Minimum value of `baseAmount` to increment.
+ */
 function getNextAt(layer, canMax=false, useType = null) {
 	let type = useType
 	if (!useType) {
@@ -67,16 +80,32 @@ function getNextAt(layer, canMax=false, useType = null) {
 		return layers[layer].getNextAt(canMax)
 	} else {
 		return decimalZero
-	}}
+	}
+}
 
+/**
+ * Reduces a value beyond a cap by raising excess amount to a power.
+ * 
+ * **This doesn't affect inputted variable for `value` directly, but *returns* the softcapped amount.**
+ * @param {Decimal} value Value to reduce.
+ * @param {Decimal} cap Minimum number value must be to reduce.
+ * @param {Decimal} power Power to raise `value` beyond `cap`.
+ * @returns {Decimal} Reduced value.
+ */
 function softcap(value, cap, power = 0.5) {
 	if (value.lte(cap)) return value
 	else
 		return value.pow(power).times(cap.pow(decimalOne.sub(power)))
 }
 
-// Return true if the layer should be highlighted. By default checks for upgrades only.
-function shouldNotify(layer){
+/**
+ * Checks whether or not a layer should be notified. By default checks for upgrades only.
+ * 
+ * To make this check for more than just upgrades, edit it in {@link shouldNotify | game.js}.
+ * @param {string} layer The layer to check.
+ * @returns {boolean} Whether or not the layer should be notified.
+ */
+function shouldNotify(layer) {
 	for (id in tmp[layer].upgrades){
 		if (isPlainObject(layers[layer].upgrades[id])){
 			if (canAffordUpgrade(layer, id) && !hasUpgrade(layer, id) && tmp[layer].upgrades[id].unlocked){
@@ -114,8 +143,12 @@ function shouldNotify(layer){
 	
 }
 
-function canReset(layer)
-{	
+/**
+ * Checks whether a layer can be reset.
+ * @param {string} layer The layer to check.
+ * @returns {boolean} Whether or not a layer can be reset.
+ */
+function canReset(layer) {	
 	if (layers[layer].canReset!== undefined)
 		return run(layers[layer].canReset, layers[layer])
 	else if(tmp[layer].type == "normal")
@@ -126,6 +159,13 @@ function canReset(layer)
 		return false
 }
 
+/**
+ * Not to be confused with {@link resetRow}
+ * 
+ * Resets all layers up to the n-th row as a specified layer.
+ * @param {number} row The row to reset up to.
+ * @param {string} layer The layer to reset as.
+ */
 function rowReset(row, layer) {
 	for (lr in ROW_LAYERS[row]){
 		if(layers[lr].doReset) {
@@ -137,6 +177,11 @@ function rowReset(row, layer) {
 	}
 }
 
+/**
+ * Resets all data within a layer, except for that listed in `keep`.
+ * @param {string} layer The layer to reset.
+ * @param {string[]} keep Array of keys of values to keep within the layer's saved data.
+ */
 function layerDataReset(layer, keep = []) {
 	let storedData = {unlocked: player[layer].unlocked, forceTooltip: player[layer].forceTooltip, noRespecConfirm: player[layer].noRespecConfirm, prevTab:player[layer].prevTab} // Always keep these
 
@@ -160,18 +205,33 @@ function layerDataReset(layer, keep = []) {
 	}
 }
 
-
-
+/**
+ * Increases base points of a certain layer. Also increases best points and total points as needed.
+ * @param {string} layer The layer to increase points of.
+ * @param {Decimal} gain Amount to gain.
+ */
 function addPoints(layer, gain) {
 	player[layer].points = player[layer].points.add(gain).max(0)
 	if (player[layer].best) player[layer].best = player[layer].best.max(player[layer].points)
 	if (player[layer].total) player[layer].total = player[layer].total.add(gain)
 }
 
+/**
+ * Increases base points of a certain layer based on `resetGain`. `diff` should be taken from `diff` in a layer's update function.
+ * 
+ * Most common use will be (in `update(diff)`) `generatePoints(this.layer, diff)`, or `generatePoints(this.layer, Decimal.times(diff, n))` where n is % of `resetGain` to generate each second.
+ * @param {string} layer The layer to increase points of.
+ * @param {(Decimal|number)} diff Direct multiplier to `resetGain`.
+ */
 function generatePoints(layer, diff) {
 	addPoints(layer, tmp[layer].resetGain.times(diff))
 }
 
+/**
+ * Resets a layer, gaining all appropriate resources and resetting previous rows. By default will do nothing if layer cannot be reset.
+ * @param {string} layer The layer to reset.
+ * @param {boolean} force If true, nothing will be gained, and will reset regardless of `canReset`.
+ */
 function doReset(layer, force=false) {
 	if (tmp[layer].type == "none") return
 	let row = tmp[layer].row
@@ -229,6 +289,13 @@ function doReset(layer, force=false) {
 	updateTemp()
 }
 
+/**
+ * Not to be confused with {@link rowReset}.
+ * Forcefully resets a row, completely.
+ * 
+ * This resets whether a layer within the row is unlocked.
+ * @param {number} row 
+ */
 function resetRow(row) {
 	if (prompt('Are you sure you want to reset this row? It is highly recommended that you wait until the end of your current run before doing this! Type "I WANT TO RESET THIS" to confirm')!="I WANT TO RESET THIS") return
 	let pre_layers = ROW_LAYERS[row-1]
@@ -245,6 +312,11 @@ function resetRow(row) {
 	resizeCanvas();
 }
 
+/**
+ * Enters a challenge if unlocked, and exits if already inside the same challenge. Resets previous rows.
+ * @param {string} layer The layer to enter a challenge in.
+ * @param {number} x ID of a challenge within `layer` to enter.
+ */
 function startChallenge(layer, x) {
 	let enter = false
 	if (!player[layer].unlocked || !tmp[layer].challenges[x].unlocked || !canEnterChallenge(layer, x)) return
@@ -267,8 +339,15 @@ function startChallenge(layer, x) {
 	updateChallengeTemp(layer)
 }
 
-function canCompleteChallenge(layer, x)
-{
+/**
+ * Checks whether a challenge can be completed.
+ * 
+ * If the challenge is not currently being run, returns `null`.
+ * @param {string} layer The layer to check a challenge in.
+ * @param {number} x ID of a challenge within `layer` to check.
+ * @returns {?boolean} Whether a given challenge can be completed currently.
+ */
+function canCompleteChallenge(layer, x) {
 	if (x != player[layer].activeChallenge) return
 	let challenge = tmp[layer].challenges[x]
 	if (challenge.canComplete !== undefined) return challenge.canComplete
@@ -289,9 +368,13 @@ function canCompleteChallenge(layer, x)
 	else {
 		return !(player.points.lt(challenge.goal))
 	}
-
 }
 
+/**
+ * Completes a challenge. Does nothing if the challenge cannot be completed, or if the challenge is not being run.
+ * @param {string} layer The layer to complete a challenge in.
+ * @param {number} x ID of a challenge within `layer` to complete.
+ */
 function completeChallenge(layer, x) {
 	var x = player[layer].activeChallenge
 	if (!x) return
@@ -316,7 +399,10 @@ function completeChallenge(layer, x) {
 VERSION.withoutName = "v" + VERSION.num + (VERSION.pre ? " Pre-Release " + VERSION.pre : VERSION.pre ? " Beta " + VERSION.beta : "")
 VERSION.withName = VERSION.withoutName + (VERSION.name ? ": " + VERSION.name : "")
 
-
+/**
+ * Attempts to buy *all* upgrades within an upgrade when run. This must be run every in-game tick to actually autobuy.
+ * @param {string} layer The layer to buy *all* upgrades in.
+ */
 function autobuyUpgrades(layer){
 	if (!tmp[layer].upgrades) return
 	for (id in tmp[layer].upgrades)
@@ -324,6 +410,10 @@ function autobuyUpgrades(layer){
 			buyUpg(layer, id) 
 }
 
+/**
+ * Runs the game loop. This should not be manually run.
+ * @param {number} diff Time in seconds since last run of `gameLoop`.
+ */
 function gameLoop(diff) {
 	if (isEndgame() || tmp.gameEnded){
 		tmp.gameEnded = true
@@ -389,6 +479,10 @@ function gameLoop(diff) {
 
 }
 
+/**
+ * Resets everything under the `player` object irreversibly. This should not be remotely involved in the main gameplay.
+ * @param {boolean} resetOptions Whether to reset the `options` object as well.
+ */
 function hardReset(resetOptions) {
 	if (!confirm("Are you sure you want to do this? You will lose all your progress!")) return
 	player = null

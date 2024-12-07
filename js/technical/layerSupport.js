@@ -6,8 +6,12 @@ const decimalNaN = new Decimal(NaN)
 
 const defaultGlow = "#ff0000"
 
-
-function layerShown(layer){
+/**
+ * Checks whether a layer is shown. This can return `"ghost"` if the layer's visibility is set to it.
+ * @param {string} layer The layer to check.
+ * @returns {(boolean | "ghost")} The visibility of the layer.
+ */
+function layerShown(layer) {
     return tmp[layer].layerShown;
 }
 
@@ -210,7 +214,12 @@ function setupLayer(layer){
     
 }
 
-
+/**
+ * Adds a layer to the game, see {@link https://github.com/Acamaeda/The-Modding-Tree/blob/master/docs/layer-features.md docs/layer-features.md} for more info.
+ * @param {string} layerName ID of layer to use, should either be as short as possible or the name of the layer. **Remember this, as most things use it.**
+ * @param {Layer} layerData The data object of the layer.
+ * @param {?string[]} tabLayers Overrides `tabFormat` with an array of layer ids (cannot include self) to use `tabFormat`s as subtabs.
+ */
 function addLayer(layerName, layerData, tabLayers = null){ // Call this to add layers from a different file!
     layers[layerName] = layerData
     layers[layerName].isLayer = true
