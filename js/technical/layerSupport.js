@@ -9,7 +9,7 @@ const defaultGlow = "#ff0000"
 /**
  * Checks whether a layer is shown. This can return `"ghost"` if the layer's visibility is set to it.
  * @param {string} layer The layer to check.
- * @returns {(boolean | "ghost")} The visibility of the layer.
+ * @returns {(boolean | "ghost")}
  */
 function layerShown(layer) {
     return tmp[layer].layerShown;
@@ -21,8 +21,10 @@ var hotkeys = {};
 
 var maxRow = 0;
 
-function updateHotkeys()
-{
+/**
+ * Empties the `hotkeys` object and fills it up with hotkeys from all layers.
+ */
+function updateHotkeys() {
     hotkeys = {};
     for (layer in layers){
         hk = layers[layer].hotkeys
@@ -42,6 +44,9 @@ var ROW_LAYERS = {}
 var TREE_LAYERS = {}
 var OTHER_LAYERS = {}
 
+/**
+ * Empties all `LAYERS` objects and fills them up with all the currently added layers.
+ */
 function updateLayers(){
     LAYERS = Object.keys(layers);
     ROW_LAYERS = {}
@@ -68,6 +73,10 @@ function updateLayers(){
     updateHotkeys()
 }
 
+/**
+ * Sets up a layer, adding all features listed as **assigned automagically** to the layer.
+ * @param {string} layer The layer to setup.
+ */
 function setupLayer(layer){
     layers[layer].layer = layer
     if (layers[layer].upgrades){
@@ -216,7 +225,7 @@ function setupLayer(layer){
 
 /**
  * Adds a layer to the game, see {@link https://github.com/Acamaeda/The-Modding-Tree/blob/master/docs/layer-features.md docs/layer-features.md} for more info.
- * @param {string} layerName ID of layer to use, should either be as short as possible or the name of the layer. **Remember this, as most things use it.**
+ * @param {string} layerName ID of layer to use, should either be as short as possible or the name of the layer. Must be exclusive to this layer. **Remember this, as most things use it.**
  * @param {Layer} layerData The data object of the layer.
  * @param {?string[]} tabLayers Overrides `tabFormat` with an array of layer ids (cannot include self) to use `tabFormat`s as subtabs.
  */
@@ -245,12 +254,22 @@ function addLayer(layerName, layerData, tabLayers = null){ // Call this to add l
     }
 }
 
+/**
+ * Similar to {@link addLayer}, but flags it as not being a layer.
+ * @param {string} layerName ID of the node to use, can not be used by any existing layers or nodes.
+ * @param {Layer} layerData Added data to be passed onto the node. Normally required attributes of a Layer are not required here.
+ */
 function addNode(layerName, layerData){ // Does the same thing, but for non-layer nodes
     layers[layerName] = layerData
     layers[layerName].isLayer = false
 }
 
-// If data is a function, return the result of calling it. Otherwise, return the data.
+/**
+ * Returns `data`, or runs (and returns result of) `data` depending on if it is a function.
+ * @param {(* | function(): any)} data Data to return or run.
+ * @param {*} args Arguments to parse onto data when it gets run.
+ * @returns {?}
+ */
 function readData(data, args=null){
 	if ((!!data && data.constructor && data.call && data.apply))
 		return data(args);
@@ -258,6 +277,10 @@ function readData(data, args=null){
 		return data;
 }
 
+/**
+ * Adds the `rows` and `cols` attritbues to an Upgrades object if they are absent.
+ * @param {Upgrades} upgrades The object to add `rows` and `cols` to.
+ */
 function setRowCol(upgrades) {
     if (upgrades.rows && upgrades.cols) return
     let maxRow = 0
@@ -272,6 +295,11 @@ function setRowCol(upgrades) {
     upgrades.cols = maxCol
 }
 
+/**
+ * Checks whether any layer within a row is unlocked.
+ * @param {number} row Row to check.
+ * @returns {boolean}
+ */
 function someLayerUnlocked(row){
     for (layer in ROW_LAYERS[row])
         if (player[layer].unlocked)

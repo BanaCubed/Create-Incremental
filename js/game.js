@@ -11,7 +11,7 @@ const TMT_VERSION = {
  * Checks the potential reset gain that a layer would gain. Uses the variables defined within a layer to calculate.
  * @param {string} layer The layer to check.
  * @param {string} useType Can be "none", "normal", "static", "custom" or left undefined (undefined is recommended).
- * @returns {Decimal} Amount of reset gain.
+ * @returns {Decimal}
  */
 function getResetGain(layer, useType = null) {
 	let type = useType
@@ -46,7 +46,7 @@ function getResetGain(layer, useType = null) {
  * @param {string} layer The layer to check.
  * @param {boolean} canMax Determines whether a "static" or "custom" reset type should check the amount for the next gain or any gain.
  * @param {string} useType Can be "none", "normal", "static", "custom" or left undefined (undefined is recommended).
- * @returns {Decimal} Minimum value of `baseAmount` to increment.
+ * @returns {Decimal}
  */
 function getNextAt(layer, canMax=false, useType = null) {
 	let type = useType
@@ -90,7 +90,7 @@ function getNextAt(layer, canMax=false, useType = null) {
  * @param {Decimal} value Value to reduce.
  * @param {Decimal} cap Minimum number value must be to reduce.
  * @param {Decimal} power Power to raise `value` beyond `cap`.
- * @returns {Decimal} Reduced value.
+ * @returns {Decimal}
  */
 function softcap(value, cap, power = 0.5) {
 	if (value.lte(cap)) return value
@@ -103,7 +103,7 @@ function softcap(value, cap, power = 0.5) {
  * 
  * To make this check for more than just upgrades, edit it in {@link shouldNotify | game.js}.
  * @param {string} layer The layer to check.
- * @returns {boolean} Whether or not the layer should be notified.
+ * @returns {boolean}
  */
 function shouldNotify(layer) {
 	for (id in tmp[layer].upgrades){
@@ -146,7 +146,7 @@ function shouldNotify(layer) {
 /**
  * Checks whether a layer can be reset.
  * @param {string} layer The layer to check.
- * @returns {boolean} Whether or not a layer can be reset.
+ * @returns {boolean}
  */
 function canReset(layer) {	
 	if (layers[layer].canReset!== undefined)
@@ -208,7 +208,7 @@ function layerDataReset(layer, keep = []) {
 /**
  * Increases base points of a certain layer. Also increases best points and total points as needed.
  * @param {string} layer The layer to increase points of.
- * @param {Decimal} gain Amount to gain.
+ * @param {Decimal} gain
  */
 function addPoints(layer, gain) {
 	player[layer].points = player[layer].points.add(gain).max(0)
@@ -342,10 +342,10 @@ function startChallenge(layer, x) {
 /**
  * Checks whether a challenge can be completed.
  * 
- * If the challenge is not currently being run, returns `null`.
+ * If the challenge is not currently being run, returns `undefined`.
  * @param {string} layer The layer to check a challenge in.
  * @param {number} x ID of a challenge within `layer` to check.
- * @returns {?boolean} Whether a given challenge can be completed currently.
+ * @returns {(boolean | undefined)}
  */
 function canCompleteChallenge(layer, x) {
 	if (x != player[layer].activeChallenge) return

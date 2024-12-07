@@ -1,5 +1,10 @@
 var app;
 
+/**
+ * Loads all Vue Components.
+ * 
+ * This should only be run when the game is first launched.
+ */
 function loadVue() {
 	// data = a function returning the content (actually HTML)
 	Vue.component('display-text', {
