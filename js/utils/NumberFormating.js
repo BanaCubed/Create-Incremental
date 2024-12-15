@@ -4,7 +4,7 @@ function coolDynamicFormat(num, precision) {
 }
 
 function exponentialFormat(num, precision, mantissa = true) {
-    let e = num.log10().floor()
+    let e = num.max(1).log10().floor()
     let m = num.div(Decimal.pow(10, e))
     if (m.toStringWithDecimalPlaces(precision) == 10) {
         m = decimalOne
@@ -149,7 +149,7 @@ function formatSmall(x, precision=2) {
 }
 
 function invertOOM(x){
-    let e = x.log10().ceil()
+    let e = x.max(1).log10().ceil()
     let m = x.div(Decimal.pow(10, e))
     e = e.neg()
     x = new Decimal(10).pow(e).times(m)

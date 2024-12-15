@@ -226,7 +226,7 @@ addLayer("SR", {
             rewardDescription: "Unlock Power Pylon D, and $ boosts SRP gain slightly",
             goalDescription: "Reach 4e36 RP",
             rewardEffect() {
-                return player.points.add(10).log(10).pow(0.1)
+                return player.points.add(10).max(1).log(10).pow(0.1)
             },
             rewardDisplay() {
                 return "Raising SRP cost by ^" + coolDynamicFormat(new Decimal(1).div(this.rewardEffect()), 4)
@@ -270,7 +270,7 @@ addLayer("SR", {
     position: 0,
     gainExp() {
         let expo = new Decimal(1)
-        if(hasChallenge('SR', 22)) expo = expo.times(player.points.add(10).log(10).pow(0.1))
+        if(hasChallenge('SR', 22)) expo = expo.times(player.points.add(10).max(1).log(10).pow(0.1))
         if(hasUpgrade('SR', 12)) expo = expo.times(1.5)
         return expo
     },
@@ -856,12 +856,12 @@ function pPylon(pylon, pylons, pylobs) {
 	if (hasUpgrade('HC', 41) && pylon == 'A') effect = effect.times(tmp.UMF.effect2)
 	if (hasUpgrade('U', 54 && (pylon == 'A' || pylon == 'B' || pylon == 'C'))) effect = effect.times(2)
 
-	if (hasChallenge('SR', 31) && pylon == 'A') effect = effect.times(player.P.points.add(tmp.SR.challenges[31].rewardEffect).log(tmp.SR.challenges[31].rewardEffect))
-	if (hasChallenge('SR', 31) && pylon == 'B') effect = effect.times(player.P.pylonA.add(tmp.SR.challenges[31].rewardEffect).log(tmp.SR.challenges[31].rewardEffect))
-	if (hasChallenge('SR', 31) && pylon == 'C') effect = effect.times(player.P.pylonB.add(tmp.SR.challenges[31].rewardEffect).log(tmp.SR.challenges[31].rewardEffect))
-	if (hasChallenge('SR', 31) && pylon == 'D') effect = effect.times(player.P.pylonC.add(tmp.SR.challenges[31].rewardEffect).log(tmp.SR.challenges[31].rewardEffect))
-	if (hasChallenge('SR', 31) && pylon == 'E') effect = effect.times(player.P.pylonD.add(tmp.SR.challenges[31].rewardEffect).log(tmp.SR.challenges[31].rewardEffect))
-	if (hasChallenge('SR', 31) && pylon == 'F') effect = effect.times(player.P.pylonE.add(tmp.SR.challenges[31].rewardEffect).log(tmp.SR.challenges[31].rewardEffect))
+	if (hasChallenge('SR', 31) && pylon == 'A') effect = effect.times(player.P.points.add(tmp.SR.challenges[31].rewardEffect).max(1).log(tmp.SR.challenges[31].rewardEffect))
+	if (hasChallenge('SR', 31) && pylon == 'B') effect = effect.times(player.P.pylonA.add(tmp.SR.challenges[31].rewardEffect).max(1).log(tmp.SR.challenges[31].rewardEffect))
+	if (hasChallenge('SR', 31) && pylon == 'C') effect = effect.times(player.P.pylonB.add(tmp.SR.challenges[31].rewardEffect).max(1).log(tmp.SR.challenges[31].rewardEffect))
+	if (hasChallenge('SR', 31) && pylon == 'D') effect = effect.times(player.P.pylonC.add(tmp.SR.challenges[31].rewardEffect).max(1).log(tmp.SR.challenges[31].rewardEffect))
+	if (hasChallenge('SR', 31) && pylon == 'E') effect = effect.times(player.P.pylonD.add(tmp.SR.challenges[31].rewardEffect).max(1).log(tmp.SR.challenges[31].rewardEffect))
+	if (hasChallenge('SR', 31) && pylon == 'F') effect = effect.times(player.P.pylonE.add(tmp.SR.challenges[31].rewardEffect).max(1).log(tmp.SR.challenges[31].rewardEffect))
 
 	effect = effect.times(tmp.U.buyables[12].effect)
 	if (hasUpgrade('SR', 13)) effect = effect.pow(1.2)

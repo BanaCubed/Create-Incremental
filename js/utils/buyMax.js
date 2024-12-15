@@ -179,7 +179,7 @@ function buyMax(item = "None") {
     // Current Optimisation - Very Good
 
     if(item === "Cash") {
-        let buy1 = player.points.add(1).log(10).sub(5).ceil()
+        let buy1 = player.points.add(1).max(1).log(10).sub(5).ceil()
         if(hasMilestone('UMF', 2)) buy1 = buy1.times(tmp.UMF.milestones[2].effect)
         if(buy1.gte(getBuyableAmount('U', 11))) setBuyableAmount('U', 11, buy1)
 
@@ -226,14 +226,14 @@ function buyMax(item = "None") {
     if(item === "Rebirth") {
         let buy1expo = new Decimal(2)
         if(hasChallenge('SR', 21)) buy1expo = buy1expo.sub(0.5)
-        let buy1 = player.R.points.div(20000).add(1).log(10).div(new Decimal(1.2).log(10)).pow(new Decimal(1).div(buy1expo)).ceil()
+        let buy1 = player.R.points.div(20000).add(1).max(1).log(10).div(new Decimal(1.2).max(1).log(10)).pow(new Decimal(1).div(buy1expo)).ceil()
 
         if(buy1.gte(getBuyableAmount('R', 11))) setBuyableAmount('R', 11, buy1)
 
         
         let buy2expo = new Decimal(2)
         if(hasChallenge('SR', 21)) buy2expo = buy2expo.sub(0.25)
-        let buy2 = player.R.points.div(1000000).add(1).log(10).div(new Decimal(3).log(10)).pow(new Decimal(1).div(buy2expo)).ceil()
+        let buy2 = player.R.points.div(1000000).add(1).max(1).log(10).div(new Decimal(3).max(1).log(10)).pow(new Decimal(1).div(buy2expo)).ceil()
 
         if(buy2.gte(getBuyableAmount('R', 12))) setBuyableAmount('R', 12, buy2)
     }
@@ -247,9 +247,9 @@ function buyMax(item = "None") {
         let buy1
         if(hasMilestone('BH', 0)) countmult = countmult.times(2)
         if(player.DM.points.gte(Decimal.times(100, (Decimal.pow(2, 400))))) {
-            buy1 = player.DM.points.div(100).log(2).div(400).pow(0.5).times(401).ceil().times(countmult).add(1)
+            buy1 = player.DM.points.div(100).max(1).log(2).div(400).pow(0.5).times(401).ceil().times(countmult).add(1)
         } else {
-            buy1 = player.DM.points.div(100).log(2).floor().times(countmult).add(1)
+            buy1 = player.DM.points.div(100).max(1).log(2).floor().times(countmult).add(1)
         }
         if(buy1.gte(getBuyableAmount('DM', 11))) setBuyableAmount('DM', 11, buy1)
         
@@ -284,8 +284,8 @@ function buyMax(item = "None") {
         let buyBH1
         let buyBH2
         if(player.BH.points.gt(0)) {
-            buyBH1 = player.DM.points.log(10).div(Decimal.log(1000, 10)).log(10).div(Decimal.log(1.1, 10)).floor()
-            buyBH2 = player.DM.points.log(10).div(Decimal.log(1000000, 10)).log(10).div(Decimal.log(1.4, 10)).floor()
+            buyBH1 = player.DM.points.max(1).log(10).div(Decimal.max(1).log(1000, 10)).max(1).log(10).div(Decimal.max(1).log(1.1, 10)).floor()
+            buyBH2 = player.DM.points.max(1).log(10).div(Decimal.max(1).log(1000000, 10)).max(1).log(10).div(Decimal.max(1).log(1.4, 10)).floor()
 
             if(buyBH1.gte(getBuyableAmount('BH', 11))) setBuyableAmount('BH', 11, buyBH1)
             if(buyBH2.gte(getBuyableAmount('BH', 12))) setBuyableAmount('BH', 12, buyBH2)
@@ -294,11 +294,11 @@ function buyMax(item = "None") {
 
     if(item === "EMatter") {
         let buy1
-        if(player.EM.points.div(10).add(1).log(1.5).gte(250)) {
-            buy1 = player.EM.points.div(10).add(1).log(1.5)
+        if(player.EM.points.div(10).add(1).max(1).log(1.5).gte(250)) {
+            buy1 = player.EM.points.div(10).add(1).max(1).log(1.5)
             buy1 = buy1.sub(250).pow(0.5).add(250)
         } else {
-            buy1 = player.EM.points.div(10).add(1).log(1.5)
+            buy1 = player.EM.points.div(10).add(1).max(1).log(1.5)
         }
         if(hasUpgrade('EM', 22)) buy1 = buy1.times(2)
         buy1 = buy1.floor().add(1)
@@ -310,11 +310,11 @@ function buyMax(item = "None") {
 
         
         let buy2
-        if(player.EM.points.div(1e25).add(1).log(5).gte(250)) {
-            buy2 = player.EM.points.div(1e25).add(1).log(5)
+        if(player.EM.points.div(1e25).add(1).max(1).log(5).gte(250)) {
+            buy2 = player.EM.points.div(1e25).add(1).max(1).log(5)
             buy2 = buy2.sub(150).pow(0.5).add(150)
         } else {
-            buy2 = player.EM.points.div(1e25).add(1).log(5)
+            buy2 = player.EM.points.div(1e25).add(1).max(1).log(5)
         }
         if(hasUpgrade('EM', 22)) buy2 = buy2.times(2)
         buy2 = buy2.floor().add(1)

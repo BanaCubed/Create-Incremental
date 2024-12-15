@@ -158,12 +158,10 @@ function showTab(name, prev) {
 }
 
 function showNavTab(name, prev) {
-	console.log(prev)
 	if (LAYERS.includes(name) && !layerunlocked(name)) return
 	if (player.navTab !== name) clearParticles(function(p) {return p.layer === player.navTab})
 	if (tmp[name] && tmp[name].previousTab !== undefined) prev = tmp[name].previousTab
 	var toTreeTab = name == "tree-tab"
-	console.log(name + prev)
 	if (name!== "none" && prev && !tmp[prev]?.leftTab == !tmp[name]?.leftTab) player[name].prevTab = prev
 	else if (player[name])
 		player[name].prevTab = ""
@@ -288,10 +286,8 @@ function addTime(diff, layer) {
 
 	//I am not that good to perfectly fix that leak. ~ DB Aarex
 	if (time + 0 !== time) {
-		console.log("Memory leak detected. Trying to fix...")
 		time = toNumber(time)
 		if (isNaN(time) || time == 0) {
-			console.log("Couldn't fix! Resetting...")
 			time = layer ? player.timePlayed : 0
 			if (!layer) player.timePlayedReset = true
 		}

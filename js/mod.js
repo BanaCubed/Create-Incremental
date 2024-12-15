@@ -51,28 +51,28 @@ function getPointGen(softcaps = true) {
 		if (hasUpgrade('U', 11) || inChallenge('SR', 22)) gain = gain.add(1)
 
 		if (hasUpgrade('U', 12)) gain = gain.times(4)
-		if (hasUpgrade('U', 13) && !hasUpgrade('U', 23)) gain = gain.times(player.points.add(5).log(5))
-		if (hasUpgrade('U', 13) && hasUpgrade('U', 23)) gain = gain.times(player.points.add(3).log(3))
+		if (hasUpgrade('U', 13) && !hasUpgrade('U', 23)) gain = gain.times(player.points.add(5).max(1).log(5))
+		if (hasUpgrade('U', 13) && hasUpgrade('U', 23)) gain = gain.times(player.points.add(3).max(1).log(3))
 		if (hasUpgrade('U', 14)) gain = gain.times(2)
-		if (hasUpgrade('U', 22)) gain = gain.times(player.points.pow(1.5).add(8).log(8).pow(0.5))
+		if (hasUpgrade('U', 22)) gain = gain.times(player.points.pow(1.5).add(8).max(1).log(8).pow(0.5))
 		if (hasUpgrade('U', 24)) gain = gain.times(1.5)
-		if (hasUpgrade('U', 31)) gain = gain.times(player.points.add(10).log(10).pow(0.5))
+		if (hasUpgrade('U', 31)) gain = gain.times(player.points.add(10).max(1).log(10).pow(0.5))
 		if (hasUpgrade('U', 41)) gain = gain.times(10)
-		if (hasUpgrade('U', 43)) gain = gain.times(player.R.points.add(10).log(10))
+		if (hasUpgrade('U', 43)) gain = gain.times(player.R.points.add(10).max(1).log(10))
 	}
 
 	if(hasMilestone('P', 8)) {
 		if (hasUpgrade('U', 11) || inChallenge('SR', 22)) gain = gain.add(100)
 
 		if (hasUpgrade('U', 12)) gain = gain.times(5)
-		if (hasUpgrade('U', 13) && !hasUpgrade('U', 23)) gain = gain.times(player.points.add(4.5).log(3.5))
-		if (hasUpgrade('U', 13) && hasUpgrade('U', 23)) gain = gain.times(player.points.add(2.5).log(2.5))
+		if (hasUpgrade('U', 13) && !hasUpgrade('U', 23)) gain = gain.times(player.points.add(4.5).max(1).log(3.5))
+		if (hasUpgrade('U', 13) && hasUpgrade('U', 23)) gain = gain.times(player.points.add(2.5).max(1).log(2.5))
 		if (hasUpgrade('U', 14)) gain = gain.times(3)
-		if (hasUpgrade('U', 22)) gain = gain.times(player.points.pow(1.55).add(7).log(7).pow(0.5))
+		if (hasUpgrade('U', 22)) gain = gain.times(player.points.pow(1.55).add(7).max(1).log(7).pow(0.5))
 		if (hasUpgrade('U', 24)) gain = gain.times(2)
-		if (hasUpgrade('U', 31)) gain = gain.times(player.points.add(8).log(8).pow(0.5))
+		if (hasUpgrade('U', 31)) gain = gain.times(player.points.add(8).max(1).log(8).pow(0.5))
 		if (hasUpgrade('U', 41)) gain = gain.times(1000)
-		if (hasUpgrade('U', 43)) gain = gain.times(player.R.points.add(8).log(8))
+		if (hasUpgrade('U', 43)) gain = gain.times(player.R.points.add(8).max(1).log(8))
 	}
 
 	if (hasUpgrade('U', 51)) gain = gain.times(player.P.points.add(1))
@@ -121,7 +121,7 @@ function getPointGen(softcaps = true) {
 	everyTick();
 
 	if(softcaps !== false) {
-        if(gain.gte("1e5000000")) gain = new Decimal(10).pow(gain.log(10).div(5000000).pow(0.25).times(5000000))
+        if(gain.gte("1e5000000")) gain = new Decimal(10).pow(gain.max(1).log(10).div(5000000).pow(0.25).times(5000000))
 	}
 
 	return gain

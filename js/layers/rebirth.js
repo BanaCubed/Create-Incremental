@@ -22,7 +22,7 @@ addLayer("R", {
         if(baseGain.gte(1e17)) baseGain = baseGain.div(1e17).pow(0.25).times(1e17)
         if(baseGain.gte("1e2000")) baseGain = baseGain.div("1e2000").pow(0.2).times("1e2000")
         baseGain = baseGain.times(this.directMult())
-        if(baseGain.gte("1e1000000")) baseGain = baseGain.div("1e1000000").pow(new Decimal(1).div(base.log(10).sub(9999999).pow(0.05))).times("1e1000000")
+        if(baseGain.gte("1e1000000")) baseGain = baseGain.div("1e1000000").pow(new Decimal(1).div(base.max(1).log(10).sub(9999999).pow(0.05))).times("1e1000000")
         return baseGain
     },
     softcapEffects() {
@@ -40,8 +40,8 @@ addLayer("R", {
         baseGain = baseGain.times(this.directMult())
         basedGain = basedGain.times(this.directMult())
         if(baseGain.gte("1e1000000")) {
-            softcaps[0].push(baseGain.div(baseGain.div("1e1000000").pow(new Decimal(1).div(base.log(10).sub(9999999).pow(0.05))).times("1e1000000")))
-            baseGain = baseGain.div("1e1000000").pow(new Decimal(1).div(base.log(10).sub(9999999).pow(0.2))).times("1e1000000")
+            softcaps[0].push(baseGain.div(baseGain.div("1e1000000").pow(new Decimal(1).div(base.max(1).log(10).sub(9999999).pow(0.05))).times("1e1000000")))
+            baseGain = baseGain.div("1e1000000").pow(new Decimal(1).div(base.max(1).log(10).sub(9999999).pow(0.2))).times("1e1000000")
         }
         softcaps.push(basedGain)
         return softcaps
@@ -80,13 +80,13 @@ addLayer("R", {
         if (getClickableState('U', 11)) remult = remult.times(2)
         if (getClickableState('U', 12)) remult = remult.times(3)
         if (getClickableState('U', 13)) remult = remult.times(4)
-        if (hasUpgrade('U', 43) && !hasMilestone('P', 8)) remult = remult.times(player.points.add(10).log(10).add(10).log(10))
-        if (hasUpgrade('U', 43) && hasMilestone('P', 8)) remult = remult.times(player.points.add(9).log(9).add(8).log(8))
+        if (hasUpgrade('U', 43) && !hasMilestone('P', 8)) remult = remult.times(player.points.add(10).max(1).log(10).add(10).max(1).log(10))
+        if (hasUpgrade('U', 43) && hasMilestone('P', 8)) remult = remult.times(player.points.add(9).max(1).log(9).add(8).max(1).log(8))
         remult = remult.times(tmp.R.buyables[11].effect)
         remult = remult.times(tmp.SR.effect[0])
         remult = remult.times(tmp.U.buyables[11].effect)
         remult = remult.times(machineBonuses())
-        if (hasUpgrade('U', 52)) remult = remult.times(player.P.points.add(3).log(3))
+        if (hasUpgrade('U', 52)) remult = remult.times(player.P.points.add(3).max(1).log(3))
         return remult
     },
     directMult() {

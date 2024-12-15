@@ -43,7 +43,7 @@ addLayer('HC', {
     type: "custom",
     update(diff) {
         let hypEss = new Decimal(1)
-        hypEss = hypEss.times(player.points.add(10).log(10).pow(0.6).times(player.SR.points.add(1).pow(0.4)).times(player.P.points.add(10).log(10)).pow(0.25))
+        hypEss = hypEss.times(player.points.add(10).max(1).log(10).pow(0.6).times(player.SR.points.add(1).pow(0.4)).times(player.P.points.add(10).max(1).log(10)).pow(0.25))
         if(hasUpgrade('HC', 33)) hypEss = hypEss.times(tmp.C.effect[3])
         if(hypEss === null || hypEss === undefined) hypEss = new Decimal(1)
         hypEss = hypEss.times(tmp.UMF.effect2)
@@ -83,7 +83,7 @@ addLayer('HC', {
     },
     getResetGain() {
         let base = player.HC.hyperNumber.add(1).div(25).pow(1.6).floor()
-        if(hasMilestone('UMF', 2)) base = base.times(tmp.UMF.effect2.log(4).add(1))
+        if(hasMilestone('UMF', 2)) base = base.times(tmp.UMF.effect2.max(1).log(4).add(1))
         return base
     },
     getNextAt() {
@@ -228,7 +228,7 @@ addLayer('HC', {
             description: "Multiply Hyper Cash gain based on $",
 			tooltip: "log10($ + 10)^0.4",
             effectDisplay() {
-                return "x" + format(player.points.add(10).log(10).pow(0.4))
+                return "x" + format(player.points.add(10).max(1).log(10).pow(0.4))
             }
         },
         23: {
@@ -400,7 +400,7 @@ addLayer('C', {
         let base = [
             hCashB1(),
             player.C.points.add(1),
-            player.C.points.add(10).log(10).add(10).log(10),
+            player.C.points.add(10).max(1).log(10).add(10).max(1).log(10),
             player.C.points.pow(0.1).div(3).add(1)
         ]
         if(hasMilestone('UMF', 3)) base = [base[0], base[1].pow(milestoneEffect('UMF', 2)), base[2].pow(milestoneEffect('UMF', 2)), base[3].pow(milestoneEffect('UMF', 2))]
@@ -435,11 +435,11 @@ function hyperCashGain() {
 	let HCgain = new Decimal(0)
     let softcaps = []
 	if (hasMilestone('HC', 0)) HCgain = HCgain.add(0.1)
-	if (hasUpgrade('HC', 13)) HCgain = HCgain.times(player.points.add(10).log(10).pow(0.4))
+	if (hasUpgrade('HC', 13)) HCgain = HCgain.times(player.points.add(10).max(1).log(10).pow(0.4))
 	if (hasUpgrade('HC', 23)) HCgain = HCgain.times(10)
 	if (HCgain.gte(100)) {
-        softcaps.push(HCgain.div(new Decimal(100).times(new Decimal(10).pow(HCgain.div(100).log(10).add(1).log(10)))))
-        HCgain = new Decimal(100).times(new Decimal(10).pow(HCgain.div(100).log(10).add(1).log(10)))
+        softcaps.push(HCgain.div(new Decimal(100).times(new Decimal(10).pow(HCgain.div(100).max(1).log(10).add(1).max(1).log(10)))))
+        HCgain = new Decimal(100).times(new Decimal(10).pow(HCgain.div(100).max(1).log(10).add(1).max(1).log(10)))
     }
 	return [HCgain, softcaps]
 }

@@ -75,12 +75,12 @@ addLayer("U", {
             currencyInternalName: "points",
             effectDisplay() {
                 if(!hasMilestone('P', 8)) {
-                    if (hasUpgrade('U', 23) === false) return 'x' + coolDynamicFormat(player.points.add(5).log(5), 2)
-                    if (hasUpgrade('U', 23) === true) return 'x' + coolDynamicFormat(player.points.add(3).log(3), 2)
+                    if (hasUpgrade('U', 23) === false) return 'x' + coolDynamicFormat(player.points.add(5).max(1).log(5), 2)
+                    if (hasUpgrade('U', 23) === true) return 'x' + coolDynamicFormat(player.points.add(3).max(1).log(3), 2)
                 }
                 if(hasMilestone('P', 8)) {
-                    if (hasUpgrade('U', 23) === false) return 'x' + coolDynamicFormat(player.points.add(4.5).log(4.5), 2)
-                    if (hasUpgrade('U', 23) === true) return 'x' + coolDynamicFormat(player.points.add(2.5).log(2.5), 2)
+                    if (hasUpgrade('U', 23) === false) return 'x' + coolDynamicFormat(player.points.add(4.5).max(1).log(4.5), 2)
+                    if (hasUpgrade('U', 23) === true) return 'x' + coolDynamicFormat(player.points.add(2.5).max(1).log(2.5), 2)
                 }
             },
         },
@@ -116,8 +116,8 @@ addLayer("U", {
             currencyDisplayName: "$",
             currencyInternalName: "points",
             effectDisplay() {
-                if(!hasMilestone('P', 8)) return 'x' + coolDynamicFormat(player.points.pow(1.5).add(8).log(8).pow(0.5), 2)
-                if(hasMilestone('P', 8)) return 'x' + coolDynamicFormat(player.points.pow(1.55).add(7).log(7).pow(0.5), 2)
+                if(!hasMilestone('P', 8)) return 'x' + coolDynamicFormat(player.points.pow(1.5).add(8).max(1).log(8).pow(0.5), 2)
+                if(hasMilestone('P', 8)) return 'x' + coolDynamicFormat(player.points.pow(1.55).add(7).max(1).log(7).pow(0.5), 2)
             },
         },
         23: {
@@ -155,8 +155,8 @@ addLayer("U", {
                 return hasUpgrade('R', 13)
             },
             effectDisplay() {
-                if(!hasMilestone('P', 8)) return 'x' + coolDynamicFormat(player.points.add(10).log(10).pow(0.5), 2)
-                if(hasMilestone('P', 8)) return 'x' + coolDynamicFormat(player.points.add(8).log(8).pow(0.5), 2)
+                if(!hasMilestone('P', 8)) return 'x' + coolDynamicFormat(player.points.add(10).max(1).log(10).pow(0.5), 2)
+                if(hasMilestone('P', 8)) return 'x' + coolDynamicFormat(player.points.add(8).max(1).log(8).pow(0.5), 2)
             },
         },
         32: {
@@ -241,10 +241,10 @@ addLayer("U", {
                 return hasUpgrade('R', 24)
             },
             effectDisplay() {
-                if(!hasMilestone('P', 8)) return 'RP x' + coolDynamicFormat(player.points.add(10).log(10).add(10).log(10), 2)
-                + '<br>$ x' + coolDynamicFormat(player.R.points.add(10).log(10), 2)
-                if(hasMilestone('P', 8)) return 'RP x' + coolDynamicFormat(player.points.add(9).log(9).add(8).log(8), 2)
-                + '<br>$ x' + coolDynamicFormat(player.R.points.add(8).log(8), 2)
+                if(!hasMilestone('P', 8)) return 'RP x' + coolDynamicFormat(player.points.add(10).max(1).log(10).add(10).max(1).log(10), 2)
+                + '<br>$ x' + coolDynamicFormat(player.R.points.add(10).max(1).log(10), 2)
+                if(hasMilestone('P', 8)) return 'RP x' + coolDynamicFormat(player.points.add(9).max(1).log(9).add(8).max(1).log(8), 2)
+                + '<br>$ x' + coolDynamicFormat(player.R.points.add(8).max(1).log(8), 2)
             },
         },
         44: {
@@ -282,7 +282,7 @@ addLayer("U", {
             unlocked() {
                 return hasMilestone('P', 6)
             },
-            effectDisplay() { return "x" + coolDynamicFormat(player.P.points.add(3).log(3), 2)}
+            effectDisplay() { return "x" + coolDynamicFormat(player.P.points.add(3).max(1).log(3), 2)}
         },
         53: {
             title: "Maybe too much inflation",
@@ -375,7 +375,7 @@ addLayer("U", {
                 let base
                 if(!hasMilestone('SR', 3)) base = new Decimal(1.1).pow(x)
                 if(hasMilestone('SR', 3)) base = new Decimal(1.3).pow(x)
-                if(base.gte("1e500000")) base = base.div("1e500000").pow(new Decimal(1).div(base.log(10).sub(499999).pow(0.2))).times("1e500000")
+                if(base.gte("1e500000")) base = base.div("1e500000").pow(new Decimal(1).div(base.max(1).log(10).sub(499999).pow(0.2))).times("1e500000")
                 return base
             },
             softcap(x) {
@@ -384,8 +384,8 @@ addLayer("U", {
                 if(!hasMilestone('SR', 3)) base = new Decimal(1.1).pow(x)
                 if(hasMilestone('SR', 3)) base = new Decimal(1.3).pow(x)
                 if(base.gte("1e500000")) {
-                    softcaps = base.div(base.div("1e500000").pow(new Decimal(1).div(base.log(10).sub(499999).pow(0.2))).times("1e500000"))
-                    base = base.div("1e500000").pow(new Decimal(1).div(base.log(10).sub(499999).pow(0.2))).times("1e500000")
+                    softcaps = base.div(base.div("1e500000").pow(new Decimal(1).div(base.max(1).log(10).sub(499999).pow(0.2))).times("1e500000"))
+                    base = base.div("1e500000").pow(new Decimal(1).div(base.max(1).log(10).sub(499999).pow(0.2))).times("1e500000")
                 }
                 return softcaps
             },

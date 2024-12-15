@@ -324,7 +324,7 @@ addLayer('AM', {
             description: "Multiply Antimatter gain based on Dark Matter and Exotic Matter",
             tooltip: "log1.5(DM + EM + 1.5)",
             effect() {
-                return player.DM.points.add(player.EM.points.add(1.5)).log(1.5)
+                return player.DM.points.add(player.EM.points.add(1.5)).max(1).log(1.5)
             },
             effectDisplay() { return "x" + format(this.effect()) }
         },
@@ -532,7 +532,7 @@ addLayer('DM', {
             cost: new Decimal(20),
             tooltip: "log5(DM*2 + 5)",
             effect() {
-                let base = player.DM.points.times(2).add(5).log(5)
+                let base = player.DM.points.times(2).add(5).max(1).log(5)
                 if(hasMilestone('BH', 1)) base = base.pow(2)
                 return base
             },
@@ -549,7 +549,7 @@ addLayer('DM', {
             cost: new Decimal(50),
             tooltip: "log($)^0.1",
             effect() {
-                let base = player.points.add(10).log(10).pow(0.1)
+                let base = player.points.add(10).max(1).log(10).pow(0.1)
                 if(hasMilestone('BH', 1)) base = base.pow(2)
                 return base
             },
@@ -867,7 +867,7 @@ addLayer('EM', {
             cost: new Decimal(500),
             tooltip: "log1,00,000(M*AM)",
             effect() {
-                return player.M.points.times(player.AM.points).add(1).log(1000000).add(1)
+                return player.M.points.times(player.AM.points).add(1).max(1).log(1000000).add(1)
             },
             effectDisplay() { return "x" + format(this.effect()) }
         },
@@ -887,7 +887,7 @@ addLayer('EM', {
             cost: new Decimal(1.32e81),
             tooltip: "log1e10(EM + 1e10)",
             effect() {
-                return player.EM.points.add(1e10).log(1e10).add(1)
+                return player.EM.points.add(1e10).max(1).log(1e10).add(1)
             },
             effectDisplay() { return "x" + format(this.effect()) }
         },
@@ -897,7 +897,7 @@ addLayer('EM', {
             cost: new Decimal(1e193),
             tooltip: "log(log($ + 10) + 10)",
             effect() {
-                return player.points.add(10).log(10).add(10).log(10)
+                return player.points.add(10).max(1).log(10).add(10).max(1).log(10)
             },
             effectDisplay() { return "+" + format(this.effect()) }
         },
@@ -1005,7 +1005,7 @@ addLayer('EM', {
                 return "EM boosts Hypothetical Particle gain" + this.rewardEffect()
             },
             effect() {
-                return player.EM.points.add("69").log("69")
+                return player.EM.points.add("69").max(1).log("69")
             },
             rewardEffect() {
                 return "<br>Currently: x" + format(this.effect())
@@ -1072,14 +1072,14 @@ addLayer('HP', {
         if(!inChallenge('EM', 11)) player.HP.points = player.HP.points.add(tmp.EM.buyables[11].effect.times(diff))
     },
     effect() {
-        let base = player.HP.points.add(2).log(2)
+        let base = player.HP.points.add(2).max(1).log(2)
         if(hasUpgrade('HC', 54)) base = base.pow(0)
         return base
     },
     effect2() {
         let log = new Decimal(10000)
         if(hasUpgrade('EM', 13)) log = log.sub(7000)
-        let base = player.HP.points.add(1).log(log)
+        let base = player.HP.points.add(1).max(1).log(log)
         if(hasMilestone('EM', 0)) base = base.pow(1.05)
         if(hasMilestone('EM', 1)) base = base.pow(1.05)
         if(hasMilestone('EM', 2)) base = base.pow(1.05)
@@ -1125,7 +1125,7 @@ addLayer('UnsM', {
         if(base.gte(64)) base = base.div(64).pow(0.0069).times(64)
         if(base.gte(128)) base = base.div(128).pow(0.069).times(128)
         if(base.gte(256)) base = base.div(256).pow(0.069).times(256)
-        if(base.gte(512)) base = base.div(512).log(1e6).add(1).times(512)
+        if(base.gte(512)) base = base.div(512).max(1).log(1e6).add(1).times(512)
         return base
     },
     effectDescription() {
@@ -1153,7 +1153,7 @@ addLayer('UnsM', {
             description: "Multiply Unstable Matter's half life based on Unstable Matter",
             cost: new Decimal(1000),
             effect() {
-                return player.UnsM.points.add(1).log(10).add(1)
+                return player.UnsM.points.add(1).max(1).log(10).add(1)
             },
             effectDisplay() {
                 return "x" + format(this.effect())
@@ -1181,7 +1181,7 @@ addLayer('UnsM', {
             description: "Exotic Matter now also boosts Unstable Matter's half-life",
             cost: new Decimal(10000),
             effect() {
-                return tmp.EM.effect2.pow(1e10).add(10).log(10).add(10).log(10)
+                return tmp.EM.effect2.pow(1e10).add(10).max(1).log(10).add(10).max(1).log(10)
             },
             effectDisplay() {
                 return "x" + format(this.effect())
@@ -1248,13 +1248,13 @@ addLayer('UMF', {
         },
         2: {
             requirementDescription: "3 Ultimate Matter Fragments",
-            effectDescription() { return "Matters now also multiply HRP and the first Cash Buyables amount at a reduced rate<br>Currently: x" + format(tmp.UMF.effect2.log(4).add(1))},
+            effectDescription() { return "Matters now also multiply HRP and the first Cash Buyables amount at a reduced rate<br>Currently: x" + format(tmp.UMF.effect2.max(1).log(4).add(1))},
             done() {
                 return player.UMF.points.gte(3)
             },
             tooltip: "Boosts are based on log(x)",
             effect() {
-                return tmp.UMF.effect2.log(4).add(1)
+                return tmp.UMF.effect2.max(1).log(4).add(1)
             }
         },
         3: {
