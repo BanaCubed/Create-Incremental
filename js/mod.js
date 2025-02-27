@@ -115,11 +115,6 @@ function getPointGen(softcaps = true) {
 
 	gain = gain.pow(tmp.C.effect[0])
 
-
-	// Dunno were else to put this
-
-	everyTick();
-
 	if(softcaps !== false) {
         if(gain.gte("1e5000000")) gain = new Decimal(10).pow(gain.max(1).log(10).div(5000000).pow(0.25).times(5000000))
 	}
@@ -160,10 +155,6 @@ function machineBonuses() {
 	bonus = bonus.times(tmp.P.effect)
 	if(hasUpgrade('U', 34) && hasMilestone('P', 8)) bonus = bonus.pow(1.25)
 	return bonus
-}
-
-function everyTick() {
-	// meh
 }
 
 function findIndex(arr, x) {

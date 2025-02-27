@@ -68,7 +68,7 @@ function matterGain(matterType) {
 }
 
 function retryMatters() {
-    if(confirm('Are you sure that you waynt to reset your matters? Thiss will reset EVERYTHING in row 5, even completed matters!')) {
+    if(confirm('Are you sure that you want to reset your matters? This will reset EVERYTHING in row 5, even completed matters!')) {
         layerDataReset('M')
         layerDataReset('AM')
         layerDataReset('DM')
@@ -487,7 +487,7 @@ addLayer('DM', {
         return base
     },
     effect2() {
-        let effect = player.DM.points.div(100).add(1).pow(0.001)
+        let effect = player.DM.points.div(100).add(1).max(1).pow(0.001)
         if(hasUpgrade('DM', 13)) effect = effect.pow(2)
         if(hasMilestone('BH', 1) && hasUpgrade('DM', 13)) effect = effect.pow(2)
         return effect
@@ -549,7 +549,7 @@ addLayer('DM', {
             cost: new Decimal(50),
             tooltip: "log($)^0.1",
             effect() {
-                let base = player.points.add(10).max(1).log(10).pow(0.1)
+                let base = player.points.add(10).max(1).log(10).max(1).pow(0.1)
                 if(hasMilestone('BH', 1)) base = base.pow(2)
                 return base
             },
