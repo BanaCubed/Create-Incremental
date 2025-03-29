@@ -20,16 +20,4 @@ The game currently has a total of 3 prestige layers:
 
 # Planned Content
 
-Below is a list of features that aren't currently in the game, but are planned to be worked on as they are already in the forum
-
-## v0.4
-
-Universes:
-- Something similar to Challenges
-    - Singularities
-- Ultimate Matter
-    - Upgrade Tree
-- Strange Matter
-- More Matter Paths
-    - Heavenly Matter
-    - Cursed Matter
+This repository will not be used for future updates. Instead look at [BanaCubed/Create-Incremental-Profectus](https://github.com/BanaCubed/Create-Incremental-Profectus) for future source code.

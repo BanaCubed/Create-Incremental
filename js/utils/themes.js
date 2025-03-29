@@ -1,11 +1,11 @@
 // ************ Themes ************
-var themes = ["default", "aqua", "verdant", "pyro", "arcane", "steel"]
+var themes = ["default", "aqua", "verdant", "pyro", "arcane", "steel"];
 
 var colors = {
 	default: {
-		1: "#ffffff",//Branch color 1
-		2: "#bfbfbf",//Branch color 2
-		3: "#7f7f7f",//Branch color 3
+		1: "#ffffff", //Branch color 1
+		2: "#bfbfbf", //Branch color 2
+		3: "#7f7f7f", //Branch color 3
 		color: "#dfdfdf",
 		points: "#ffffff",
 		locked: "#bf8f8f",
@@ -13,9 +13,9 @@ var colors = {
 		background_tooltip: "rgba(0, 0, 0, 0.75)",
 	},
 	steel: {
-		1: "#eeeeee",//Branch color 1
-		2: "#afafaf",//Branch color 2
-		3: "#6f6f6f",//Branch color 3
+		1: "#eeeeee", //Branch color 1
+		2: "#afafaf", //Branch color 2
+		3: "#6f6f6f", //Branch color 3
 		color: "#cfcfcf",
 		points: "#efefef",
 		locked: "#af9f9f",
@@ -172,28 +172,26 @@ var colors = {
 		background: "#ffffff",
 		background_tooltip: "rgba(255, 255, 255, 0.75)",
 	},
-}
+};
 function changeTheme() {
-
 	colors_theme = colors[options.theme || "default"];
-	document.body.style.setProperty('--background', colors_theme["background"]);
-	document.body.style.setProperty('--background_tooltip', colors_theme["background_tooltip"]);
-	document.body.style.setProperty('--color', colors_theme["color"]);
-	document.body.style.setProperty('--points', colors_theme["points"]);
+	document.body.style.setProperty("--background", colors_theme["background"]);
+	document.body.style.setProperty("--background_tooltip", colors_theme["background_tooltip"]);
+	document.body.style.setProperty("--color", colors_theme["color"]);
+	document.body.style.setProperty("--points", colors_theme["points"]);
 	document.body.style.setProperty("--locked", colors_theme["locked"]);
 }
 function getThemeName() {
-	return options.theme? options.theme : "default";
+	return options.theme ? options.theme : "default";
 }
 
 function switchTheme() {
-	updateSecretThemes()
-	let index = themes.indexOf(options.theme)
-	if (options.theme === null || index >= themes.length-1 || index < 0) {
+	updateSecretThemes();
+	let index = themes.indexOf(options.theme);
+	if (options.theme === null || index >= themes.length - 1 || index < 0) {
 		options.theme = themes[0];
-	}
-	else {
-		index ++;
+	} else {
+		index++;
 		options.theme = themes[index];
 	}
 	changeTheme();
@@ -201,44 +199,57 @@ function switchTheme() {
 }
 
 function updateSecretThemes() {
-
-	if(hasAchievement('SA', 11) && themes.indexOf("quality") == -1) {
-		themes.push("quality")
+	if (hasAchievement("SA", 11) && themes.indexOf("quality") == -1) {
+		themes.push("quality");
 	}
 
-	if(hasAchievement('SA', 12) && themes.indexOf("golden") == -1) {
-		themes.push("golden")
+	if (hasAchievement("SA", 12) && themes.indexOf("golden") == -1) {
+		themes.push("golden");
 	}
 
-	if(hasAchievement('SA', 13) && themes.indexOf("void") == -1) {
-		themes.push("void")
+	if (hasAchievement("SA", 13) && themes.indexOf("void") == -1) {
+		themes.push("void");
 	}
 
-	if(hasAchievement('SA', 14) && themes.indexOf("light") == -1) {
-		themes.push("light")
+	if (hasAchievement("SA", 14) && themes.indexOf("light") == -1) {
+		themes.push("light");
 	}
 
-	if(hasAchievement('SA', 15) && themes.indexOf("auqa") == -1) {
-		themes.push("auqa")
+	if (hasAchievement("SA", 15) && themes.indexOf("auqa") == -1) {
+		themes.push("auqa");
 	}
-	if(hasAchievement('SA', 15) && themes.indexOf("tnadrev") == -1) {
-		themes.push("tnadrev")
+	if (hasAchievement("SA", 15) && themes.indexOf("tnadrev") == -1) {
+		themes.push("tnadrev");
 	}
-	if(hasAchievement('SA', 15) && themes.indexOf("oryp") == -1) {
-		themes.push("oryp")
+	if (hasAchievement("SA", 15) && themes.indexOf("oryp") == -1) {
+		themes.push("oryp");
 	}
-	if(hasAchievement('SA', 15) && themes.indexOf("enacra") == -1) {
-		themes.push("enacra")
-	}
-
-	if(player.MILK === true && themes.indexOf("milk") == -1) {
-		themes.push("milk")
+	if (hasAchievement("SA", 15) && themes.indexOf("enacra") == -1) {
+		themes.push("enacra");
 	}
 
-	if(hasAchievement('SA', 11) && hasAchievement('SA', 12) && hasAchievement('SA', 13) && hasAchievement('SA', 14) && hasAchievement('SA', 15) && themes.indexOf("electro") == -1) {
-		themes.push("electro")
+	if (player.MILK === true && themes.indexOf("milk") == -1) {
+		themes.push("milk");
 	}
-	if(hasAchievement('SA', 11) && hasAchievement('SA', 12) && hasAchievement('SA', 13) && hasAchievement('SA', 14) && hasAchievement('SA', 15) && themes.indexOf("wooden") == -1) {
-		themes.push("wooden")
+
+	if (
+		hasAchievement("SA", 11) &&
+		hasAchievement("SA", 12) &&
+		hasAchievement("SA", 13) &&
+		hasAchievement("SA", 14) &&
+		hasAchievement("SA", 15) &&
+		themes.indexOf("electro") == -1
+	) {
+		themes.push("electro");
+	}
+	if (
+		hasAchievement("SA", 11) &&
+		hasAchievement("SA", 12) &&
+		hasAchievement("SA", 13) &&
+		hasAchievement("SA", 14) &&
+		hasAchievement("SA", 15) &&
+		themes.indexOf("wooden") == -1
+	) {
+		themes.push("wooden");
 	}
 }

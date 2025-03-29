@@ -1,6 +1,6 @@
 // ************ Options ************
 
-let options = {}
+let options = {};
 
 function getStartOptions() {
 	return {
@@ -15,18 +15,15 @@ function getStartOptions() {
 		oldStyle: false,
 		forceTooltips: true,
 		hideMilestonePopups: false,
-	}
+	};
 }
 
 function toggleOpt(name) {
-	if (name == "oldStyle" && styleCooldown > 0)
-		return;
+	if (name == "oldStyle" && styleCooldown > 0) return;
 
 	options[name] = !options[name];
-	if (name == "hqTree")
-		changeTreeQuality();
-	if (name == "oldStyle")
-		updateStyle();
+	if (name == "hqTree") changeTreeQuality();
+	if (name == "oldStyle") updateStyle();
 }
 var styleCooldown = 0;
 function updateStyle() {
@@ -37,14 +34,17 @@ function updateStyle() {
 }
 function changeTreeQuality() {
 	var on = options.hqTree;
-	document.body.style.setProperty('--hqProperty1', on ? "2px solid" : "4px solid");
-	document.body.style.setProperty('--hqProperty2a', on ? "-4px -4px 4px rgba(0, 0, 0, 0.25) inset" : "-4px -4px 4px rgba(0, 0, 0, 0) inset");
-	document.body.style.setProperty('--hqProperty2b', on ? "0px 0px 20px var(--background)" : "");
-	document.body.style.setProperty('--hqProperty3', on ? "2px 2px 4px rgba(0, 0, 0, 0.25)" : "none");
+	document.body.style.setProperty("--hqProperty1", on ? "2px solid" : "4px solid");
+	document.body.style.setProperty(
+		"--hqProperty2a",
+		on ? "-4px -4px 4px rgba(0, 0, 0, 0.25) inset" : "-4px -4px 4px rgba(0, 0, 0, 0) inset"
+	);
+	document.body.style.setProperty("--hqProperty2b", on ? "0px 0px 20px var(--background)" : "");
+	document.body.style.setProperty("--hqProperty3", on ? "2px 2px 4px rgba(0, 0, 0, 0.25)" : "none");
 }
 function toggleAuto(toggle) {
 	Vue.set(player[toggle[0]], [toggle[1]], !player[toggle[0]][toggle[1]]);
-	needCanvasUpdate=true
+	needCanvasUpdate = true;
 }
 
 const MS_DISPLAYS = ["ALL", "LAST, AUTO, INCOMPLETE", "AUTOMATION, INCOMPLETE", "INCOMPLETE", "NONE"];
@@ -63,10 +63,10 @@ function milestoneShown(layer, id) {
 			return true;
 			break;
 		case "last":
-			return (auto) || !complete || player[layer].lastMilestone === id;
+			return auto || !complete || player[layer].lastMilestone === id;
 			break;
 		case "automation":
-			return (auto) || !complete;
+			return auto || !complete;
 			break;
 		case "incomplete":
 			return !complete;
@@ -78,4 +78,4 @@ function milestoneShown(layer, id) {
 	return false;
 }
 
-let formatOption = (opt) => opt ? 'ON' : 'OFF'
+let formatOption = (opt) => (opt ? "ON" : "OFF");
