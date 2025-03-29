@@ -3,7 +3,6 @@
 	text-align: center;
 	font-family: "Inconsolata", monospace;
 	font-weight: bold;
-	table-align: center;
 	margin: auto;
 	-webkit-text-size-adjust: none;
 	text-size-adjust: none;
@@ -12,7 +11,7 @@
 
 *:focus {
 	outline: none;
-	webkit-outline: none;
+	--webkit-outline: none;
 }
 
 html, body {

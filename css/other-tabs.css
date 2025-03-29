@@ -62,8 +62,8 @@
 	right: 4px;
 	top: 4px;
 	text-align: right;
-	color: var(--points);
-	text-shadow: 0 0 10px var(--points);
+	color: var(--color);
+	text-shadow: 0 0 10px var(--color);
 	cursor: pointer;
 }
 

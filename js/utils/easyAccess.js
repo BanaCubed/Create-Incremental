@@ -98,3 +98,20 @@ function layerEffect(layer) {
 function gridEffect(layer, id) {
 	return gridRun(layer, "getEffect", player[layer].grid[id], id);
 }
+
+function hasVisibleUpgrade(layer, row) {
+	const cols = tmp[layer].upgrades.cols;
+	const upgrades = [];
+	for (let i = 1; i <= cols; i++) {
+		if (tmp[layer].upgrades[row * 10 + i] !== undefined) {
+			upgrades.push(tmp[layer].upgrades[row * 10 + i]);
+		}
+	}
+	for (let i = 0; i < upgrades.length; i++) {
+		const upgrade = upgrades[i];
+		if (upgrade.unlocked === true || upgrade.unlocked === undefined) {
+			return true;
+		}
+	}
+	return false;
+}

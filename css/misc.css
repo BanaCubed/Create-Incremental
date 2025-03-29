@@ -48,7 +48,7 @@
     z-index: 20000;
   
     background-color: var(--background_tooltip);
-    color: var(--points);
+    color: var(--color);
     content: attr(tooltip);
     font-size:14px;
 

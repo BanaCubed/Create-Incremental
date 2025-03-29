@@ -8,7 +8,7 @@ addLayer("U", {
 			points: new Decimal(0),
 		};
 	},
-	color: "#157307",
+	color: "var(--points)",
 	tooltip() {
 		if (inChallenge("SR", 31)) return format(player.SR.tax, 2) + " Tax";
 		else return format(player.points, 2) + " Cash";
@@ -19,6 +19,7 @@ addLayer("U", {
 	resource: "$",
 	type: "none",
 	row: 0, // Row the layer is in on the tree (0 is the first row)
+	// #region tabFormat
 	tabFormat: {
 		Upgrades: {
 			content: ["main-display", "buyables", "upgrades"],
@@ -41,7 +42,7 @@ addLayer("U", {
 						if (hasAchievement("A", 33))
 							return (
 								"Your external bonuses to The Machine are multiplying Cash and RP gain by " +
-								format(machineBonuses(), 2)
+								format(machineBonuses())
 							);
 					},
 				],
@@ -51,15 +52,21 @@ addLayer("U", {
 			},
 		},
 	},
+	// #endregion
 	upgrades: {
+		// #region Cash Upgrade 1
 		11: {
 			title: "Economic Inflation",
-			description: () => `Start generating ${formatWhole(upgradeEffect(this.layer, this.id))}`,
+			description: () => `Start generating ${formatWhole(tmp.U.upgrades[11].effect)} Cash each second`,
 			cost: new Decimal(0),
 			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
-			effect: () => (hasMilestone("P", 8) ? 100 : 1),
+			effect() {
+				return hasMilestone("P", 8) ? 100 : 1;
+			},
 		},
+		// #endregion
+		// #region Cash Upgrade 2
 		12: {
 			title: "Money Printer",
 			description: () => (hasMilestone("P", 8) ? "Quintuple Cash gain" : "Quadruple Cash gain"),
@@ -68,28 +75,33 @@ addLayer("U", {
 			currencyInternalName: "points",
 			effect: () => (hasMilestone("P", 8) ? 5 : 4),
 		},
+		// #endregion
+		// #region Cash Upgrade 3
 		13: {
 			title: "Superinflation",
 			description: "Multiply Cash gain based on Cash",
-			tooltip: () => `log${hasMilestone("P", 8) ? 4.5 : 5}($ + ${hasMilestone("P", 8) ? 4.5 : 5})`,
+			tooltip: () =>
+				`log<sub>${tmp.U.upgrades[13].base}</sub>($ + ${tmp.U.upgrades[13].base})`,
 			cost: new Decimal(50),
 			currencyDisplayName: "$",
 			currencyInternalName: "points",
 			effectDisplay() {
-				if (!hasMilestone("P", 8)) {
-					if (hasUpgrade("U", 23) === false)
-						return "x" + coolDynamicFormat(player.points.add(5).max(1).log(5), 2);
-					if (hasUpgrade("U", 23) === true)
-						return "x" + coolDynamicFormat(player.points.add(3).max(1).log(3), 2);
-				}
-				if (hasMilestone("P", 8)) {
-					if (hasUpgrade("U", 23) === false)
-						return "x" + coolDynamicFormat(player.points.add(4.5).max(1).log(4.5), 2);
-					if (hasUpgrade("U", 23) === true)
-						return "x" + coolDynamicFormat(player.points.add(2.5).max(1).log(2.5), 2);
-				}
+				return `&times;${format(tmp.U.upgrades[13].effect)}`;
 			},
+			base() {
+				let base = 5;
+				if (hasMilestone("P", 8)) base -= 0.5;
+				if (hasUpgrade("U", 23)) base -= 2;
+				return base;
+			},
+			effect: () =>
+				player.points
+					.add(tmp.U.upgrades[13].base)
+					.max(1)
+					.log(tmp.U.upgrades[13].base),
 		},
+		// #endregion
+		// #region Cash Upgrade 4
 		14: {
 			title: "Another Money Printer",
 			description() {
