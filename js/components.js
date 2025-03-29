@@ -1,6 +1,7 @@
 var app;
 
 function loadVue() {
+	// #region display-text
 	// data = a function returning the content (actually HTML)
 	Vue.component("display-text", {
 		props: ["layer", "data"],
@@ -8,7 +9,8 @@ function loadVue() {
 			<span class="instant" v-html="data"></span>
 		`,
 	});
-
+	// #endregion
+	// #region raw-html
 	// data = a function returning the content (actually HTML)
 	Vue.component("raw-html", {
 		props: ["layer", "data"],
@@ -16,7 +18,8 @@ function loadVue() {
 				<span class="instant"  v-html="data"></span>
 			`,
 	});
-
+	// #endregion
+	// #region blank
 	// Blank space, data = optional height in px or pair with width and height in px
 	Vue.component("blank", {
 		props: ["layer", "data"],
@@ -28,7 +31,8 @@ function loadVue() {
 			</div>
 		`,
 	});
-
+	// #endregion
+	// #region display-image
 	// Displays an image, data is the URL
 	Vue.component("display-image", {
 		props: ["layer", "data"],
@@ -36,7 +40,8 @@ function loadVue() {
 			<img class="instant" v-bind:src= "data" v-bind:alt= "data">
 		`,
 	});
-
+	// #endregion
+	// #region row
 	// data = an array of Components to be displayed in a row
 	Vue.component("row", {
 		props: ["layer", "data"],
@@ -57,7 +62,8 @@ function loadVue() {
 		</div>
 		`,
 	});
-
+	// #endregion
+	// #region column
 	// data = an array of Components to be displayed in a column
 	Vue.component("column", {
 		props: ["layer", "data"],
@@ -78,7 +84,8 @@ function loadVue() {
 		</div>
 		`,
 	});
-
+	// #endregion
+	// #region layer-proxy
 	// data [other layer, tabformat for within proxy]
 	Vue.component("layer-proxy", {
 		props: ["layer", "data"],
@@ -93,6 +100,8 @@ function loadVue() {
 		</div>
 		`,
 	});
+	// #endregion
+	// #region infobox
 	Vue.component("infobox", {
 		props: ["layer", "data"],
 		template: `
@@ -108,7 +117,8 @@ function loadVue() {
 		</div>
 		`,
 	});
-
+	// #endregion
+	// #region h-line
 	// Data = width in px, by default fills the full area
 	Vue.component("h-line", {
 		props: ["layer", "data"],
@@ -116,7 +126,8 @@ function loadVue() {
 				<hr class="instant" v-bind:style="data ? {'width': data} : {}" class="hl">
 			`,
 	});
-
+	// #endregion
+	// #region v-line
 	// Data = height in px, by default is bad
 	Vue.component("v-line", {
 		props: ["layer", "data"],
@@ -124,7 +135,8 @@ function loadVue() {
 			<div class="instant" v-bind:style="data ? {'height': data} : {}" class="vl2"></div>
 		`,
 	});
-
+	// #endregion
+	// #region challenges
 	Vue.component("challenges", {
 		props: ["layer", "data"],
 		template: `
@@ -137,7 +149,8 @@ function loadVue() {
 		</div>
 		`,
 	});
-
+	// #endregion
+	// #region challenge
 	// data = id
 	Vue.component("challenge", {
 		props: ["layer", "data"],
@@ -158,7 +171,8 @@ function loadVue() {
 		</div>
 		`,
 	});
-
+	// #endregion
+	// #region upgrades
 	Vue.component("upgrades", {
 		props: ["layer", "data"],
 		template: `
@@ -171,7 +185,8 @@ function loadVue() {
 		</div>
 		`,
 	});
-
+	// #endregion
+	// #region upgrade
 	// data = id
 	Vue.component("upgrade", {
 		props: ["layer", "data"],
@@ -190,7 +205,8 @@ function loadVue() {
 			</button>
 		`,
 	});
-
+	// #endregion
+	// #region milestones
 	Vue.component("milestones", {
 		props: ["layer", "data"],
 		template: `
@@ -204,7 +220,8 @@ function loadVue() {
 		</div>
 		`,
 	});
-
+	// #endregion
+	// #region milestone
 	// data = id
 	Vue.component("milestone", {
 		props: ["layer", "data"],
@@ -217,14 +234,16 @@ function loadVue() {
 		<span v-if="(tmp[layer].milestones[data].toggles)&&(hasMilestone(layer, data))" v-for="toggle in tmp[layer].milestones[data].toggles"><toggle :layer= "layer" :data= "toggle" v-bind:style="tmp[layer].componentStyles.toggle"></toggle>&nbsp;</span></td></tr>
 		`,
 	});
-
+	// #endregion
+	// #region toggle
 	Vue.component("toggle", {
 		props: ["layer", "data"],
 		template: `
 		<button class="smallUpg can" v-bind:style="{'background-color': tmp[data[0]].color}" v-on:click="toggleAuto(data)">{{player[data[0]][data[1]]?"ON":"OFF"}}</button>
 		`,
 	});
-
+	// #endregion
+	// #region prestige-button
 	Vue.component("prestige-button", {
 		props: ["layer", "data"],
 		template: `
@@ -234,7 +253,8 @@ function loadVue() {
 		</button>
 		`,
 	});
-
+	// #endregion
+	// #region main-display
 	// Displays the main resource for the layer
 	Vue.component("main-display", {
 		props: ["layer", "data"],
@@ -242,7 +262,8 @@ function loadVue() {
 		<div><span v-if="player[layer].points.lt('1e1000')">You have </span><h2 v-bind:style="{'color': tmp[layer].color, 'text-shadow': '0px 0px 10px ' + tmp[layer].color}">{{data ? format(player[layer].points, data) : formatWhole(player[layer].points)}}</h2> {{tmp[layer].resource}}<span v-if="layers[layer].effectDescription">, <span v-html="run(layers[layer].effectDescription, layers[layer])"></span></span><br><br></div>
 		`,
 	});
-
+	// #endregion
+	// #region resource-display
 	// Displays the base resource for the layer, as well as the best and total values for the layer's currency, if tracked
 	Vue.component("resource-display", {
 		props: ["layer"],
@@ -256,7 +277,8 @@ function loadVue() {
 		</div>
 		`,
 	});
-
+	// #endregion
+	// #region buyables
 	Vue.component("buyables", {
 		props: ["layer", "data"],
 		template: `
@@ -271,7 +293,8 @@ function loadVue() {
 		</div>
 	`,
 	});
-
+	// #endregion
+	// #region buyable
 	Vue.component("buyable", {
 		props: ["layer", "data"],
 		template: `
@@ -312,7 +335,8 @@ function loadVue() {
 			},
 		},
 	});
-
+	// #endregion
+	// #region respec-button
 	Vue.component("respec-button", {
 		props: ["layer", "data"],
 		template: `
@@ -322,7 +346,8 @@ function loadVue() {
 			</div>
 			`,
 	});
-
+	// #endregion
+	// #region clickables
 	Vue.component("clickables", {
 		props: ["layer", "data"],
 		template: `
@@ -337,7 +362,8 @@ function loadVue() {
 		</div>
 	`,
 	});
-
+	// #endregion
+	// #region clickable
 	// data = id of clickable
 	Vue.component("clickable", {
 		props: ["layer", "data"],
@@ -379,7 +405,8 @@ function loadVue() {
 			},
 		},
 	});
-
+	// #endregion
+	// #region master-button
 	Vue.component("master-button", {
 		props: ["layer", "data"],
 		template: `
@@ -387,7 +414,8 @@ function loadVue() {
 			v-on:click="run(tmp[layer].clickables.masterButtonPress, tmp[layer].clickables)" v-bind:class="{ longUpg: true, can: player[layer].unlocked, locked: !player[layer].unlocked }">{{tmp[layer].clickables.masterButtonText ? tmp[layer].clickables.masterButtonText : "Click me!"}}</button>
 	`,
 	});
-
+	// #endregion
+	// #region grid
 	// data = optionally, array of rows for the grid to show
 	Vue.component("grid", {
 		props: ["layer", "data"],
@@ -403,7 +431,8 @@ function loadVue() {
 		</div>
 	`,
 	});
-
+	// #endregion
+	// #region gridable
 	Vue.component("gridable", {
 		props: ["layer", "data"],
 		template: `
@@ -450,7 +479,8 @@ function loadVue() {
 			},
 		},
 	});
-
+	// #endregion
+	// #region microtabs
 	// data = id of microtab family
 	Vue.component("microtabs", {
 		props: ["layer", "data"],
@@ -470,7 +500,8 @@ function loadVue() {
 		</div>
 		`,
 	});
-
+	// #endregion
+	// #region bar
 	// data = id of the bar
 	Vue.component("bar", {
 		props: ["layer", "data"],
@@ -490,7 +521,8 @@ function loadVue() {
 		</div></div>
 		`,
 	});
-
+	// #endregion
+	// #region achievements
 	Vue.component("achievements", {
 		props: ["layer", "data"],
 		template: `
@@ -500,11 +532,11 @@ function loadVue() {
 					<achievement :layer = "layer" :data = "row*10+col" v-bind:style="tmp[layer].componentStyles.achievement"></achievement>
 				</div></div>
 			</div>
-			<br>
 		</div>
 		`,
 	});
-
+	// #endregion
+	// #region achievement
 	// data = id
 	Vue.component("achievement", {
 		props: ["layer", "data"],

@@ -14,7 +14,7 @@ addLayer("A", {
 	update() {
 		let title = "Create Incremental";
 		if (hasAchievement("A", 11) && !hasUpgrade("A", 21)) {
-			title = "Create Incremental, " + formatWhole(player.points) + " $";
+			title = "Create Incremental, " + formatWhole(player.points) + " Cash";
 			changeFavicon("favicon.ico");
 		}
 		if (hasAchievement("A", 21) && !hasUpgrade("A", 43)) {
@@ -62,11 +62,7 @@ addLayer("A", {
 						[
 							[
 								"display-text",
-								"Secret Achievements only say what to do to get them after obtaining them<br>Most Secret Achievements will become impossible if too much progression is made before unlocking them<br>Each Secret Achievement has its own color theme<br>Getting all secret achievements unlocks more themes (ugly themes but whatever)",
-							],
-							[
-								"display-text",
-								"<br>Every Secret Achievement has a hint when hovering over them to make them theoretically possible to obtain without searching up the answers (you'll do it anyways)",
+								"Secret Achievements are not required for progression<br>Most Secret Achievements will become impossible if too much progression is made before unlocking them<br>Each Secret Achievement has its own color theme<br><br>Good luck<br><br>",
 							],
 							"h-line",
 							"achievements",
@@ -77,153 +73,196 @@ addLayer("A", {
 		},
 	},
 	achievements: {
+		// #region Achievement 1
 		11: {
-			name: "The Start",
-			tooltip: "Start producing $",
+			name: "Freebie",
+			tooltip: "Start producing Cash",
 			done() {
 				if (hasUpgrade("U", 11)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 2
 		12: {
-			name: "100 antima- I mean cash is a lot",
-			tooltip: "Get 100 $ <br>(no, that is not a typo)",
+			name: "100 antimatter is a lot!",
+			tooltip: "Reach 100 Cash",
 			done() {
 				if (player.points.gte(100)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 3
 		13: {
 			name: "We couldn't afford 9",
-			tooltip: "Get the 8th $ upgrade",
+			tooltip: "Purchase Cash Upgrade 8",
 			done() {
 				if (hasUpgrade("U", 24)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 4
 		14: {
-			name: "Millionaire",
-			tooltip: "Get 1,000,000 $",
+			name: "Who Wants to be a Millionaire?",
+			tooltip: "Reach a <i>million</i> Cash",
 			done() {
 				if (player.points.gte(1000000)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 5
 		15: {
 			name: "Very Rich Person",
-			tooltip: "Get 5e11 $",
+			tooltip: "Become the richest person in the world",
 			done() {
-				if (player.points.gte("5e11")) return true;
+				if (player.points.gte("320e9")) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 6
 		21: {
-			name: "Reincarnated",
-			tooltip: "Rebirth",
+			name: "Take 2",
+			tooltip: "Gain your first Rebirth Point",
 			done() {
 				if (player.R.points.gte(1)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 7
 		22: {
-			name: "Wow, more upgrades...",
-			tooltip: "Buy a Rebirth Upgrade",
+			name: "More Upgrades! Yay!",
+			tooltip: "Purchase Rebirth Upgrade 1",
 			done() {
 				if (hasUpgrade("R", 11)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 8
 		23: {
-			name: "We COULD afford 9",
-			tooltip: "Get the 9th $ upgrade",
+			name: "We <i>could</i> afford 9",
+			tooltip: "Purchase Cash Upgrade 9",
 			done() {
 				if (hasUpgrade("U", 31)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 9
 		24: {
 			name: "Life and Death",
-			tooltip: "Get the 5th Rebirth upgrade",
+			tooltip: "Purchase Rebirth Upgrade 5",
 			done() {
 				if (hasUpgrade("R", 21)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 10
 		25: {
 			name: "Endless Cycle",
-			tooltip: "Get 100,000 Rebirth Points",
+			tooltip: () => `Get ${formatWhole(1e5)} Rebirth Points`,
 			done() {
 				if (player.R.points.gte(100000)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 11
 		31: {
 			name: "Mechanical Mechanic",
-			tooltip: "Unlock The Machine<br>Reward: automate $ upgrade 9",
+			tooltip: "Unlock The Machine<br>Reward: Automate Cash Upgrade 9",
 			done() {
 				if (hasUpgrade("U", 34)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 12
 		32: {
-			name: "Secondary Choice",
+			name: "Both is good",
 			tooltip: "Unlock the ability to use two of The Machines modes at once",
 			done() {
 				if (achievement33()) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 13
 		33: {
-			name: "No thoughts required",
-			tooltip: "Use all of the Machine's modes at once<br>Reward: automate $ upgrades 10-12",
+			name: "Braindead",
+			tooltip: "Remove the need to choose between modes<br>Reward: Automate Cash Upgrade 10-12",
 			done() {
 				if (hasUpgrade("R", 32)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 14
 		34: {
-			name: "Now with technically infinite upgrades!",
-			tooltip: "Purchase the first RP buyable",
+			name: "Infinite Upgrades",
+			tooltip: "Purchase Rebirth Buyable 1",
 			done() {
 				if (getBuyableAmount("R", 11).gte(1)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 15
 		35: {
 			name: "Perfectly Balanced",
-			tooltip: "Purchase the second RP buyable",
+			tooltip: "Purchase Rebirth Buyable 2",
 			done() {
 				if (getBuyableAmount("R", 12).gte(1)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 16
 		41: {
 			name: "Wow, a content",
-			tooltip: "Buy RP upgrade 8",
+			tooltip: "Purchase Rebirth Upgrade 8",
 			done() {
 				if (hasUpgrade("R", 24)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 17
 		42: {
 			name: "Super Duper Uber Rebirth",
-			tooltip: "Reach 1e19 RP<br>Reward: retain all automation in future",
+			tooltip: `Reach ${format(1e19)} RP<br>Reward: Automation is never lost`,
 			done() {
 				if (player.R.points.gte("1e19")) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 18
 		43: {
 			name: "Can't wait for Hyper Rebirth",
-			tooltip: "Perform a Super Rebirth reset",
+			tooltip: "Perform a Super Rebirth",
 			done() {
 				if (player.SR.points.gte(1)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 19
 		44: {
 			name: "Monetary Incentive",
-			tooltip: "Purchase the $ buyable",
+			tooltip: "Purchase Cash Buyable 1",
 			done() {
 				if (getBuyableAmount("U", 11).gte(1)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 20
 		45: {
 			name: "The Ninth Milestone is a Lie",
-			tooltip: "Get Super Rebirth Milestone 8",
+			tooltip: "Get Super Milestone 8",
 			done() {
 				if (hasMilestone("SR", 7)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 21
 		51: {
 			name: "Unchallenged",
-			tooltip: "Complete a challenge",
+			tooltip: "Complete Super Challenge 1",
 			done() {
 				if (hasChallenge("SR", 11)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 22
 		52: {
 			name: "Powerful",
 			tooltip: "Unlock Power",
@@ -231,90 +270,116 @@ addLayer("A", {
 				if (hasMilestone("SR", 8)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 23
 		53: {
 			name: "Megawatt",
-			tooltip: "Reach 1,000,000 Power",
+			tooltip: () => `Reach ${formatWhole(1e6)} Power`,
 			done() {
 				if (player.P.points.gte(1000000)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 24
 		54: {
 			name: "Googology",
-			tooltip: "Reach e100 $",
+			tooltip: "Reach a Googol Cash",
 			done() {
 				if (player.points.gte("1e100")) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 25
 		55: {
-			name: "The Seventh Pylon is a Lie",
-			tooltip: "Buy a PPyF",
+			name: "We couldn't afford 7",
+			tooltip: "Purchase PPyF",
 			done() {
 				if (player.P.pylobF.gte(1)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 26
 		61: {
-			name: "Duo-Googology",
-			tooltip: "Reach e200 $",
+			name: "Googology 2",
+			tooltip: () => `Reach ${format(1e200)} Cash`,
 			done() {
 				if (player.points.gte("1e200")) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 27
 		62: {
-			name: "Afterlife Google",
-			tooltip: "Reach e100 RP",
+			name: "Rebirth Googology",
+			tooltip: "Reach a Googol Rebirth Points",
 			done() {
 				if (player.R.points.gte("1e100")) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 28
 		63: {
 			name: "Power Hungry",
-			tooltip: "Reach 1e50 Power",
+			tooltip: () => `Reach ${format(1e10)} Power`,
 			done() {
 				if (player.P.points.gte("1e50")) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 29
 		64: {
-			name: "Hyper Rebirthed",
-			tooltip: "Reach 500 SRP",
+			name: "Super Super Rebirth'd",
+			tooltip: () => `Reach ${formatWhole(500)} SRP`,
 			done() {
 				if (player.SR.points.gte(500)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 30
 		65: {
 			name: "To Infinity, and Beyond!",
 			tooltip: "Reach Infinity",
 			done() {
-				if (player.points.gte(new Decimal(2).pow(1024))) return true;
+				if (player.points.gte(Decimal.dNumberMax)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 31
 		71: {
 			name: "Kilometrerock",
-			tooltip: "Obtain all Power Milestones",
+			tooltip: "Get Power Milestone 12",
 			done() {
 				if (hasMilestone("P", 12)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 32
 		72: {
 			name: "Super Upgraded",
-			tooltip: "Purchase four Super Rebirth layer upgrades",
+			tooltip: "Purchase Super Upgrade 4",
 			done() {
 				if (hasUpgrade("SR", 14)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 33
 		73: {
-			name: "Beeg numba",
-			tooltip: "Reach e1000 $",
+			name: "Number go brrrrrrrrrrrrrr",
+			tooltip: () => `Reach ${format('e1000')} Cash`,
 			done() {
 				if (player.points.gte("1e1000")) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 34
 		74: {
-			name: "Infinite^0.3 Power",
-			tooltip: "Reach e100 Power",
+			name: "Unlimited Power",
+			tooltip: () => `Reach ${format(1e100)} Power`,
 			done() {
 				if (player.P.points.gte("1e100")) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 35
 		75: {
 			name: "Just getting started",
 			tooltip: "Purchase Omega",
@@ -322,13 +387,8 @@ addLayer("A", {
 				if (hasUpgrade("SR", 21)) return true;
 			},
 		},
-		83: {
-			name: "Hyper Rebirth?",
-			tooltip: "Go Hyper",
-			done() {
-				if (player.HC.points.gte(1)) return true;
-			},
-		},
+		// #endregion
+		// #region Achievement 36
 		81: {
 			name: "The Basic Path",
 			tooltip: "Start the Basic Path",
@@ -336,6 +396,8 @@ addLayer("A", {
 				if (hasUpgrade("HC", 11)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 37
 		82: {
 			name: "The Machine's Path",
 			tooltip: "Start the Machine's Path",
@@ -343,6 +405,17 @@ addLayer("A", {
 				if (hasUpgrade("HC", 12)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 38
+		83: {
+			name: "Hyper Rebirth?",
+			tooltip: "Go Hyper",
+			done() {
+				if (player.HC.points.gte(1)) return true;
+			},
+		},
+		// #endregion
+		// #region Achievement 39
 		84: {
 			name: "The Hyper Path",
 			tooltip: "Start the Hyper Path",
@@ -350,6 +423,8 @@ addLayer("A", {
 				if (hasUpgrade("HC", 13)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 40
 		85: {
 			name: "The Combined Path",
 			tooltip: "Start the Combined Path",
@@ -357,6 +432,8 @@ addLayer("A", {
 				if (hasUpgrade("HC", 14)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 41
 		91: {
 			name: "Learning the Basics",
 			tooltip: "Complete the Basic Path",
@@ -364,6 +441,8 @@ addLayer("A", {
 				if (hasUpgrade("HC", 31)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 42
 		92: {
 			name: "Complex Machinery",
 			tooltip: "Complete the Machine's Path",
@@ -371,20 +450,8 @@ addLayer("A", {
 				if (hasUpgrade("HC", 32)) return true;
 			},
 		},
-		94: {
-			name: "God of Hyperdeath",
-			tooltip: "Complete the Hyper Path",
-			done() {
-				if (hasUpgrade("HC", 33)) return true;
-			},
-		},
-		95: {
-			name: "By Our Power Combined",
-			tooltip: "Complete the Combined Path",
-			done() {
-				if (hasUpgrade("HC", 34)) return true;
-			},
-		},
+		// #endregion
+		// #region Achievement 43
 		93: {
 			name: "Master of Reality",
 			tooltip: "Complete all Paths",
@@ -393,6 +460,26 @@ addLayer("A", {
 					return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 44
+		94: {
+			name: "God of Hyperdeath",
+			tooltip: "Complete the Hyper Path",
+			done() {
+				if (hasUpgrade("HC", 33)) return true;
+			},
+		},
+		// #endregion
+		// #region Achievement 45
+		95: {
+			name: "By Our Power Combined",
+			tooltip: "Complete the Combined Path",
+			done() {
+				if (hasUpgrade("HC", 34)) return true;
+			},
+		},
+		// #endregion
+		// #region Achievement 46
 		101: {
 			name: "Material Possessions",
 			tooltip: "Unlock the Matter Combustor",
@@ -400,6 +487,8 @@ addLayer("A", {
 				if (hasUpgrade("HC", 41)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 47
 		102: {
 			name: "Nothing Matters",
 			tooltip: "Annihilate Matter",
@@ -407,6 +496,8 @@ addLayer("A", {
 				if (hasUpgrade("HC", 51)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 48
 		103: {
 			name: "Antimatter Dimensions",
 			tooltip: "Annihilate Antimatter",
@@ -414,6 +505,8 @@ addLayer("A", {
 				if (hasUpgrade("HC", 52)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 49
 		104: {
 			name: "Born from Void",
 			tooltip: "Annihilate Dark Matter",
@@ -421,6 +514,8 @@ addLayer("A", {
 				if (hasUpgrade("HC", 53)) return true;
 			},
 		},
+		// #endregion
+		// #region Achievement 50
 		105: {
 			name: "Dying Stars",
 			tooltip: "Annihilate Exotic Matter",
@@ -428,6 +523,7 @@ addLayer("A", {
 				if (hasUpgrade("HC", 54)) return true;
 			},
 		},
+		// #endregion
 	},
 });
 
@@ -453,12 +549,12 @@ addLayer("SA", {
 	],
 	unlocked: true,
 	achievements: {
+		// #region Secret 1
 		11: {
 			name: "Out of Order",
 			tooltip() {
 				if (!hasAchievement(this.layer, this.id)) return "That's not going to do anything";
-				else
-					return "Buy $ Upgrade 7 before $ Upgrade 3<br>Reward: unlock the quality theme<br>That's not going to do anything";
+				return "Buy Cash Upgrade 7 before Cash Upgrade 3<br>Reward: unlock the quality theme<br>That's not going to do anything";
 			},
 			unlocked() {
 				return true;
@@ -467,24 +563,28 @@ addLayer("SA", {
 				return !hasUpgrade("U", 13) && hasUpgrade("U", 23);
 			},
 		},
+		// #endregion
+		// #region Secret 2
 		12: {
 			name: "Can't Escape the IRS",
 			tooltip() {
 				if (!hasAchievement(this.layer, this.id)) return "Infinite tax";
-				else return "Get 1e308 tax<br>Reward: unlock the golden theme<br>Infinite Tax";
+				return "Get Infinite tax<br>Reward: unlock the golden theme<br>Infinite Tax";
 			},
 			unlocked() {
 				return true;
 			},
 			done() {
-				return player.SR.tax.gte("1e308");
+				return player.SR.tax.gte(Decimal.dNumberMax);
 			},
 		},
+		// #endregion
+		// #region Secret 3
 		13: {
 			name: "Blinded",
 			tooltip() {
 				if (!hasAchievement(this.layer, this.id)) return "ARGH, MY EYES!!";
-				else return "Use a bright theme<br>Reward: unlock the void theme<br>ARGH, MY EYES!!";
+				return "Use a bright theme<br>Reward: unlock the void theme<br>ARGH, MY EYES!!";
 			},
 			unlocked() {
 				return true;
@@ -500,11 +600,13 @@ addLayer("SA", {
 				);
 			},
 		},
+		// #endregion
+		// #region Secret 4
 		14: {
 			name: "Following Instructions",
 			tooltip() {
 				if (!hasAchievement(this.layer, this.id)) return "Follow instructions";
-				else return "Import 'save'<br>Reward: unlock the light theme<br>Follow instructions";
+				return "Import 'save'<br>Reward: unlock the light theme<br>Follow instructions";
 			},
 			unlocked() {
 				return true;
@@ -513,11 +615,13 @@ addLayer("SA", {
 				return player.SA14 === true;
 			},
 		},
+		// #endregion
+		// #region Secret 5
 		15: {
 			name: "Backup",
 			tooltip() {
-				if (!hasAchievement(this.layer, this.id)) return "No Hint";
-				else return "Export your save<br>Reward: unlock the auqa, oryp, tnadrev and enacra themes";
+				if (!hasAchievement(this.layer, this.id)) return "No Hints Here!";
+				return "Export your save<br>Reward: unlock the auqa, oryp, tnadrev and enacra themes";
 			},
 			unlocked() {
 				return true;
@@ -526,6 +630,7 @@ addLayer("SA", {
 				return player.SA15 === true;
 			},
 		},
+		// #endregion
 	},
 });
 

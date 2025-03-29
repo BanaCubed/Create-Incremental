@@ -16,34 +16,60 @@ addLayer("U", {
 	deactivated() {
 		return inChallenge("SR", 22);
 	},
-	resource: "$",
+	resource: "Cash",
 	type: "none",
 	row: 0, // Row the layer is in on the tree (0 is the first row)
-	// #region tabFormat
+	// #region Tab Format
 	tabFormat: {
 		Upgrades: {
-			content: ["main-display", "buyables", "upgrades"],
+			content: [
+				"main-display",
+				[
+					"display-text",
+					() =>
+						`<div style="margin-top: -18px;">${
+							canGenPoints()
+								? `(${
+										tmp.other.oompsMag != 0
+											? format(tmp.other.oomps) +
+											  " OOM" +
+											  (tmp.other.oompsMag < 0
+													? "^OOM"
+													: tmp.other.oompsMag > 1
+													? "^" + tmp.other.oompsMag
+													: "") +
+											  "s"
+											: formatSmall(getPointGen())
+								  }/sec)`
+								: ""
+						}</div>`,
+				],
+				"buyables",
+				"upgrades",
+			],
 		},
 		"The Machine": {
 			content: [
 				"main-display",
 				[
 					"display-text",
-					function () {
-						if (hasUpgrade("U", 34) || hasUpgrade("R", 21))
-							return "The Machine can provide boosts to both Cash and RP, but be aware that you can't change your selection once you make it.<br>Bonus is reset on Rebirth.";
-						else return "The Machine needs Cash Upgrade 12 to be unlocked";
+					() => {
+						if (hasUpgrade("U", 34) || hasUpgrade("R", 21)) {
+							return `The Machine can provide boosts to both Cash and RP, but be aware that you can't${" "}change your selection once you make it.<br>Bonus is reset on Rebirth.`;
+						}
+						return "The Machine needs Cash Upgrade 12 to be unlocked";
 					},
 				],
 				"clickables",
 				[
 					"display-text",
-					function () {
-						if (hasAchievement("A", 33))
+					() => {
+						if (hasAchievement("A", 33)) {
 							return (
 								"Your external bonuses to The Machine are multiplying Cash and RP gain by " +
 								format(machineBonuses())
 							);
+						}
 					},
 				],
 			],
@@ -57,7 +83,9 @@ addLayer("U", {
 		// #region Cash Upgrade 1
 		11: {
 			title: "Economic Inflation",
-			description: () => `Start generating ${formatWhole(tmp.U.upgrades[11].effect)} Cash each second`,
+			description: () => {
+				return `Start generating ${formatWhole(tmp.U.upgrades[11].effect)} Cash each second`;
+			},
 			cost: new Decimal(0),
 			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
@@ -79,11 +107,10 @@ addLayer("U", {
 		// #region Cash Upgrade 3
 		13: {
 			title: "Superinflation",
-			description: "Multiply Cash gain based on Cash",
-			tooltip: () =>
-				`log<sub>${tmp.U.upgrades[13].base}</sub>($ + ${tmp.U.upgrades[13].base})`,
+			description: "Multiply Cash gain based on itself",
+			tooltip: () => `log<sub>${tmp.U.upgrades[13].base}</sub>($ + ${tmp.U.upgrades[13].base})`,
 			cost: new Decimal(50),
-			currencyDisplayName: "$",
+			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
 			effectDisplay() {
 				return `&times;${format(tmp.U.upgrades[13].effect)}`;
@@ -94,82 +121,89 @@ addLayer("U", {
 				if (hasUpgrade("U", 23)) base -= 2;
 				return base;
 			},
-			effect: () =>
-				player.points
-					.add(tmp.U.upgrades[13].base)
-					.max(1)
-					.log(tmp.U.upgrades[13].base),
+			effect: () => player.points.add(tmp.U.upgrades[13].base).max(1).log(tmp.U.upgrades[13].base).max(1),
 		},
 		// #endregion
 		// #region Cash Upgrade 4
 		14: {
 			title: "Another Money Printer",
-			description() {
-				if (!hasMilestone("P", 8)) return "Double $ gain";
-				if (hasMilestone("P", 8)) return "Triple $ gain";
-			},
+			description: () => (hasMilestone("P", 8) ? "Triple Cash gain" : "Double Cash gain"),
 			cost: new Decimal(200),
-			currencyDisplayName: "$",
+			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
+			effect: () => (hasMilestone("P", 8) ? 3 : 2),
 		},
+		// #endregion
+		// #region Cash Upgrade 5
 		21: {
 			title: "Hyperinflation",
-			description() {
-				if (!hasMilestone("P", 8)) return "Raise $ gain by ^1.25";
-				if (hasMilestone("P", 8)) return "Raise $ gain by ^1.3";
-			},
+			description: () => `Raise Cash gain by ^${format(tmp.U.upgrades[21].effect)}`,
 			cost: new Decimal(500),
-			currencyDisplayName: "$",
+			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
-			tooltip: "All exponents are applied after all multipliers in the same layer",
+			effect: () => (hasMilestone("P", 8) ? 1.3 : 1.25),
 		},
+		// #endregion
+		// #region Cash Upgrade 6
 		22: {
 			title: "Ultrainflation",
-			description: "Multiply $ gain based on $ again",
-			tooltip() {
-				if (!hasMilestone("P", 8)) return "sqrt(log8($^1.5 + 8))";
-				if (hasMilestone("P", 8)) return "sqrt(log7($^1.55 + 7))";
-			},
+			description: "Multiply Cash gain based on itself again",
+			tooltip: () =>
+				`(log<sub>${formatWhole(tmp.U.upgrades[22].base[0])}</sub>($<sup>${format(
+					tmp.U.upgrades[22].base[1]
+				)}</sup> + ${formatWhole(tmp.U.upgrades[22].base[1])}))<sup>${format(0.5)}</sup>`,
 			cost: new Decimal(2000),
-			currencyDisplayName: "$",
+			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
-			effectDisplay() {
-				if (!hasMilestone("P", 8))
-					return "x" + coolDynamicFormat(player.points.pow(1.5).add(8).max(1).log(8).pow(0.5), 2);
-				if (hasMilestone("P", 8))
-					return "x" + coolDynamicFormat(player.points.pow(1.55).add(7).max(1).log(7).pow(0.5), 2);
+			effectDisplay: () => `&times;${format(tmp.U.upgrades[22].effect)}`,
+			base() {
+				let base = [8, 1.5];
+				if (hasMilestone("P", 8)) {
+					base[0] -= 1;
+					base[1] += 0.25;
+				}
+				return base;
 			},
+			effect: () =>
+				player.points
+					.pow(tmp.U.upgrades[22].base[1])
+					.add(tmp.U.upgrades[22].base[0])
+					.max(1)
+					.log(tmp.U.upgrades[22].base[0])
+					.max(1)
+					.pow(0.5),
 		},
+		// #endregion
+		// #region Cash Upgrade 7
 		23: {
 			title: "Super-Superinflation",
 			description: "Improve the above upgrades effect",
-			tooltip() {
-				if (!hasMilestone("P", 8)) return "log5 -> log3";
-				if (hasMilestone("P", 8)) return "log4.5 -> log2.5";
-			},
+			tooltip: () => "log<sub>b</sub> &#8594; log<sub>b-2</sub>",
 			cost: new Decimal(15000),
-			currencyDisplayName: "$",
+			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
 		},
+		// #endregion
+		// #region Cash Upgrade 8
 		24: {
 			title: "Yet Another Money Printer",
-			description() {
-				if (!hasMilestone("P", 8)) return "Multiply $ gain by 1.5";
-				if (hasMilestone("P", 8)) return "Double $ gain";
-			},
+			description: () => (hasMilestone("P", 8) ? "Double Cash gain" : `Multiple Cash gain by &times;${format(1.5)}`),
 			cost: new Decimal(30000),
-			currencyDisplayName: "$",
+			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
+			effect: () => (hasMilestone("P", 8) ? 2 : 1.5),
 		},
+		// #endregion
+		// #region Cash Upgrade 9
 		31: {
 			title: "Gigainflation",
-			description: "Multiply $ gain based on $ yet again",
+			description: "Multiply Cash gain based on itself yer again",
 			tooltip() {
 				if (!hasMilestone("P", 8)) return "sqrt(log($ + 10))";
 				if (hasMilestone("P", 8)) return "sqrt(log8($ + 8))";
 			},
 			cost: new Decimal(5000000),
-			currencyDisplayName: "$",
+			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
 			unlocked() {
 				return hasUpgrade("R", 13);
@@ -181,6 +215,8 @@ addLayer("U", {
 					return "x" + coolDynamicFormat(player.points.add(8).max(1).log(8).pow(0.5), 2);
 			},
 		},
+		// #endregion
+		// #region Cash Upgrade 10
 		32: {
 			title: "Certainly a concept",
 			description: "Reduce RP gain scaling",
@@ -189,12 +225,14 @@ addLayer("U", {
 				if (hasMilestone("P", 8)) return "^0.5 -> ^0.8";
 			},
 			cost: new Decimal(35000000),
-			currencyDisplayName: "$",
+			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
 			unlocked() {
 				return hasUpgrade("R", 13);
 			},
 		},
+		// #endregion
+		// #region Cash Upgrade 11
 		33: {
 			title: "Blessing from the gods",
 			description: "Increase RP's effect",
@@ -203,12 +241,14 @@ addLayer("U", {
 				if (hasMilestone("P", 8)) return "^0.6 -> ^0.8";
 			},
 			cost: new Decimal(250000000),
-			currencyDisplayName: "$",
+			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
 			unlocked() {
 				return hasUpgrade("R", 13);
 			},
 		},
+		// #endregion
+		// #region Cash Upgrade 12
 		34: {
 			title: "THE MACHINE",
 			description() {
@@ -216,12 +256,14 @@ addLayer("U", {
 				if (hasMilestone("P", 8)) return "Unlock The Machine<br>Boosts to the machine are raised ^1.25";
 			},
 			cost: new Decimal("1e9"),
-			currencyDisplayName: "$",
+			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
 			unlocked() {
 				return hasUpgrade("R", 13);
 			},
 		},
+		// #endregion
+		// #region Cash Upgrade 13
 		41: {
 			title: "Payrise",
 			description() {
@@ -229,12 +271,14 @@ addLayer("U", {
 				if (hasMilestone("P", 8)) return "Multiply $ gain by 1,000";
 			},
 			cost: new Decimal("1e13"),
-			currencyDisplayName: "$",
+			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
 			unlocked() {
 				return hasUpgrade("R", 24);
 			},
 		},
+		// #endregion
+		// #region Cash Upgrade 14
 		42: {
 			title: "Relativity",
 			description: "Boost RP's effect again",
@@ -243,12 +287,14 @@ addLayer("U", {
 				if (hasMilestone("P", 8)) return "^0.8 -> ^1";
 			},
 			cost: new Decimal("5e14"),
-			currencyDisplayName: "$",
+			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
 			unlocked() {
 				return hasUpgrade("R", 24);
 			},
 		},
+		// #endregion
+		// #region Cash Upgrade 15
 		43: {
 			title: "Synergism",
 			description: "RP and $ boost each other",
@@ -257,7 +303,7 @@ addLayer("U", {
 				if (hasMilestone("P", 8)) return "RP*log8(log9($ + 9) + 8)<br>$*log8(RP + 8)";
 			},
 			cost: new Decimal("3e15"),
-			currencyDisplayName: "$",
+			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
 			unlocked() {
 				return hasUpgrade("R", 24);
@@ -279,11 +325,13 @@ addLayer("U", {
 					);
 			},
 		},
+		// #endregion
+		// #region Cash Upgrade 16
 		44: {
 			title: "Ankh",
 			description: "Boost the second RP buyables effect slightly",
 			cost: new Decimal("1e25"),
-			currencyDisplayName: "$",
+			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
 			tooltip() {
 				if (!hasMilestone("P", 8)) return "+0.05 to base";
@@ -293,11 +341,13 @@ addLayer("U", {
 				return hasUpgrade("R", 24);
 			},
 		},
+		// #endregion
+		// #region Cash Upgrade 17
 		51: {
 			title: "Tesla Coils",
 			description: "Multiply $ gain by Power",
 			cost: new Decimal("1e80"),
-			currencyDisplayName: "$",
+			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
 			unlocked() {
 				return hasMilestone("P", 6);
@@ -306,11 +356,13 @@ addLayer("U", {
 				return "x" + coolDynamicFormat(player.P.points, 2);
 			},
 		},
+		// #endregion
+		// #region Cash Upgrade 18
 		52: {
 			title: "Heavenly Batteries",
 			description: "Multiply RP gain based on Power",
 			cost: new Decimal("1e92"),
-			currencyDisplayName: "$",
+			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
 			tooltip: "log3(Power + 3)",
 			unlocked() {
@@ -320,33 +372,39 @@ addLayer("U", {
 				return "x" + coolDynamicFormat(player.P.points.add(3).max(1).log(3), 2);
 			},
 		},
+		// #endregion
+		// #region Cash Upgrade 19
 		53: {
 			title: "Maybe too much inflation",
 			description: "Unlock another challenge<br>The challenge is permanently unlocked after buying this upgrade",
 			cost: new Decimal("1e95"),
-			currencyDisplayName: "$",
+			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
 			unlocked() {
 				return hasMilestone("P", 6);
 			},
 		},
+		// #endregion
+		// #region Cash Upgrade 20
 		54: {
 			title: "Powerup",
 			description: "Double efficiency of the first three Power Pylons",
 			cost: new Decimal("1e100"),
-			currencyDisplayName: "$",
+			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
 			unlocked() {
 				return hasMilestone("P", 6);
 			},
 		},
+		// #endregion
 	},
 	layerShown() {
 		return true;
 	},
 	clickables: {
+		// #region Cash Mode Clickable
 		11: {
-			title: "Money Mode",
+			title: "Cash Mode",
 			display() {
 				if (!getClickableState(this.layer, this.id)) return "Quadruples $ gain<br>Doubles RP gain";
 				else return "Quadruples $ gain<br>Doubles RP gain<br>ACTIVE";
@@ -366,6 +424,8 @@ addLayer("U", {
 				setClickableState(this.layer, this.id, true);
 			},
 		},
+		// #endregion
+		// #region Neutral Mode Clickable
 		12: {
 			title: "Neutral Mode",
 			display() {
@@ -387,6 +447,8 @@ addLayer("U", {
 				setClickableState(this.layer, this.id, true);
 			},
 		},
+		// #endregion
+		// #region Rebirth Mode Clickable
 		13: {
 			title: "Rebirth Mode",
 			display() {
@@ -408,8 +470,10 @@ addLayer("U", {
 				setClickableState(this.layer, this.id, true);
 			},
 		},
+		// #endregion
 	},
 	buyables: {
+		// #region Cash Buyable 1
 		11: {
 			cost(x) {
 				let y = x;
@@ -477,6 +541,8 @@ addLayer("U", {
 				return hasMilestone("SR", 2);
 			},
 		},
+		// #endregion
+		// #region Cash Buyable 2
 		12: {
 			cost(x) {
 				return new Decimal("1e400").times(new Decimal(100000).pow(x).pow(0.1).pow(x));
@@ -507,7 +573,9 @@ addLayer("U", {
 				return hasMilestone("P", 10);
 			},
 		},
+		// #endregion
 	},
+	// #region Reset Function
 	doReset(resetlayer) {
 		if (resetlayer == "R") {
 			if (!hasMilestone("SR", 5)) player.U.upgrades = [];
@@ -547,6 +615,8 @@ addLayer("U", {
 			setClickableState("U", 13, true);
 		}
 	},
+	// #endregion
+	// #region Automation
 	automate() {
 		player.U.points = player.points;
 		if (!inChallenge("SR", 21)) {
@@ -605,6 +675,7 @@ addLayer("U", {
 			setClickableState("U", 13, true);
 		}
 	},
+	// #endregion
 	softcapPower() {
 		return getPointGen(false).div(getPointGen(true));
 	},
