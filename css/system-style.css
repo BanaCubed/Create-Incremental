@@ -269,8 +269,8 @@ button > * {
 }
 
 ::-webkit-scrollbar-thumb {
-	border-radius: 5px;
-	background-color: var(--points);
+	border-radius: 5px 0 0 5px;
+	background-color: var(--color);
 	transition: all 0.3s;
 }
 

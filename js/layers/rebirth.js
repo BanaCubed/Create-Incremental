@@ -1,5 +1,6 @@
 addLayer("R", {
 	name: "rebirth",
+	// #region Softcap(?)
 	softcap() {
 		cap = new Decimal("1e17");
 		if (player.points.gte("1e6363.2")) cap = new Decimal("e1686.89");
@@ -10,139 +11,148 @@ addLayer("R", {
 		if (player.points.gte("1e6363.2")) softness = softness.div(5);
 		return softness;
 	},
+	// #endregion
 	symbol: "R",
+	image: "./resources/icons/rebirth.png",
 	row: "1",
 	type: "custom",
 	canReset() {
-		return this.baseAmount().gte(this.requires());
+		return this.baseAmount().gte(tmp.R.requires);
 	},
 	update(diff) {
-		player.R.points = player.R.points.add(this.getResetGain().times(this.passiveGen()).times(diff));
+		player.R.points = player.R.points.add(tmp.R.getResetGain.mul(tmp.R.passiveGen).mul(diff));
 	},
+	// #region Reset Gain
 	getResetGain() {
-		let baseGain = this.baseAmount().times(this.gainMult()).div(this.requires()).pow(this.exponent());
-		if (baseGain.gte(1e17)) baseGain = baseGain.div(1e17).pow(0.25).times(1e17);
-		if (baseGain.gte("1e2000")) baseGain = baseGain.div("1e2000").pow(0.2).times("1e2000");
-		baseGain = baseGain.times(this.directMult());
+		let baseGain = tmp.R.baseAmount.mul(tmp.R.gainMult).div(tmp.R.requires).pow(tmp.R.exponent);
+		if (baseGain.gte(1e17)) baseGain = baseGain.div(1e17).pow(0.25).mul(1e17);
+		if (baseGain.gte("1e2000")) baseGain = baseGain.div("1e2000").pow(0.2).mul("1e2000");
+		baseGain = baseGain.mul(tmp.R.directMult);
 		if (baseGain.gte("1e1000000"))
 			baseGain = baseGain
 				.div("1e1000000")
 				.pow(new Decimal(1).div(base.max(1).log(10).sub(9999999).pow(0.05)))
-				.times("1e1000000");
+				.mul("1e1000000");
 		return baseGain;
 	},
+	// #endregion
+	// #region Softcaps
 	softcapEffects() {
 		let softcaps = [[]];
-		let baseGain = this.baseAmount().times(this.gainMult()).div(this.requires()).pow(this.exponent());
+		let baseGain = tmp.R.baseAmount.mul(tmp.R.gainMult).div(tmp.R.requires).pow(tmp.R.exponent);
 		let basedGain = baseGain;
 		if (baseGain.gte(1e17)) {
 			softcaps[0].push(baseGain.div(1e17).pow(0.75));
-			baseGain = baseGain.div(1e17).pow(0.25).times(1e17);
+			baseGain = baseGain.div(1e17).pow(0.25).mul(1e17);
 		}
 		if (baseGain.gte("1e2000")) {
 			softcaps[0].push(baseGain.div("1e2000").pow(0.8));
-			baseGain = baseGain.div("1e2000").pow(0.2).times("1e2000");
+			baseGain = baseGain.div("1e2000").pow(0.2).mul("1e2000");
 		}
-		baseGain = baseGain.times(this.directMult());
-		basedGain = basedGain.times(this.directMult());
+		baseGain = baseGain.mul(tmp.R.directMult);
+		basedGain = basedGain.mul(tmp.R.directMult);
 		if (baseGain.gte("1e1000000")) {
 			softcaps[0].push(
 				baseGain.div(
 					baseGain
 						.div("1e1000000")
 						.pow(new Decimal(1).div(base.max(1).log(10).sub(9999999).pow(0.05)))
-						.times("1e1000000")
+						.mul("1e1000000")
 				)
 			);
 			baseGain = baseGain
 				.div("1e1000000")
 				.pow(new Decimal(1).div(base.max(1).log(10).sub(9999999).pow(0.2)))
-				.times("1e1000000");
+				.mul("1e1000000");
 		}
 		softcaps.push(basedGain);
 		return softcaps;
 	},
+	// #endregion
+	// #region Next At
 	getNextAt() {
-		let baseGain = this.getResetGain().add(1);
-		baseGain = baseGain.div(this.directMult());
-		if (baseGain.gte("1e2000")) baseGain = baseGain.div("1e2000").pow(5).times("1e2000");
-		if (baseGain.gte(1e17)) baseGain = baseGain.div(1e17).pow(4).times(1e17);
-		baseGain = baseGain.pow(new Decimal(1).div(this.exponent())).div(this.gainMult()).times(this.requires());
+		let baseGain = tmp.R.getResetGain.add(1);
+		baseGain = baseGain.div(tmp.R.directMult);
+		if (baseGain.gte("1e2000")) baseGain = baseGain.div("1e2000").pow(5).mul("1e2000");
+		if (baseGain.gte(1e17)) baseGain = baseGain.div(1e17).pow(4).mul(1e17);
+		baseGain = baseGain.pow(new Decimal(1).div(tmp.R.exponent)).div(tmp.R.gainMult).mul(tmp.R.requires);
+		return baseGain;
 	},
+	// #endregion
+	// #region Button Text
 	prestigeButtonText() {
+		if (inChallenge("SR", 11)) return "Challenges are stopping you from Rebirthing";
+
 		let text;
-		if (!inChallenge("SR", 11)) {
-			if (this.getResetGain().lt(1e17))
-				text = "Rebirth for " + formatWhole(this.getResetGain()) + " Rebirth Points";
-			if (this.getResetGain().gte(1e17))
-				text = formatWhole(this.getResetGain()) + "<br>(" + format(this.softcapEffects()[1]) + " base) RP";
-		}
-		if (inChallenge("SR", 11)) text = "A Superior being is stopping you from Rebirthing";
-		return text;
+		if (tmp.R.getResetGain.lt(1e17)) return "Rebirth for " + formatWhole(tmp.R.getResetGain) + " Rebirth Points";
+		return formatWhole(tmp.R.getResetGain) + "<br>(" + format(tmp.R.softcapEffects[1]) + " base) RP";
 	},
+	// #endregion
 	prestigeNotify() {
-		return this.getResetGain().gte(player.R.points.div(5)) && this.passiveGen === 0;
+		return tmp.R.getResetGain.gte(player.R.points.div(5)) && this.passiveGen === 0;
 	},
-	baseResource: "$",
+	baseResource: "Cash",
 	resource: "Rebirth Points",
 	baseAmount() {
 		return player.points;
 	},
+	// #region Requirement
 	requires() {
-		let requirement = new Decimal(0);
-		if (!inChallenge("SR", 11)) requirement = requirement.add(100000);
-		if (inChallenge("SR", 11)) requirement = requirement.add("eeeeeeeee10");
+		if (inChallenge("SR", 11)) return new Decimal("eeeeeeeee10");
+
+		let requirement = new Decimal(100000);
 		if (hasChallenge("SR", 12)) requirement = requirement.div(10);
-		if (inChallenge("SR", 12)) requirement = requirement.times(10);
+		if (inChallenge("SR", 12)) requirement = requirement.mul(10);
 		if (hasUpgrade("HC", 34)) requirement = requirement.div(100000);
 		return requirement;
 	},
+	// #endregion
+	// #region Multiplier
 	gainMult() {
-		let remult = new Decimal(1);
-		if (getClickableState("U", 11)) remult = remult.times(2);
-		if (getClickableState("U", 12)) remult = remult.times(3);
-		if (getClickableState("U", 13)) remult = remult.times(4);
-		if (hasUpgrade("U", 43) && !hasMilestone("P", 8))
-			remult = remult.times(player.points.add(10).max(1).log(10).add(10).max(1).log(10));
-		if (hasUpgrade("U", 43) && hasMilestone("P", 8))
-			remult = remult.times(player.points.add(9).max(1).log(9).add(8).max(1).log(8));
-		remult = remult.times(tmp.R.buyables[11].effect);
-		remult = remult.times(tmp.SR.effect[0]);
-		remult = remult.times(tmp.U.buyables[11].effect);
-		remult = remult.times(machineBonuses());
-		if (hasUpgrade("U", 52)) remult = remult.times(player.P.points.add(3).max(1).log(3));
-		return remult;
+		let mul = new Decimal(1);
+		if (getClickableState("U", 11)) mul = mul.mul(2);
+		if (getClickableState("U", 12)) mul = mul.mul(3);
+		if (getClickableState("U", 13)) mul = mul.mul(4);
+		if (hasUpgrade("U", 43) && !hasMilestone("P", 8)) mul = mul.mul(ue("U", 43));
+		mul = mul.mul(tmp.R.buyables[11].effect);
+		mul = mul.mul(tmp.SR.effect[0]);
+		mul = mul.mul(tmp.U.buyables[11].effect);
+		mul = mul.mul(machineBonuses());
+		if (hasUpgrade("U", 52)) mul = mul.mul(ue("U", 52));
+		return mul;
 	},
 	directMult() {
 		let remult = new Decimal(1);
-		if (hasUpgrade("HC", 21)) remult = remult.times(10000);
-		if (hasUpgrade("HC", 14)) remult = remult.times(100);
-		if (hasUpgrade("HC", 33)) remult = remult.times(tmp.C.effect[1]);
-		remult = remult.times(tmp.UMF.effect2);
+		if (hasUpgrade("HC", 21)) remult = remult.mul(10000);
+		if (hasUpgrade("HC", 14)) remult = remult.mul(100);
+		if (hasUpgrade("HC", 33)) remult = remult.mul(tmp.C.effect[1]);
+		remult = remult.mul(tmp.UMF.effect2);
 		return remult;
 	},
+	// #endregion
+	// #region Exponent
 	exponent() {
 		let power = new Decimal(0.5);
-		if (hasUpgrade("U", 32)) power = power.add(0.2);
-		if (hasMilestone("P", 8) && hasUpgrade("U", 32)) power = power.add(0.1);
+		if (hasUpgrade("U", 32)) power = power.add(ue("U", 32));
 		return power;
 	},
 	gainExp() {
-		let expo = new Decimal(1);
-		if (hasUpgrade("SR", 11)) expo = expo.times(1.05);
-		return expo;
+		let exp = new Decimal(1);
+		if (hasUpgrade("SR", 11)) exp = exp.mul(1.05);
+		return exp;
 	},
+	// #endregion
 	color: "#ba0022",
 	branches: ["U"],
+	// #region Effect
 	effect() {
-		let power = new Decimal(0.6);
-		if (hasUpgrade("U", 33)) power = power.add(0.1);
-		if (hasUpgrade("U", 42)) power = power.add(0.1);
-		if (hasUpgrade("R", 33)) power = power.add(0.2);
-		if (hasMilestone("P", 8) && hasUpgrade("U", 33)) power = power.add(0.1);
-		if (hasMilestone("P", 8) && hasUpgrade("U", 42)) power = power.add(0.1);
-		return player.R.points.pow(power).add(1);
+		let exp = new Decimal(0.6);
+		if (hasUpgrade("U", 33)) exp = exp.add(ue("U", 33));
+		if (hasUpgrade("U", 42)) exp = exp.add(ue("U", 42));
+		if (hasUpgrade("R", 33)) exp = exp.add(0.2);
+		return player.R.points.pow(exp).add(1);
 	},
+	// #endregion
 	layerShown() {
 		return hasAchievement("A", 12);
 	},
@@ -152,116 +162,155 @@ addLayer("R", {
 			points: new Decimal(0),
 		};
 	},
+	// #region Effect Description
 	effectDescription() {
-		let text = "multiplying $ gain by " + coolDynamicFormat(this.effect(), 2);
-		if (this.getResetGain().gte(1e17))
-			text = text + "<br>RP gain past 1e17 is softcapped, diving it by " + format(this.softcapEffects()[0][0]);
-		if (this.getResetGain().gte("1e2000"))
+		let text = "multiplying $ gain by " + format(tmp.R.effect, 2);
+		if (tmp.R.getResetGain.gte(1e17))
+			text = text + "<br>RP gain past 1e17 is softcapped, diving it by " + format(tmp.R.softcapEffects[0][0]);
+		if (tmp.R.getResetGain.gte("1e2000"))
 			text =
 				text +
 				"<br>RP gain past 1e2000 is softcapped again, further diving it by " +
-				format(this.softcapEffects()[0][1]);
-		if (this.getResetGain().gte("1e1000000"))
+				format(tmp.R.softcapEffects[0][1]);
+		if (tmp.R.getResetGain.gte("1e1000000"))
 			text =
-				text +
-				"<br>RP gain has become victim of inflation, diving it by " +
-				format(this.softcapEffects()[0][2]);
+				text + "<br>RP gain has become victim of inflation, diving it by " + format(tmp.R.softcapEffects[0][2]);
 		return text;
 	},
+	// #endregion
 	upgrades: {
+		// #region Rebirth Upgrade 1
 		11: {
-			title: "$$$$$",
-			description: "Multiply $ gain by 5",
+			title: "Five Dollars",
+			description: () => `Multiply Cash gain by &times;${formatWhole(ue("R", 11))}`,
 			cost: new Decimal(1),
+			effect: 5,
 		},
+		// #endregion
+		// #region Rebirth Upgrade 2
 		12: {
 			title: "Moneybots",
-			description: "Automate $ upgrades 1-8",
+			description: "Automate Cash Upgrades 1-8",
 			cost: new Decimal(3),
 		},
+		// #endregion
+		// #region Rebirth Upgrade 3
 		13: {
 			title: "I need more!",
-			description: "Unlock another row of $ upgrades",
+			description: "Unlock four more Cash Upgrades",
 			cost: new Decimal(15),
 		},
+		// #endregion
+		// #region Rebirth Upgrade 4
 		14: {
 			title: "Underwhelming",
-			description: "Double $ gain",
+			description: "Double Cash gain",
 			cost: new Decimal(100),
+			effect: 2,
 		},
+		// #endregion
+		// #region Rebirth Upgrade 5
 		21: {
 			title: "Mechanical Reconstruction",
-			description: "The Machine starts unlocked",
+			description: "Keep The Machine unlocked on Rebirth",
 			cost: new Decimal(10000),
 			unlocked() {
 				return hasAchievement("A", 31);
 			},
 		},
+		// #endregion
+		// #region Rebirth Upgrade 6
 		22: {
 			title: "Repeated Costs",
-			description: "Unlock a RP buyable",
+			description: "Unlock Rebirth Buyable 1",
 			cost: new Decimal(50000),
 			unlocked() {
 				return hasAchievement("A", 31);
 			},
 		},
+		// #endregion
+		// #region Rebirth Upgrade 7
 		23: {
 			title: "Repeated Repeated Costs",
-			description: "Unlock a second RP buyable",
+			description: "Unlock Rebirth Buyable 2",
 			cost: new Decimal(1000000),
 			unlocked() {
 				return hasAchievement("A", 31);
 			},
 		},
+		// #endregion
+		// #region Rebirth Upgrade 8
 		24: {
 			title: "Upgrading Revival",
-			description: "Unlock more upgrades (both RP and $)",
+			description: "Unlock more Cash/Rebirth Upgrades",
 			cost: new Decimal("1e8"),
 			unlocked() {
 				return hasAchievement("A", 31);
 			},
 		},
+		// #endregion
+		// #region Rebirth Upgrade 9
 		31: {
 			title: "Doublatron 3000",
-			description: "Allows use of two of The Machines modes at once",
+			description: "Increase maximum modes for The Machine to two",
 			cost: new Decimal("1e16"),
 			unlocked() {
 				return hasUpgrade("R", 24);
 			},
+			style: {
+				width: "240px",
+			},
 		},
+		// #endregion
+		// #region Rebirth Upgrade 10
 		32: {
 			title: "Machine automating Machine",
-			description: "Automatically select all three modes of The Machine<br>The Machine also gets a buff",
+			description: "Automate The Machine, and remove maximum modes<br>Buff The Machine's individual modes",
 			cost: new Decimal("1e18"),
 			unlocked() {
 				return hasUpgrade("R", 24);
 			},
+			style: {
+				width: "240px",
+			},
 		},
-		33: {
+		// #endregion
+		// #region Rebirth Upgrade 11
+		41: {
 			title: "Rebirth Empowerment",
-			description: "Boost RP effect, again",
+			description: "Boost Rebirth Points' effect on Cash gain",
 			cost: new Decimal("1e23"),
 			unlocked() {
 				return hasMilestone("SR", 6);
 			},
-			tooltip: "^0.8 -> ^1",
+			tooltip: () => `^${format(0.8)} &#8594; ^${format(0.8 + ue("R", 41))}`,
+			style: {
+				width: "240px",
+			},
+			effect: 0.2,
 		},
-		34: {
+		// #endregion
+		// #region Rebirth Upgrade 12
+		42: {
 			title: "Super Rebirth Empowerment",
-			description: "Boost SRP's boost to Cash",
+			description: "Boost Super Rebirth Points' effect on Cash gain",
 			cost: new Decimal("1e25"),
 			unlocked() {
 				return hasMilestone("SR", 6);
 			},
-			tooltip: "1.5x -> 1.5(x^2)",
+			tooltip: "1.5&times;SRP &#8594; 1.5&times;SRP<sup>2</sup>",
+			style: {
+				width: "240px",
+			},
 		},
+		// #endregion
 	},
 	buyables: {
 		11: {
 			cost(x) {
 				scalar = 2;
 				if (hasChallenge("SR", 21)) scalar = scalar - 0.5;
-				return new Decimal(20000).times(new Decimal(1.2).pow(new Decimal(x).pow(scalar)));
+				return new Decimal(20000).mul(new Decimal(1.2).pow(new Decimal(x).pow(scalar)));
 			},
 			title: "Rebirth Booster",
 			tooltip: "Base effect: 1.5^x<br>Base cost:20,000*(1.2^x^2)",
@@ -293,7 +342,7 @@ addLayer("R", {
 			cost(x) {
 				scalar = 2;
 				if (hasChallenge("SR", 21)) scalar = scalar - 0.25;
-				return new Decimal(1000000).times(new Decimal(3).pow(new Decimal(x).pow(scalar)));
+				return new Decimal(1000000).mul(new Decimal(3).pow(new Decimal(x).pow(scalar)));
 			},
 			title: "Rebirth Booster Booster",
 			tooltip: "Base effect: +x/4<br>Base cost:1,000,000*(3^x^2)",
@@ -318,9 +367,9 @@ addLayer("R", {
 				return hasUpgrade("R", 23);
 			},
 			effect(x) {
-				if (!hasUpgrade("U", 44)) return new Decimal(0.25).times(x);
-				if (hasUpgrade("U", 44) && !hasMilestone("P", 8)) return new Decimal(0.3).times(x);
-				if (hasUpgrade("U", 44) && hasMilestone("P", 8)) return new Decimal(0.4).times(x);
+				if (!hasUpgrade("U", 44)) return new Decimal(0.25).mul(x);
+				if (hasUpgrade("U", 44) && !hasMilestone("P", 8)) return new Decimal(0.3).mul(x);
+				if (hasUpgrade("U", 44) && hasMilestone("P", 8)) return new Decimal(0.4).mul(x);
 			},
 		},
 	},
@@ -349,7 +398,7 @@ addLayer("R", {
 		let passive = new Decimal(0);
 		if (!inChallenge("SR", 21)) {
 			if (hasChallenge("SR", 11)) passive = passive.add(0.2);
-			if (hasChallenge("SR", 21)) passive = passive.times(10);
+			if (hasChallenge("SR", 21)) passive = passive.mul(10);
 		}
 		return passive;
 	},
@@ -388,7 +437,7 @@ addLayer("R", {
 	hotkeys: [
 		{
 			key: "r", // What the hotkey button is. Use uppercase if it's combined with shift, or "ctrl+x" for holding down ctrl.
-			description: "R: Rebirth into another life", // The description of the hotkey that is displayed in the game's How To Play tab
+			description: "R: Rebirth", // The description of the hotkey that is displayed in the game's How To Play tab
 			onPress() {
 				if (player.R.unlocked) doReset("R");
 			},

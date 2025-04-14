@@ -212,22 +212,22 @@
     border-radius: 0;
 }
 
-.upgTable > .upgRow:first-child>div:first-child>.upgAlign > button,
-.upgTable > .upgRow:first-child>div:first-child>.upgAlign > .achievement {
+.upgTable > .upgRow:first-child:not(:last-child)>div:first-child>.upgAlign > button,
+.upgTable > .upgRow:first-child:not(:last-child)>div:first-child>.upgAlign > .achievement {
     border-radius: var(--border-radius) 0 0 0;
 }
 
-.upgTable > .upgRow:first-child>div:last-child>.upgAlign > button,
-.upgTable > .upgRow:first-child>div:last-child>.upgAlign > .achievement {
+.upgTable > .upgRow:first-child:not(:last-child)>div:last-child>.upgAlign > button,
+.upgTable > .upgRow:first-child:not(:last-child)>div:last-child>.upgAlign > .achievement {
     border-radius: 0 var(--border-radius) 0 0;
 }
 
-.upgTable > .upgRow:last-child>div:last-child>.upgAlign > button,
-.upgTable > .upgRow:last-child>div:last-child>.upgAlign > .achievement {
+.upgTable > .upgRow:last-child:not(:first-child)>div:last-child>.upgAlign > button,
+.upgTable > .upgRow:last-child:not(:first-child)>div:last-child>.upgAlign > .achievement {
     border-radius: 0 0 var(--border-radius) 0;
 }
 
-.upgTable > .upgRow:last-child>div:first-child>.upgAlign > button,
-.upgTable > .upgRow:last-child>div:first-child>.upgAlign > .achievement {
+.upgTable > .upgRow:last-child:not(:first-child)>div:first-child>.upgAlign > button,
+.upgTable > .upgRow:last-child:not(:first-child)>div:first-child>.upgAlign > .achievement {
     border-radius: 0 0 0 var(--border-radius);
 }

@@ -90,6 +90,7 @@ addLayer("M", {
 		};
 	},
 	symbol: "M",
+	image: "./resources/icons/matter.png",
 	row: 3,
 	update(diff) {
 		if (hasUpgrade("HC", 41)) player.M.points = player.M.points.add(matterGain(1).times(diff));
@@ -288,6 +289,7 @@ addLayer("AM", {
 	},
 	row: 3,
 	symbol: "AM",
+	image: "./resources/icons/antimatter.png",
 	update(diff) {
 		if (hasUpgrade("HC", 41)) player.AM.points = player.AM.points.add(matterGain(2).times(diff));
 	},
@@ -485,6 +487,7 @@ addLayer("DM", {
 	},
 	row: 3,
 	symbol: "DM",
+	image: "./resources/icon/darkmatter.png",
 	update(diff) {
 		if (hasUpgrade("HC", 41)) player.DM.points = player.DM.points.add(matterGain(3).times(diff));
 	},
@@ -849,6 +852,7 @@ addLayer("EM", {
 	},
 	row: 3,
 	symbol: "EM",
+	image: "./resources/exomatter.png",
 	update(diff) {
 		if (hasUpgrade("HC", 41)) player.EM.points = player.EM.points.add(matterGain(4).times(diff));
 		if (inChallenge("EM", 12)) player.EM.realParticle = player.EM.realParticle.add(diff);

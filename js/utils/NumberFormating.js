@@ -82,7 +82,7 @@ function formatWhole(decimal) {
 	return format(decimal, 0);
 }
 
-function formatZero(decimal) {
+function unnamed_function(decimal) {
 	decimal = new Decimal(decimal);
 	let number;
 	if (decimal.gte(1e9)) number = format(decimal, 2);
@@ -93,7 +93,7 @@ function formatZero(decimal) {
 	return number;
 }
 
-function formatZeroo(decimal) {
+function unnamed_function_2(decimal) {
 	decimal = new Decimal(decimal);
 	let number;
 	if (decimal.gte(1e9)) number = format(decimal, 2);
@@ -105,13 +105,13 @@ function formatZeroo(decimal) {
 	return number;
 }
 
-function iDontWantToNameThis(decimal, mantissa) {
+function unnamed_function_3(decimal, precision) {
 	let number;
-	if (mantissa !== 0) {
+	if (precision !== 0) {
 		decimal = new Decimal(decimal);
-		number = format(decimal, mantissa);
+		number = format(decimal, precision);
 
-		if (number.length == 2 + mantissa) number = " " + number;
+		if (number.length == 2 + precision) number = " " + number;
 	} else {
 		decimal = new Decimal(decimal);
 		number = formatWhole(decimal);
@@ -122,50 +122,50 @@ function iDontWantToNameThis(decimal, mantissa) {
 	return number;
 }
 
-function formatTime(s, mantissa = 3) {
+function formatTime(s, precision = 3) {
 	let sec = new Decimal(s);
-	if (sec.lt(60)) return format(sec, mantissa) + "s";
+	if (sec.lt(60)) return format(sec, precision) + "s";
 	else if (sec.lt(3600))
 		return (
 			formatWhole(sec.div(60).floor()) +
 			"m " +
-			iDontWantToNameThis(sec.sub(sec.div(60).floor().mul(60)), mantissa) +
+			unnamed_function_3(sec.sub(sec.div(60).floor().mul(60)), precision) +
 			"s"
 		);
 	else if (sec.lt(86400))
 		return (
 			formatWhole(sec.div(3600).floor()) +
 			"h " +
-			formatZero(sec.div(60).floor().sub(sec.div(3600).floor().mul(60))) +
+			unnamed_function(sec.div(60).floor().sub(sec.div(3600).floor().mul(60))) +
 			"m " +
-			iDontWantToNameThis(sec.sub(sec.div(60).floor().mul(60)), mantissa) +
+			unnamed_function_3(sec.sub(sec.div(60).floor().mul(60)), precision) +
 			"s"
 		);
 	else if (sec.lt(31536000))
 		return (
 			formatWhole(sec.div(86400).floor()) +
 			"d " +
-			formatZero(sec.div(3600).floor().sub(sec.div(86400).floor().mul(24))) +
+			unnamed_function(sec.div(3600).floor().sub(sec.div(86400).floor().mul(24))) +
 			"h " +
-			formatZero(sec.div(60).floor().sub(sec.div(3600).floor().mul(60))) +
+			unnamed_function(sec.div(60).floor().sub(sec.div(3600).floor().mul(60))) +
 			"m " +
-			iDontWantToNameThis(sec.sub(sec.div(60).floor().mul(60)), mantissa) +
+			unnamed_function_3(sec.sub(sec.div(60).floor().mul(60)), precision) +
 			"s"
 		);
 	else if (sec.lt(31536000000))
 		return (
 			formatWhole(sec.div(31536000).floor()) +
 			"y " +
-			formatZeroo(sec.div(86400).floor().sub(sec.div(31536000).floor().mul(365))) +
+			unnamed_function_2(sec.div(86400).floor().sub(sec.div(31536000).floor().mul(365))) +
 			"d " +
-			formatZero(sec.div(3600).floor().sub(sec.div(86400).floor().mul(24))) +
+			unnamed_function(sec.div(3600).floor().sub(sec.div(86400).floor().mul(24))) +
 			"h"
 		);
 	else if (sec.lt(31536000000000000))
 		return (
 			formatWhole(sec.div(31536000).floor()) +
 			"y " +
-			formatZeroo(sec.div(86400).floor().sub(sec.div(31536000).floor().mul(365))) +
+			unnamed_function_2(sec.div(86400).floor().sub(sec.div(31536000).floor().mul(365))) +
 			"d"
 		);
 	else return formatWhole(sec.div(31536000).floor()) + "y";

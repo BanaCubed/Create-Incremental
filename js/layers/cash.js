@@ -18,9 +18,10 @@ addLayer("U", {
 	},
 	resource: "Cash",
 	type: "none",
+	image: "./resources/icons/cash.png",
 	row: 0, // Row the layer is in on the tree (0 is the first row)
-	// #region Tab Format
 	tabFormat: {
+		// #region Upgrades Tab
 		Upgrades: {
 			content: [
 				"main-display",
@@ -48,6 +49,8 @@ addLayer("U", {
 				"upgrades",
 			],
 		},
+		// #endregion
+		// #region Machine Tab
 		"The Machine": {
 			content: [
 				"main-display",
@@ -55,7 +58,7 @@ addLayer("U", {
 					"display-text",
 					() => {
 						if (hasUpgrade("U", 34) || hasUpgrade("R", 21)) {
-							return `The Machine can provide boosts to both Cash and RP, but be aware that you can't${" "}change your selection once you make it.<br>Bonus is reset on Rebirth.`;
+							return `The Machine can provide boosts to both Cash and RP, but be aware that you can't change your selection once you make it.<br>Bonus is reset on Rebirth.`;
 						}
 						return "The Machine needs Cash Upgrade 12 to be unlocked";
 					},
@@ -187,7 +190,8 @@ addLayer("U", {
 		// #region Cash Upgrade 8
 		24: {
 			title: "Yet Another Money Printer",
-			description: () => (hasMilestone("P", 8) ? "Double Cash gain" : `Multiple Cash gain by &times;${format(1.5)}`),
+			description: () =>
+				hasMilestone("P", 8) ? "Double Cash gain" : `Multiple Cash gain by &times;${format(1.5)}`,
 			cost: new Decimal(30000),
 			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
@@ -197,107 +201,99 @@ addLayer("U", {
 		// #region Cash Upgrade 9
 		31: {
 			title: "Gigainflation",
-			description: "Multiply Cash gain based on itself yer again",
-			tooltip() {
-				if (!hasMilestone("P", 8)) return "sqrt(log($ + 10))";
-				if (hasMilestone("P", 8)) return "sqrt(log8($ + 8))";
-			},
+			description: "Multiply Cash gain based on itself yet again",
+			tooltip: () =>
+				`(log<sub>${formatWhole(tmp.U.upgrades[31].base[0])}</sub>($ + ${formatWhole(
+					tmp.U.upgrades[31].base[0]
+				)}))<sup>0.5</sup>`,
 			cost: new Decimal(5000000),
 			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
 			unlocked() {
 				return hasUpgrade("R", 13);
 			},
-			effectDisplay() {
-				if (!hasMilestone("P", 8))
-					return "x" + coolDynamicFormat(player.points.add(10).max(1).log(10).pow(0.5), 2);
-				if (hasMilestone("P", 8))
-					return "x" + coolDynamicFormat(player.points.add(8).max(1).log(8).pow(0.5), 2);
+			effectDisplay: () => `&times;${format(tmp.U.upgrades[31].effect)}`,
+			base() {
+				let base = [10];
+				if (hasMilestone("P", 8)) base[0] -= 2;
+				return base;
 			},
+			effect: () =>
+				player.points.add(tmp.U.upgrades[31].base[0]).max(1).log(tmp.U.upgrades[31].base[0]).max(1).pow(0.5),
 		},
 		// #endregion
 		// #region Cash Upgrade 10
 		32: {
-			title: "Certainly a concept",
-			description: "Reduce RP gain scaling",
-			tooltip() {
-				if (!hasMilestone("P", 8)) return "^0.5 -> ^0.7";
-				if (hasMilestone("P", 8)) return "^0.5 -> ^0.8";
-			},
+			title: "Curses",
+			description: "Increase Rebirth Points gain relative to Cash",
+			tooltip: () => `^${format(0.5)} &#8594; ^${format(0.5 + tmp.U.upgrades[32].effect)}`,
 			cost: new Decimal(35000000),
 			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
 			unlocked() {
 				return hasUpgrade("R", 13);
 			},
+			effect: () => hasMilestone("P", 8) ? 0.3 : 0.2,
 		},
 		// #endregion
 		// #region Cash Upgrade 11
 		33: {
-			title: "Blessing from the gods",
-			description: "Increase RP's effect",
-			tooltip() {
-				if (!hasMilestone("P", 8)) return "^0.6 -> ^0.7";
-				if (hasMilestone("P", 8)) return "^0.6 -> ^0.8";
-			},
+			title: "Blessings",
+			description: "Increase Rebirth Points' boost to Cash gain",
+			tooltip: () => `^${format(0.6)} &#8594; ^${format(0.6 + tmp.U.upgrades[33].effect)}`,
 			cost: new Decimal(250000000),
 			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
 			unlocked() {
 				return hasUpgrade("R", 13);
 			},
+			effect: () => hasMilestone("P", 8) ? 0.2 : 0.1,
 		},
 		// #endregion
 		// #region Cash Upgrade 12
 		34: {
-			title: "THE MACHINE",
-			description() {
-				if (!hasMilestone("P", 8)) return "Unlock The Machine";
-				if (hasMilestone("P", 8)) return "Unlock The Machine<br>Boosts to the machine are raised ^1.25";
-			},
+			title: "Mechanic's Dream",
+			description: () => `Unlock The Machine${hasMilestone("P", 8) ? `<br>Boosts to The Machine are raised ^${format(ue("U", 34))}` : ""}`,
 			cost: new Decimal("1e9"),
 			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
 			unlocked() {
 				return hasUpgrade("R", 13);
 			},
+			effect: () => hasMilestone("P", 8) ? 1.25 : 1,
 		},
 		// #endregion
 		// #region Cash Upgrade 13
 		41: {
-			title: "Payrise",
-			description() {
-				if (!hasMilestone("P", 8)) return "Multiply $ gain by 10";
-				if (hasMilestone("P", 8)) return "Multiply $ gain by 1,000";
-			},
+			title: "Payraise",
+			description: () => `Multiply Cash gain by &times;${formatWhole(ue("U", 41))}`,
 			cost: new Decimal("1e13"),
 			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
 			unlocked() {
 				return hasUpgrade("R", 24);
 			},
+			effect: () => hasMilestone("P", 8) ? 1000 : 10,
 		},
 		// #endregion
 		// #region Cash Upgrade 14
 		42: {
-			title: "Relativity",
-			description: "Boost RP's effect again",
-			tooltip() {
-				if (!hasMilestone("P", 8)) return "^0.7 -> ^0.8";
-				if (hasMilestone("P", 8)) return "^0.8 -> ^1";
-			},
+			title: "Prayers",
+			description: "Boost Rebirth Points' boost to Cash gain again",
+			tooltip: () => `^${format(0.6 + ue("U", 33))} &#8594; ^${format(0.6 + ue("U", 33) + ue("U", 42))}`,
 			cost: new Decimal("5e14"),
 			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
 			unlocked() {
 				return hasUpgrade("R", 24);
 			},
+			effect: () => hasMilestone("P", 8) ? 0.2 : 0.1,
 		},
 		// #endregion
 		// #region Cash Upgrade 15
 		43: {
 			title: "Synergism",
-			description: "RP and $ boost each other",
+			description: "Slightly improve Cash and Rebirth Point gain based on each other",
 			tooltip() {
 				if (!hasMilestone("P", 8)) return "RP*log(log($ + 10) + 10)<br>$*log(RP + 10)";
 				if (hasMilestone("P", 8)) return "RP*log8(log9($ + 9) + 8)<br>$*log8(RP + 8)";

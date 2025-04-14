@@ -37,6 +37,7 @@ addLayer("HC", {
 		},
 	},
 	symbol: "HR",
+	image: "./resources/icons/hyper_rebirth.png",
 	row: "3",
 	resource: "Hyper Rebirth Points",
 	color: "#2ed5e8",
@@ -405,7 +406,7 @@ addLayer("HC", {
 	hotkeys: [
 		{
 			key: "h", // What the hotkey button is. Use uppercase if it's combined with shift, or "ctrl+x" for holding down ctrl.
-			description: "H: Hyper Rebirth, bringing inflation to another galaxy", // The description of the hotkey that is displayed in the game's How To Play tab
+			description: "H: Hyper Rebirth", // The description of the hotkey that is displayed in the game's How To Play tab
 			onPress() {
 				if (player.HC.unlocked) doReset("HC");
 			},

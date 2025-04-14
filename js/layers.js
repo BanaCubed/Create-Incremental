@@ -220,7 +220,7 @@ addLayer("A", {
 		// #region Achievement 17
 		42: {
 			name: "Super Duper Uber Rebirth",
-			tooltip: `Reach ${format(1e19)} RP<br>Reward: Automation is never lost`,
+			tooltip: () => `Reach ${format(1e19)} RP<br>Reward: Automation is never lost`,
 			done() {
 				if (player.R.points.gte("1e19")) return true;
 			},
