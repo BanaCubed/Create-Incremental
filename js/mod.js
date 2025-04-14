@@ -33,7 +33,7 @@ let changelog = `<h1>Changelog</h1><br><br>
 		- Added changelog<br>
 		<img width="50" height="50" style="position: relative; top: 15px; left: 10px; margin-right: 5px; scale: 0.6;" src="./resources/icons/matter.png" /><h2>v0.3.1 - Matter</h2><br>
 		- Added Matter, Antimatter, Dark Matter, & Exotic Matter<br>
-		- Also added Black Hole, Unstable Matter, and Hypothetical Particles<br>
+		- Also added Black Hole, Unstable Matter, Hypothetical Particles, & UMFs<br>
 		- Added a respec button for Hyper Paths<br>
 		- Added a buy max button for Power Pylons<br>
 		<img width="50" height="50" style="position: relative; top: 15px; left: 10px; margin-right: 5px; scale: 0.6;" src="./resources/icons/hyper_rebirth.png" /><h2>v0.3 - Hyper Rebirth</h2><br>

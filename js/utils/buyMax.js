@@ -357,18 +357,18 @@ function buyMax(item = "None") {
 			buyBH1 = player.DM.points
 				.max(1)
 				.log(10)
-				.div(Decimal.max(1).log(1000, 10))
+				.div(Decimal.log(1000, 10))
 				.max(1)
 				.log(10)
-				.div(Decimal.max(1).log(1.1, 10))
+				.div(Decimal.log(1.1, 10))
 				.floor();
 			buyBH2 = player.DM.points
 				.max(1)
 				.log(10)
-				.div(Decimal.max(1).log(1000000, 10))
+				.div(Decimal.log(1000000, 10))
 				.max(1)
 				.log(10)
-				.div(Decimal.max(1).log(1.4, 10))
+				.div(Decimal.log(1.4, 10))
 				.floor();
 
 			if (buyBH1.gte(getBuyableAmount("BH", 11))) setBuyableAmount("BH", 11, buyBH1);

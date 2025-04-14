@@ -31,7 +31,7 @@ addLayer("R", {
 		if (baseGain.gte("1e1000000"))
 			baseGain = baseGain
 				.div("1e1000000")
-				.pow(new Decimal(1).div(base.max(1).log(10).sub(9999999).pow(0.05)))
+				.pow(Decimal.dOne.div(base.max(1).log(10).sub(9999999).pow(0.05)))
 				.mul("1e1000000");
 		return baseGain;
 	},
@@ -71,7 +71,7 @@ addLayer("R", {
 	// #endregion
 	// #region Next At
 	getNextAt() {
-		let baseGain = tmp.R.getResetGain.add(1);
+		let baseGain = tmp.R.getResetGain.add(1).floor();
 		baseGain = baseGain.div(tmp.R.directMult);
 		if (baseGain.gte("1e2000")) baseGain = baseGain.div("1e2000").pow(5).mul("1e2000");
 		if (baseGain.gte(1e17)) baseGain = baseGain.div(1e17).pow(4).mul(1e17);
@@ -83,9 +83,10 @@ addLayer("R", {
 	prestigeButtonText() {
 		if (inChallenge("SR", 11)) return "Challenges are stopping you from Rebirthing";
 
-		let text;
-		if (tmp.R.getResetGain.lt(1e17)) return "Rebirth for " + formatWhole(tmp.R.getResetGain) + " Rebirth Points";
-		return formatWhole(tmp.R.getResetGain) + "<br>(" + format(tmp.R.softcapEffects[1]) + " base) RP";
+		if (tmp.R.getResetGain.lt(1)) return `Reach ${formatWhole(tmp.R.requires)} Cash to Rebirth`;
+		if (tmp.R.getResetGain.lt(1000)) return `Rebirth for ${formatWhole(tmp.R.getResetGain)} Rebirth Points, next at ${formatWhole(tmp.R.getNextAt)} Cash`;
+		if (tmp.R.getResetGain.lt(1e17)) return `Rebirth for ${formatWhole(tmp.R.getResetGain)} Rebirth Points`;
+		return `${formatWhole(tmp.R.getResetGain)} (${format(tmp.R.softcapEffects[1])} base) RP`;
 	},
 	// #endregion
 	prestigeNotify() {
