@@ -40,7 +40,7 @@ addLayer("HC", {
 	image: "./resources/icons/hyper_rebirth.png",
 	row: "3",
 	resource: "Hyper Rebirth Points",
-	color: "#2ed5e8",
+	color: "#21b592",
 	type: "custom",
 	update(diff) {
 		let hypEss = new Decimal(1);
@@ -62,8 +62,7 @@ addLayer("HC", {
 		player.HC.hyperNumber = hypEss;
 		if (hasMilestone("UMF", 0))
 			player.HC.points = player.HC.points.add(this.getResetGain().times(0.0005).times(diff));
-		if (hasMilestone("UMF", 0))
-			player.HC.total = player.HC.total.add(this.getResetGain().times(0.0005).times(diff));
+		player.HC.total = player.HC.total.add(this.getResetGain().times(0.0005).times(diff));
 	},
 	effect() {
 		let totalitism = player.HC.total;
@@ -77,7 +76,7 @@ addLayer("HC", {
 	},
 	effectDescription() {
 		return (
-			"multiplying $ gain by " +
+			"multiplying Cash gain by " +
 			formatWhole(this.effect()[0]) +
 			", SRP gain by " +
 			format(this.effect()[1]) +
@@ -137,14 +136,14 @@ addLayer("HC", {
 		0: {
 			requirementDescription: "1 Total HRP",
 			effectDescription:
-				"The Machine is now permanently unlocked, keep $ Upgrades v2 on Hyper Reset, unlock Hyper Cash, and keep all buyables, upgrades and automation unlocked",
+				"The Machine is now permanently unlocked, keep Cash Upgrades v2 on Hyper Rebirth, unlock Hyper Cash, and keep all buyables, upgrades and automation unlocked",
 			done() {
 				return player.HC.total.gte(1);
 			},
 		},
 		1: {
 			requirementDescription: "6 Total HRP",
-			effectDescription: "All Buyables (including Pylons) automation is 10 times as effective",
+			effectDescription: "All Buyables (including Pylons) automation is 10&times; as effective",
 			done() {
 				return player.HC.total.gte(6);
 			},
@@ -158,7 +157,7 @@ addLayer("HC", {
 		},
 		3: {
 			requirementDescription: "42 Total HRP",
-			effectDescription: "Automate all pre-Hyper upgrades except Omega",
+			effectDescription: "Automate all pre-Hyper upgrades except the final Super Rebirth Upgrade",
 			done() {
 				return player.HC.total.gte(42);
 			},
@@ -189,7 +188,7 @@ addLayer("HC", {
 				player.HC.paths.push(1);
 			},
 			title: "The Basic Path",
-			description: "Multiply $ gain by 10,000",
+			description: "Multiply Cash gain 10,000&times;",
 		},
 		21: {
 			cost() {
@@ -197,7 +196,7 @@ addLayer("HC", {
 				base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 1)));
 				return base;
 			},
-			description: "Multiply RP gain by 10,000",
+			description: "Multiply Rebirth Point gain 10,000&times;",
 			branches: [11, 31],
 			canAfford() {
 				return hasUpgrade("HC", 11);
@@ -210,7 +209,7 @@ addLayer("HC", {
 				base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 1)));
 				return base;
 			},
-			description: "Start with 12 SRP, and reduce SRP base cost by 1e9",
+			description: "Start with 12 Super Rebirth Points, and reduce SRP base cost by /1e9",
 			canAfford() {
 				return hasUpgrade("HC", 21);
 			},
@@ -238,7 +237,7 @@ addLayer("HC", {
 				base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 2)));
 				return base;
 			},
-			description: "Power Pylons become 5 times more effective",
+			description: "Power Pylons become 5&times; more effective",
 			branches: [12, 32],
 			canAfford() {
 				return hasUpgrade("HC", 12);
@@ -252,7 +251,7 @@ addLayer("HC", {
 				return base;
 			},
 			description:
-				"You start with all Power Pylons unlocked, keep all Power milestones on Hyper reset, and reduce Power Pylon scaling",
+				"You start with all Power Pylons unlocked, keep all Power milestones on Hyper Rebirth, and reduce Power Pylon scaling",
 			canAfford() {
 				return hasUpgrade("HC", 22);
 			},
@@ -269,10 +268,10 @@ addLayer("HC", {
 				player.HC.paths.push(3);
 			},
 			title: "The Hyper Path",
-			description: "Multiply Hyper Cash gain based on $",
-			tooltip: "log10($ + 10)^0.4",
+			description: "Multiply Hyper Cash gain based on Cash",
+			tooltip: "log<sub>10</sub>($ + 10)<sup>0.4</sup>",
 			effectDisplay() {
-				return "x" + format(player.points.add(10).max(1).log(10).pow(0.4));
+				return "&times;" + format(player.points.add(10).max(1).log(10).pow(0.4));
 			},
 		},
 		23: {
@@ -281,7 +280,7 @@ addLayer("HC", {
 				base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 3)));
 				return base;
 			},
-			description: "Multiply Hyper Cash gain by 10",
+			description: "Multiply Hyper Cash gain by 10&times;",
 			branches: [13, 33],
 			canAfford() {
 				return hasUpgrade("HC", 13);
@@ -295,7 +294,7 @@ addLayer("HC", {
 				return base;
 			},
 			description: "Hyper Cash also boosts RP, SRP and Hyper Essence",
-			tooltip: "RP: x(HC + 1)<br>SRP: x(log(log(HC + 10) + 10))<br>HE: x(HC^0.1/3 + 1)",
+			tooltip: "RP: &times;(HC + 1)<br>SRP: &timesl(log<sub>10</sub>(log<sub>10</sub>(HC+10) +10))<br>HE: &times;(HC<sup>0.1</sup>/3 +1)",
 			canAfford() {
 				return hasUpgrade("HC", 23);
 			},
@@ -312,7 +311,7 @@ addLayer("HC", {
 				player.HC.paths.push(4);
 			},
 			title: "The Combined Path",
-			description: "Multiply $, Power, and RP gain by 100",
+			description: "Multiply Cash, Power, and Rebirth Points gain by 100&times;",
 		},
 		24: {
 			cost() {
@@ -320,7 +319,7 @@ addLayer("HC", {
 				base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 4)));
 				return base;
 			},
-			description: "Multiply $ gain and PPy effect by 200",
+			description: "Multiply Cash gain and Power Pylon efficiency effect by 200&times;",
 			branches: [14, 34],
 			canAfford() {
 				return hasUpgrade("HC", 14);
@@ -333,7 +332,7 @@ addLayer("HC", {
 				base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 4)));
 				return base;
 			},
-			description: "Divide RP, SRP, and PPy cost by 100,000, and increase both of the $ buyables bases",
+			description: "Reduce Rebirth Points, Super Rebirth Points, and Power Pylons cost by /100,000, and increase both of the Cash Buyables' bases",
 			canAfford() {
 				return hasUpgrade("HC", 24);
 			},
@@ -474,7 +473,7 @@ addLayer("C", {
 		let text;
 		if (!hasUpgrade("HC", 33))
 			text =
-				"raising $ gain by " +
+				"raising Cash gain by ^" +
 				format(tmp.C.effect[0]) +
 				"<br>Producing " +
 				format(hyperCashGain()[0]) +
@@ -483,20 +482,20 @@ addLayer("C", {
 
 		if (hasUpgrade("HC", 33))
 			text =
-				"raising $ gain by " +
+				"raising Cash gain by ^" +
 				format(tmp.C.effect[0]) +
-				", multiplying RP gain by  " +
+				", boosting Rebirth Points gain by &times;" +
 				format(tmp.C.effect[1]) +
-				", multiplying SRP gain by  " +
+				", boosting Super Rebirth Points gain by &times;" +
 				format(tmp.C.effect[2]) +
-				", multiplying Hyper Essence gain by  " +
+				", boosting Hyper Essence gain by &times;" +
 				format(tmp.C.effect[3]) +
 				"<br>Producing " +
 				format(hyperCashGain()[0]) +
 				"/sec";
 
 		if (hyperCashGain()[0].gte(100))
-			text = text + "<br>Hyper Cash gain is softcapped past 100, dividing it by " + format(hyperCashGain()[1][0]);
+			text = text + "<br>Hyper Cash gain is softcapped past 100, reducing it /" + format(hyperCashGain()[1][0]);
 
 		return text;
 	},

@@ -104,6 +104,7 @@ td {
 .left {
 	position: absolute;
 	left: 0;
+	overflow-x: hidden;
 }
 
 .remove {
@@ -126,7 +127,8 @@ td {
 	position: absolute;
 	overflow-y: auto;
 	overflow-x: auto;
-	transition-duration: 0s
+	transition-duration: 0s;
+	overflow-x: hidden;
 }
 
 .instant {
@@ -140,6 +142,7 @@ td {
 .col.right {
 	top: 0;
 	right: 0;
+	overflow-x: hidden;
 }
 
 #app {

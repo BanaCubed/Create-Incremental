@@ -70,7 +70,7 @@ function matterGain(matterType) {
 function retryMatters() {
 	if (
 		confirm(
-			"Are you sure that you want to reset your matters? This will reset EVERYTHING in row 5, even completed matters!"
+			"Are you sure that you want to reset your matters? This will reset everything related to matters except the completion status of paths (progress within path is still lost)!"
 		)
 	) {
 		layerDataReset("M");
@@ -109,9 +109,9 @@ addLayer("M", {
 	},
 	effectDescription() {
 		return (
-			"dividing Antimatter gain by " +
+			"reducing Antimatter gain /" +
 			format(this.effect()) +
-			", and multiplying $, RP, SRP, Power and HE gain by " +
+			", and boosting Cash, Rebirth Points, Super Rebirth Points, Power and Hyper Essence gain by &times;" +
 			format(this.effect2()) +
 			"<br>(" +
 			format(matterGain(1)) +
@@ -120,6 +120,9 @@ addLayer("M", {
 	},
 	tabFormat: ["main-display", "buyables", "blank", "milestones", "upgrades"],
 	color: "#2dc0d6",
+	nodeStyle: {
+		"background-color": "rgb(104, 104, 104)",
+	},
 	previousTab: "HC",
 	branches: ["HC"],
 	upgrades: {
@@ -131,24 +134,23 @@ addLayer("M", {
 		12: {
 			title: "Anti-Antimatter",
 			cost: new Decimal(10),
-			description: "Divide Antimatter's nerf by 3",
+			description: "Reduce Antimatter's nerf by /3",
 		},
 		13: {
 			title: '"Normal Upgrade"',
 			cost: new Decimal(15),
-			description: "Multiply both of Matter's effect by 1.2",
+			description: "Multiply both of Matter's effects by &times;1.2",
 		},
 		14: {
 			title: "Proton",
 			cost: new Decimal(60),
 			description: "Increase Quarks effect",
-			tooltip: "x/10 -> x/3",
+			tooltip: "x/10 &#8594; x/3",
 		},
 		21: {
 			title: "Nuclear Fission",
 			cost: new Decimal(500),
 			description: "Milestones now also multiply Matter gain at a reduced rate",
-			tooltip: "Mult = Div^0.7<br>Milestone 2 is ^0.2 instead and is based on Matter",
 			effect() {
 				let mGain = new Decimal(1);
 				if (hasMilestone("M", 0)) mGain = mGain.times(new Decimal(4).pow(0.7));
@@ -157,7 +159,7 @@ addLayer("M", {
 				return mGain;
 			},
 			effectDisplay() {
-				return "x" + format(this.effect());
+				return "&times;" + format(this.effect());
 			},
 		},
 		22: {
@@ -185,14 +187,14 @@ addLayer("M", {
 				return new Decimal(5).times(new Decimal(expo).pow(x));
 			},
 			title: "Create a Quark",
-			tooltip: "Base effect: x/10 + 1<br>Base cost: 5*1.16^x",
+			tooltip: "Base effect: x/10 + 1<br>Base cost: 5&times;1.16<sup>x</sup>",
 			display() {
 				return (
 					"Quarks multiply matter and divide antimatter gain<br>Cost: " +
 					coolDynamicFormat(this.cost(), 3) +
 					"<br>You have " +
 					coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0) +
-					" quarks<br>Currently multiplying/dividing by " +
+					" quarks<br>Currently: &times;/&divide;" +
 					coolDynamicFormat(this.effect(), 2)
 				);
 			},
@@ -221,14 +223,14 @@ addLayer("M", {
 				return new Decimal(1000000).times(new Decimal(expo).pow(x));
 			},
 			title: "Create an Atom",
-			tooltip: "Base effect: (x + 1)^1.6<br>Base cost: 5,000,000*1.2^x",
+			tooltip: "Base effect: (x + 1)<sup>1.6</sup><br>Base cost: 5,000,000&times;1.2<sup>x</sup>",
 			display() {
 				return (
 					"Atoms multiply matter and divide antimatter gain<br>Cost: " +
 					coolDynamicFormat(this.cost(), 3) +
 					"<br>You have " +
 					coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0) +
-					" atoms<br>Currently multiplying/dividing by " +
+					" atomsCurrently: &times;/&divide;" +
 					coolDynamicFormat(this.effect(), 2)
 				);
 			},
@@ -306,9 +308,9 @@ addLayer("AM", {
 	},
 	effectDescription() {
 		return (
-			"dividing Matter gain by " +
+			"reducing Matter gain /" +
 			format(this.effect()) +
-			", and multiplying $, RP, SRP, Power and HE gain by " +
+			", and boosting Cash, Rebirth Points, Super Rebirth Points, Power and Hyper Essence gain by &times;" +
 			format(this.effect2()) +
 			"<br>(" +
 			format(matterGain(2)) +
@@ -317,6 +319,12 @@ addLayer("AM", {
 	},
 	tabFormat: ["main-display", "buyables", "upgrades"],
 	color: "#d6442d",
+	nodeStyle: {
+		"background-color": "black",
+		"background-position-x": "9px",
+		"background-position-y": "3px",
+		border: "white 2px solid",
+	},
 	branches: ["HC"],
 	layerShown() {
 		return hasAchievement("A", 101);
@@ -326,40 +334,39 @@ addLayer("AM", {
 			title: "X Dimension",
 			cost: new Decimal(6),
 			description: "Multiply Antimatter gain based on Dark Matter and Exotic Matter",
-			tooltip: "log1.5(DM + EM + 1.5)",
+			tooltip: "log<sub>1.5</sub>(DM + EM + 1.5)",
 			effect() {
 				return player.DM.points.add(player.EM.points.add(1.5)).max(1).log(1.5);
 			},
 			effectDisplay() {
-				return "x" + format(this.effect());
+				return "&times;" + format(this.effect());
 			},
 		},
 		12: {
 			title: "Y Dimension",
 			cost: new Decimal(20),
 			description: "Reduce Matter's division to Antimatter",
-			tooltip: "^0.5 -> ^0.3",
+			tooltip: "^0.5 &#8594; ^0.3",
 		},
 		13: {
 			title: "Z Dimension",
 			cost: new Decimal(35),
-			description: "Increase Antimatter's second effect",
-			tooltip: "Effect ^1.2",
+			description: "Raise Antimatter's second effect ^1.2",
 		},
 		14: {
 			title: "W Dimension",
 			cost: new Decimal(50),
-			description: "Raise Antimatter gain by 1.2",
+			description: "Raise Antimatter gain ^1.2",
 		},
 		21: {
 			title: "Infinity?",
 			cost: new Decimal(100),
-			description: "Unlock some Antimatter buyables",
+			description: "Unlock some Antimatter Buyables",
 		},
 		22: {
 			title: "Discount",
 			cost: new Decimal(10000),
-			description: "Lower the cost scaling of Antimatter buyables",
+			description: "Slow the cost scaling of Antimatter buyables",
 			tooltip: "-0.05 to exponent",
 		},
 		23: {
@@ -371,7 +378,7 @@ addLayer("AM", {
 		24: {
 			title: "S Dimension?",
 			cost: new Decimal(100000000),
-			description: "Multiply Antimatter gain by 10",
+			description: "Multiply Antimatter gain by 10&times;",
 		},
 	},
 	buyables: {
@@ -382,14 +389,14 @@ addLayer("AM", {
 				return new Decimal(100).pow(new Decimal(expo).pow(x));
 			},
 			title: "Antimatter Galaxy",
-			tooltip: "Base effect: 1.25^x<br>Base cost: 100^(1.1^x)",
+			tooltip: "Base effect: 1.25<sup>x</sup><br>Base cost: 100<sup>(1.1<sup>x</sup>)</sup>",
 			display() {
 				return (
 					"Multiply Antimatter gain<br>Cost: " +
 					coolDynamicFormat(this.cost(), 3) +
 					"<br>Count: " +
 					coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0) +
-					"<br>Currently: x" +
+					"<br>Currently: &times;" +
 					coolDynamicFormat(this.effect(), 2)
 				);
 			},
@@ -416,14 +423,14 @@ addLayer("AM", {
 				return new Decimal(200).pow(new Decimal(expo).pow(x));
 			},
 			title: "Replicanti Galaxy?",
-			tooltip: "Base effect: 1.15^x<br>Base cost: 200^(1.15^x)",
+			tooltip: "Base effect: 1.15<sup>x</sup><br>Base cost: 200<sup>(1.15<sup>x</sup>)</sup>",
 			display() {
 				return (
 					"Multiply Antimatter gain, again<br>Cost: " +
 					coolDynamicFormat(this.cost(), 3) +
 					"<br>Count: " +
 					coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0) +
-					"<br>Currently: x" +
+					"<br>Currently: &times;" +
 					coolDynamicFormat(this.effect(), 2)
 				);
 			},
@@ -447,8 +454,8 @@ addLayer("AM", {
 				if (hasUpgrade("AM", 22)) expo = expo.sub(0.05);
 				return new Decimal(500).pow(new Decimal(expo).pow(x));
 			},
-			title: "Some other Antimatter Dimensions reference",
-			tooltip: "Base effect: 1.2^x<br>Base cost: 500^(1.2^x)",
+			title: "Tachyon Galaxy??",
+			tooltip: "Base effect: 1.2<sup>x</sup><br>Base cost: 500<sup>(1.2<sup>x</sup>)</sup>",
 			display() {
 				return (
 					"Divide Matter gain<br>Cost: " +
@@ -487,7 +494,7 @@ addLayer("DM", {
 	},
 	row: 3,
 	symbol: "DM",
-	image: "./resources/icon/darkmatter.png",
+	image: "./resources/icons/darkmatter.png",
 	update(diff) {
 		if (hasUpgrade("HC", 41)) player.DM.points = player.DM.points.add(matterGain(3).times(diff));
 	},
@@ -507,9 +514,9 @@ addLayer("DM", {
 	},
 	effectDescription() {
 		return (
-			"dividing Exotic Matter gain by " +
+			"reducing Exotic Matter gain /" +
 			format(this.effect()) +
-			", and multiplying $, RP, SRP, Power and HE gain by " +
+			", and boosting Cash, Rebirth Points, Super Rebirth Points, Power and Hyper Essence gain by &times;" +
 			format(this.effect2()) +
 			"<br>(" +
 			format(matterGain(3)) +
@@ -535,14 +542,14 @@ addLayer("DM", {
 	upgrades: {
 		11: {
 			title: "Void Matter",
-			description: "Multiply Dark Matter gain by 1.5 and raise it ^1.1",
+			description: "Multiply Dark Matter gain 1.5&times; and raise it ^1.1",
 			cost: new Decimal(8),
 		},
 		12: {
 			title: "Growing Void",
 			description: "Dark Matter boosts it's own gain",
 			cost: new Decimal(20),
-			tooltip: "log5(DM*2 + 5)",
+			tooltip: "log<sub>5</sub>(DM&times;2 + 5)",
 			effect() {
 				let base = player.DM.points.times(2).add(5).max(1).log(5);
 				if (hasMilestone("BH", 1)) base = base.pow(2);
@@ -559,9 +566,9 @@ addLayer("DM", {
 		},
 		21: {
 			title: "Inflation in Hell",
-			description: "Boost Dark Matter gain based on $",
+			description: "Boost Dark Matter gain based on Cash",
 			cost: new Decimal(50),
-			tooltip: "log($)^0.1",
+			tooltip: "log<sub>2</sub>($ +10)<sup>0.1</sup>",
 			effect() {
 				let base = player.points.add(10).max(1).log(10).max(1).pow(0.1);
 				if (hasMilestone("BH", 1)) base = base.pow(2);
@@ -592,14 +599,14 @@ addLayer("DM", {
 				return new Decimal(100).times(new Decimal(expo).pow(y));
 			},
 			title: "Anti Hawking Radiation",
-			tooltip: "Base effect: 1.65^x<br>Base cost: 100*(2^x)",
+			tooltip: "Base effect: 1.65<sup>x</sup><br>Base cost: 100&times;(2<sup>x</sup>)",
 			display() {
 				return (
 					"Multiply Black Hole's gain<br>Cost: " +
 					coolDynamicFormat(this.cost(), 3) +
 					"<br>Count: " +
 					coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0) +
-					"<br>Currently: x" +
+					"<br>Currently: &times;" +
 					coolDynamicFormat(this.effect(), 2)
 				);
 			},
@@ -627,14 +634,14 @@ addLayer("DM", {
 				return new Decimal(400).times(new Decimal(expo).pow(y));
 			},
 			title: "Sacrifice",
-			tooltip: "Base effect: 1.2^x<br>Base cost: 400*(2^x), exponent increases with count",
+			tooltip: "Base effect: 1.2<sup>x</sup><br>Base cost: 400&times;(2<sup>x</sup>)",
 			display() {
 				return (
 					"Multiply Black Hole's gain, again<br>Cost: " +
 					coolDynamicFormat(this.cost(), 3) +
 					"<br>Count: " +
 					coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0) +
-					"<br>Currently: x" +
+					"<br>Currently: &times;" +
 					coolDynamicFormat(this.effect(), 2)
 				);
 			},
@@ -678,7 +685,7 @@ addLayer("DM", {
 
 addLayer("BH", {
 	name: "black-hole",
-	resource: "plank lengths^3 of Black Hole volume",
+	resource: "plank volumes of Black Hole",
 	startData() {
 		return {
 			unlocked: true,
@@ -697,9 +704,9 @@ addLayer("BH", {
 	},
 	effectDescription() {
 		return (
-			"multiplying Dark Matter gain by " +
+			"boosting Dark Matter gain &times;" +
 			format(this.effect()) +
-			", but divide their own gain by " +
+			", but reduce their own gain /" +
 			format(this.nerf()) +
 			"<br>(" +
 			format(this.gain()) +
@@ -729,14 +736,14 @@ addLayer("BH", {
 				return new Decimal(1000).pow(new Decimal(expo).pow(y));
 			},
 			title: "Big Black Hole",
-			tooltip: "Base effect: 3^x<br>Base cost: 1,000^(1.1^x)",
+			tooltip: "Base effect: 3<sup>x</sup><br>Base cost: 1,000<sup>(1.1<sup>x</sup>)</sup>",
 			display() {
 				return (
 					"Multiply Black Hole's gain<br>Cost: " +
 					coolDynamicFormat(this.cost(), 3) +
 					"<br>Count: " +
 					coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0) +
-					"<br>Currently: x" +
+					"<br>Currently: &times;" +
 					coolDynamicFormat(this.effect(), 2)
 				);
 			},
@@ -764,14 +771,14 @@ addLayer("BH", {
 				return new Decimal(1000000).pow(new Decimal(expo).pow(y));
 			},
 			title: "Gift from the Abyss",
-			tooltip: "Base effect: 5^x<br>Base cost: 1,000,000^(1.4^x)",
+			tooltip: "Base effect: 5<sup>x</sup><br>Base cost: 1,000,000<sup>(1.4<sup>x</sup>)</sup>",
 			display() {
 				return (
 					"Multiply Dark Matter gain<br>Cost: " +
 					coolDynamicFormat(this.cost(), 3) +
 					"<br>Count: " +
 					coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0) +
-					"<br>Currently: x" +
+					"<br>Currently: &times;" +
 					coolDynamicFormat(this.effect(), 2)
 				);
 			},
@@ -821,7 +828,7 @@ addLayer("BH", {
 				return hasUpgrade("DM", 23) && player.BH.points.gte("1e65");
 			},
 			requirementDescription: "1e65 BHV",
-			effectDescription: "Raise BHV gain by ^1.15",
+			effectDescription: "Raise BHV gain ^1.15",
 		},
 		3: {
 			unlocked() {
@@ -852,7 +859,7 @@ addLayer("EM", {
 	},
 	row: 3,
 	symbol: "EM",
-	image: "./resources/exomatter.png",
+	image: "./resources/icons/exomatter.png",
 	update(diff) {
 		if (hasUpgrade("HC", 41)) player.EM.points = player.EM.points.add(matterGain(4).times(diff));
 		if (inChallenge("EM", 12)) player.EM.realParticle = player.EM.realParticle.add(diff);
@@ -868,9 +875,9 @@ addLayer("EM", {
 	},
 	effectDescription() {
 		return (
-			"dividing Dark Matter gain by " +
+			"reducing Dark Matter gain /" +
 			format(this.effect()) +
-			", and multiplying $, RP, SRP, Power and HE gain by " +
+			", and boosting Cash, Rebirth Points, Super Rebirth Points, Power and Hyper Essence gain by &times;" +
 			format(this.effect2()) +
 			"<br>(" +
 			format(matterGain(4)) +
@@ -892,7 +899,7 @@ addLayer("EM", {
 			content: [
 				[
 					"display-text",
-					"Challenges will reset Exotic Matter, Dark Matter, Hypothetical Particles and Unstable Matter, but will NOT reset any upgrades or milestones (and buyables for challenge 1) in this layer. Entering a Challenge will save the current amount of Dark Matter and Exotic Matter which will be returned after exiting the challenge",
+					"Challenges will reset Exotic Matter, Dark Matter, Hypothetical Particles and Unstable Matter, but will NOT reset any upgrades or milestones (or buyables for challenge 1) in this layer. Entering a Challenge will save the current amount of Dark Matter and Exotic Matter which will be returned after exiting the challenge",
 				],
 				"blank",
 				"challenges",
@@ -920,18 +927,18 @@ addLayer("EM", {
 			title: "Stability",
 			description: "Boost Hypothetical Particles production of Unstable Matter",
 			cost: new Decimal(100),
-			tooltip: "log10k -> log2k",
+			tooltip: "log<sub>10,000</sub> &#8594; log<sub>2,000</sub>",
 		},
 		14: {
 			title: "Neutrality",
 			description: "Matter and Antimatter boost Exotic Matter gain",
 			cost: new Decimal(500),
-			tooltip: "log1,00,000(M*AM)",
+			tooltip: "log<sub>1,000,000</sub>(M*AM)",
 			effect() {
 				return player.M.points.times(player.AM.points).add(1).max(1).log(1000000).add(1);
 			},
 			effectDisplay() {
-				return "x" + format(this.effect());
+				return "&times;" + format(this.effect());
 			},
 		},
 		21: {
@@ -949,19 +956,19 @@ addLayer("EM", {
 			title: "I'm running out of names",
 			description: "Exotic Matter boosts it's own gain",
 			cost: new Decimal(1.32e81),
-			tooltip: "log1e10(EM + 1e10)",
+			tooltip: "log<sub>1e10</sub>(EM +1e10)",
 			effect() {
 				return player.EM.points.add(1e10).max(1).log(1e10).add(1);
 			},
 			effectDisplay() {
-				return "x" + format(this.effect());
+				return "&times;" + format(this.effect());
 			},
 		},
 		24: {
 			title: "Frogbert",
-			description: "$ boosts Unstable Matter's half-life",
+			description: "Cash boosts Unstable Matter's half-life",
 			cost: new Decimal(1e193),
-			tooltip: "log(log($ + 10) + 10)",
+			tooltip: "log<sub>10</sub>(log<sub>10</sub>($ +10) +10)",
 			effect() {
 				return player.points.add(10).max(1).log(10).add(10).max(1).log(10);
 			},
@@ -980,7 +987,7 @@ addLayer("EM", {
 				return new Decimal(10).times(new Decimal(expo).pow(y));
 			},
 			title: "Hypotheory",
-			tooltip: "Base effect: x<br>Base cost: 10*(1.5^x)",
+			tooltip: "Base effect: x<br>Base cost: 10&times;(1.5<sup>x</sup>)",
 			display() {
 				return (
 					"Start producing Hypothetical Particles<br>Cost: " +
@@ -1018,14 +1025,14 @@ addLayer("EM", {
 				return new Decimal("1e25").times(new Decimal(expo).pow(y));
 			},
 			title: "Theoretical",
-			tooltip: "Base effect: 2^x<br>Base cost: 1e25*(5^x)",
+			tooltip: "Base effect: 2<sup>x</sup><br>Base cost: 1e25&times;(5<sup>x</sup>)",
 			display() {
 				return (
 					"Multiply the previous buyables effect<br>Cost: " +
 					coolDynamicFormat(this.cost(), 3) +
 					"<br>Count: " +
 					coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0) +
-					"<br>Currently: x" +
+					"<br>Currently: &times;" +
 					coolDynamicFormat(this.effect(), 2)
 				);
 			},
@@ -1045,7 +1052,7 @@ addLayer("EM", {
 	milestones: {
 		0: {
 			requirementDescription: "500,000 Hypothetical Particles",
-			effectDescription: "Raise Unstable Matter gain by 1.05",
+			effectDescription: "Raise Unstable Matter gain ^1.05",
 			done() {
 				return player.HP.points.gte(500000);
 			},
@@ -1055,7 +1062,7 @@ addLayer("EM", {
 		},
 		1: {
 			requirementDescription: "5,000,000 Hypothetical Particles",
-			effectDescription: "Raise Unstable Matter gain by 1.05, again",
+			effectDescription: "Raise Unstable Matter gain ^1.05, again",
 			done() {
 				return player.HP.points.gte(5000000);
 			},
@@ -1065,7 +1072,7 @@ addLayer("EM", {
 		},
 		2: {
 			requirementDescription: "1e24 Exotic Matter",
-			effectDescription: "Raise Unstable Matter gain by 1.05, yet again",
+			effectDescription: "Raise Unstable Matter gain ^1.05, yet again",
 			done() {
 				return player.EM.points.gte("1e24");
 			},
@@ -1097,7 +1104,7 @@ addLayer("EM", {
 				return player.EM.points.add("69").max(1).log("69");
 			},
 			rewardEffect() {
-				return "<br>Currently: x" + format(this.effect());
+				return "<br>Currently: &times;" + format(this.effect());
 			},
 			onExit() {
 				player.DM.points = player.EM.darksave;
@@ -1107,7 +1114,7 @@ addLayer("EM", {
 		12: {
 			name: "Theorem > Conjecture",
 			challengeDescription:
-				"There are linearly increasing Real Particles that divide Hypothetical Particle gain<br>Entering this challenge also temporarily resets both Exotic Matter buyables",
+				"There are linearly increasing Real Particles that divide Hypothetical Particle gain<br>Entering this challenge also <i>temporarily</i> resets both Exotic Matter buyables",
 			onEnter() {
 				player.EM.buy1save = getBuyableAmount("EM", 11);
 				player.EM.buy2save = getBuyableAmount("EM", 12);
@@ -1132,7 +1139,7 @@ addLayer("EM", {
 				return player.UnsM.points.gte("420");
 			},
 			rewardDescription() {
-				return "Raising Hypothetical Particles by ^1.4";
+				return "Raising Hypothetical Particles ^1.4";
 			},
 		},
 	},
@@ -1152,6 +1159,11 @@ addLayer("EM", {
 				return true;
 			},
 		},
+	},
+	nodeStyle: {
+		"background-color": "rgb(255, 0, 255)",
+		"background-position-y": "10px",
+		"background-position-x": "3px",
 	},
 });
 
@@ -1250,14 +1262,14 @@ addLayer("UnsM", {
 	effectDescription() {
 		if (this.halfLife().lte(1))
 			return (
-				"raising Exotic Matter gain by ^" +
+				"raising Exotic Matter gain ^" +
 				format(this.effect()) +
 				"<br>But they are unstable and decay with a half-life of " +
 				formatTime(this.halfLife())
 			);
 		if (this.halfLife().lte(3600))
 			return (
-				"raising Exotic Matter gain by ^" +
+				"raising Exotic Matter gain ^" +
 				format(this.effect()) +
 				"<br>But they decay with a half-life of " +
 				formatTime(this.halfLife()) +
@@ -1266,7 +1278,7 @@ addLayer("UnsM", {
 			);
 		else
 			return (
-				"raising Exotic Matter gain by ^" +
+				"raising Exotic Matter gain ^" +
 				format(this.effect()) +
 				"<br>But they have a half-life of " +
 				formatTime(this.halfLife()) +
@@ -1350,9 +1362,9 @@ addLayer("UMF", {
 	},
 	effectDescription() {
 		return (
-			"multiplying all matters gain by " +
+			"boosting all matters gain &times;" +
 			format(tmp.UMF.effect) +
-			"<br>Your matters are multiplying $, RP, SRP, Power and HE gain by " +
+			"<br>Your matters are boosting Cash, Rebirth Points, Super Rebirth Points, Power and Hyper Essence gain by &times;" +
 			format(tmp.UMF.effect2)
 		);
 	},
@@ -1363,7 +1375,7 @@ addLayer("UMF", {
 	milestones: {
 		0: {
 			requirementDescription: "1 Ultimate Matter Fragment",
-			effectDescription: "Passively gain 0.05% of HRP gained on reset, also automate Omega",
+			effectDescription: "Passively gain 0.05% of HRP gained on reset, also automate Unending",
 			done() {
 				return player.UMF.points.gte(1);
 			},
@@ -1379,14 +1391,13 @@ addLayer("UMF", {
 			requirementDescription: "3 Ultimate Matter Fragments",
 			effectDescription() {
 				return (
-					"Matters now also multiply HRP and the first Cash Buyables amount at a reduced rate<br>Currently: x" +
+					"Matters now also multiply Hyper Rebirth Points and the first Cash Buyables amount at a reduced rate<br>Currently: &times;" +
 					format(tmp.UMF.effect2.max(1).log(4).add(1))
 				);
 			},
 			done() {
 				return player.UMF.points.gte(3);
 			},
-			tooltip: "Boosts are based on log(x)",
 			effect() {
 				return tmp.UMF.effect2.max(1).log(4).add(1);
 			},
@@ -1394,7 +1405,7 @@ addLayer("UMF", {
 		3: {
 			requirementDescription: "4 Ultimate Matter Fragments",
 			effectDescription:
-				"The above milestone now also powers Hyper Cash's last three effects<br>Also annihilate all types of matter from the universe, preventing any more inflation from happening in this universe...<br>CURRENT ENDGAME",
+				"The above milestone now also powers Hyper Cash's last three effects<br>CURRENT ENDGAME",
 			done() {
 				return player.UMF.points.gte(4);
 			},

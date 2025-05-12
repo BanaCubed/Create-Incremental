@@ -58,9 +58,9 @@ addLayer("U", {
 					"display-text",
 					() => {
 						if (hasUpgrade("U", 34) || hasUpgrade("R", 21)) {
-							return `The Machine can provide boosts to both Cash and RP, but be aware that you can't change your selection once you make it.<br>Bonus is reset on Rebirth.`;
+							return `The Machine can provide boosts to both Cash and RP, but selected boost(s) cannot be deselected.<br>Bonus is reset on Rebirth.`;
 						}
-						return "The Machine needs Cash Upgrade 12 to be unlocked";
+						return "The Machine needs Cash Upgrade 12 to be bought to function";
 					},
 				],
 				"clickables",
@@ -233,7 +233,7 @@ addLayer("U", {
 			unlocked() {
 				return hasUpgrade("R", 13);
 			},
-			effect: () => hasMilestone("P", 8) ? 0.3 : 0.2,
+			effect: () => (hasMilestone("P", 8) ? 0.3 : 0.2),
 		},
 		// #endregion
 		// #region Cash Upgrade 11
@@ -247,20 +247,23 @@ addLayer("U", {
 			unlocked() {
 				return hasUpgrade("R", 13);
 			},
-			effect: () => hasMilestone("P", 8) ? 0.2 : 0.1,
+			effect: () => (hasMilestone("P", 8) ? 0.2 : 0.1),
 		},
 		// #endregion
 		// #region Cash Upgrade 12
 		34: {
 			title: "Mechanic's Dream",
-			description: () => `Unlock The Machine${hasMilestone("P", 8) ? `<br>Boosts to The Machine are raised ^${format(ue("U", 34))}` : ""}`,
+			description: () =>
+				`Unlock The Machine${
+					hasMilestone("P", 8) ? `<br>Boosts to The Machine are raised ^${format(ue("U", 34))}` : ""
+				}`,
 			cost: new Decimal("1e9"),
 			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
 			unlocked() {
 				return hasUpgrade("R", 13);
 			},
-			effect: () => hasMilestone("P", 8) ? 1.25 : 1,
+			effect: () => (hasMilestone("P", 8) ? 1.25 : 1),
 		},
 		// #endregion
 		// #region Cash Upgrade 13
@@ -273,7 +276,7 @@ addLayer("U", {
 			unlocked() {
 				return hasUpgrade("R", 24);
 			},
-			effect: () => hasMilestone("P", 8) ? 1000 : 10,
+			effect: () => (hasMilestone("P", 8) ? 1000 : 10),
 		},
 		// #endregion
 		// #region Cash Upgrade 14
@@ -287,45 +290,43 @@ addLayer("U", {
 			unlocked() {
 				return hasUpgrade("R", 24);
 			},
-			effect: () => hasMilestone("P", 8) ? 0.2 : 0.1,
+			effect: () => (hasMilestone("P", 8) ? 0.2 : 0.1),
 		},
 		// #endregion
 		// #region Cash Upgrade 15
 		43: {
 			title: "Synergism",
-			description: "Slightly improve Cash and Rebirth Point gain based on each other",
-			tooltip() {
-				if (!hasMilestone("P", 8)) return "RP*log(log($ + 10) + 10)<br>$*log(RP + 10)";
-				if (hasMilestone("P", 8)) return "RP*log8(log9($ + 9) + 8)<br>$*log8(RP + 8)";
-			},
+			description: "Slightly boost Cash and Rebirth Points gain based on each other",
+			tooltip: () =>
+				`RP&times;log<sub>${tmp.U.upgrades[43].bases[1]}</sub>(log<sub>${tmp.U.upgrades[43].bases[0]}</sub>
+				($+${tmp.U.upgrades[43].bases[0]})+${tmp.U.upgrades[43].bases[1]})<br>
+				$&times;log<sub>${tmp.U.upgrades[43].bases[2]}</sub>(RP+${tmp.U.upgrades[43].bases[2]})`,
 			cost: new Decimal("3e15"),
 			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
 			unlocked() {
 				return hasUpgrade("R", 24);
 			},
-			effectDisplay() {
-				if (!hasMilestone("P", 8))
-					return (
-						"RP x" +
-						coolDynamicFormat(player.points.add(10).max(1).log(10).add(10).max(1).log(10), 2) +
-						"<br>$ x" +
-						coolDynamicFormat(player.R.points.add(10).max(1).log(10), 2)
-					);
-				if (hasMilestone("P", 8))
-					return (
-						"RP x" +
-						coolDynamicFormat(player.points.add(9).max(1).log(9).add(8).max(1).log(8), 2) +
-						"<br>$ x" +
-						coolDynamicFormat(player.R.points.add(8).max(1).log(8), 2)
-					);
+			effectDisplay: () => `<br>RP &times;${format(ue("U", 43)[0])}<br>$ &times;${format(ue("U", 43)[1])}`,
+			effect() {
+				const bases = tmp.U.upgrades[43].bases;
+				return [
+					player.points.add(bases[0]).max(1).log(bases[0]).add(bases[1]).max(1).log(bases[1]),
+					player.R.points.add(bases[2]).max(1).log(bases[2]),
+				];
+			},
+			bases() {
+				if (!hasMilestone("P", 8)) {
+					return [10, 10, 10];
+				}
+				return [9, 8, 8];
 			},
 		},
 		// #endregion
 		// #region Cash Upgrade 16
 		44: {
 			title: "Ankh",
-			description: "Boost the second RP buyables effect slightly",
+			description: "Boost Rebirth Buyable 2's effect slightly",
 			cost: new Decimal("1e25"),
 			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
@@ -341,7 +342,7 @@ addLayer("U", {
 		// #region Cash Upgrade 17
 		51: {
 			title: "Tesla Coils",
-			description: "Multiply $ gain by Power",
+			description: "Multiply Cash gain by Power",
 			cost: new Decimal("1e80"),
 			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
@@ -349,30 +350,30 @@ addLayer("U", {
 				return hasMilestone("P", 6);
 			},
 			effectDisplay() {
-				return "x" + coolDynamicFormat(player.P.points, 2);
+				return "&times;" + format(player.P.points, 2);
 			},
 		},
 		// #endregion
 		// #region Cash Upgrade 18
 		52: {
 			title: "Heavenly Batteries",
-			description: "Multiply RP gain based on Power",
+			description: "Multiply Rebirth Points gain based on Power",
 			cost: new Decimal("1e92"),
 			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
-			tooltip: "log3(Power + 3)",
+			tooltip: "log<sub>3</sub>(Power + 3)",
 			unlocked() {
 				return hasMilestone("P", 6);
 			},
 			effectDisplay() {
-				return "x" + coolDynamicFormat(player.P.points.add(3).max(1).log(3), 2);
+				return "&times;" + format(player.P.points.add(3).max(1).log(3), 2);
 			},
 		},
 		// #endregion
 		// #region Cash Upgrade 19
 		53: {
 			title: "Maybe too much inflation",
-			description: "Unlock another challenge<br>The challenge is permanently unlocked after buying this upgrade",
+			description: "Unlock another challenge<br>This unlock is permanent",
 			cost: new Decimal("1e95"),
 			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
@@ -384,7 +385,7 @@ addLayer("U", {
 		// #region Cash Upgrade 20
 		54: {
 			title: "Powerup",
-			description: "Double efficiency of the first three Power Pylons",
+			description: "Double efficiency of the Power Pylons A-C",
 			cost: new Decimal("1e100"),
 			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
@@ -402,8 +403,9 @@ addLayer("U", {
 		11: {
 			title: "Cash Mode",
 			display() {
-				if (!getClickableState(this.layer, this.id)) return "Quadruples $ gain<br>Doubles RP gain";
-				else return "Quadruples $ gain<br>Doubles RP gain<br>ACTIVE";
+				if (!getClickableState(this.layer, this.id))
+					return "Quadruples Cash gain<br>Doubles Rebirth Points gain";
+				else return "Quadruples Cash gain<br>Doubles Rebirth Points gain<br>ACTIVE";
 			},
 			canClick() {
 				if (hasUpgrade("R", 32)) return true;
@@ -425,8 +427,8 @@ addLayer("U", {
 		12: {
 			title: "Neutral Mode",
 			display() {
-				if (!getClickableState(this.layer, this.id)) return "Triples $ gain<br>Triples RP gain";
-				else return "Triples $ gain<br>Triples RP gain<br>ACTIVE";
+				if (!getClickableState(this.layer, this.id)) return "Triples Cash gain<br>Triples Rebirth Points gain";
+				else return "Triples Cash gain<br>Triples Rebirth Points gain<br>ACTIVE";
 			},
 			canClick() {
 				if (hasUpgrade("R", 32)) return true;
@@ -448,8 +450,9 @@ addLayer("U", {
 		13: {
 			title: "Rebirth Mode",
 			display() {
-				if (!getClickableState(this.layer, this.id)) return "Doubles $ gain<br>Quadruples RP gain";
-				else return "Doubles $ gain<br>Quadruples RP gain<br>ACTIVE";
+				if (!getClickableState(this.layer, this.id))
+					return "Doubles Cash gain<br>Quadruples Rebirth Points gain";
+				else return "Doubles Cash gain<br>Quadruples Rebirth Points gain<br>ACTIVE";
 			},
 			canClick() {
 				if (hasUpgrade("R", 32)) return true;
@@ -517,22 +520,22 @@ addLayer("U", {
 			},
 			display() {
 				let text =
-					"Boost RP gain<br>Cost: " +
+					"Boost Rebirth Points gain<br>Cost: " +
 					coolDynamicFormat(this.cost(), 3) +
 					"<br>Count: " +
 					coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0) +
-					"<br>Effect: x" +
+					"<br>Effect: &times;" +
 					coolDynamicFormat(this.effect(), 2);
 
 				if (this.softcap(getBuyableAmount("U", 11)) !== null)
 					text =
 						text +
-						"<br>Effect past 1e500,000 is softcapped, dividing the effect by " +
+						"<br>Effect past &times;1e500,000 is softcapped, reducing it by /" +
 						format(this.softcap(getBuyableAmount("U", 11)));
 
 				return text;
 			},
-			tooltip: "Base effect: 1.1^x<br>Base cost: 1,000,000*(10^x)",
+			tooltip: "Effect: 1.1<sup>x</sup><br>Cost: 1,000,000&times;10<sup>x</sup>",
 			unlocked() {
 				return hasMilestone("SR", 2);
 			},
@@ -556,15 +559,15 @@ addLayer("U", {
 			},
 			display() {
 				return (
-					"Boost Power Pylon effect<br>Cost: " +
+					"Boost Power Pylon efficiency<br>Cost: " +
 					coolDynamicFormat(this.cost(), 3) +
 					"<br>Count: " +
 					coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0) +
-					"<br>Effect: x" +
+					"<br>Effect: &times;" +
 					coolDynamicFormat(this.effect(), 2)
 				);
 			},
-			tooltip: "Base effect: 1.2^x<br>Base cost: 1e450*((1e5^x)^0.1)^x",
+			tooltip: "Effect: 1.2<sup>x</sup><br>Cost: 1e450&times; ((1e5<sup>x</sup>)<sup>0.1</sup>)<sup>x</sup>",
 			unlocked() {
 				return hasMilestone("P", 10);
 			},

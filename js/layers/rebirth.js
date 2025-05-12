@@ -84,7 +84,10 @@ addLayer("R", {
 		if (inChallenge("SR", 11)) return "Challenges are stopping you from Rebirthing";
 
 		if (tmp.R.getResetGain.lt(1)) return `Reach ${formatWhole(tmp.R.requires)} Cash to Rebirth`;
-		if (tmp.R.getResetGain.lt(1000)) return `Rebirth for ${formatWhole(tmp.R.getResetGain)} Rebirth Points, next at ${formatWhole(tmp.R.getNextAt)} Cash`;
+		if (tmp.R.getResetGain.lt(1000))
+			return `Rebirth for ${formatWhole(tmp.R.getResetGain)} Rebirth Points, next at ${formatWhole(
+				tmp.R.getNextAt
+			)} Cash`;
 		if (tmp.R.getResetGain.lt(1e17)) return `Rebirth for ${formatWhole(tmp.R.getResetGain)} Rebirth Points`;
 		return `${formatWhole(tmp.R.getResetGain)} (${format(tmp.R.softcapEffects[1])} base) RP`;
 	},
@@ -114,12 +117,12 @@ addLayer("R", {
 		if (getClickableState("U", 11)) mul = mul.mul(2);
 		if (getClickableState("U", 12)) mul = mul.mul(3);
 		if (getClickableState("U", 13)) mul = mul.mul(4);
-		if (hasUpgrade("U", 43) && !hasMilestone("P", 8)) mul = mul.mul(ue("U", 43));
+		if (hasUpgrade("U", 43) && !hasMilestone("P", 8)) mul = mul.mul(ue("U", 43)[0]);
 		mul = mul.mul(tmp.R.buyables[11].effect);
 		mul = mul.mul(tmp.SR.effect[0]);
 		mul = mul.mul(tmp.U.buyables[11].effect);
 		mul = mul.mul(machineBonuses());
-		if (hasUpgrade("U", 52)) mul = mul.mul(ue("U", 52));
+		if (hasUpgrade("U", 52)) mul = mul.mul(player.P.points.add(3).max(1).log(3));
 		return mul;
 	},
 	directMult() {
@@ -165,17 +168,22 @@ addLayer("R", {
 	},
 	// #region Effect Description
 	effectDescription() {
-		let text = "multiplying $ gain by " + format(tmp.R.effect, 2);
+		let text = "boosting Cash gain by &times;" + format(tmp.R.effect, 2);
 		if (tmp.R.getResetGain.gte(1e17))
-			text = text + "<br>RP gain past 1e17 is softcapped, diving it by " + format(tmp.R.softcapEffects[0][0]);
+			text =
+				text +
+				"<br>Rebirth Point gain past 1e17 is softcapped, reducing their gain by /" +
+				format(tmp.R.softcapEffects[0][0]);
 		if (tmp.R.getResetGain.gte("1e2000"))
 			text =
 				text +
-				"<br>RP gain past 1e2000 is softcapped again, further diving it by " +
+				"<br>Rebirth Point gain past 1e2000 is softcapped again, further reducing their gain by /" +
 				format(tmp.R.softcapEffects[0][1]);
 		if (tmp.R.getResetGain.gte("1e1000000"))
 			text =
-				text + "<br>RP gain has become victim of inflation, diving it by " + format(tmp.R.softcapEffects[0][2]);
+				text +
+				"<br>Rebirth Points have become victim to inflation, reducing their gain by /" +
+				format(tmp.R.softcapEffects[0][2]);
 		return text;
 	},
 	// #endregion
@@ -183,7 +191,7 @@ addLayer("R", {
 		// #region Rebirth Upgrade 1
 		11: {
 			title: "Five Dollars",
-			description: () => `Multiply Cash gain by &times;${formatWhole(ue("R", 11))}`,
+			description: () => `Boost Cash gain by &times;${formatWhole(ue("R", 11))}`,
 			cost: new Decimal(1),
 			effect: 5,
 		},
@@ -243,7 +251,7 @@ addLayer("R", {
 		// #region Rebirth Upgrade 8
 		24: {
 			title: "Upgrading Revival",
-			description: "Unlock more Cash/Rebirth Upgrades",
+			description: "Unlock more Cash & Rebirth Upgrades",
 			cost: new Decimal("1e8"),
 			unlocked() {
 				return hasAchievement("A", 31);
@@ -314,14 +322,14 @@ addLayer("R", {
 				return new Decimal(20000).mul(new Decimal(1.2).pow(new Decimal(x).pow(scalar)));
 			},
 			title: "Rebirth Booster",
-			tooltip: "Base effect: 1.5^x<br>Base cost:20,000*(1.2^x^2)",
+			tooltip: "Base effect: 1.5<sup>x</sup><br>Base cost:20,000&times;(1.2<sup>x<sup>2</sup></sup>)",
 			display() {
 				return (
 					"Multiply RP gain<br>Cost: " +
 					coolDynamicFormat(this.cost(), 3) +
 					"<br>Count: " +
 					coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0) +
-					"<br>Effect: x" +
+					"<br>Effect: &times;" +
 					coolDynamicFormat(this.effect(), 2)
 				);
 			},
@@ -345,8 +353,8 @@ addLayer("R", {
 				if (hasChallenge("SR", 21)) scalar = scalar - 0.25;
 				return new Decimal(1000000).mul(new Decimal(3).pow(new Decimal(x).pow(scalar)));
 			},
-			title: "Rebirth Booster Booster",
-			tooltip: "Base effect: +x/4<br>Base cost:1,000,000*(3^x^2)",
+			title: "Rebirth Booster<sup>2</sup>",
+			tooltip: "Base effect: +x/4<br>Base cost:1,000,000&times;(3<sup>x<sup>2</sup></sup>)",
 			display() {
 				return (
 					"Boost the previous buyables power<br>Cost: " +

@@ -85,7 +85,7 @@ function getPointGen(softcaps = true) {
 		const element = [12, 13, 14, 22, 24, 31, 41][index];
 		if (hu("U", element)) gain = gain.times(ue("U", element));
 	}
-	if (hu("U", 43)) gain = gain;
+	if (hu("U", 43)) gain = gain.mul(ue("U", 43)[1]);
 
 	if (hasUpgrade("U", 51)) gain = gain.times(player.P.points.add(1));
 

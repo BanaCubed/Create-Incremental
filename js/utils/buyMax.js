@@ -10,6 +10,9 @@ function buyMax(item = "None") {
 	// Power Pylons
 	// Current Optimisation - Very Good
 
+	// Editors Note:
+	// What the fuck is this bullshit
+
 	if (item === "Power") {
 		const pylons = [
 			{
@@ -354,25 +357,22 @@ function buyMax(item = "None") {
 		let buyBH1;
 		let buyBH2;
 		if (player.BH.points.gt(0)) {
-			buyBH1 = player.DM.points
+			buyBH1 = player.BH.points
 				.max(1)
-				.log(10)
-				.div(Decimal.log(1000, 10))
+				.log(1000)
 				.max(1)
-				.log(10)
-				.div(Decimal.log(1.1, 10))
-				.floor();
-			buyBH2 = player.DM.points
+				.log(1.1).mul(2)
+				.ceil();
+			buyBH2 = player.BH.points
 				.max(1)
-				.log(10)
-				.div(Decimal.log(1000000, 10))
+				.log(1e6)
 				.max(1)
-				.log(10)
-				.div(Decimal.log(1.4, 10))
-				.floor();
+				.log(1.4).mul(2)
+				.ceil();
 
 			if (buyBH1.gte(getBuyableAmount("BH", 11))) setBuyableAmount("BH", 11, buyBH1);
 			if (buyBH2.gte(getBuyableAmount("BH", 12))) setBuyableAmount("BH", 12, buyBH2);
+			console.log(format(buyBH1))
 		}
 	}
 

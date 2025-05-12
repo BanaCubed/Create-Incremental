@@ -12,6 +12,9 @@ addLayer("SR", {
 		return hasMilestone(this.layer, 2);
 	},
 	color: "#eb1a3d",
+	nodeStyle: {
+		"background-color": "#750202",
+	},
 	resource: "Super Rebirth Points",
 	requires() {
 		let req = new Decimal(1e19);
@@ -55,30 +58,31 @@ addLayer("SR", {
 	},
 	effectDescription() {
 		return (
-			"multiplying RP gain by " +
+			"boosting RP gain by &times;" +
 			coolDynamicFormat(this.effect()[1], 2) +
-			" and $ gain by " +
+			" and Cash gain by &times;" +
 			coolDynamicFormat(this.effect()[0], 2)
 		);
 	},
 	milestones: {
 		0: {
 			requirementDescription: "1 SRP",
-			effectDescription: "$ upgrades 1-8 are kept on all resets, and RP buyables don't spend RP.",
+			effectDescription: "Cash Upgrades 1-8 are kept on all resets, and Rebirth Buyables don't spend RP.",
 			done() {
 				return player.SR.points.gte(1);
 			},
 		},
 		1: {
 			requirementDescription: "2 SRP",
-			effectDescription: "Keep first 4 RP upgrades on SRP reset, and keep $ upgrades 9-11 on all resets",
+			effectDescription:
+				"Keep first 4 Rebirth Upgrades on Super Rebirth, and keep Cash Upgrades 9-11 on all resets",
 			done() {
 				return player.SR.points.gte(2);
 			},
 		},
 		2: {
 			requirementDescription: "3 SRP",
-			effectDescription: "Unlock a $ buyable (kept on Rebirths), and unlock the ability to buy max SRP",
+			effectDescription: "Unlock a Cash buyable (kept on Rebirths), and the ability to buy max SRP",
 			done() {
 				return player.SR.points.gte(3);
 			},
@@ -86,22 +90,23 @@ addLayer("SR", {
 		3: {
 			requirementDescription: "5 SRP",
 			effectDescription:
-				"ALL buyables are kept on Super Rebirth resets, keep RP upgrade 6 and 7, boost the $ buyable, and unlock the first challenge",
+				"<b>ALL</b> buyables are kept on Super Rebirths, keep Rebirth Upgrade 6-7 on Super Rebirths, boost the Cash Buyable, and unlock the first challenge",
 			done() {
 				return player.SR.points.gte(5);
 			},
-			tooltip: "$ buyable boost: 1.1^x -> 1.3^x",
+			tooltip: "Cash Buyable boost: 1.1<sup>x</sup> &#8594; 1.3<sup>x</sup>",
 		},
 		4: {
 			requirementDescription: "8 SRP",
-			effectDescription: "Raise $ gain ^1.1",
+			effectDescription: "Boost Cash gain ^1.1",
 			done() {
 				return player.SR.points.gte(8);
 			},
 		},
 		5: {
 			requirementDescription: "12 SRP",
-			effectDescription: "Keep ALL $ and RP upgrades on Rebirth and Super Rebirth, and unlock another challenge",
+			effectDescription:
+				"Keep <b>ALL</b> Cash and Rebirth Upgrades on Rebirth and Super Rebirth, and unlock the second challenge",
 			done() {
 				return player.SR.points.gte(12);
 			},
@@ -129,7 +134,7 @@ addLayer("SR", {
 		},
 		9: {
 			requirementDescription: "100 SRP",
-			effectDescription: "Every bought upgrade before Super Rebirth increases $ gain by 40% (exponential)",
+			effectDescription: "Every bought upgrade before Super Rebirth increases Cash gain by 40% (exponential)",
 			done() {
 				return player.SR.points.gte(100);
 			},
@@ -179,12 +184,12 @@ addLayer("SR", {
 				return upgs;
 			},
 			tooltip() {
-				return "Currently: x" + coolDynamicFormat(this.effect(), 2);
+				return "Currently: &times;" + coolDynamicFormat(this.effect(), 2);
 			},
 		},
 		10: {
 			requirementDescription: "Unlock the Fourth Challenge",
-			effectDescription: "Keep the fourth challenge unlocked even when $ Upgrade 19 is locked or removed",
+			effectDescription: "Keep the fourth challenge unlocked even when Cash Upgrade 19 is locked or removed",
 			done() {
 				return hasUpgrade("U", 53);
 			},
@@ -204,11 +209,11 @@ addLayer("SR", {
 				return hasMilestone(this.layer, 3);
 			},
 			rewardDescription: "Gain 20% of RP gain every second",
-			goalDescription: "Reach 30,000,000 $",
+			goalDescription: "Reach 30,000,000 Cash",
 		},
 		12: {
 			name: "A Low Income Family<br>in the Midst of<br>Inflation",
-			challengeDescription: "$ gain ^0.5 and Rebirth requirement x10",
+			challengeDescription: "Cash gain ^0.5 and Rebirth requirement &times;10",
 			canComplete() {
 				return player.R.points.gte("1e15");
 			},
@@ -216,7 +221,7 @@ addLayer("SR", {
 				return hasMilestone(this.layer, 5);
 			},
 			rewardDescription: "Rebirth Requirement /10",
-			goalDescription: "Reach 1e15 RP",
+			goalDescription: "Reach 1e15 Rebirth Points",
 		},
 		21: {
 			name: "Clicking Simulator<br>202X",
@@ -227,8 +232,8 @@ addLayer("SR", {
 			unlocked() {
 				return hasMilestone("P", 1);
 			},
-			rewardDescription: "Multiply automatic RP gain by 10 and also reduce RP buyables scaling",
-			goalDescription: "Reach 1e20 RP",
+			rewardDescription: "Boost automatic Rebirth Points gain by &times;10 and also reduce RP buyables scaling",
+			goalDescription: "Reach 1e20 Rebirth Points",
 			onEnter() {
 				player.U.upgrades = [];
 				player.R.upgrades = [];
@@ -239,27 +244,31 @@ addLayer("SR", {
 		},
 		22: {
 			name: "Sold Out",
-			challengeDescription: "All $ Upgrades and The Machine are disabled, but, you passively gain 1 $ per second",
+			challengeDescription:
+				"Cash Upgrades and The Machine are disabled, but, you passively gain 1 Cash per second",
 			canComplete() {
 				return player.R.points.gte("1e30");
 			},
 			unlocked() {
 				return hasMilestone("SR", 10);
 			},
-			rewardDescription: "Unlock Power Pylon D, and $ boosts SRP gain slightly",
-			goalDescription: "Reach 4e36 RP",
+			rewardDescription: "Unlock Power Pylon D, and Cash boosts Super Rebirth Points gain slightly",
+			goalDescription: "Reach 4e36 Rebirth Points",
 			rewardEffect() {
 				return player.points.add(10).max(1).log(10).pow(0.1);
 			},
 			rewardDisplay() {
-				return "Raising SRP cost by ^" + coolDynamicFormat(new Decimal(1).div(this.rewardEffect()), 4);
+				return (
+					"Raising Super Rebirth Points cost by ^" +
+					coolDynamicFormat(new Decimal(1).div(tmp.SR.challenges[22].rewardEffect), 4)
+				);
 			},
 		},
 		31: {
 			name: "Tax Evasion Simulator",
 			challengeDescription() {
 				return (
-					"There is rapidly increasing Tax that divides $ gain<br>" +
+					"There is rapidly increasing Tax that divides Cash gain<br>" +
 					formatWhole(challengeCompletions("SR", 31)) +
 					"/4 Completions"
 				);
@@ -276,13 +285,15 @@ addLayer("SR", {
 				"Boost each Power Pylon based on the previous Power Pylon<br>On first completion unlock Power Pylon E<br>On final completion unlock Power Pylon F",
 			goalDescription() {
 				let goal = new Decimal("1e50").times(new Decimal(1000).pow(challengeCompletions("SR", 31)));
-				return "Reach " + coolDynamicFormat(goal, 0) + " RP";
+				return "Reach " + coolDynamicFormat(goal, 0) + " Rebirth Points";
 			},
 			rewardEffect() {
 				return new Decimal(50).div(new Decimal(1.5).pow(challengeCompletions("SR", 31)));
 			},
 			rewardDisplay() {
-				return "Multiplies by log" + coolDynamicFormat(this.rewardEffect(), 0) + " of previous Pylon";
+				return (
+					"Multiplies by log<sub>" + coolDynamicFormat(this.rewardEffect(), 0) + "</sub> of previous Pylon"
+				);
 			},
 			completionLimit: new Decimal(4),
 			onEnter() {
@@ -337,23 +348,23 @@ addLayer("SR", {
 				return hasMilestone("P", 10);
 			},
 			cost: new Decimal("1e600"),
-			currencyDisplayName: "$",
+			currencyDisplayName: "Cash",
 			currencyInternalName: "points",
-			title: "Δ - Delta",
-			description: "Raise RP gain by ^1.05",
+			title: "Unstoppable",
+			description: "Raise Rebirth Points gain by ^1.05",
 		},
 		12: {
 			unlocked() {
 				return hasMilestone("P", 10);
 			},
 			cost: new Decimal("1e270"),
-			currencyDisplayName: "RP",
+			currencyDisplayName: "Rebirth Points",
 			currencyInternalName: "points",
 			currencyLayer() {
 				return "R";
 			},
-			title: "Σ - Sigma",
-			description: "Raise SRP cost by ^0.66",
+			title: "Unyeilding",
+			description: "Raise Super Rebirth Points cost by ^0.66",
 		},
 		13: {
 			unlocked() {
@@ -361,7 +372,7 @@ addLayer("SR", {
 			},
 			cost: new Decimal(2600),
 			currencyDisplayName: "SRP",
-			title: "Ψ - Phi",
+			title: "Unlimited",
 			description: "Raise Power Pylon effect by ^1.2",
 		},
 		14: {
@@ -374,20 +385,20 @@ addLayer("SR", {
 			currencyLayer() {
 				return "P";
 			},
-			title: "Θ - Theta",
-			description: "Automate the second $ buyable<br>And unlock another upgrade...",
+			title: "Unrelenting",
+			description: "Automate the second Cash Buyable<br>And unlock another upgrade...",
 		},
 		21: {
 			style: {
-				width: "250px",
-				height: "150px",
+				width: "480px",
+				"border-bottom-right-radius": "20px",
 			},
 			unlocked() {
 				return hasUpgrade("SR", 14);
 			},
-			title: "Ω - Omega",
+			title: "Unending",
 			description:
-				"Start calculating Hyper Essence<br>Hyper Essence is calculated based on log($), SRP, and log(Power)<br>Unlock another prestige layer...",
+				"Unlock Hyper Rebirth<br>Hyper Rebirth Point gain is based on Cash, Super Rebirth Points, and Power",
 			cost: new Decimal(5000),
 		},
 	},
@@ -443,7 +454,7 @@ addLayer("P", {
 	image: "./resources/icons/power.png",
 	row: "2",
 	resource: "Power",
-	color: "#d6c611",
+	color: "#ebe46a",
 	type: "custom",
 	baseAmount() {
 		return player.SR.points;
@@ -501,7 +512,7 @@ addLayer("P", {
 		return player.P.points.div(100).add(1);
 	},
 	effectDescription() {
-		return "boosting The Machine by x" + coolDynamicFormat(tmp.P.effect, 3);
+		return "boosting The Machine by &times;" + coolDynamicFormat(tmp.P.effect, 3);
 	},
 	position: 1,
 	milestones: {
@@ -528,14 +539,14 @@ addLayer("P", {
 		},
 		3: {
 			requirementDescription: "5 PPyB",
-			effectDescription: "Each manually bought PPy boosts its own type by x1.15 (exponential)",
+			effectDescription: "Each manually bought Power Pylon boosts its own type by &times;1.15 (exponential)",
 			done() {
 				return player.P.pylobB.gte(5);
 			},
 		},
 		4: {
 			requirementDescription: "15,000 Power",
-			effectDescription: "Boost PPyA's effect by x5",
+			effectDescription: "Boost PPyA's effect by &times;5",
 			done() {
 				return player.P.points.gte(15000);
 			},
@@ -549,7 +560,7 @@ addLayer("P", {
 		},
 		6: {
 			requirementDescription: "1,000,000 Power",
-			effectDescription: "Slightly reduce Power Pylon Costs, unlock some more upgrades",
+			effectDescription: "Slightly reduce Power Pylon Costs, and unlock some more upgrades",
 			done() {
 				return player.P.points.gte("1e6");
 			},
@@ -563,37 +574,35 @@ addLayer("P", {
 		},
 		8: {
 			requirementDescription: "1e18 Power",
-			effectDescription: "Boost the first 16 $ upgrades ($ Upgrades v2)",
+			effectDescription: "Boost the first 16 Cash upgrades (Cash Upgrades v2)",
 			done() {
 				return player.P.points.gte("1e18");
 			},
 		},
 		9: {
 			requirementDescription: "1e20 Power",
-			effectDescription:
-				"Divide PPyF cost by SRP, PPyE by SRP^2, PPyD by SRP^3, PPyC by SRP^4, PPyB by SRP^5, PPyA by SRP^6",
+			effectDescription: "Reduce PPyF cost by /SRP, PPyE by /SRP<sup>2</sup> ... PPyA by /SRP<sup>6</sup>",
 			done() {
 				return player.P.points.gte("1e20");
 			},
 		},
 		10: {
 			requirementDescription: "12 PPyF",
-			effectDescription: "Unlock another $ buyable, and unlock some more upgrades (in SR layer)",
+			effectDescription: "Unlock another Cash Buyable, and unlock some more Super Rebirth Upgrades",
 			done() {
 				return player.P.pylobF.gte(12);
 			},
 		},
 		11: {
 			requirementDescription: "1e60 Power",
-			effectDescription:
-				"Automate Power Pylons A, B, and C, and Power Pylons no longer decrease any values when purchased",
+			effectDescription: "Automate PPyA-C, and Power Pylons no longer spend their cost",
 			done() {
 				return player.P.points.gte("1e60");
 			},
 		},
 		12: {
 			requirementDescription: "1e120 Power",
-			effectDescription: "Automate Power Pylons D and E",
+			effectDescription: "Automate PPyD-E",
 			done() {
 				return player.P.points.gte("1e120");
 			},

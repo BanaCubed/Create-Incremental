@@ -13,7 +13,7 @@ addLayer("A", {
 	},
 	update() {
 		let title = "Create Incremental";
-		if (hasAchievement("A", 11) && !hasUpgrade("A", 21)) {
+		if (!hasUpgrade("A", 21)) {
 			title = "Create Incremental, " + formatWhole(player.points) + " Cash";
 			changeFavicon("favicon.ico");
 		}
