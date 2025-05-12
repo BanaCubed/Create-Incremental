@@ -48,7 +48,7 @@
     z-index: 20000;
   
     background-color: var(--background_tooltip);
-    color: var(--points);
+    color: var(--color);
     content: attr(tooltip);
     font-size:14px;
 
@@ -74,8 +74,9 @@
 	height: 100%;
 	position: absolute;
 	left: 50%;
-	margin-left: -3px;
-	top: 0
+	margin-left: -0.5vw;
+	top: 0;
+    transition: none;
 }
 
 .hl {

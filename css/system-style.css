@@ -3,7 +3,6 @@
 	text-align: center;
 	font-family: "Inconsolata", monospace;
 	font-weight: bold;
-	table-align: center;
 	margin: auto;
 	-webkit-text-size-adjust: none;
 	text-size-adjust: none;
@@ -12,7 +11,7 @@
 
 *:focus {
 	outline: none;
-	webkit-outline: none;
+	--webkit-outline: none;
 }
 
 html, body {
@@ -105,6 +104,7 @@ td {
 .left {
 	position: absolute;
 	left: 0;
+	overflow-x: hidden;
 }
 
 .remove {
@@ -127,7 +127,8 @@ td {
 	position: absolute;
 	overflow-y: auto;
 	overflow-x: auto;
-	transition-duration: 0s
+	transition-duration: 0s;
+	overflow-x: hidden;
 }
 
 .instant {
@@ -141,6 +142,7 @@ td {
 .col.right {
 	top: 0;
 	right: 0;
+	overflow-x: hidden;
 }
 
 #app {
@@ -270,8 +272,8 @@ button > * {
 }
 
 ::-webkit-scrollbar-thumb {
-	border-radius: 5px;
-	background-color: var(--points);
+	border-radius: 5px 0 0 5px;
+	background-color: var(--color);
 	transition: all 0.3s;
 }
 
