@@ -1,32 +1,7 @@
-# Profectus
+# Create Incremental
+I really hope this time it works out.
 
-A game engine that grows with you
-
-[![Run on Repl.it](https://repl.it/badge/github/profectus-engine/Profectus)](https://repl.it/github/profectus-engine/Profectus)
-
-[Read the docs](https://moddingtree.com)
-
-## Project setup
-```
-npm install
-```
-
-### Hosts dev server and hot-reloads modules as they're changed
-```
-npm start
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Hosts the production build
-```
-npm run preview
-```
-
-### Runs the tests using vite-jest
-```
-npm run test
-```
+## Why are there three Create Incremental repos?
+The first one, ([Create-Incremental-Legacy-TMT](https://github.com/BanaCubed/Create-Incremental-Legacy-TMT)), was made in [The Modding Tree](https://github.com/Acamaeda/The-Modding-Tree), and was generally very buggy due to being my first game.
+The second one, ([Create-Incremental-Legacy-Profectus](https://github.com/BanaCubed/Create-Incremental-Legacy-Profectus)), was made in Profectus, and was generally less buggy but became really hard to work with after a while.
+This repo doesn't have any commit history shared with Profectus, meaning it cannot be updated, but it is much safer generally speaking to switch out aspects of the engine.
