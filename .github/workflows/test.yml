@@ -16,7 +16,8 @@ jobs:
               uses: actions/setup-node@v3
               with:
                   node-version: 21.x
-            - run: pnpm ci
+            - run: pnpm clean
+            - run: pnpm install --frozen-lockfile
             - run: pnpm run build --if-present
             - run: pnpm test
             - run: pnpm run lint
