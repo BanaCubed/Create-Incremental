@@ -1,8 +1,8 @@
 <template>
-    <Nodes />
-    <LeftNodes v-if="leftSideNodes" />
-    <RightNodes v-if="rightSideNodes" />
-    <Links v-if="branches" :links="unref(branches)" />
+	<Nodes />
+	<LeftNodes v-if="leftSideNodes" />
+	<RightNodes v-if="rightSideNodes" />
+	<Links v-if="branches" :links="unref(branches)" />
 </template>
 
 <script setup lang="tsx">
@@ -37,28 +37,28 @@ const RightNodes = () => props.rightSideNodes == null ? <></> :
 
 <style scoped>
 .left-side-nodes {
-    position: absolute;
-    left: 15px;
-    top: 65px;
+	position: absolute;
+	left: 15px;
+	top: 65px;
 }
 
 .side-nodes {
-    position: absolute;
-    right: 15px;
-    top: 65px;
+	position: absolute;
+	right: 15px;
+	top: 65px;
 }
 
 .left-side-nodes :deep(.treeNode),
 .side-nodes :deep(.treeNode) {
-    margin: 20px auto;
+	margin: 20px auto;
 }
 
 .small :deep(.treeNode) {
-    height: 60px;
-    width: 60px;
+	height: 60px;
+	width: 60px;
 }
 
 .small :deep(.treeNode) > *:first-child {
-    font-size: 30px;
+	font-size: 30px;
 }
 </style>

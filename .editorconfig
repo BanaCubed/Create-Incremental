@@ -1,0 +1,4 @@
+[*.{ts, tsx, vue}]
+tab_width = 4
+end_of_line = crlf
+indent_size = tab

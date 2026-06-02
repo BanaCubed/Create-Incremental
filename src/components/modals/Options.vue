@@ -1,44 +1,44 @@
 <template>
-    <Modal v-model="isOpen">
-        <template v-slot:header>
-            <div class="header">
-                <h2>Settings</h2>
-                <div class="option-tabs">
-                    <button :class="{ selected: isTab('behaviour') }" @click="setTab('behaviour')">
-                        Behaviour
-                    </button>
-                    <button
-                        :class="{ selected: isTab('appearance') }"
-                        @click="setTab('appearance')"
-                    >
-                        Appearance
-                    </button>
-                </div>
-            </div>
-        </template>
-        <template v-slot:body>
-            <div v-if="isTab('behaviour')">
-                <Toggle :title="unthrottledTitle" v-model="unthrottled" />
-                <Toggle v-if="projInfo.enablePausing" :title="isPausedTitle" v-model="isPaused" />
-                <Toggle :title="offlineProdTitle" v-model="offlineProd" />
-                <Toggle
-                    :title="showHealthWarningTitle"
-                    v-model="showHealthWarning"
-                    v-if="!projInfo.disableHealthWarning"
-                />
-                <Toggle :title="autosaveTitle" v-model="autosave" />
-                <FeedbackButton v-if="!autosave" class="button save-button" @click="save()"
-                    >Manually save</FeedbackButton
-                >
-            </div>
-            <div v-if="isTab('appearance')">
-                <Select :title="themeTitle" :options="themes" v-model="theme" />
-                <SettingFields />
-                <Toggle :title="showTPSTitle" v-model="showTPS" />
-                <Toggle :title="alignModifierUnitsTitle" v-model="alignUnits" />
-            </div>
-        </template>
-    </Modal>
+	<Modal v-model="isOpen">
+		<template v-slot:header>
+			<div class="header">
+				<h2>Settings</h2>
+				<div class="option-tabs">
+					<button :class="{ selected: isTab('behaviour') }" @click="setTab('behaviour')">
+						Behaviour
+					</button>
+					<button
+						:class="{ selected: isTab('appearance') }"
+						@click="setTab('appearance')"
+					>
+						Appearance
+					</button>
+				</div>
+			</div>
+		</template>
+		<template v-slot:body>
+			<div v-if="isTab('behaviour')">
+				<Toggle :title="unthrottledTitle" v-model="unthrottled" />
+				<Toggle v-if="projInfo.enablePausing" :title="isPausedTitle" v-model="isPaused" />
+				<Toggle :title="offlineProdTitle" v-model="offlineProd" />
+				<Toggle
+					:title="showHealthWarningTitle"
+					v-model="showHealthWarning"
+					v-if="!projInfo.disableHealthWarning"
+				/>
+				<Toggle :title="autosaveTitle" v-model="autosave" />
+				<FeedbackButton v-if="!autosave" class="button save-button" @click="save()"
+					>Manually save</FeedbackButton
+				>
+			</div>
+			<div v-if="isTab('appearance')">
+				<Select :title="themeTitle" :options="themes" v-model="theme" />
+				<SettingFields />
+				<Toggle :title="showTPSTitle" v-model="showTPS" />
+				<Toggle :title="alignModifierUnitsTitle" v-model="alignUnits" />
+			</div>
+		</template>
+	</Modal>
 </template>
 
 <script setup lang="tsx">
@@ -130,39 +130,39 @@ const alignModifierUnitsTitle = <span class="option-title">
 
 <style>
 .option-tabs {
-    border-bottom: 2px solid var(--outline);
-    margin-top: 10px;
-    margin-bottom: -10px;
+	border-bottom: 2px solid var(--outline);
+	margin-top: 10px;
+	margin-bottom: -10px;
 }
 
 .option-tabs button {
-    background-color: transparent;
-    color: var(--foreground);
-    margin-bottom: -2px;
-    font-size: 14px;
-    cursor: pointer;
-    padding: 5px 20px;
-    border: none;
-    border-bottom: 2px solid var(--foreground);
+	background-color: transparent;
+	color: var(--foreground);
+	margin-bottom: -2px;
+	font-size: 14px;
+	cursor: pointer;
+	padding: 5px 20px;
+	border: none;
+	border-bottom: 2px solid var(--foreground);
 }
 
 .option-tabs button:not(.selected) {
-    border-bottom-color: transparent;
+	border-bottom-color: transparent;
 }
 
 .option-title .tooltip-container {
-    display: inline;
-    margin-left: 5px;
+	display: inline;
+	margin-left: 5px;
 }
 .option-title desc {
-    display: block;
-    opacity: 0.6;
-    font-size: small;
-    width: 300px;
-    margin-left: 0;
+	display: block;
+	opacity: 0.6;
+	font-size: small;
+	width: 300px;
+	margin-left: 0;
 }
 
 .save-button {
-    text-align: right;
+	text-align: right;
 }
 </style>
