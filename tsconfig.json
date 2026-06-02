@@ -18,35 +18,19 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": "src",
-    "types": [
-      "vite/client",
-      "node"
-    ],
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "scripthost"
-    ]
+    "types": ["vite/client", "node"],
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "tests/**/*.ts", "tests/**/*.tsx"],
+  "exclude": ["node_modules"],
   "typedocOptions": {
-      "entryPoints": ["src"],
-      "entryPointStrategy": "expand",
-      "cleanOutputDir": true,
-      "name": "Profectus",
-      "includeVersion": true,
-      "categorizeByGroup": false,
-      "readme": "none",
-      "out": "../docs/api"
+    "entryPoints": ["src"],
+    "entryPointStrategy": "expand",
+    "cleanOutputDir": true,
+    "name": "Profectus",
+    "includeVersion": true,
+    "categorizeByGroup": false,
+    "readme": "none",
+    "out": "../docs/api"
   }
 }

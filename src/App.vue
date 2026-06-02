@@ -1,18 +1,18 @@
 <template>
-    <div v-if="appErrors.length > 0" class="error-container" :style="theme">
-        <Error :errors="appErrors" />
+  <div v-if="appErrors.length > 0" class="error-container" :style="theme">
+    <Error :errors="appErrors" />
+  </div>
+  <template v-else>
+    <div id="modal-root" :style="theme" />
+    <div class="app" :style="theme" :class="{ useHeader }">
+      <Game />
+      <TPS v-if="unref(showTPS)" />
+      <AddictionWarning />
+      <NaNScreen />
+      <CloudSaveResolver />
+      <GameComponent />
     </div>
-    <template v-else>
-        <div id="modal-root" :style="theme" />
-        <div class="app" :style="theme" :class="{ useHeader }">
-            <Game />
-            <TPS v-if="unref(showTPS)" />
-            <AddictionWarning />
-            <NaNScreen />
-            <CloudSaveResolver />
-            <GameComponent />
-        </div>
-    </template>
+  </template>
 </template>
 
 <script setup lang="tsx">
@@ -39,34 +39,34 @@ const theme = computed(() => themes[settings.theme].variables as unknown as CSSP
 const showTPS = toRef(settings, "showTPS");
 const appErrors = toRef(state, "errors");
 
-const GameComponent = () => gameComponents.map(c => render(c));
+const GameComponent = () => gameComponents.map((c) => render(c));
 </script>
 
 <style scoped>
 .app {
-    background-color: var(--background);
-    color: var(--foreground);
-    display: flex;
-    flex-flow: column;
-    min-height: 100%;
-    height: 100%;
+  background-color: var(--background);
+  color: var(--foreground);
+  display: flex;
+  flex-flow: column;
+  min-height: 100%;
+  height: 100%;
 }
 
 #modal-root {
-    position: absolute;
-    min-height: 100%;
-    height: 100%;
-    color: var(--foreground);
+  position: absolute;
+  min-height: 100%;
+  height: 100%;
+  color: var(--foreground);
 }
 
 .error-container {
-    background: var(--background);
-    overflow: auto;
-    width: 100%;
-    height: 100%;
+  background: var(--background);
+  overflow: auto;
+  width: 100%;
+  height: 100%;
 }
 
 .error-container > .error {
-    position: static;
+  position: static;
 }
 </style>

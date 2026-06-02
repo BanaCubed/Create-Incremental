@@ -1,56 +1,56 @@
 <template>
-    <div class="nav" v-if="useHeader" v-bind="$attrs">
-        <img v-if="banner" :src="banner" class="banner" :alt="title" />
-        <div v-else class="title">{{ title }}</div>
-        <div style="flex-grow: 1; cursor: unset"></div>
-        <div class="discord">
-            <span @click="openDiscord" class="material-icons">discord</span>
-            <ul class="discord-links">
-                <li v-if="discordLink">
-                    <a :href="discordLink" target="_blank">{{ discordName }}</a>
-                </li>
-                <li>
-                    <a href="https://discord.gg/yJ4fjnjU54" target="_blank">Profectus & Friends</a>
-                </li>
-                <li>
-                    <a href="https://discord.gg/F3xveHV" target="_blank">The Modding Tree</a>
-                </li>
-            </ul>
-        </div>
-        <div>
-            <a href="https://forums.moddingtree.com/" target="_blank">
-                <Tooltip display="Forums" :direction="Direction.Down" yoffset="5px">
-                    <span class="material-icons">forum</span>
-                </Tooltip>
-            </a>
-        </div>
+  <div class="nav" v-if="useHeader" v-bind="$attrs">
+    <img v-if="banner" :src="banner" class="banner" :alt="title" />
+    <div v-else class="title">{{ title }}</div>
+    <div style="flex-grow: 1; cursor: unset"></div>
+    <div class="discord">
+      <span @click="openDiscord" class="material-icons">discord</span>
+      <ul class="discord-links">
+        <li v-if="discordLink">
+          <a :href="discordLink" target="_blank">{{ discordName }}</a>
+        </li>
+        <li>
+          <a href="https://discord.gg/yJ4fjnjU54" target="_blank">Profectus & Friends</a>
+        </li>
+        <li>
+          <a href="https://discord.gg/F3xveHV" target="_blank">The Modding Tree</a>
+        </li>
+      </ul>
     </div>
-    <div v-else class="overlay-nav" v-bind="$attrs">
-        <div>
-            <a href="https://forums.moddingtree.com/" target="_blank">
-                <Tooltip display="Forums" :direction="Direction.Right" xoffset="7px">
-                    <span class="material-icons">forum</span>
-                </Tooltip>
-            </a>
-        </div>
-        <div class="discord">
-            <span @click="openDiscord" class="material-icons">discord</span>
-            <ul class="discord-links">
-                <li v-if="discordLink">
-                    <a :href="discordLink" target="_blank">{{ discordName }}</a>
-                </li>
-                <li>
-                    <a href="https://discord.gg/yJ4fjnjU54" target="_blank">Profectus & Friends</a>
-                </li>
-                <li>
-                    <a href="https://discord.gg/F3xveHV" target="_blank">The Modding Tree</a>
-                </li>
-            </ul>
-        </div>
+    <div>
+      <a href="https://forums.moddingtree.com/" target="_blank">
+        <Tooltip display="Forums" :direction="Direction.Down" yoffset="5px">
+          <span class="material-icons">forum</span>
+        </Tooltip>
+      </a>
     </div>
-    <SavesManager ref="savesManager" />
-    <Options ref="options" />
-    <Changelog ref="changelog" />
+  </div>
+  <div v-else class="overlay-nav" v-bind="$attrs">
+    <div>
+      <a href="https://forums.moddingtree.com/" target="_blank">
+        <Tooltip display="Forums" :direction="Direction.Right" xoffset="7px">
+          <span class="material-icons">forum</span>
+        </Tooltip>
+      </a>
+    </div>
+    <div class="discord">
+      <span @click="openDiscord" class="material-icons">discord</span>
+      <ul class="discord-links">
+        <li v-if="discordLink">
+          <a :href="discordLink" target="_blank">{{ discordName }}</a>
+        </li>
+        <li>
+          <a href="https://discord.gg/yJ4fjnjU54" target="_blank">Profectus & Friends</a>
+        </li>
+        <li>
+          <a href="https://discord.gg/F3xveHV" target="_blank">The Modding Tree</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <SavesManager ref="savesManager" />
+  <Options ref="options" />
+  <Changelog ref="changelog" />
 </template>
 
 <script setup lang="ts">
@@ -64,185 +64,189 @@ import Tooltip from "wrappers/tooltips/Tooltip.vue";
 const { useHeader, banner, title, discordName, discordLink, versionNumber } = projInfo;
 
 function openDiscord() {
-    window.open(discordLink, "mywindow");
+  window.open(discordLink, "mywindow");
 }
 
 const needsSync = computed(
-    () => galaxy.value?.loggedIn === true && !syncedSaves.value.includes(settings.active)
+  () => galaxy.value?.loggedIn === true && !syncedSaves.value.includes(settings.active),
 );
 </script>
 
 <style scoped>
 .nav {
-    background-color: var(--raised-background);
-    display: flex;
-    left: 0;
-    right: 0;
-    top: 0;
-    height: 46px;
-    width: 100%;
-    border-bottom: 4px solid var(--outline);
+  background-color: var(--raised-background);
+  display: flex;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 46px;
+  width: 100%;
+  border-bottom: 4px solid var(--outline);
 }
 
 .nav > * {
-    height: 46px;
-    width: 46px;
-    display: flex;
-    cursor: pointer;
-    flex-shrink: 0;
+  height: 46px;
+  width: 46px;
+  display: flex;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 
 .nav > .banner {
-    height: 100%;
-    width: unset;
+  height: 100%;
+  width: unset;
 }
 
 .overlay-nav {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    display: flex;
-    flex-direction: column;
-    z-index: 2;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
 }
 
 .overlay-nav > * {
-    height: 50px;
-    width: 50px;
-    display: flex;
-    cursor: pointer;
-    margin: 0;
-    align-items: center;
-    justify-content: center;
+  height: 50px;
+  width: 50px;
+  display: flex;
+  cursor: pointer;
+  margin: 0;
+  align-items: center;
+  justify-content: center;
 }
 
 .title {
-    font-size: 36px;
-    text-align: left;
-    margin-left: 12px;
-    cursor: unset;
+  font-size: 36px;
+  text-align: left;
+  margin-left: 12px;
+  cursor: unset;
 }
 
 .nav > .title {
-    width: unset;
-    flex-shrink: 1;
-    overflow: hidden;
-    white-space: nowrap;
+  width: unset;
+  flex-shrink: 1;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .nav .saves,
 .nav .info {
-    display: flex;
+  display: flex;
 }
 
 .tooltip-container {
-    width: 100%;
-    height: 100%;
-    display: flex;
+  width: 100%;
+  height: 100%;
+  display: flex;
 }
 
 .overlay-nav .discord {
-    position: relative;
+  position: relative;
 }
 
 .discord img {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .discord-links {
-    position: fixed;
-    top: 45px;
-    padding: 20px;
-    right: -280px;
-    width: 200px;
-    transition: right 0.25s ease;
-    background: var(--raised-background);
-    z-index: 10;
+  position: fixed;
+  top: 45px;
+  padding: 20px;
+  right: -280px;
+  width: 200px;
+  transition: right 0.25s ease;
+  background: var(--raised-background);
+  z-index: 10;
 }
 
 .overlay-nav .discord-links {
-    position: absolute;
-    left: -280px;
-    right: unset;
-    transition: left 0.25s ease;
+  position: absolute;
+  left: -280px;
+  right: unset;
+  transition: left 0.25s ease;
 }
 
 .overlay-nav .discord:hover .discord-links {
-    left: -10px;
+  left: -10px;
 }
 
 .discord-links li {
-    margin-bottom: 4px;
+  margin-bottom: 4px;
 }
 
 .discord-links li:first-child {
-    font-size: 1.2em;
+  font-size: 1.2em;
 }
 
 *:not(.overlay-nav) .discord:hover .discord-links {
-    right: 0;
+  right: 0;
 }
 
 .material-icons {
-    font-size: 36px;
+  font-size: 36px;
 }
 
 .material-icons:hover {
-    text-shadow: 5px 0 10px var(--link), -3px 0 12px var(--foreground);
+  text-shadow:
+    5px 0 10px var(--link),
+    -3px 0 12px var(--foreground);
 }
 
 .nav .version-container {
-    display: flex;
-    height: 25px;
-    margin-bottom: 0;
-    margin-left: 10px;
+  display: flex;
+  height: 25px;
+  margin-bottom: 0;
+  margin-left: 10px;
 }
 
 .overlay-nav .version-container {
-    width: unset;
-    height: 25px;
+  width: unset;
+  height: 25px;
 }
 
 .version {
-    color: var(--points);
+  color: var(--points);
 }
 
 .version:hover span {
-    text-shadow: 5px 0 10px var(--points), -3px 0 12px var(--points);
+  text-shadow:
+    5px 0 10px var(--points),
+    -3px 0 12px var(--points);
 }
 
 .nav > div > a,
 .overlay-nav > div > a {
-    color: var(--foreground);
-    text-shadow: none;
+  color: var(--foreground);
+  text-shadow: none;
 }
 
 .needsSync {
-    color: var(--danger);
-    animation: 4s wiggle ease infinite;
+  color: var(--danger);
+  animation: 4s wiggle ease infinite;
 }
 
 @keyframes wiggle {
-    0% {
-        transform: rotate(-3deg);
-        box-shadow: 0 2px 2px #0003;
-    }
-    5% {
-        transform: rotate(20deg);
-    }
-    10% {
-        transform: rotate(-15deg);
-    }
-    15% {
-        transform: rotate(5deg);
-    }
-    20% {
-        transform: rotate(-1deg);
-    }
-    25% {
-        transform: rotate(0);
-        box-shadow: 0 2px 2px #0003;
-    }
+  0% {
+    transform: rotate(-3deg);
+    box-shadow: 0 2px 2px #0003;
+  }
+  5% {
+    transform: rotate(20deg);
+  }
+  10% {
+    transform: rotate(-15deg);
+  }
+  15% {
+    transform: rotate(5deg);
+  }
+  20% {
+    transform: rotate(-1deg);
+  }
+  25% {
+    transform: rotate(0);
+    box-shadow: 0 2px 2px #0003;
+  }
 }
 </style>

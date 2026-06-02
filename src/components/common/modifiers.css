@@ -1,21 +1,21 @@
 .modifier-container {
-    display: flex;
-    padding: 1px 8px;
+  display: flex;
+  padding: 1px 8px;
 }
 
 .modifier-container:nth-child(2n) {
-    background: var(--raised-background);
+  background: var(--raised-background);
 }
 
 .modifier-amount {
-    flex-shrink: 0;
-    text-align: right;
+  flex-shrink: 0;
+  text-align: right;
 }
 :not(:first-of-type, :last-of-type) > .modifier-amount::after {
-    content: var(--unit);
-    opacity: 0;
+  content: var(--unit);
+  opacity: 0;
 }
 
 .modifier-description {
-    flex-grow: 1;
+  flex-grow: 1;
 }

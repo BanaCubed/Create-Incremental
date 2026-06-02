@@ -5,7 +5,7 @@ import { CSSProperties, nextTick, Ref, ref, watch } from "vue";
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 
-globalBus.on("setupVue", vue => vue.use(Toast));
+globalBus.on("setupVue", (vue) => vue.use(Toast));
 
 /**
  * Gives a [CSSProperties](https://vuejs.org/api/utility-types.html#cssproperties) object that makes an object glow, to bring focus to it.
@@ -14,17 +14,17 @@ globalBus.on("setupVue", vue => vue.use(Toast));
  * @param strength The strength of the glow effect - affects its spread.
  */
 export function getNotifyStyle(color = "white", strength = "8px") {
-    return {
-        transform: "scale(1.05, 1.05)",
-        borderColor: "rgba(0, 0, 0, 0.125)",
-        boxShadow: `-4px -4px 4px rgba(0, 0, 0, 0.25) inset, 0 0 ${strength} ${color}`,
-        zIndex: 1
-    } satisfies CSSProperties;
+  return {
+    transform: "scale(1.05, 1.05)",
+    borderColor: "rgba(0, 0, 0, 0.125)",
+    boxShadow: `-4px -4px 4px rgba(0, 0, 0, 0.25) inset, 0 0 ${strength} ${color}`,
+    zIndex: 1,
+  } satisfies CSSProperties;
 }
 
 /** Utility function to call {@link getNotifyStyle} with "high importance" parameters. */
 export function getHighNotifyStyle() {
-    return getNotifyStyle("red", "20px");
+  return getNotifyStyle("red", "20px");
 }
 
 /**
@@ -33,22 +33,22 @@ export function getHighNotifyStyle() {
  * @param shouldNotify A function or ref that determines if the notif should be active currently or not.
  */
 export function createDismissableNotify(
-    element: VueFeature,
-    shouldNotify: Ref<boolean> | (() => boolean)
+  element: VueFeature,
+  shouldNotify: Ref<boolean> | (() => boolean),
 ): Ref<boolean> {
-    const processedShouldNotify = processGetter(shouldNotify) as Ref<boolean>;
-    const notifying = ref(false);
-    nextTick(() => {
-        notifying.value = processedShouldNotify.value;
+  const processedShouldNotify = processGetter(shouldNotify) as Ref<boolean>;
+  const notifying = ref(false);
+  nextTick(() => {
+    notifying.value = processedShouldNotify.value;
 
-        watch(trackHover(element), hovering => {
-            if (!hovering) {
-                notifying.value = false;
-            }
-        });
-        watch(processedShouldNotify, shouldNotify => {
-            notifying.value = shouldNotify;
-        });
+    watch(trackHover(element), (hovering) => {
+      if (!hovering) {
+        notifying.value = false;
+      }
     });
-    return notifying;
+    watch(processedShouldNotify, (shouldNotify) => {
+      notifying.value = shouldNotify;
+    });
+  });
+  return notifying;
 }
