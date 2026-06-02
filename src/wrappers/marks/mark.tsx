@@ -8,13 +8,13 @@ import MarkNode from "./MarkNode.vue";
  * An object that configures a {@link Mark}.
  */
 export interface MarkOptions {
-  /** Whether or not to display a star or custom string. None if falsy value */
-  mark: MaybeRefOrGetter<string | boolean>;
+    /** Whether or not to display a star or custom string. None if falsy value */
+    mark: MaybeRefOrGetter<string | boolean>;
 }
 
 /** An object that represents a tooltip that appears when hovering over an element. */
 export interface Mark {
-  mark: MaybeRef<string | boolean>;
+    mark: MaybeRef<string | boolean>;
 }
 
 /**
@@ -23,25 +23,25 @@ export interface Mark {
  * @param optionsFunc Mark options.
  */
 export function addMark(
-  element: VueFeature,
-  optionsFunc: () => MarkOptions,
+    element: VueFeature,
+    optionsFunc: () => MarkOptions
 ): asserts element is VueFeature & { mark: Mark } {
-  const mark = createLazyProxy(() => {
-    const options = optionsFunc();
-    const { mark, ...props } = options;
+    const mark = createLazyProxy(() => {
+        const options = optionsFunc();
+        const { mark, ...props } = options;
 
-    return {
-      ...(props as Omit<typeof props, keyof MarkOptions>),
-      mark: processGetter(mark),
-    } satisfies Mark;
-  });
+        return {
+            ...(props as Omit<typeof props, keyof MarkOptions>),
+            mark: processGetter(mark)
+        } satisfies Mark;
+    });
 
-  runAfterEvaluation(element, (el) => {
-    // eslint-disable-next-line no-unused-expressions
-    mark.mark; // Ensure mark gets evaluated
-    (element as VueFeature & { mark: Mark }).mark = mark;
-    el.wrappers.push((el) =>
-      unref(mark.mark) ? <MarkNode mark={mark.mark}>{el}</MarkNode> : <>{el}</>,
-    );
-  });
+    runAfterEvaluation(element, el => {
+        // eslint-disable-next-line no-unused-expressions
+        mark.mark; // Ensure mark gets evaluated
+        (element as VueFeature & { mark: Mark }).mark = mark;
+        el.wrappers.push(el =>
+            unref(mark.mark) ? <MarkNode mark={mark.mark}>{el}</MarkNode> : <>{el}</>
+        );
+    });
 }

@@ -1,17 +1,17 @@
 <template>
-  <div
-    v-if="isVisible(unref(visibility))"
-    :style="[
-      {
-        visibility: isHidden(unref(visibility)) ? 'hidden' : undefined,
-      },
-      unref(style),
-    ]"
-    :class="{ feature: true, ...unref(classes) }"
-  >
-    <Components />
-    <Node :id="id" />
-  </div>
+    <div
+        v-if="isVisible(unref(visibility))"
+        :style="[
+            {
+                visibility: isHidden(unref(visibility)) ? 'hidden' : undefined
+            },
+            unref(style)
+        ]"
+        :class="{ feature: true, ...unref(classes) }"
+    >
+        <Components />
+        <Node :id="id" />
+    </div>
 </template>
 
 <script setup lang="tsx">

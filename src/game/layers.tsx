@@ -9,40 +9,40 @@ import { MaybeGetter, processGetter } from "util/computed";
 import { createLazyProxy } from "util/proxies";
 import { Renderable } from "util/vue";
 import {
-  computed,
-  type CSSProperties,
-  InjectionKey,
-  MaybeRef,
-  MaybeRefOrGetter,
-  Ref,
-  ref,
-  shallowReactive,
-  unref,
+    computed,
+    type CSSProperties,
+    InjectionKey,
+    MaybeRef,
+    MaybeRefOrGetter,
+    Ref,
+    ref,
+    shallowReactive,
+    unref
 } from "vue";
 import { JSX } from "vue/jsx-runtime";
 
 /** A feature's node in the DOM that has its size tracked. */
 export interface FeatureNode {
-  rect: DOMRect;
-  observer: MutationObserver;
-  element: HTMLElement;
+    rect: DOMRect;
+    observer: MutationObserver;
+    element: HTMLElement;
 }
 
 /**
  * An injection key that a Context component will use to provide a function that registers a {@link FeatureNode} with the given id and HTML element.
  */
 export const RegisterNodeInjectionKey: InjectionKey<(id: string, element: HTMLElement) => void> =
-  Symbol("RegisterNode");
+    Symbol("RegisterNode");
 /**
  * An injection key that a Context component will use to provide a function that unregisters a {@link FeatureNode} with the given id.
  */
 export const UnregisterNodeInjectionKey: InjectionKey<(id: string) => void> =
-  Symbol("UnregisterNode");
+    Symbol("UnregisterNode");
 /**
  * An injection key that a Context component will use to provide a ref to a map of all currently registered {@link FeatureNode}s.
  */
 export const NodesInjectionKey: InjectionKey<Ref<Record<string, FeatureNode | undefined>>> =
-  Symbol("Nodes");
+    Symbol("Nodes");
 /**
  * An injection key that a Context component will use to provide a ref to a bounding rect of the Context.
  */
@@ -50,21 +50,21 @@ export const BoundsInjectionKey: InjectionKey<Ref<DOMRect | undefined>> = Symbol
 
 /** All types of events able to be sent or emitted from a layer's emitter. */
 export interface LayerEvents {
-  /**
-   * Sent every game tick, before the update event. Intended for "generation" type actions.
-   * @param diff The delta time since last tick, in ms.
-   */
-  preUpdate: (diff: number) => void;
-  /**
-   * Sent every game tick. Intended for "automation" type actions.
-   * @param diff The delta time since last tick, in ms.
-   */
-  update: (diff: number) => void;
-  /**
-   * Sent every game tick, after the update event. Intended for checking state.
-   * @param diff The delta time since last tick, in ms.
-   */
-  postUpdate: (diff: number) => void;
+    /**
+     * Sent every game tick, before the update event. Intended for "generation" type actions.
+     * @param diff The delta time since last tick, in ms.
+     */
+    preUpdate: (diff: number) => void;
+    /**
+     * Sent every game tick. Intended for "automation" type actions.
+     * @param diff The delta time since last tick, in ms.
+     */
+    update: (diff: number) => void;
+    /**
+     * Sent every game tick, after the update event. Intended for checking state.
+     * @param diff The delta time since last tick, in ms.
+     */
+    postUpdate: (diff: number) => void;
 }
 
 /**
@@ -74,26 +74,26 @@ export interface LayerEvents {
 export const layers: Record<string, Readonly<Layer>> = shallowReactive({});
 
 declare global {
-  /** Augment the window object so the layers can be accessed from the console. */
-  interface Window {
-    layers: Record<string, Readonly<Layer> | undefined>;
-  }
+    /** Augment the window object so the layers can be accessed from the console. */
+    interface Window {
+        layers: Record<string, Readonly<Layer> | undefined>;
+    }
 }
 window.layers = layers;
 
 declare module "@vue/runtime-dom" {
-  /** Augment CSS Properties to allow for setting the layer color CSS variable. */
-  interface CSSProperties {
-    "--layer-color"?: string;
-  }
+    /** Augment CSS Properties to allow for setting the layer color CSS variable. */
+    interface CSSProperties {
+        "--layer-color"?: string;
+    }
 }
 
 /** An object representing the position of some entity. */
 export interface Position {
-  /** The X component of the entity's position. */
-  x: number;
-  /** The Y component of the entity's position. */
-  y: number;
+    /** The X component of the entity's position. */
+    x: number;
+    /** The Y component of the entity's position. */
+    y: number;
 }
 
 /**
@@ -102,104 +102,104 @@ export interface Position {
  * All {@link game/persistence.Persistent} refs must be included somewhere within the layer object.
  */
 export interface LayerOptions {
-  /** The color of the layer, used to theme the entire layer's display. */
-  color?: MaybeRefOrGetter<string>;
-  /**
-   * The layout of this layer's features.
-   * When the layer is open in {@link game/player.Player.tabs}, this is the content that is displayed.
-   */
-  display: MaybeGetter<Renderable>;
-  /** An object of classes that should be applied to the display. */
-  classes?: MaybeRefOrGetter<Record<string, boolean>>;
-  /** Styles that should be applied to the display. */
-  style?: MaybeRefOrGetter<CSSProperties>;
-  /**
-   * The name of the layer, used on minimized tabs.
-   * Defaults to {@link BaseLayer.id}.
-   */
-  name?: MaybeRefOrGetter<string>;
-  /**
-   * Whether or not the layer can be minimized.
-   * Defaults to true.
-   */
-  minimizable?: MaybeRefOrGetter<boolean>;
-  /**
-   * The layout of this layer's features.
-   * When the layer is open in {@link game/player.Player.tabs}, but the tab is {@link Layer.minimized} this is the content that is displayed.
-   */
-  minimizedDisplay?: MaybeGetter<Renderable>;
-  /**
-   * Whether or not to force the go back button to be hidden.
-   * If true, go back will be hidden regardless of allowGoBack value in the project settings.
-   */
-  forceHideGoBack?: MaybeRefOrGetter<boolean>;
-  /**
-   * A CSS min-width value that is applied to the layer.
-   * Can be a number, in which case the unit is assumed to be px.
-   * Defaults to 600px.
-   */
-  minWidth?: MaybeRefOrGetter<number | string>;
+    /** The color of the layer, used to theme the entire layer's display. */
+    color?: MaybeRefOrGetter<string>;
+    /**
+     * The layout of this layer's features.
+     * When the layer is open in {@link game/player.Player.tabs}, this is the content that is displayed.
+     */
+    display: MaybeGetter<Renderable>;
+    /** An object of classes that should be applied to the display. */
+    classes?: MaybeRefOrGetter<Record<string, boolean>>;
+    /** Styles that should be applied to the display. */
+    style?: MaybeRefOrGetter<CSSProperties>;
+    /**
+     * The name of the layer, used on minimized tabs.
+     * Defaults to {@link BaseLayer.id}.
+     */
+    name?: MaybeRefOrGetter<string>;
+    /**
+     * Whether or not the layer can be minimized.
+     * Defaults to true.
+     */
+    minimizable?: MaybeRefOrGetter<boolean>;
+    /**
+     * The layout of this layer's features.
+     * When the layer is open in {@link game/player.Player.tabs}, but the tab is {@link Layer.minimized} this is the content that is displayed.
+     */
+    minimizedDisplay?: MaybeGetter<Renderable>;
+    /**
+     * Whether or not to force the go back button to be hidden.
+     * If true, go back will be hidden regardless of allowGoBack value in the project settings.
+     */
+    forceHideGoBack?: MaybeRefOrGetter<boolean>;
+    /**
+     * A CSS min-width value that is applied to the layer.
+     * Can be a number, in which case the unit is assumed to be px.
+     * Defaults to 600px.
+     */
+    minWidth?: MaybeRefOrGetter<number | string>;
 }
 
 /** The properties that are added onto a processed {@link LayerOptions} to create a {@link Layer} */
 export interface BaseLayer {
-  /**
-   * The ID of the layer.
-   * Populated from the {@link createLayer} parameters.
-   * Used for saving and tracking open tabs.
-   */
-  id: string;
-  /** A persistent ref tracking if the tab is minimized or not. */
-  minimized: Persistent<boolean>;
-  /** An emitter for sending {@link LayerEvents} events for this layer. */
-  emitter: Emitter<LayerEvents>;
-  /** A function to register an event listener on {@link emitter}. */
-  on: OmitThisParameter<Emitter<LayerEvents>["on"]>;
-  /** A function to emit a {@link LayerEvents} event to this layer. */
-  emit: <K extends keyof LayerEvents>(...args: [K, ...Parameters<LayerEvents[K]>]) => void;
-  /** A map of {@link FeatureNode}s present in this layer's Context component. */
-  nodes: Ref<Record<string, FeatureNode | undefined>>;
+    /**
+     * The ID of the layer.
+     * Populated from the {@link createLayer} parameters.
+     * Used for saving and tracking open tabs.
+     */
+    id: string;
+    /** A persistent ref tracking if the tab is minimized or not. */
+    minimized: Persistent<boolean>;
+    /** An emitter for sending {@link LayerEvents} events for this layer. */
+    emitter: Emitter<LayerEvents>;
+    /** A function to register an event listener on {@link emitter}. */
+    on: OmitThisParameter<Emitter<LayerEvents>["on"]>;
+    /** A function to emit a {@link LayerEvents} event to this layer. */
+    emit: <K extends keyof LayerEvents>(...args: [K, ...Parameters<LayerEvents[K]>]) => void;
+    /** A map of {@link FeatureNode}s present in this layer's Context component. */
+    nodes: Ref<Record<string, FeatureNode | undefined>>;
 }
 
 /** An unit of game content. Displayed to the user as a tab or modal. */
 export interface Layer extends BaseLayer {
-  /** The color of the layer, used to theme the entire layer's display. */
-  color?: MaybeRef<string>;
-  /**
-   * The layout of this layer's features.
-   * When the layer is open in {@link game/player.Player.tabs}, this is the content that is displayed.
-   */
-  display: MaybeGetter<Renderable>;
-  /** An object of classes that should be applied to the display. */
-  classes?: MaybeRef<Record<string, boolean>>;
-  /** Styles that should be applied to the display. */
-  style?: MaybeRef<CSSProperties>;
-  /**
-   * The name of the layer, used on minimized tabs.
-   * Defaults to {@link BaseLayer.id}.
-   */
-  name?: MaybeRef<string>;
-  /**
-   * Whether or not the layer can be minimized.
-   * Defaults to true.
-   */
-  minimizable?: MaybeRef<boolean>;
-  /**
-   * The layout of this layer's features.
-   * When the layer is open in {@link game/player.Player.tabs}, but the tab is {@link Layer.minimized} this is the content that is displayed.
-   */
-  minimizedDisplay?: MaybeGetter<Renderable>;
-  /**
-   * Whether or not to force the go back button to be hidden.
-   * If true, go back will be hidden regardless of allowGoBack value in the project settings.
-   */
-  forceHideGoBack?: MaybeRef<boolean>;
-  /**
-   * A CSS min-width value that is applied to the layer.
-   * Can be a number, in which case the unit is assumed to be px.
-   * Defaults to 600px.
-   */
-  minWidth?: MaybeRef<number | string>;
+    /** The color of the layer, used to theme the entire layer's display. */
+    color?: MaybeRef<string>;
+    /**
+     * The layout of this layer's features.
+     * When the layer is open in {@link game/player.Player.tabs}, this is the content that is displayed.
+     */
+    display: MaybeGetter<Renderable>;
+    /** An object of classes that should be applied to the display. */
+    classes?: MaybeRef<Record<string, boolean>>;
+    /** Styles that should be applied to the display. */
+    style?: MaybeRef<CSSProperties>;
+    /**
+     * The name of the layer, used on minimized tabs.
+     * Defaults to {@link BaseLayer.id}.
+     */
+    name?: MaybeRef<string>;
+    /**
+     * Whether or not the layer can be minimized.
+     * Defaults to true.
+     */
+    minimizable?: MaybeRef<boolean>;
+    /**
+     * The layout of this layer's features.
+     * When the layer is open in {@link game/player.Player.tabs}, but the tab is {@link Layer.minimized} this is the content that is displayed.
+     */
+    minimizedDisplay?: MaybeGetter<Renderable>;
+    /**
+     * Whether or not to force the go back button to be hidden.
+     * If true, go back will be hidden regardless of allowGoBack value in the project settings.
+     */
+    forceHideGoBack?: MaybeRef<boolean>;
+    /**
+     * A CSS min-width value that is applied to the layer.
+     * Can be a number, in which case the unit is assumed to be px.
+     * Defaults to 600px.
+     */
+    minWidth?: MaybeRef<number | string>;
 }
 
 /**
@@ -216,88 +216,88 @@ export const addingLayers: string[] = [];
  * @param optionsFunc Layer options.
  */
 export function createLayer<T extends LayerOptions>(
-  id: string,
-  optionsFunc: (layer: BaseLayer) => T & ThisType<Layer & Omit<T, keyof Layer>>,
+    id: string,
+    optionsFunc: (layer: BaseLayer) => T & ThisType<Layer & Omit<T, keyof Layer>>
 ) {
-  return createLazyProxy(() => {
-    const emitter = createNanoEvents<LayerEvents>();
-    addingLayers.push(id);
-    persistentRefs[id] = new Set();
+    return createLazyProxy(() => {
+        const emitter = createNanoEvents<LayerEvents>();
+        addingLayers.push(id);
+        persistentRefs[id] = new Set();
 
-    const baseLayer = {
-      id,
-      emitter,
-      ...emitter,
-      nodes: ref({}),
-      minimized: persistent(false, false),
-    } satisfies BaseLayer;
+        const baseLayer = {
+            id,
+            emitter,
+            ...emitter,
+            nodes: ref({}),
+            minimized: persistent(false, false)
+        } satisfies BaseLayer;
 
-    const options = optionsFunc(baseLayer);
-    const {
-      color,
-      display,
-      classes,
-      style: _style,
-      name,
-      forceHideGoBack,
-      minWidth,
-      minimizable,
-      minimizedDisplay,
-      ...props
-    } = options;
-    if (
-      addingLayers[addingLayers.length - 1] == null ||
-      addingLayers[addingLayers.length - 1] !== id
-    ) {
-      throw new Error(
-        `Adding layers stack in invalid state. This should not happen\nStack: ${addingLayers}\nTrying to pop ${id}`,
-      );
-    }
-    addingLayers.pop();
-
-    const style = processGetter(_style);
-
-    const layer = {
-      ...baseLayer,
-      ...(props as Omit<typeof props, keyof LayerOptions>),
-      color: processGetter(color),
-      display,
-      classes: processGetter(classes),
-      style: computed((): CSSProperties => {
-        let width = unref(layer.minWidth);
-        if (typeof width === "number" || !Number.isNaN(parseInt(width))) {
-          width = width + "px";
+        const options = optionsFunc(baseLayer);
+        const {
+            color,
+            display,
+            classes,
+            style: _style,
+            name,
+            forceHideGoBack,
+            minWidth,
+            minimizable,
+            minimizedDisplay,
+            ...props
+        } = options;
+        if (
+            addingLayers[addingLayers.length - 1] == null ||
+            addingLayers[addingLayers.length - 1] !== id
+        ) {
+            throw new Error(
+                `Adding layers stack in invalid state. This should not happen\nStack: ${addingLayers}\nTrying to pop ${id}`
+            );
         }
-        return {
-          ...unref(style),
-          ...(baseLayer.minimized.value
-            ? {
-                flexGrow: "0",
-                flexShrink: "0",
-                width: "60px",
-                minWidth: "",
-                flexBasis: "",
-                margin: "0",
-              }
-            : {
-                flexGrow: "",
-                flexShrink: "",
-                width: "",
-                minWidth: width,
-                flexBasis: width,
-                margin: "",
-              }),
-        };
-      }),
-      name: processGetter(name) ?? id,
-      forceHideGoBack: processGetter(forceHideGoBack),
-      minWidth: processGetter(minWidth) ?? 600,
-      minimizable: processGetter(minimizable) ?? true,
-      minimizedDisplay,
-    } satisfies Layer;
+        addingLayers.pop();
 
-    return layer;
-  });
+        const style = processGetter(_style);
+
+        const layer = {
+            ...baseLayer,
+            ...(props as Omit<typeof props, keyof LayerOptions>),
+            color: processGetter(color),
+            display,
+            classes: processGetter(classes),
+            style: computed((): CSSProperties => {
+                let width = unref(layer.minWidth);
+                if (typeof width === "number" || !Number.isNaN(parseInt(width))) {
+                    width = width + "px";
+                }
+                return {
+                    ...unref(style),
+                    ...(baseLayer.minimized.value
+                        ? {
+                              flexGrow: "0",
+                              flexShrink: "0",
+                              width: "60px",
+                              minWidth: "",
+                              flexBasis: "",
+                              margin: "0"
+                          }
+                        : {
+                              flexGrow: "",
+                              flexShrink: "",
+                              width: "",
+                              minWidth: width,
+                              flexBasis: width,
+                              margin: ""
+                          })
+                };
+            }),
+            name: processGetter(name) ?? id,
+            forceHideGoBack: processGetter(forceHideGoBack),
+            minWidth: processGetter(minWidth) ?? 600,
+            minimizable: processGetter(minimizable) ?? true,
+            minimizedDisplay
+        } satisfies Layer;
+
+        return layer;
+    });
 }
 
 /**
@@ -309,26 +309,26 @@ export function createLayer<T extends LayerOptions>(
  * @param player The player data object, which will have a data object for this layer.
  */
 export function addLayer(
-  layer: Layer,
-  player: { layers?: Record<string, Record<string, unknown>> },
+    layer: Layer,
+    player: { layers?: Record<string, Record<string, unknown>> }
 ): void {
-  console.info("Adding layer", layer.id);
-  if (layers[layer.id] != null) {
-    console.error(
-      "Attempted to add layer with same ID as existing layer",
-      layer.id,
-      layers[layer.id],
-    );
-    return;
-  }
+    console.info("Adding layer", layer.id);
+    if (layers[layer.id] != null) {
+        console.error(
+            "Attempted to add layer with same ID as existing layer",
+            layer.id,
+            layers[layer.id]
+        );
+        return;
+    }
 
-  player.layers ??= {};
-  if (player.layers[layer.id] == null) {
-    player.layers[layer.id] = {};
-  }
-  layers[layer.id] = layer;
+    player.layers ??= {};
+    if (player.layers[layer.id] == null) {
+        player.layers[layer.id] = {};
+    }
+    layers[layer.id] = layer;
 
-  globalBus.emit("addLayer", layer, player.layers[layer.id]);
+    globalBus.emit("addLayer", layer, player.layers[layer.id]);
 }
 
 /**
@@ -336,7 +336,7 @@ export function addLayer(
  * @param layerID The ID of the layer to get.
  */
 export function getLayer<T extends Layer>(layerID: string): T {
-  return layers[layerID] as T;
+    return layers[layerID] as T;
 }
 
 /**
@@ -345,10 +345,10 @@ export function getLayer<T extends Layer>(layerID: string): T {
  * @param layer The layer to remove.
  */
 export function removeLayer(layer: Layer): void {
-  console.info("Removing layer", layer.id);
-  globalBus.emit("removeLayer", layer);
+    console.info("Removing layer", layer.id);
+    globalBus.emit("removeLayer", layer);
 
-  delete layers[layer.id];
+    delete layers[layer.id];
 }
 
 /**
@@ -357,10 +357,10 @@ export function removeLayer(layer: Layer): void {
  * @param layer Layer to remove and then re-add
  */
 export function reloadLayer(layer: Layer): void {
-  removeLayer(layer);
+    removeLayer(layer);
 
-  // Re-create layer
-  addLayer(layer, player);
+    // Re-create layer
+    addLayer(layer, player);
 }
 
 /**
@@ -369,34 +369,34 @@ export function reloadLayer(layer: Layer): void {
  * @param layer The layer to display in the modal.
  */
 export function setupLayerModal(layer: Layer): {
-  openModal: VoidFunction;
-  modal: () => JSX.Element;
+    openModal: VoidFunction;
+    modal: () => JSX.Element;
 } {
-  const showModal = ref(false);
-  return {
-    openModal: () => (showModal.value = true),
-    modal: () => (
-      <Modal
-        modelValue={showModal.value}
-        onUpdate:modelValue={(value) => (showModal.value = value)}
-        v-slots={{
-          header: () => <h2>{unref(layer.name)}</h2>,
-          // eslint-disable-next-line no-constant-condition
-          body: typeof layer.display ? layer.display : () => layer.display,
-        }}
-      />
-    ),
-  };
+    const showModal = ref(false);
+    return {
+        openModal: () => (showModal.value = true),
+        modal: () => (
+            <Modal
+                modelValue={showModal.value}
+                onUpdate:modelValue={value => (showModal.value = value)}
+                v-slots={{
+                    header: () => <h2>{unref(layer.name)}</h2>,
+                    // eslint-disable-next-line no-constant-condition
+                    body: typeof layer.display ? layer.display : () => layer.display
+                }}
+            />
+        )
+    };
 }
 
 globalBus.on("update", function updateLayers(diff) {
-  Object.values(layers).forEach((layer) => {
-    layer?.emit("preUpdate", diff);
-  });
-  Object.values(layers).forEach((layer) => {
-    layer?.emit("update", diff);
-  });
-  Object.values(layers).forEach((layer) => {
-    layer?.emit("postUpdate", diff);
-  });
+    Object.values(layers).forEach(layer => {
+        layer?.emit("preUpdate", diff);
+    });
+    Object.values(layers).forEach(layer => {
+        layer?.emit("update", diff);
+    });
+    Object.values(layers).forEach(layer => {
+        layer?.emit("postUpdate", diff);
+    });
 });

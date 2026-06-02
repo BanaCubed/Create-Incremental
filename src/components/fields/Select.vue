@@ -1,16 +1,16 @@
 <template>
-  <div class="field">
-    <span class="field-title" v-if="title"><Title /></span>
-    <VueNextSelect
-      :options="options"
-      v-model="value"
-      :min="1"
-      :placeholder="placeholder"
-      :close-on-select="closeOnSelect"
-      @update:model-value="onUpdate"
-      label-by="label"
-    />
-  </div>
+    <div class="field">
+        <span class="field-title" v-if="title"><Title /></span>
+        <VueNextSelect
+            :options="options"
+            v-model="value"
+            :min="1"
+            :placeholder="placeholder"
+            :close-on-select="closeOnSelect"
+            @update:model-value="onUpdate"
+            label-by="label"
+        />
+    </div>
 </template>
 
 <script setup lang="tsx">
@@ -52,46 +52,46 @@ function onUpdate(value: SelectOption) {
 
 <style>
 .vue-select {
-  width: 50%;
-  border-radius: var(--border-radius);
+    width: 50%;
+    border-radius: var(--border-radius);
 }
 
 .field-buttons .vue-select {
-  width: unset;
+    width: unset;
 }
 
 .vue-select,
 .vue-dropdown {
-  border-color: var(--outline);
+    border-color: var(--outline);
 }
 
 .vue-dropdown {
-  background: var(--raised-background);
+    background: var(--raised-background);
 }
 
 .vue-dropdown-item {
-  color: var(--foreground);
+    color: var(--foreground);
 }
 
 .vue-dropdown-item,
 .vue-dropdown-item * {
-  transition-duration: 0s;
+    transition-duration: 0s;
 }
 
 .vue-dropdown-item.highlighted {
-  background-color: var(--highlighted);
+    background-color: var(--highlighted);
 }
 
 .vue-dropdown-item.selected,
 .vue-dropdown-item.highlighted.selected {
-  background-color: var(--bought);
+    background-color: var(--bought);
 }
 
 .vue-input input {
-  font-size: inherit;
+    font-size: inherit;
 }
 
 .vue-input input::placeholder {
-  color: var(--link);
+    color: var(--link);
 }
 </style>

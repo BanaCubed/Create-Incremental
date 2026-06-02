@@ -1,17 +1,17 @@
 <template>
-  <button
-    :style="{
-      backgroundImage: (unref(earned) && unref(image) && `url(${image})`) || '',
-    }"
-    :class="{
-      achievement: true,
-      locked: !unref(earned),
-      done: unref(earned),
-      small: unref(small),
-    }"
-  >
-    <Component />
-  </button>
+    <button
+        :style="{
+            backgroundImage: (unref(earned) && unref(image) && `url(${image})`) || ''
+        }"
+        :class="{
+            achievement: true,
+            locked: !unref(earned),
+            done: unref(earned),
+            small: unref(small)
+        }"
+    >
+        <Component />
+    </button>
 </template>
 
 <script setup lang="tsx">
@@ -34,38 +34,38 @@ const Component = () => props.display == null ? <></> : render(props.display);
 
 <style scoped>
 .achievement {
-  height: 90px;
-  width: 90px;
-  font-size: 10px;
-  color: white;
-  text-shadow: 0 0 2px #000000;
+    height: 90px;
+    width: 90px;
+    font-size: 10px;
+    color: white;
+    text-shadow: 0 0 2px #000000;
 }
 
 .achievement:not(.small) {
-  height: unset;
-  width: calc(100% - 10px);
-  min-width: 120px;
-  padding-left: 5px;
-  padding-right: 5px;
-  background-color: var(--locked);
-  border-width: 4px;
-  border-radius: 5px;
-  color: rgba(0, 0, 0, 0.5);
-  font-size: unset;
-  text-shadow: unset;
+    height: unset;
+    width: calc(100% - 10px);
+    min-width: 120px;
+    padding-left: 5px;
+    padding-right: 5px;
+    background-color: var(--locked);
+    border-width: 4px;
+    border-radius: 5px;
+    color: rgba(0, 0, 0, 0.5);
+    font-size: unset;
+    text-shadow: unset;
 }
 
 .achievement.done {
-  background-color: var(--bought);
-  cursor: default;
+    background-color: var(--bought);
+    cursor: default;
 }
 
 .achievement :deep(.equal-spaced) {
-  display: flex;
-  justify-content: center;
+    display: flex;
+    justify-content: center;
 }
 
 .achievement :deep(.equal-spaced > *) {
-  margin: auto;
+    margin: auto;
 }
 </style>

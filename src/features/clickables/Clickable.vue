@@ -1,21 +1,21 @@
 <template>
-  <button
-    @click="(e) => emits('click', e)"
-    @mousedown="start"
-    @mouseleave="stop"
-    @mouseup="stop"
-    @touchstart.passive="start"
-    @touchend.passive="stop"
-    @touchcancel.passive="stop"
-    :class="{
-      clickable: true,
-      can: unref(canClick),
-      locked: !unref(canClick),
-    }"
-    :disabled="!unref(canClick)"
-  >
-    <Component />
-  </button>
+    <button
+        @click="e => emits('click', e)"
+        @mousedown="start"
+        @mouseleave="stop"
+        @mouseup="stop"
+        @touchstart.passive="start"
+        @touchend.passive="stop"
+        @touchcancel.passive="stop"
+        :class="{
+            clickable: true,
+            can: unref(canClick),
+            locked: !unref(canClick)
+        }"
+        :disabled="!unref(canClick)"
+    >
+        <Component />
+    </button>
 </template>
 
 <script setup lang="tsx">
@@ -46,12 +46,12 @@ const { start, stop } = setupHoldToClick(() => emits("hold"));
 
 <style scoped>
 .clickable {
-  min-height: 120px;
-  width: 120px;
-  font-size: 10px;
+    min-height: 120px;
+    width: 120px;
+    font-size: 10px;
 }
 
 .clickable > * {
-  pointer-events: none;
+    pointer-events: none;
 }
 </style>

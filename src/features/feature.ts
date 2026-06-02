@@ -10,17 +10,17 @@ let id = 0;
  * @param prefix A string to prepend to the id to make it more readable in the inspector tools
  */
 export function getUniqueID(prefix = "feature-"): string {
-  return prefix + id++;
+    return prefix + id++;
 }
 
 /** Enum for what the visibility of a feature or component should be */
 export enum Visibility {
-  /** The feature or component should be visible */
-  Visible,
-  /** The feature or component should not appear but still take up space */
-  Hidden,
-  /** The feature or component should not appear not take up space */
-  None,
+    /** The feature or component should be visible */
+    Visible,
+    /** The feature or component should not appear but still take up space */
+    Hidden,
+    /** The feature or component should not appear not take up space */
+    None
 }
 
 /**
@@ -30,8 +30,8 @@ export enum Visibility {
  * @returns True if the visibility is either true, Visibility.Visible, or Visibility.Hidden
  */
 export function isVisible(visibility: MaybeRef<Visibility | boolean>) {
-  const currVisibility = unref(visibility);
-  return currVisibility !== Visibility.None && currVisibility !== false;
+    const currVisibility = unref(visibility);
+    return currVisibility !== Visibility.None && currVisibility !== false;
 }
 
 /**
@@ -41,8 +41,8 @@ export function isVisible(visibility: MaybeRef<Visibility | boolean>) {
  * @returns True if the visibility is Visibility.Hidden
  */
 export function isHidden(visibility: MaybeRef<Visibility | boolean>) {
-  const currVisibility = unref(visibility);
-  return currVisibility === Visibility.Hidden;
+    const currVisibility = unref(visibility);
+    return currVisibility === Visibility.Hidden;
 }
 
 /**
@@ -53,7 +53,7 @@ export function isHidden(visibility: MaybeRef<Visibility | boolean>) {
  * @returns Whether or not the object is the specified type
  */
 export function isType<T extends symbol>(object: unknown, type: T): object is { type: T } {
-  return object != null && typeof object === "object" && "type" in object && object.type === type;
+    return object != null && typeof object === "object" && "type" in object && object.type === type;
 }
 
 /**
@@ -62,25 +62,25 @@ export function isType<T extends symbol>(object: unknown, type: T): object is { 
  * @param types The feature types that will be searched for
  */
 export function findFeatures(obj: object, ...types: symbol[]): unknown[] {
-  const objects: unknown[] = [];
-  const handleObject = (obj: object) => {
-    Object.keys(obj).forEach((key) => {
-      const value: unknown = obj[key as keyof typeof obj];
-      if (
-        value != null &&
-        typeof value === "object" &&
-        (value as Record<string, unknown>).__v_isVNode !== true
-      ) {
-        if (types.includes((value as Record<string, unknown>).type as symbol)) {
-          objects.push(value);
-        } else if (!(value instanceof Decimal) && !isRef(value)) {
-          handleObject(value as Record<string, unknown>);
-        }
-      }
-    });
-  };
-  handleObject(obj);
-  return objects;
+    const objects: unknown[] = [];
+    const handleObject = (obj: object) => {
+        Object.keys(obj).forEach(key => {
+            const value: unknown = obj[key as keyof typeof obj];
+            if (
+                value != null &&
+                typeof value === "object" &&
+                (value as Record<string, unknown>).__v_isVNode !== true
+            ) {
+                if (types.includes((value as Record<string, unknown>).type as symbol)) {
+                    objects.push(value);
+                } else if (!(value instanceof Decimal) && !isRef(value)) {
+                    handleObject(value as Record<string, unknown>);
+                }
+            }
+        });
+    };
+    handleObject(obj);
+    return objects;
 }
 
 /**
@@ -90,21 +90,21 @@ export function findFeatures(obj: object, ...types: symbol[]): unknown[] {
  * @returns An object containing a ref to the first filtered _out_ feature, a render function for the collapsed content, and a ref for whether or not there is any collapsed content to show
  */
 export function getFirstFeature<T extends VueFeature>(
-  features: T[],
-  filter: (feature: T) => boolean,
+    features: T[],
+    filter: (feature: T) => boolean
 ): {
-  firstFeature: Ref<T | undefined>;
-  collapsedContent: () => Renderable;
-  hasCollapsedContent: Ref<boolean>;
+    firstFeature: Ref<T | undefined>;
+    collapsedContent: () => Renderable;
+    hasCollapsedContent: Ref<boolean>;
 } {
-  const filteredFeatures = computed(() =>
-    features.filter((feature) => isVisible(feature.visibility ?? true) && filter(feature)),
-  );
-  return {
-    firstFeature: computed(() => filteredFeatures.value[0]),
-    collapsedContent: () => renderCol(...filteredFeatures.value.slice(1)),
-    hasCollapsedContent: computed(() => filteredFeatures.value.length > 1),
-  };
+    const filteredFeatures = computed(() =>
+        features.filter(feature => isVisible(feature.visibility ?? true) && filter(feature))
+    );
+    return {
+        firstFeature: computed(() => filteredFeatures.value[0]),
+        collapsedContent: () => renderCol(...filteredFeatures.value.slice(1)),
+        hasCollapsedContent: computed(() => filteredFeatures.value.length > 1)
+    };
 }
 
 /**
@@ -114,24 +114,24 @@ export function getFirstFeature<T extends VueFeature>(
  * @param types The feature types that will be skipped over
  */
 export function excludeFeatures(obj: Record<string, unknown>, ...types: symbol[]): unknown[] {
-  const objects: unknown[] = [];
-  const handleObject = (obj: Record<string, unknown>) => {
-    Object.keys(obj).forEach((key) => {
-      const value = obj[key];
-      if (
-        value != null &&
-        typeof value === "object" &&
-        (value as Record<string, unknown>).__v_isVNode !== true
-      ) {
-        const type = (value as Record<string, unknown>).type;
-        if (typeof type === "symbol" && !types.includes(type)) {
-          objects.push(value);
-        } else if (!(value instanceof Decimal) && !isRef(value)) {
-          handleObject(value as Record<string, unknown>);
-        }
-      }
-    });
-  };
-  handleObject(obj);
-  return objects;
+    const objects: unknown[] = [];
+    const handleObject = (obj: Record<string, unknown>) => {
+        Object.keys(obj).forEach(key => {
+            const value = obj[key];
+            if (
+                value != null &&
+                typeof value === "object" &&
+                (value as Record<string, unknown>).__v_isVNode !== true
+            ) {
+                const type = (value as Record<string, unknown>).type;
+                if (typeof type === "symbol" && !types.includes(type)) {
+                    objects.push(value);
+                } else if (!(value instanceof Decimal) && !isRef(value)) {
+                    handleObject(value as Record<string, unknown>);
+                }
+            }
+        });
+    };
+    handleObject(obj);
+    return objects;
 }
