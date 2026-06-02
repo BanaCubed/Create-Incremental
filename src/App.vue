@@ -5,11 +5,9 @@
     <template v-else>
         <div id="modal-root" :style="theme" />
         <div class="app" :style="theme" :class="{ useHeader }">
-            <Nav v-if="useHeader" />
             <Game />
             <TPS v-if="unref(showTPS)" />
             <AddictionWarning />
-            <GameOverScreen />
             <NaNScreen />
             <CloudSaveResolver />
             <GameComponent />
@@ -37,7 +35,7 @@ import settings, { gameComponents } from "./game/settings";
 import "./main.css";
 
 const useHeader = projInfo.useHeader;
-const theme = computed(() => themes[settings.theme].variables as CSSProperties);
+const theme = computed(() => themes[settings.theme].variables as unknown as CSSProperties);
 const showTPS = toRef(settings, "showTPS");
 const appErrors = toRef(state, "errors");
 

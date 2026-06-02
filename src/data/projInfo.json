@@ -3,13 +3,13 @@
 
 	"title": "Profectus",
 	"description": "A project made in Profectus",
-	"id": "",
-	"author": "",
+	"id": "createincremental3",
+	"author": "BanaCubed",
 	"discordName": "",
 	"discordLink": "",
 
-	"versionNumber": "0.0",
-	"versionTitle": "Initial Commit",
+	"versionNumber": "1.0",
+	"versionTitle": "Closed Alpha",
 
 	"allowGoBack": true,
 	"defaultShowSmall": false,

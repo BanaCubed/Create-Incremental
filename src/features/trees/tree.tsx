@@ -176,7 +176,7 @@ export function createTree<T extends TreeOptions>(optionsFunc: () => T) {
         } = options;
 
         const style = processGetter(_style);
-        options.style = () => ({ position: "static", ...(unref(style) ?? {}) });
+        options.style = () => ({ position: "static", ...unref(style) });
 
         const branches = _branches == null ? undefined : processGetter(_branches);
 

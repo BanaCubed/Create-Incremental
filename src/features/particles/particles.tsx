@@ -51,7 +51,7 @@ export function createParticles<T extends ParticlesOptions>(optionsFunc?: () => 
         const { onContainerResized, onHotReload, style: _style, ...props } = options;
 
         const style = processGetter(_style);
-        options.style = () => ({ position: "static", ...(unref(style) ?? {}) });
+        options.style = () => ({ position: "static", ...unref(style) });
 
         let emittersToAdd: {
             resolve: (value: Emitter | PromiseLike<Emitter>) => void;

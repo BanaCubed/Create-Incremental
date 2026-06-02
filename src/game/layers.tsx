@@ -381,6 +381,7 @@ export function setupLayerModal(layer: Layer): {
                 onUpdate:modelValue={value => (showModal.value = value)}
                 v-slots={{
                     header: () => <h2>{unref(layer.name)}</h2>,
+                    // eslint-disable-next-line no-constant-condition
                     body: typeof layer.display ? layer.display : () => layer.display
                 }}
             />

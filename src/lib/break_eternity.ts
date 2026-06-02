@@ -1783,6 +1783,7 @@ export default class Decimal {
             return FC(Math.sign(mantissa), 1, b.mag + Math.log10(Math.abs(mantissa)));
         }
 
+        // eslint-disable-next-line no-unreachable
         throw Error("Bad arguments to add: " + this + ", " + value);
     }
 

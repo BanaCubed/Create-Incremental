@@ -2,11 +2,6 @@
     <div class="nav" v-if="useHeader" v-bind="$attrs">
         <img v-if="banner" :src="banner" class="banner" :alt="title" />
         <div v-else class="title">{{ title }}</div>
-        <div @click="changelog?.open()" class="version-container">
-            <Tooltip display="Changelog" :direction="Direction.Down" class="version"
-                ><span>v{{ versionNumber }}</span></Tooltip
-            >
-        </div>
         <div style="flex-grow: 1; cursor: unset"></div>
         <div class="discord">
             <span @click="openDiscord" class="material-icons">discord</span>
@@ -29,43 +24,8 @@
                 </Tooltip>
             </a>
         </div>
-        <div @click="info?.open()">
-            <Tooltip display="Info" :direction="Direction.Down" class="info">
-                <span class="material-icons">info</span>
-            </Tooltip>
-        </div>
-        <div @click="savesManager?.open()">
-            <Tooltip display="Saves" :direction="Direction.Down" xoffset="-20px">
-                <span class="material-icons" :class="{ needsSync }">library_books</span>
-            </Tooltip>
-        </div>
-        <div @click="options?.open()">
-            <Tooltip display="Settings" :direction="Direction.Down" xoffset="-66px">
-                <span class="material-icons">settings</span>
-            </Tooltip>
-        </div>
     </div>
     <div v-else class="overlay-nav" v-bind="$attrs">
-        <div @click="changelog?.open()" class="version-container">
-            <Tooltip display="Changelog" :direction="Direction.Right" xoffset="25%" class="version">
-                <span>v{{ versionNumber }}</span>
-            </Tooltip>
-        </div>
-        <div @click="savesManager?.open()">
-            <Tooltip display="Saves" :direction="Direction.Right">
-                <span class="material-icons" :class="{ needsSync }">library_books</span>
-            </Tooltip>
-        </div>
-        <div @click="options?.open()">
-            <Tooltip display="Settings" :direction="Direction.Right">
-                <span class="material-icons">settings</span>
-            </Tooltip>
-        </div>
-        <div @click="info?.open()">
-            <Tooltip display="Info" :direction="Direction.Right">
-                <span class="material-icons">info</span>
-            </Tooltip>
-        </div>
         <div>
             <a href="https://forums.moddingtree.com/" target="_blank">
                 <Tooltip display="Forums" :direction="Direction.Right" xoffset="7px">
@@ -88,28 +48,18 @@
             </ul>
         </div>
     </div>
-    <Info ref="info" @open-changelog="changelog?.open()" />
     <SavesManager ref="savesManager" />
     <Options ref="options" />
     <Changelog ref="changelog" />
 </template>
 
 <script setup lang="ts">
-import Changelog from "data/Changelog.vue";
 import projInfo from "data/projInfo.json";
 import settings from "game/settings";
 import { Direction } from "util/common";
 import { galaxy, syncedSaves } from "util/galaxy";
 import { computed, ref } from "vue";
 import Tooltip from "wrappers/tooltips/Tooltip.vue";
-import Info from "./modals/Info.vue";
-import Options from "./modals/Options.vue";
-import SavesManager from "./modals/SavesManager.vue";
-
-const info = ref<typeof Info | null>(null);
-const savesManager = ref<typeof SavesManager | null>(null);
-const options = ref<typeof Options | null>(null);
-const changelog = ref<typeof Changelog | null>(null);
 
 const { useHeader, banner, title, discordName, discordLink, versionNumber } = projInfo;
 

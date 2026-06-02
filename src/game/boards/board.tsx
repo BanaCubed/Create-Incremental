@@ -333,6 +333,7 @@ export function makeDraggable<T, S extends MakeDraggableOptions<T>>(
     });
 
     runAfterEvaluation(element, el => {
+        // eslint-disable-next-line no-unused-expressions
         draggable.id; // Ensure draggable gets evaluated
         (el as VueFeature & { draggable: Draggable<T> }).draggable = draggable;
         element.wrappers.push(el => (

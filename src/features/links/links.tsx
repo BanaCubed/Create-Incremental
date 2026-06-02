@@ -40,7 +40,7 @@ export function createLinks<T extends LinksOptions>(optionsFunc: () => T) {
         const { links, style: _style, ...props } = options;
 
         const style = processGetter(_style);
-        options.style = () => ({ position: "static", ...(unref(style) ?? {}) });
+        options.style = () => ({ position: "static", ...unref(style) });
 
         const retLinks = {
             type: LinksType,

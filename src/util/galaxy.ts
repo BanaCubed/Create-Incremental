@@ -77,6 +77,7 @@ function syncSaves(
     >
 ) {
     const savesToUpload = new Set(settings.saves.slice());
+    // eslint-disable-next-line @unicorn/no-new-array
     const availableSlots = new Set(new Array(11).fill(0).map((_, i) => i));
     const saves = (
         Object.keys(list)
@@ -88,7 +89,7 @@ function syncSaves(
                         label,
                         content: JSON.parse(decodeSave(content) ?? "")
                     };
-                } catch (e) {
+                } catch {
                     return null;
                 }
             })
@@ -158,7 +159,7 @@ function syncSaves(
                         slot: cloudSave.slot
                     });
                 }
-            } catch (e) {
+            } catch {
                 return false;
             }
         }
@@ -178,7 +179,7 @@ function syncSaves(
                     .catch(console.error);
                 availableSlots.delete(slot);
             }
-        } catch (e) {}
+        } catch {}
     });
 
     return saves;

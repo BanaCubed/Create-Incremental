@@ -37,10 +37,11 @@ export function addMark(
     });
 
     runAfterEvaluation(element, el => {
+        // eslint-disable-next-line no-unused-expressions
         mark.mark; // Ensure mark gets evaluated
         (element as VueFeature & { mark: Mark }).mark = mark;
         el.wrappers.push(el =>
-            Boolean(unref(mark.mark)) ? <MarkNode mark={mark.mark}>{el}</MarkNode> : <>{el}</>
+            unref(mark.mark) ? <MarkNode mark={mark.mark}>{el}</MarkNode> : <>{el}</>
         );
     });
 }
