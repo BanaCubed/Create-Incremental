@@ -7,7 +7,6 @@
 		<div class="app" :style="theme" :class="{ useHeader }">
 			<Game />
 			<TPS v-if="unref(showTPS)" />
-			<AddictionWarning />
 			<NaNScreen />
 			<CloudSaveResolver />
 			<GameComponent />
@@ -18,9 +17,7 @@
 <script setup lang="tsx">
 import "@fontsource/roboto-mono";
 import Error from "components/Error.vue";
-import AddictionWarning from "components/modals/AddictionWarning.vue";
 import CloudSaveResolver from "components/modals/CloudSaveResolver.vue";
-import GameOverScreen from "components/modals/GameOverScreen.vue";
 import NaNScreen from "components/modals/NaNScreen.vue";
 import state from "game/state";
 import { render } from "util/vue";

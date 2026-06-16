@@ -1,44 +1,28 @@
 import Node from "components/Node.vue";
 import Spacer from "components/layout/Spacer.vue";
-import { createResource, trackBest, trackOOMPS, trackTotal } from "features/resources/resource";
 import { branchedResetPropagation, createTree, Tree } from "features/trees/tree";
 import type { Layer } from "game/layers";
 import { createLayer } from "game/layers";
 import { noPersist } from "game/persistence";
 import player, { Player } from "game/player";
-import type { DecimalSource } from "util/bignum";
 import Decimal, { format, formatTime } from "util/bignum";
 import { render } from "util/vue";
-import { computed, toRaw } from "vue";
-import prestige from "./layers/prestige";
+import { computed } from "vue";
+import lCash from "./layers/cash/layer";
+import { cashGain } from "./layers/cash/resourceGain";
 
 /**
  * @hidden
  */
-export const main = createLayer("main", layer => {
-	const points = createResource<DecimalSource>(10);
-	const best = trackBest(points);
-	const total = trackTotal(points);
-
-	const pointGain = computed(() => {
-		// eslint-disable-next-line prefer-const
-		let gain = new Decimal(1);
-		return gain;
-	});
-	layer.on("update", diff => {
-		points.value = Decimal.add(points.value, Decimal.times(pointGain.value, diff));
-	});
-	const oomps = trackOOMPS(points, pointGain);
+export const main = createLayer("main", () => {
+	
 
 	// Note: Casting as generic tree to avoid recursive type definitions
+	// Something of note is that this tree is never actually shown to the player, and solely used
+	// as a method of propagating resets through layers.
 	const tree = createTree(() => ({
-		nodes: noPersist([[prestige.treeNode]]),
+		nodes: noPersist([[lCash.treeNode]]),
 		branches: [],
-		onReset() {
-			points.value = toRaw(tree.resettingNode.value) === toRaw(prestige.treeNode) ? 0 : 10;
-			best.value = points.value;
-			total.value = points.value;
-		},
 		resetPropagation: branchedResetPropagation
 	})) as Tree;
 
@@ -69,13 +53,13 @@ export const main = createLayer("main", layer => {
 					</div>
 				) : null}
 				<div>
-					{Decimal.lt(points.value, "1e1000") ? <span>You have </span> : null}
-					<h2>{format(points.value)}</h2>
-					{Decimal.lt(points.value, "1e1e6") ? <span> points</span> : null}
+					{Decimal.lt(lCash.points.value, "1e1000") ? <span>You have </span> : null}
+					<h2>{format(lCash.points.value)}</h2>
+					{Decimal.lt(lCash.points.value, "1e1e6") ? <span> points</span> : null}
 				</div>
-				{Decimal.gt(pointGain.value, 0) ? (
+				{Decimal.gt(cashGain.value, 0) ? (
 					<div>
-						({oomps.value})
+						({lCash.oomps.value})
 						<Node id="oomps" />
 					</div>
 				) : null}
@@ -83,10 +67,6 @@ export const main = createLayer("main", layer => {
 				{render(tree)}
 			</>
 		),
-		points,
-		best,
-		total,
-		oomps,
 		tree
 	};
 });
@@ -98,7 +78,7 @@ export const main = createLayer("main", layer => {
 export const getInitialLayers = (
 	/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 	player: Partial<Player>
-): Array<Layer> => [main, prestige];
+): Array<Layer> => [main, lCash];
 
 /**
  * A computed ref whose value is true whenever the game is over.
