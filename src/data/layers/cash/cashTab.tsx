@@ -8,7 +8,7 @@ import { renderRow } from "util/vue";
 
 export const cashTab: Tab = createTab(() => ({
 	display: () => (
-		<>
+		<div style={{ ["--layer-color"]: lCash.color as string } as any}>
 			You have <Resource resource={lCash.cash} color={lCash.color as string} /> Cash
 			{Decimal.gt(cashGain.value, 0) ? (
 				<>
@@ -19,6 +19,6 @@ export const cashTab: Tab = createTab(() => ({
 			<Spacer />
 			<h2>Creations</h2>
 			{renderRow(...Object.values(lCash.upgrades))}
-		</>
+		</div>
 	)
 }));

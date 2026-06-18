@@ -10,12 +10,14 @@ import { render } from "util/vue";
 import { computed } from "vue";
 import lCash from "./layers/cash/lCash";
 import { cashGain } from "./layers/cash/resourceGain";
+import { createTabFamily } from "features/tabs/tabFamily";
+import { cashTab } from "./layers/cash/cashTab";
+import Row from "components/layout/Row.vue";
 
 /**
  * @hidden
  */
 export const main = createLayer("main", () => {
-	// Note: Casting as generic tree to avoid recursive type definitions
 	// Something of note is that this tree is never actually shown to the player, and solely used
 	// as a method of propagating resets through layers.
 	const tree = createTree(() => ({
@@ -24,14 +26,19 @@ export const main = createLayer("main", () => {
 		resetPropagation: branchedResetPropagation
 	})) as Tree;
 
-	// Note: layers don't _need_ a reference to everything,
-	//  but I'd recommend it over trying to remember what does and doesn't need to be included.
-	// Officially all you need are anything with persistency or that you want to access elsewhere
+	const tabFamily = createTabFamily({
+		cash: () => ({
+			tab: cashTab,
+			display: "Cash"
+		})
+	});
+
 	return {
 		name: "Tree",
 		links: tree.links,
 		display: () => (
 			<>
+				<Row>{}</Row>
 				{player.devSpeed === 0 ? (
 					<div>
 						Game Paused
@@ -62,11 +69,12 @@ export const main = createLayer("main", () => {
 					</div>
 				) : null}
 				<Spacer />
-				{render(tree)}
+				{render(tabFamily)}
 			</>
 		),
 		tree,
-		minimizable: false
+		minimizable: false,
+		tabFamily
 	};
 });
 
