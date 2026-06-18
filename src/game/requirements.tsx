@@ -277,7 +277,7 @@ export function createBooleanRequirement(
 		return {
 			requirementMet: processGetter(requirement),
 			partialDisplay,
-			display: display == null ? undefined : () => <>Req: {partialDisplay}</>,
+			display: display == null ? undefined : () => <>Req: {partialDisplay?.()}</>,
 			visibility: display == null ? Visibility.None : Visibility.Visible,
 			requiresPay: false,
 			[SkipPersistence]: true

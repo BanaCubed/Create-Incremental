@@ -8,15 +8,13 @@ import player, { Player } from "game/player";
 import Decimal, { format, formatTime } from "util/bignum";
 import { render } from "util/vue";
 import { computed } from "vue";
-import lCash from "./layers/cash/layer";
+import lCash from "./layers/cash/lCash";
 import { cashGain } from "./layers/cash/resourceGain";
 
 /**
  * @hidden
  */
 export const main = createLayer("main", () => {
-	
-
 	// Note: Casting as generic tree to avoid recursive type definitions
 	// Something of note is that this tree is never actually shown to the player, and solely used
 	// as a method of propagating resets through layers.
