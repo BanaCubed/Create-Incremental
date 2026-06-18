@@ -51,9 +51,9 @@ export const main = createLayer("main", () => {
 					</div>
 				) : null}
 				<div>
-					{Decimal.lt(lCash.points.value, "1e1000") ? <span>You have </span> : null}
-					<h2>{format(lCash.points.value)}</h2>
-					{Decimal.lt(lCash.points.value, "1e1e6") ? <span> points</span> : null}
+					{Decimal.lt(lCash.cash.value, "1e1000") ? <span>You have </span> : null}
+					<h2>{format(lCash.cash.value)}</h2>
+					{Decimal.lt(lCash.cash.value, "1e1e6") ? <span> points</span> : null}
 				</div>
 				{Decimal.gt(cashGain.value, 0) ? (
 					<div>
@@ -65,7 +65,8 @@ export const main = createLayer("main", () => {
 				{render(tree)}
 			</>
 		),
-		tree
+		tree,
+		minimizable: false
 	};
 });
 

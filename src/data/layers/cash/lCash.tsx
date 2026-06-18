@@ -1,18 +1,31 @@
 import { createReset } from "features/reset";
-import { createLayer } from "game/layers";
-import { createLayerTreeNode } from "../../common";
-import { createResource, trackBest, trackOOMPS, trackTotal } from "features/resources/resource";
+import { createLayer, Layer } from "game/layers";
+import { createLayerTreeNode, LayerTreeNode } from "../../common";
+import {
+	createResource,
+	Resource,
+	trackBest,
+	trackOOMPS,
+	trackTotal
+} from "features/resources/resource";
 import Decimal, { DecimalSource } from "lib/break_eternity";
 import { cashGain } from "./resourceGain";
 import { createUpgrade, Upgrade } from "features/clickables/upgrade";
 import { CashUpgradeID } from "./enums";
 import { createBooleanRequirement, createCostRequirement } from "game/requirements";
-import Resource from "features/resources/Resource.vue";
-import Spacer from "components/layout/Spacer.vue";
-import { renderRow } from "util/vue";
+import { Ref } from "vue";
+
+export interface LayerCash extends Layer {
+	cash: Resource<DecimalSource>;
+	bestCash: Ref<DecimalSource>;
+	totalCash: Ref<DecimalSource>;
+	oomps: Ref<string>;
+	treeNode: LayerTreeNode;
+	upgrades: Record<CashUpgradeID, Upgrade>;
+}
 
 const id = "cash";
-const layer = createLayer(id, l => {
+const layer: LayerCash = createLayer(id, l => {
 	const name = "Cash";
 	const color = "#0b9000";
 
@@ -27,7 +40,8 @@ const layer = createLayer(id, l => {
 	});
 
 	const reset = createReset(() => ({
-		thingsToReset: (): Record<string, unknown>[] => [layer]
+		thingsToReset: (): Record<string, unknown>[] =>
+			[cash, bestCash, totalCash, upgrades] as unknown as Record<string, unknown>[]
 	}));
 
 	const treeNode = createLayerTreeNode(() => ({
@@ -38,10 +52,10 @@ const layer = createLayer(id, l => {
 
 	const upgrades: Record<CashUpgradeID, Upgrade> = {
 		[CashUpgradeID.CUpA]: createUpgrade(() => ({
-			requirements: createBooleanRequirement(true, "Free"),
+			requirements: createBooleanRequirement(true, "Nil"),
 			display: {
-				title: "Create Incremental",
-				description: "Start producing cash.",
+				title: "Create Cash",
+				description: "Unlock cash.",
 				effectDisplay: "+1/s"
 			}
 		})),
@@ -55,26 +69,16 @@ const layer = createLayer(id, l => {
 				description: "Unlock the Machine."
 			}
 		}))
-	}
+	};
 
 	return {
 		name,
 		color,
-		points: cash,
-		best: bestCash,
-		total: totalCash,
+		cash,
+		bestCash,
+		totalCash,
 		oomps,
-		display: () => (
-			<>
-				You have <Resource resource={cash} color={color} /> Cash
-				{
-					Decimal.gt(cashGain.value, 0) ? <><br />{oomps.value}</> : null
-				}
-				<Spacer />
-				<h2>Creations</h2>
-				{renderRow(...Object.values(upgrades))}
-			</>
-		),
+		display: () => <></>,
 		treeNode,
 		upgrades
 	};
