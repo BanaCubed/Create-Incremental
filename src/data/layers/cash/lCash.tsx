@@ -11,7 +11,7 @@ import {
 import Decimal, { DecimalSource } from "lib/break_eternity";
 import { cashGain } from "./resourceGain";
 import { createUpgrade, Upgrade } from "features/clickables/upgrade";
-import { CashUpgradeID } from "./enums";
+import { CreationID } from "./enums";
 import { createBooleanRequirement, createCostRequirement } from "game/requirements";
 import { Ref } from "vue";
 
@@ -21,7 +21,7 @@ export interface LayerCash extends Layer {
 	totalCash: Ref<DecimalSource>;
 	oomps: Ref<string>;
 	treeNode: LayerTreeNode;
-	upgrades: Record<CashUpgradeID, Upgrade>;
+	upgrades: Record<CreationID, Upgrade>;
 }
 
 const id = "cash";
@@ -50,8 +50,8 @@ const layer: LayerCash = createLayer(id, l => {
 		reset
 	}));
 
-	const upgrades: Record<CashUpgradeID, Upgrade> = {
-		[CashUpgradeID.CUpA]: createUpgrade(() => ({
+	const upgrades: Record<CreationID, Upgrade> = {
+		[CreationID.CreationCash]: createUpgrade(() => ({
 			requirements: createBooleanRequirement(true, "Nil"),
 			display: {
 				title: "Create Cash",
@@ -59,7 +59,7 @@ const layer: LayerCash = createLayer(id, l => {
 				effectDisplay: "+1/s"
 			}
 		})),
-		[CashUpgradeID.CUpB]: createUpgrade(() => ({
+		[CreationID.CreationMachine]: createUpgrade(() => ({
 			requirements: createCostRequirement(() => ({
 				cost: 12,
 				resource: cash

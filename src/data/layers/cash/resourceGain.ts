@@ -6,7 +6,7 @@ import {
 import Decimal, { DecimalSource } from "util/bignum";
 import { computed } from "vue";
 import lCash from "./lCash";
-import { CashUpgradeID } from "./enums";
+import { CreationID } from "./enums";
 
 /**
  * Computed Decimal value of the cash gain per second the player should get.
@@ -32,7 +32,7 @@ export const cashGain = computed<Decimal>(() => {
 export const cashModifiersAdditive = createSequentialModifier(() => [
 	createAdditiveModifier(() => ({
 		addend: 1,
-		enabled: lCash.upgrades[CashUpgradeID.CUpA].bought
+		enabled: lCash.upgrades[CreationID.CreationCash].bought
 	}))
 ]);
 

@@ -1,4 +1,4 @@
-export enum CashUpgradeID {
-	CUpA,
-	CUpB
+export enum CreationID {
+	CreationCash,
+	CreationMachine
 }
