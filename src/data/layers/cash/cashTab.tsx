@@ -6,7 +6,7 @@ import { cashGain } from "./resourceGain";
 import Spacer from "components/layout/Spacer.vue";
 import { renderRow } from "util/vue";
 
-export const cashTab: Tab = createTab(() => ({
+const creationsTab: Tab = createTab(() => ({
 	display: () => (
 		<div style={{ ["--layer-color"]: lCash.color as string } as any}>
 			You have <Resource resource={lCash.cash} color={lCash.color as string} /> Cash
@@ -22,3 +22,5 @@ export const cashTab: Tab = createTab(() => ({
 		</div>
 	)
 }));
+
+export default creationsTab;

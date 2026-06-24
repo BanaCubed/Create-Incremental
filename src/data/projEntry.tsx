@@ -11,8 +11,8 @@ import { computed } from "vue";
 import lCash from "./layers/cash/lCash";
 import { cashGain } from "./layers/cash/resourceGain";
 import { createTabFamily } from "features/tabs/tabFamily";
-import { cashTab } from "./layers/cash/cashTab";
 import Row from "components/layout/Row.vue";
+import creationsTab from "./layers/cash/cashTab";
 
 /**
  * @hidden
@@ -28,7 +28,7 @@ export const main = createLayer("main", () => {
 
 	const tabFamily = createTabFamily({
 		cash: () => ({
-			tab: cashTab,
+			tab: creationsTab,
 			display: "Cash"
 		})
 	});
