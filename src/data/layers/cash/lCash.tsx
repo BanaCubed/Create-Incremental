@@ -41,7 +41,7 @@ const layer: LayerCash = createLayer(id, l => {
 
 	const reset = createReset(() => ({
 		thingsToReset: (): Record<string, unknown>[] =>
-			[cash, bestCash, totalCash, upgrades] as unknown as Record<string, unknown>[]
+			[cash, bestCash, totalCash, creations] as unknown as Record<string, unknown>[]
 	}));
 
 	const treeNode = createLayerTreeNode(() => ({
@@ -50,7 +50,7 @@ const layer: LayerCash = createLayer(id, l => {
 		reset
 	}));
 
-	const upgrades: Record<CreationID, Upgrade> = {
+	const creations: Record<CreationID, Upgrade> = {
 		[CreationID.CreationCash]: createUpgrade(() => ({
 			requirements: createBooleanRequirement(true, "Nil"),
 			display: {
@@ -61,7 +61,7 @@ const layer: LayerCash = createLayer(id, l => {
 		})),
 		[CreationID.CreationMachine]: createUpgrade(() => ({
 			requirements: createCostRequirement(() => ({
-				cost: 12,
+				cost: 15,
 				resource: cash
 			})),
 			display: {
@@ -80,7 +80,7 @@ const layer: LayerCash = createLayer(id, l => {
 		oomps,
 		display: () => <></>,
 		treeNode,
-		upgrades
+		upgrades: creations
 	};
 });
 

@@ -1,6 +1,6 @@
-import { defineConfig } from "oxlint";
+require("@rushstack/eslint-patch/modern-module-resolution");
 
-export default defineConfig({
+module.exports = {
 	root: true,
 	env: {
 		node: true
@@ -47,4 +47,5 @@ export default defineConfig({
 		defineProps: "readonly",
 		defineEmits: "readonly"
 	}
-});
+};
+
