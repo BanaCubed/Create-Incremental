@@ -12,7 +12,7 @@ import lCash from "./layers/cash/lCash";
 import { cashGain } from "./layers/cash/resourceGain";
 import { createTabFamily } from "features/tabs/tabFamily";
 import Row from "components/layout/Row.vue";
-import creationsTab from "./layers/cash/creationsTab";
+import creationsTab from "./layers/main/creationsTab";
 
 /**
  * @hidden

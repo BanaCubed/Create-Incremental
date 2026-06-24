@@ -1,8 +1,8 @@
 import { createTab, Tab } from "features/tabs/tab";
 import Resource from "features/resources/Resource.vue";
-import lCash from "./lCash";
+import lCash from "../cash/lCash";
 import Decimal from "util/bignum";
-import { cashGain } from "./resourceGain";
+import { cashGain } from "../cash/resourceGain";
 import Spacer from "components/layout/Spacer.vue";
 import { renderRow } from "util/vue";
 
