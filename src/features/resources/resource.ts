@@ -133,8 +133,8 @@ export function trackOOMPS(
 		if (oompsMag.value === 0) {
 			return pointGain
 				? format(pointGain.value, resource.precision, resource.small) +
-						" " +
-						resource.displayName +
+						// " " +
+						// resource.displayName +
 						"/s"
 				: "";
 		}

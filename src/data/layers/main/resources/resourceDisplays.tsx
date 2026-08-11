@@ -1,14 +1,13 @@
 import lCash from "../../cash/lCash";
 import { JSX } from "vue/jsx-runtime";
-import MainDisplay from "features/resources/MainDisplay.vue";
 import { computed, ComputedRef } from "vue";
+import SidebarResource from "./SidebarResource.vue";
 
 /**
  * Interface of a resource display entry.
  */
 export interface resourceDisplay {
 	display: () => JSX.Element;
-	color: string;
 	unlocked: () => boolean;
 }
 
@@ -20,10 +19,13 @@ export const resourceDisplays: resourceDisplay[] = [
 		// Cash Display
 		display: () => (
 			<>
-				<MainDisplay resource={lCash.cash} color={lCash.color as string} />
+				<SidebarResource
+					color={lCash.color as string}
+					resource={lCash.cash}
+					oomps={lCash.oomps}
+				/>
 			</>
 		),
-		color: lCash.color as string,
 		unlocked() {
 			return true;
 		}

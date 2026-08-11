@@ -6,13 +6,15 @@ import { createLayer } from "game/layers";
 import { noPersist } from "game/persistence";
 import player, { Player } from "game/player";
 import Decimal, { format, formatTime } from "util/bignum";
-import { render } from "util/vue";
+import { render, renderCol } from "util/vue";
 import { computed } from "vue";
 import lCash from "./layers/cash/lCash";
 import { cashGain } from "./layers/cash/resourceGain";
 import { createTabFamily } from "features/tabs/tabFamily";
 import Row from "components/layout/Row.vue";
 import creationsTab from "./layers/main/creationsTab";
+import SidebarResource from "./layers/main/resources/SidebarResource.vue";
+import { renderedDisplays } from "./layers/main/resources/resourceDisplays";
 
 /**
  * @hidden
@@ -38,8 +40,7 @@ export const main = createLayer("main", () => {
 		links: tree.links,
 		display: () => (
 			<>
-				<Row>{}</Row>
-				{player.devSpeed === 0 ? (
+				{/* {player.devSpeed === 0 ? (
 					<div>
 						Game Paused
 						<Node id="paused" />
@@ -56,20 +57,12 @@ export const main = createLayer("main", () => {
 						Offline Time: {formatTime(player.offlineTime)}
 						<Node id="offline" />
 					</div>
-				) : null}
-				<div>
-					{Decimal.lt(lCash.cash.value, "1e1000") ? <span>You have </span> : null}
-					<h2>{format(lCash.cash.value)}</h2>
-					{Decimal.lt(lCash.cash.value, "1e1e6") ? <span> points</span> : null}
+				) : null} */}
+				<div style="display: flex;">
+					<div style="flex-grow: 1;">{render(tabFamily)}</div>
+					<Spacer />
+					{renderCol(...renderedDisplays.value, <div style="flex-grow: 1;"></div>)}
 				</div>
-				{Decimal.gt(cashGain.value, 0) ? (
-					<div>
-						({lCash.oomps.value})
-						<Node id="oomps" />
-					</div>
-				) : null}
-				<Spacer />
-				{render(tabFamily)}
 			</>
 		),
 		tree,

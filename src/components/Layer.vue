@@ -122,7 +122,7 @@ onErrorCaptured((err, instance, info) => {
 
 .inner-tab > .layer-container > .layer-tab:not(.minimized) {
 	margin: -50px -10px;
-	padding: 50px 10px;
+	padding: 5px;
 }
 
 .modal-body .layer-tab {

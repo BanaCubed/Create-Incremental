@@ -10,10 +10,12 @@ import { CreationID } from "./enums";
 
 /**
  * Computed Decimal value of the cash gain per second the player should get.
+ *
  * Default value is 0,
  * then added to all additive modifiers,
  * then multiplied by all multiplicative modifiers.
- * Exponential modifiers will be implemented when relevant.
+ *
+ * Exponential modifiers will be implemented once relevant.
  */
 export const cashGain = computed<Decimal>(() => {
 	let gain: DecimalSource = Decimal.dZero;
