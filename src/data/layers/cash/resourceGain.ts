@@ -6,7 +6,8 @@ import {
 import Decimal, { DecimalSource } from "util/bignum";
 import { computed } from "vue";
 import lCash from "./lCash";
-import { CreationID } from "./enums";
+import { CreationID } from "../enums";
+import effects, { EffectID } from "../effects";
 
 /**
  * Computed Decimal value of the cash gain per second the player should get.
@@ -34,7 +35,7 @@ export const cashGain = computed<Decimal>(() => {
 export const cashModifiersAdditive = createSequentialModifier(() => [
 	createAdditiveModifier(() => ({
 		addend: 1,
-		enabled: lCash.upgrades[CreationID.CreationCash].bought
+		enabled: lCash.creations[CreationID.CreationCash].bought
 	}))
 ]);
 
@@ -45,7 +46,15 @@ export const cashModifiersAdditive = createSequentialModifier(() => [
  */
 export const cashModifiersMultiplicative = createSequentialModifier(() => [
 	createMultiplicativeModifier(() => ({
-		multiplier: 1,
-		enabled: false
+		multiplier: effects[EffectID.PrinterOverclock],
+		enabled: true
+	})),
+	createMultiplicativeModifier(() => ({
+		multiplier: effects[EffectID.PrinterInk],
+		enabled: true
+	})),
+	createMultiplicativeModifier(() => ({
+		multiplier: effects[EffectID.UselessWires],
+		enabled: true
 	}))
 ]);

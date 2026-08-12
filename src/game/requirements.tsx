@@ -212,7 +212,7 @@ export function createCostRequirement<T extends CostRequirementOptions>(optionsF
 							resource,
 							cumulativeCost ?? true,
 							directSum,
-							maxBulkAmount
+							maxBulkAmount ?? 1
 						)
 					: computed(
 							(): DecimalSource =>

@@ -12,9 +12,11 @@ import lCash from "./layers/cash/lCash";
 import { cashGain } from "./layers/cash/resourceGain";
 import { createTabFamily } from "features/tabs/tabFamily";
 import Row from "components/layout/Row.vue";
-import creationsTab from "./layers/main/creationsTab";
+import creationsTab from "./layers/cash/creationsTab";
 import SidebarResource from "./layers/main/resources/SidebarResource.vue";
 import { renderedDisplays } from "./layers/main/resources/resourceDisplays";
+import Nav from "components/Nav.vue";
+import machineTab from "./layers/cash/machineTab";
 
 /**
  * @hidden
@@ -31,7 +33,11 @@ export const main = createLayer("main", () => {
 	const tabFamily = createTabFamily({
 		cash: () => ({
 			tab: creationsTab,
-			display: "Cash"
+			display: "Creations"
+		}),
+		machine: () => ({
+			tab: machineTab,
+			display: "Machine"
 		})
 	});
 
