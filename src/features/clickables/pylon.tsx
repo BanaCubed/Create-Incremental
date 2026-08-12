@@ -8,7 +8,7 @@ import {
 } from "game/requirements";
 import { RepeatableOptions } from "./repeatable";
 import Decimal, { DecimalSource, formatWhole } from "util/bignum";
-import { computed, MaybeRef, MaybeRefOrGetter, Ref, unref } from "vue";
+import { computed, ComputedRef, MaybeRef, MaybeRefOrGetter, Ref, unref } from "vue";
 import { MaybeGetter, processGetter } from "util/computed";
 import { isJSXElement, render, Renderable, VueFeature, vueFeatureMixin } from "util/vue";
 import { DefaultValue, persistent, Persistent, SkipPersistence } from "game/persistence";
@@ -52,14 +52,18 @@ export interface Pylon extends VueFeature {
 	onClick: (event?: MouseEvent | TouchEvent) => void;
 	/** The current amount this pylon has. */
 	amount: Persistent<DecimalSource>;
-	/** The current amount this pylon has. */
+	/** The current produced amount this pylon has. */
 	produced: Persistent<DecimalSource>;
+	/** The effective amount of this pylon, combined both bought and produced. */
+	effectiveAmount: ComputedRef<DecimalSource>;
 	/** Whether or not this pylon's amount is at it's limit. */
 	maxed: Ref<boolean>;
 	/** How much amount can be increased by, or 1 if unclickable. * */
 	amountToIncrease: Ref<DecimalSource>;
-	/** The amount of the target to produce each second. */
+	/** The amount of the target to produce each second, per pylon. */
 	gain: MaybeRef<DecimalSource>;
+	/** The actual amount of the target produced per second, accounting for pylon amount. */
+	effectiveGain: ComputedRef<DecimalSource>;
 	/** The target value to increase. */
 	target: Ref<DecimalSource>;
 	/** A symbol that helps identify features of the same type. */
@@ -166,12 +170,16 @@ export function createPylon<T extends PylonOptions>(optionsFunc: () => T) {
 		amount[DefaultValue] = initialAmount ?? 0;
 		produced[DefaultValue] = initialProduced ?? 0;
 
-		const pylon = {
+		const pylon: Pylon = {
 			type: PylonType,
 			...(props as Omit<typeof props, keyof VueFeature | keyof RepeatableOptions>),
 			...vueFeature,
 			amount,
 			produced,
+			effectiveAmount: computed(() => Decimal.add(amount.value, produced.value)),
+			effectiveGain: computed(() =>
+				Decimal.mul(pylon.effectiveAmount.value, unref(pylon.gain))
+			),
 			requirements,
 			initialAmount,
 			initialProduced,
@@ -210,7 +218,7 @@ globalBus.on("addLayer", layer => {
 		pylons.forEach(pylon => {
 			pylon.target.value = Decimal.add(
 				pylon.target.value,
-				Decimal.mul(diff, unref(pylon.gain))
+				Decimal.mul(diff, unref(pylon.effectiveGain))
 			);
 		});
 	});
