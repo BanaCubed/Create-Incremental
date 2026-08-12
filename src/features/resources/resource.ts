@@ -19,6 +19,7 @@ export interface Resource<T = DecimalSource> extends Ref<T> {
 
 /**
  * Creates a resource.
+ *
  * @param defaultValue The initial value of the resource
  * @param displayName The human readable name of this resource
  * @param precision The number of significant digits to display by default
@@ -59,7 +60,10 @@ export function createResource<T extends State>(
 	return resource as Resource<T>;
 }
 
-/** Returns a reference to the highest amount of the resource ever owned, which is updated automatically. */
+/**
+ * Returns a reference to the highest amount of the resource ever owned, which is updated
+ * automatically.
+ */
 export function trackBest(resource: Resource): Ref<DecimalSource> {
 	const best = persistent(resource.value);
 	watch(resource, amount => {
@@ -73,7 +77,10 @@ export function trackBest(resource: Resource): Ref<DecimalSource> {
 	return best;
 }
 
-/** Returns a reference to the total amount of the resource gained, updated automatically. "Refunds" count as gain. */
+/**
+ * Returns a reference to the total amount of the resource gained, updated automatically. "Refunds"
+ * count as gain.
+ */
 export function trackTotal(resource: Resource): Ref<DecimalSource> {
 	const total = persistent(resource.value);
 	watch(resource, (amount, prevAmount) => {
@@ -89,7 +96,11 @@ export function trackTotal(resource: Resource): Ref<DecimalSource> {
 
 const tetra8 = new Decimal("10^^8");
 const e100 = new Decimal("1e100");
-/** Returns a reference to the amount of resource being gained in terms of orders of magnitude per second, calcualted over the last tick. Useful for situations where the gain rate is increasing very rapidly. */
+/**
+ * Returns a reference to the amount of resource being gained in terms of orders of magnitude per
+ * second, calcualted over the last tick. Useful for situations where the gain rate is increasing
+ * very rapidly.
+ */
 export function trackOOMPS(
 	resource: Resource,
 	pointGain?: ComputedRef<DecimalSource>

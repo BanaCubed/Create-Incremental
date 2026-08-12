@@ -13,9 +13,7 @@ export const hotkeys: Record<string, Hotkey | undefined> = shallowReactive({});
 /** A symbol used to identify {@link Hotkey} features. */
 export const HotkeyType = Symbol("Hotkey");
 
-/**
- * An object that configures a {@link Hotkey}.
- */
+/** An object that configures a {@link Hotkey}. */
 export interface HotkeyOptions {
 	/** Whether or not this hotkey is currently enabled. */
 	enabled?: MaybeRefOrGetter<boolean>;
@@ -27,7 +25,10 @@ export interface HotkeyOptions {
 	onPress: (e?: MouseEvent | TouchEvent) => void;
 }
 
-/** An object that represents a hotkey shortcut that performs an action upon a key sequence being pressed. */
+/**
+ * An object that represents a hotkey shortcut that performs an action upon a key sequence being
+ * pressed.
+ */
 export interface Hotkey {
 	/** Whether or not this hotkey is currently enabled. */
 	enabled: MaybeRef<boolean>;
@@ -45,6 +46,7 @@ const uppercaseNumbers = [")", "!", "@", "#", "$", "%", "^", "&", "*", "("];
 
 /**
  * Lazily creates a hotkey with the given options.
+ *
  * @param optionsFunc Hotkey options.
  */
 export function createHotkey<T extends HotkeyOptions>(optionsFunc: () => T) {

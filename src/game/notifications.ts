@@ -8,8 +8,9 @@ import "vue-toastification/dist/index.css";
 globalBus.on("setupVue", vue => vue.use(Toast));
 
 /**
- * Gives a [CSSProperties](https://vuejs.org/api/utility-types.html#cssproperties) object that makes an object glow, to bring focus to it.
- * Default values are for a "soft" white notif effect.
+ * Gives a [CSSProperties](https://vuejs.org/api/utility-types.html#cssproperties) object that makes
+ * an object glow, to bring focus to it. Default values are for a "soft" white notif effect.
+ *
  * @param color The color of the glow effect.
  * @param strength The strength of the glow effect - affects its spread.
  */
@@ -28,9 +29,13 @@ export function getHighNotifyStyle() {
 }
 
 /**
- * Create a boolean ref that will automatically be set based on the given condition, but also dismissed when hovering over a given element, typically the element where acting upon the notification would take place.
+ * Create a boolean ref that will automatically be set based on the given condition, but also
+ * dismissed when hovering over a given element, typically the element where acting upon the
+ * notification would take place.
+ *
  * @param element The element that will dismiss the notification on hover.
- * @param shouldNotify A function or ref that determines if the notif should be active currently or not.
+ * @param shouldNotify A function or ref that determines if the notif should be active currently or
+ *   not.
  */
 export function createDismissableNotify(
 	element: VueFeature,

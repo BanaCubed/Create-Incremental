@@ -28,9 +28,7 @@ import { ClickableOptions } from "./clickable";
 /** A symbol used to identify {@link Upgrade} features. */
 export const UpgradeType = Symbol("Upgrade");
 
-/**
- * An object that configures a {@link Upgrade}.
- */
+/** An object that configures a {@link Upgrade}. */
 export interface UpgradeOptions extends VueFeatureOptions, ClickableOptions {
 	/** The display to use for this upgrade. */
 	display?:
@@ -40,7 +38,10 @@ export interface UpgradeOptions extends VueFeatureOptions, ClickableOptions {
 				title?: MaybeGetter<Renderable>;
 				/** The main text that appears in the display. */
 				description: MaybeGetter<Renderable>;
-				/** A description of the current effect of the achievement. Useful when the effect changes dynamically. */
+				/**
+				 * A description of the current effect of the achievement. Useful when the effect
+				 * changes dynamically.
+				 */
 				effectDisplay?: MaybeGetter<Renderable>;
 		  };
 	/** The requirements to purchase this upgrade. */
@@ -69,6 +70,7 @@ export interface Upgrade extends VueFeature {
 
 /**
  * Lazily creates an upgrade with the given options.
+ *
  * @param optionsFunc Upgrade options.
  */
 export function createUpgrade<T extends UpgradeOptions>(optionsFunc: () => T) {
@@ -153,6 +155,7 @@ export function createUpgrade<T extends UpgradeOptions>(optionsFunc: () => T) {
 
 /**
  * Utility to auto purchase a list of upgrades whenever they're affordable.
+ *
  * @param layer The layer the upgrades are apart of
  * @param autoActive Whether or not the upgrades should currently be auto-purchasing
  * @param upgrades The specific upgrades to upgrade. If unspecified, uses all upgrades on the layer.

@@ -18,9 +18,7 @@ export const TreeNodeType = Symbol("TreeNode");
 /** A symbol used to identify {@link Tree} features. */
 export const TreeType = Symbol("Tree");
 
-/**
- * An object that configures a {@link TreeNode}.
- */
+/** An object that configures a {@link TreeNode}. */
 export interface TreeNodeOptions extends VueFeatureOptions {
 	/** Whether or not this tree node can be clicked. */
 	canClick?: MaybeRefOrGetter<boolean>;
@@ -39,7 +37,8 @@ export interface TreeNodeOptions extends VueFeatureOptions {
 }
 
 /**
- * The properties that are added onto a processed {@link TreeNodeOptions} to create an {@link TreeNode}.
+ * The properties that are added onto a processed {@link TreeNodeOptions} to create an
+ * {@link TreeNode}.
  */
 export interface TreeNode extends VueFeature {
 	/** Whether or not this tree node can be clicked. */
@@ -62,6 +61,7 @@ export interface TreeNode extends VueFeature {
 
 /**
  * Lazily creates a tree node with the given options.
+ *
  * @param optionsFunc Tree Node options.
  */
 export function createTreeNode<T extends TreeNodeOptions>(optionsFunc?: () => T) {
@@ -114,9 +114,7 @@ export interface TreeBranch extends Omit<Link, "startNode" | "endNode"> {
 	endNode: TreeNode;
 }
 
-/**
- * An object that configures a {@link Tree}.
- */
+/** An object that configures a {@link Tree}. */
 export interface TreeOptions extends VueFeatureOptions {
 	/** The nodes within the tree, in a 2D array. */
 	nodes: MaybeRefOrGetter<TreeNode[][]>;
@@ -145,9 +143,12 @@ export interface Tree extends VueFeature {
 	resetPropagation?: ResetPropagation;
 	/** A function that is called when a node within the tree is reset. */
 	onReset?: (node: TreeNode) => void;
-	/** The link objects for each of the branches of the tree.  */
+	/** The link objects for each of the branches of the tree. */
 	links: MaybeRef<Link[]>;
-	/** Cause a reset on this node and propagate it through the tree according to {@link TreeOptions.resetPropagation}. */
+	/**
+	 * Cause a reset on this node and propagate it through the tree according to
+	 * {@link TreeOptions.resetPropagation}.
+	 */
 	reset: (node: TreeNode) => void;
 	/** A flag that is true while the reset is still propagating through the tree. */
 	isResetting: Ref<boolean>;
@@ -159,6 +160,7 @@ export interface Tree extends VueFeature {
 
 /**
  * Lazily creates a tree with the given options.
+ *
  * @param optionsFunc Tree options.
  */
 export function createTree<T extends TreeOptions>(optionsFunc: () => T) {
@@ -258,8 +260,9 @@ export const branchedResetPropagation = function (tree: Tree, resettingNode: Tre
 };
 
 /**
- * Utility for creating a tooltip for a tree node that displays a resource-based unlock requirement, and after unlock shows the amount of another resource.
- * It sounds oddly specific, but comes up a lot.
+ * Utility for creating a tooltip for a tree node that displays a resource-based unlock requirement,
+ * and after unlock shows the amount of another resource. It sounds oddly specific, but comes up a
+ * lot.
  */
 export function createResourceTooltip(
 	resource: Resource,

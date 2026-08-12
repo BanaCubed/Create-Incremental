@@ -39,7 +39,10 @@ export interface RepeatableOptions extends ClickableOptions {
 				description: MaybeGetter<Renderable>;
 				/** A description of the current effect of this repeatable, based off its amount. */
 				effectDisplay?: MaybeGetter<Renderable>;
-				/** Whether or not to show the current amount of this repeatable at the bottom of the display. */
+				/**
+				 * Whether or not to show the current amount of this repeatable at the bottom of the
+				 * display.
+				 */
 				showAmount?: boolean;
 		  };
 }
@@ -62,7 +65,7 @@ export interface Repeatable extends VueFeature {
 	amount: Persistent<DecimalSource>;
 	/** Whether or not this repeatable's amount is at it's limit. */
 	maxed: Ref<boolean>;
-	/** How much amount can be increased by, or 1 if unclickable. **/
+	/** How much amount can be increased by, or 1 if unclickable. * */
 	amountToIncrease: Ref<DecimalSource>;
 	/** A symbol that helps identify features of the same type. */
 	type: typeof RepeatableType;
@@ -70,6 +73,7 @@ export interface Repeatable extends VueFeature {
 
 /**
  * Lazily creates a repeatable with the given options.
+ *
  * @param optionsFunc Repeatable options.
  */
 export function createRepeatable<T extends RepeatableOptions>(optionsFunc: () => T) {

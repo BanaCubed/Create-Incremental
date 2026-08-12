@@ -340,9 +340,7 @@ function d_lambertw(z: Decimal, tol = 1e-10): Decimal {
 
 export type DecimalSource = Decimal | number | string;
 
-/**
- * The Decimal's value is simply mantissa * 10^exponent.
- */
+/** The Decimal's value is simply mantissa * 10^exponent. */
 export default class Decimal {
 	public static dZero: Decimal;
 	public static dOne: Decimal;
@@ -485,13 +483,12 @@ export default class Decimal {
 	}
 
 	/**
-	 * Converts a DecimalSource to a Decimal, without constructing a new Decimal
-	 * if the provided value is already a Decimal.
+	 * Converts a DecimalSource to a Decimal, without constructing a new Decimal if the provided
+	 * value is already a Decimal.
 	 *
-	 * As the return value could be the provided value itself, this function
-	 * returns a read-only Decimal to prevent accidental mutations of the value.
-	 * Use `new Decimal(value)` to explicitly create a writeable copy if mutation
-	 * is required.
+	 * As the return value could be the provided value itself, this function returns a read-only
+	 * Decimal to prevent accidental mutations of the value. Use `new Decimal(value)` to explicitly
+	 * create a writeable copy if mutation is required.
 	 */
 	public static fromValue_noAlloc(value: DecimalSource): Readonly<Decimal> {
 		if (value instanceof Decimal) {
@@ -935,10 +932,9 @@ export default class Decimal {
 	}
 
 	/**
-	 * If you're willing to spend 'resourcesAvailable' and want to buy something
-	 * with exponentially increasing cost each purchase (start at priceStart,
-	 * multiply by priceRatio, already own currentOwned), how much of it can you buy?
-	 * Adapted from Trimps source code.
+	 * If you're willing to spend 'resourcesAvailable' and want to buy something with exponentially
+	 * increasing cost each purchase (start at priceStart, multiply by priceRatio, already own
+	 * currentOwned), how much of it can you buy? Adapted from Trimps source code.
 	 */
 
 	public static affordGeometricSeries(
@@ -955,8 +951,8 @@ export default class Decimal {
 		);
 	}
 	/**
-	 * How much resource would it cost to buy (numItems) items if you already have currentOwned,
-	 * the initial price is priceStart and it multiplies by priceRatio each purchase?
+	 * How much resource would it cost to buy (numItems) items if you already have currentOwned, the
+	 * initial price is priceStart and it multiplies by priceRatio each purchase?
 	 */
 
 	public static sumGeometricSeries(
@@ -969,8 +965,8 @@ export default class Decimal {
 	}
 	/**
 	 * If you're willing to spend 'resourcesAvailable' and want to buy something with additively
-	 * increasing cost each purchase (start at priceStart, add by priceAdd, already own currentOwned),
-	 * how much of it can you buy?
+	 * increasing cost each purchase (start at priceStart, add by priceAdd, already own
+	 * currentOwned), how much of it can you buy?
 	 */
 
 	public static affordArithmeticSeries(
@@ -987,9 +983,9 @@ export default class Decimal {
 		);
 	}
 	/**
-	 * How much resource would it cost to buy (numItems) items if you already have currentOwned,
-	 * the initial price is priceStart and it adds priceAdd each purchase?
-	 * Adapted from http://www.mathwords.com/a/arithmetic_series.htm
+	 * How much resource would it cost to buy (numItems) items if you already have currentOwned, the
+	 * initial price is priceStart and it adds priceAdd each purchase? Adapted from
+	 * http://www.mathwords.com/a/arithmetic_series.htm
 	 */
 
 	public static sumArithmeticSeries(
@@ -1006,9 +1002,8 @@ export default class Decimal {
 		);
 	}
 	/**
-	 * When comparing two purchases that cost (resource) and increase your resource/sec by (deltaRpS),
-	 * the lowest efficiency score is the better one to purchase.
-	 * From Frozen Cookies:
+	 * When comparing two purchases that cost (resource) and increase your resource/sec by
+	 * (deltaRpS), the lowest efficiency score is the better one to purchase. From Frozen Cookies:
 	 * http://cookieclicker.wikia.com/wiki/Frozen_Cookies_(JavaScript_Add-on)#Efficiency.3F_What.27s_that.3F
 	 */
 
@@ -1916,9 +1911,7 @@ export default class Decimal {
 		return this.recip();
 	}
 
-	/**
-	 * -1 for less than value, 0 for equals value, 1 for greater than value
-	 */
+	/** -1 for less than value, 0 for equals value, 1 for greater than value */
 	public cmp(value: DecimalSource): CompareResult {
 		const decimal = D(value);
 		if (this.sign > decimal.sign) {
@@ -2038,9 +2031,9 @@ export default class Decimal {
 	}
 
 	/**
-	 * Tolerance is a relative tolerance, multiplied by the greater of the magnitudes of the two arguments.
-	 * For example, if you put in 1e-9, then any number closer to the
-	 * larger number than (larger number)*1e-9 will be considered equal.
+	 * Tolerance is a relative tolerance, multiplied by the greater of the magnitudes of the two
+	 * arguments. For example, if you put in 1e-9, then any number closer to the larger number than
+	 * (larger number)*1e-9 will be considered equal.
 	 */
 	public eq_tolerance(value: DecimalSource, tolerance?: number): boolean {
 		const decimal = D(value); // https://stackoverflow.com/a/33024979
@@ -2929,9 +2922,7 @@ export default class Decimal {
 		return Decimal.ln(this.add(1).div(Decimal.fromNumber(1).sub(this))).div(2);
 	}
 
-	/**
-	 * Joke function from Realm Grinder
-	 */
+	/** Joke function from Realm Grinder */
 	public ascensionPenalty(ascensions: DecimalSource): Decimal {
 		if (ascensions === 0) {
 			return this;
@@ -2940,9 +2931,7 @@ export default class Decimal {
 		return this.root(Decimal.pow(10, ascensions));
 	}
 
-	/**
-	 * Joke function from Cookie Clicker. It's 'egg'
-	 */
+	/** Joke function from Cookie Clicker. It's 'egg' */
 	public egg(): Decimal {
 		return this.add(9);
 	}

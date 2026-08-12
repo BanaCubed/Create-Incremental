@@ -4,9 +4,7 @@ import type { VueFeature } from "util/vue";
 import { MaybeRef, MaybeRefOrGetter, unref } from "vue";
 import MarkNode from "./MarkNode.vue";
 
-/**
- * An object that configures a {@link Mark}.
- */
+/** An object that configures a {@link Mark}. */
 export interface MarkOptions {
 	/** Whether or not to display a star or custom string. None if falsy value */
 	mark: MaybeRefOrGetter<string | boolean>;
@@ -19,6 +17,7 @@ export interface Mark {
 
 /**
  * Creates a mark to the top left of the given element with the given options.
+ *
  * @param element The renderable feature to display the tooltip on.
  * @param optionsFunc Mark options.
  */

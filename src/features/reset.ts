@@ -17,11 +17,12 @@ import { isRef, MaybeRef, MaybeRefOrGetter, unref } from "vue";
 /** A symbol used to identify {@link Reset} features. */
 export const ResetType = Symbol("Reset");
 
-/**
- * An object that configures a {@link features/clickables/clickable.Clickable}.
- */
+/** An object that configures a {@link features/clickables/clickable.Clickable}. */
 export interface ResetOptions {
-	/** List of things to reset. Can include objects which will be recursed over for persistent values. */
+	/**
+	 * List of things to reset. Can include objects which will be recursed over for persistent
+	 * values.
+	 */
 	thingsToReset: MaybeRefOrGetter<unknown[]>;
 	/** A function that is called when the reset is performed. */
 	onReset?: VoidFunction;
@@ -29,7 +30,10 @@ export interface ResetOptions {
 
 /** An object that represents a reset mechanic, which resets progress back to its initial state. */
 export interface Reset {
-	/** List of things to reset. Can include objects which will be recursed over for persistent values. */
+	/**
+	 * List of things to reset. Can include objects which will be recursed over for persistent
+	 * values.
+	 */
 	thingsToReset: MaybeRef<unknown[]>;
 	/** A function that is called when the reset is performed. */
 	onReset?: VoidFunction;
@@ -41,6 +45,7 @@ export interface Reset {
 
 /**
  * Lazily creates a reset with the given options.
+ *
  * @param optionsFunc Reset options.
  */
 export function createReset<T extends ResetOptions>(optionsFunc: () => T) {
@@ -87,6 +92,7 @@ export function createReset<T extends ResetOptions>(optionsFunc: () => T) {
 const listeners: Record<string, Unsubscribe | undefined> = {};
 /**
  * Track the time since the specified reset last occured.
+ *
  * @param layer The layer the reset is attached to
  * @param reset The reset mechanic to track the time since
  */

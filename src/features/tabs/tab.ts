@@ -5,9 +5,7 @@ import { Renderable, VueFeature, vueFeatureMixin, VueFeatureOptions } from "util
 /** A symbol used to identify {@link Tab} features. */
 export const TabType = Symbol("Tab");
 
-/**
- * An object that configures a {@link Tab}.
- */
+/** An object that configures a {@link Tab}. */
 export interface TabOptions extends VueFeatureOptions {
 	/** The display to use for this tab. */
 	display: MaybeGetter<Renderable>;
@@ -15,6 +13,7 @@ export interface TabOptions extends VueFeatureOptions {
 
 /**
  * An object representing a tab of content in a tabbed interface.
+ *
  * @see {@link features/tabs/tabFamily.TabFamily}
  */
 export interface Tab extends VueFeature {
@@ -26,6 +25,7 @@ export interface Tab extends VueFeature {
 
 /**
  * Lazily creates a tab with the given options.
+ *
  * @param optionsFunc Tab options.
  */
 export function createTab<T extends TabOptions>(optionsFunc: () => T) {

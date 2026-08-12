@@ -11,10 +11,10 @@ import Formula from "./formulas/formulas";
 import { FormulaSource, GenericFormula } from "./formulas/types";
 
 /**
- * An object that can be used to apply or unapply some modification to a number.
- * Being reversible requires the operation being invertible, but some features may rely on that.
- * Descriptions can be optionally included for displaying them to the player.
- * The built-in modifier creators are designed to display the modifiers using {@link createModifierSection}.
+ * An object that can be used to apply or unapply some modification to a number. Being reversible
+ * requires the operation being invertible, but some features may rely on that. Descriptions can be
+ * optionally included for displaying them to the player. The built-in modifier creators are
+ * designed to display the modifiers using {@link createModifierSection}.
  */
 export interface Modifier {
 	/** Applies some operation on the input and returns the result. */
@@ -24,12 +24,13 @@ export interface Modifier {
 	/** Get a formula for this modifier. Required by some features. */
 	getFormula?: (gain: FormulaSource) => GenericFormula;
 	/**
-	 * Whether or not this modifier should be considered enabled.
-	 * Typically for use with modifiers passed into {@link createSequentialModifier}.
+	 * Whether or not this modifier should be considered enabled. Typically for use with modifiers
+	 * passed into {@link createSequentialModifier}.
 	 */
 	enabled?: MaybeRef<boolean>;
 	/**
 	 * A description of this modifier.
+	 *
 	 * @see {@link createModifierSection}.
 	 */
 	description?: MaybeGetter<Renderable>;
@@ -55,6 +56,7 @@ export interface AdditiveModifierOptions {
 
 /**
  * Create a modifier that adds some value to the input value.
+ *
  * @param optionsFunc Additive modifier options.
  */
 export function createAdditiveModifier<T extends AdditiveModifierOptions, S = OperationModifier<T>>(
@@ -111,6 +113,7 @@ export interface MultiplicativeModifierOptions {
 
 /**
  * Create a modifier that multiplies the input value by some value.
+ *
  * @param optionsFunc Multiplicative modifier options.
  */
 export function createMultiplicativeModifier<
@@ -161,7 +164,10 @@ export interface ExponentialModifierOptions {
 	description?: MaybeGetter<Renderable> | undefined;
 	/** A MaybeRefOrGetter that will be processed and passed directly into the returned modifier. */
 	enabled?: MaybeRefOrGetter<boolean> | undefined;
-	/** Add 1 before calculating, then remove it afterwards. This prevents low numbers from becoming lower. */
+	/**
+	 * Add 1 before calculating, then remove it afterwards. This prevents low numbers from becoming
+	 * lower.
+	 */
 	supportLowNumbers?: boolean;
 	/** Determines if numbers larger or smaller than 1 should be displayed as red. */
 	smallerIsBetter?: boolean;
@@ -169,6 +175,7 @@ export interface ExponentialModifierOptions {
 
 /**
  * Create a modifier that raises the input value to the power of some value.
+ *
  * @param optionsFunc Exponential modifier options.
  */
 export function createExponentialModifier<
@@ -239,9 +246,9 @@ export function createExponentialModifier<
 }
 
 /**
- * Takes an array of modifiers and applies and reverses them in order.
- * Modifiers that are not enabled will not be applied nor reversed.
- * Also joins their descriptions together.
+ * Takes an array of modifiers and applies and reverses them in order. Modifiers that are not
+ * enabled will not be applied nor reversed. Also joins their descriptions together.
+ *
  * @param modifiersFunc The modifiers to perform sequentially.
  * @see {@link createModifierSection}.
  */
@@ -310,8 +317,9 @@ export interface ModifierSectionOptions {
 }
 
 /**
- * Create a JSX element that displays a modifier.
- * Intended to be used with the output from {@link createSequentialModifier}.
+ * Create a JSX element that displays a modifier. Intended to be used with the output from
+ * {@link createSequentialModifier}.
+ *
  * @param options Modifier section options.
  */
 export function createModifierSection({

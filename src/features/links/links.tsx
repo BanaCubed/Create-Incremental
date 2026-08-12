@@ -8,7 +8,10 @@ import Links from "./Links.vue";
 /** A symbol used to identify {@link Links} features. */
 export const LinksType = Symbol("Links");
 
-/** Represents a link between two nodes. It will be displayed as an SVG line, and can take any appropriate properties for an SVG line element. */
+/**
+ * Represents a link between two nodes. It will be displayed as an SVG line, and can take any
+ * appropriate properties for an SVG line element.
+ */
 export interface Link extends /* @vue-ignore */ SVGAttributes {
 	startNode: { id: string };
 	endNode: { id: string };
@@ -22,7 +25,10 @@ export interface LinksOptions extends VueFeatureOptions {
 	links: MaybeRefOrGetter<Link[]>;
 }
 
-/** An object that represents a list of links between nodes, which are the elements in the DOM for any renderable feature. */
+/**
+ * An object that represents a list of links between nodes, which are the elements in the DOM for
+ * any renderable feature.
+ */
 export interface Links extends VueFeature {
 	/** The list of links to display. */
 	links: MaybeRef<Link[]>;
@@ -32,6 +38,7 @@ export interface Links extends VueFeature {
 
 /**
  * Lazily creates links with the given options.
+ *
  * @param optionsFunc Links options.
  */
 export function createLinks<T extends LinksOptions>(optionsFunc: () => T) {

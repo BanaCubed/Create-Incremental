@@ -13,9 +13,7 @@ import { globalBus } from "game/events";
 import { startGameLoop } from "game/gameLoop";
 
 declare global {
-	/**
-	 * Augment the window object so the vue app and project info can be accessed from the console.
-	 */
+	/** Augment the window object so the vue app and project info can be accessed from the console. */
 	interface Window {
 		vue: VueApp;
 		projInfo: typeof projInfo;

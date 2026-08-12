@@ -12,9 +12,8 @@ import effects, { EffectID } from "../effects";
 /**
  * Computed Decimal value of the cash gain per second the player should get.
  *
- * Default value is 0,
- * then added to all additive modifiers,
- * then multiplied by all multiplicative modifiers.
+ * Default value is 0, then added to all additive modifiers, then multiplied by all multiplicative
+ * modifiers.
  *
  * Exponential modifiers will be implemented once relevant.
  */
@@ -28,9 +27,8 @@ export const cashGain = computed<Decimal>(() => {
 });
 
 /**
- * Additive modifiers affecting cash gain.
- * Modifiers are split up into multiple variables to enforce order of operations,
- * and for those cool collapsible modifiers views eventually.
+ * Additive modifiers affecting cash gain. Modifiers are split up into multiple variables to enforce
+ * order of operations, and for those cool collapsible modifiers views eventually.
  */
 export const cashModifiersAdditive = createSequentialModifier(() => [
 	createAdditiveModifier(() => ({
@@ -40,9 +38,8 @@ export const cashModifiersAdditive = createSequentialModifier(() => [
 ]);
 
 /**
- * Multiplicative modifiers affecting cash gain.
- * Modifiers are split up into multiple variables to enforce order of operations,
- * and for those cool collapsible modifiers views eventually.
+ * Multiplicative modifiers affecting cash gain. Modifiers are split up into multiple variables to
+ * enforce order of operations, and for those cool collapsible modifiers views eventually.
  */
 export const cashModifiersMultiplicative = createSequentialModifier(() => [
 	createMultiplicativeModifier(() => ({

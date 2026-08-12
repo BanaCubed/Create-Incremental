@@ -42,21 +42,28 @@ export enum AchievementDisplay {
 	None = "none"
 }
 
-/**
- * An object that configures an {@link Achievement}.
- */
+/** An object that configures an {@link Achievement}. */
 export interface AchievementOptions extends VueFeatureOptions {
-	/** The requirement(s) to earn this achievement. Can be left null if using {@link Achievement.complete}. */
+	/**
+	 * The requirement(s) to earn this achievement. Can be left null if using
+	 * {@link Achievement.complete}.
+	 */
 	requirements?: Requirements;
 	/** The display to use for this achievement. */
 	display?:
 		| MaybeGetter<Renderable>
 		| {
-				/** Description of the requirement(s) for this achievement. If unspecified then the requirements will be displayed automatically based on {@link requirements}. */
+				/**
+				 * Description of the requirement(s) for this achievement. If unspecified then the
+				 * requirements will be displayed automatically based on {@link requirements}.
+				 */
 				requirement?: MaybeGetter<Renderable>;
 				/** Description of what will change (if anything) for achieving this. */
 				effectDisplay?: MaybeGetter<Renderable>;
-				/** Any additional things to display on this achievement, such as a toggle for it's effect. */
+				/**
+				 * Any additional things to display on this achievement, such as a toggle for it's
+				 * effect.
+				 */
 				optionsDisplay?: MaybeGetter<Renderable>;
 		  };
 	/** Toggles a smaller design for the feature. */
@@ -69,7 +76,10 @@ export interface AchievementOptions extends VueFeatureOptions {
 	onComplete?: VoidFunction;
 }
 
-/** An object that represents a feature with requirements that is passively earned upon meeting certain requirements. */
+/**
+ * An object that represents a feature with requirements that is passively earned upon meeting
+ * certain requirements.
+ */
 export interface Achievement extends VueFeature {
 	/** The requirement(s) to earn this achievement. */
 	requirements?: Requirements;
@@ -93,6 +103,7 @@ export interface Achievement extends VueFeature {
 
 /**
  * Lazily creates an achievement with the given options.
+ *
  * @param optionsFunc Achievement options.
  */
 export function createAchievement<T extends AchievementOptions>(optionsFunc?: () => T) {

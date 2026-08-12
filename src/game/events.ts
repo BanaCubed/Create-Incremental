@@ -8,45 +8,51 @@ import state from "./state";
 export interface GlobalEvents {
 	/**
 	 * Sent whenever a layer is added.
+	 *
 	 * @param layer The layer being added.
 	 * @param saveData The layer's save data object within player.
 	 */
 	addLayer: (layer: Layer, saveData: Record<string, unknown>) => void;
 	/**
 	 * Sent whenever a layer is removed.
+	 *
 	 * @param layer The layer being removed.
 	 */
 	removeLayer: (layer: Layer) => void;
 	/**
 	 * Sent every game tick. Runs the life cycle of the project.
+	 *
 	 * @param diff The delta time since last tick, in ms.
-	 * @param trueDiff The delta time since last tick, in ms. Unaffected by time modifiers like {@link game/player.Player.devSpeed} or {@link game/player.Player.offlineTime}. Intended for things like updating animations.
+	 * @param trueDiff The delta time since last tick, in ms. Unaffected by time modifiers like
+	 *   {@link game/player.Player.devSpeed} or {@link game/player.Player.offlineTime}. Intended for
+	 *   things like updating animations.
 	 */
 	update: (diff: number, trueDiff: number) => void;
 	/**
-	 * Sent when constructing the {@link Settings} object.
-	 * Use it to add default values for custom properties to the object.
+	 * Sent when constructing the {@link Settings} object. Use it to add default values for custom
+	 * properties to the object.
+	 *
 	 * @param settings The settings object being constructed.
 	 */
 	loadSettings: (settings: Partial<Settings>) => void;
-	/**
-	 * Sent when the game has ended.
-	 */
+	/** Sent when the game has ended. */
 	gameWon: VoidFunction;
 	/**
-	 * Sent when setting up the Vue Application instance.
-	 * Use it to register global components or otherwise set up things that should affect Vue globally.
+	 * Sent when setting up the Vue Application instance. Use it to register global components or
+	 * otherwise set up things that should affect Vue globally.
+	 *
 	 * @param vue The Vue App being constructed.
 	 */
 	setupVue: (vue: App) => void;
 	/**
-	 * Sent whenever a save has finished loading.
-	 * Happens when the page is opened and upon switching saves in the saves manager.
+	 * Sent whenever a save has finished loading. Happens when the page is opened and upon switching
+	 * saves in the saves manager.
 	 */
 	onLoad: VoidFunction;
 	/**
-	 * Using document.fonts.ready returns too early on firefox, so we use document.fonts.onloadingdone instead, which doesn't accept multiple listeners.
-	 * This event fires when that callback is called.
+	 * Using document.fonts.ready returns too early on firefox, so we use
+	 * document.fonts.onloadingdone instead, which doesn't accept multiple listeners. This event
+	 * fires when that callback is called.
 	 */
 	fontsLoaded: VoidFunction;
 }

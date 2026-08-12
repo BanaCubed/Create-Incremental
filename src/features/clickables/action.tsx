@@ -15,9 +15,7 @@ import { type Clickable, ClickableOptions } from "./clickable";
 /** A symbol used to identify {@link Action} features. */
 export const ActionType = Symbol("Action");
 
-/**
- * An object that configures an {@link Action}.
- */
+/** An object that configures an {@link Action}. */
 export interface ActionOptions extends Omit<ClickableOptions, "onClick" | "onHold"> {
 	/** The cooldown during which the action cannot be performed again, in seconds. */
 	duration: MaybeRefOrGetter<DecimalSource>;
@@ -29,7 +27,10 @@ export interface ActionOptions extends Omit<ClickableOptions, "onClick" | "onHol
 	barOptions?: Partial<BarOptions>;
 }
 
-/** An object that represents a feature that can be clicked upon, and then has a cooldown before it can be clicked again. */
+/**
+ * An object that represents a feature that can be clicked upon, and then has a cooldown before it
+ * can be clicked again.
+ */
 export interface Action extends VueFeature {
 	/** The cooldown during which the action cannot be performed again, in seconds. */
 	duration: MaybeRef<DecimalSource>;
@@ -41,7 +42,10 @@ export interface Action extends VueFeature {
 	display?: MaybeGetter<Renderable>;
 	/** A function that is called when the action is clicked. */
 	onClick: (amount: DecimalSource) => void;
-	/** Whether or not the player is holding down the action. Actions will be considered clicked as soon as the cooldown completes when being held down. */
+	/**
+	 * Whether or not the player is holding down the action. Actions will be considered clicked as
+	 * soon as the cooldown completes when being held down.
+	 */
 	isHolding: Ref<boolean>;
 	/** The current amount of progress through the cooldown. */
 	progress: Ref<DecimalSource>;
@@ -55,6 +59,7 @@ export interface Action extends VueFeature {
 
 /**
  * Lazily creates an action with the given options.
+ *
  * @param optionsFunc Action options.
  */
 export function createAction<T extends ActionOptions>(optionsFunc?: () => T) {

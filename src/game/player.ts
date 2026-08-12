@@ -25,7 +25,10 @@ export interface Player {
 	keepGoing: boolean;
 	/** The ID of this project, to make sure saves aren't imported into the wrong project. */
 	modID: string;
-	/** The version of the project this save was created by. Used for upgrading saves for new versions. */
+	/**
+	 * The version of the project this save was created by. Used for upgrading saves for new
+	 * versions.
+	 */
 	modVersion: string;
 	/** A dictionary of layer save data. */
 	layers: Record<string, LayerData<unknown>>;

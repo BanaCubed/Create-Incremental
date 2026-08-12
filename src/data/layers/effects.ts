@@ -10,6 +10,10 @@ export enum EffectID {
 	UselessWires
 }
 
+/**
+ * Globals object containing all effects within the game. Basically just a long list of
+ * `ComputedRef`s for every dynamic number based on other values.
+ */
 const effects: Record<EffectID, ComputedRef<DecimalSource>> = {
 	[EffectID.PrinterOverclock]: computed(() =>
 		Decimal.add(

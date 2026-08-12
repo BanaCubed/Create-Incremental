@@ -16,9 +16,7 @@ import { computed, MaybeRef, MaybeRefOrGetter, unref } from "vue";
 /** A symbol used to identify {@link Clickable} features. */
 export const ClickableType = Symbol("Clickable");
 
-/**
- * An object that configures a {@link Clickable}.
- */
+/** An object that configures a {@link Clickable}. */
 export interface ClickableOptions extends VueFeatureOptions {
 	/** Whether or not the clickable may be clicked. */
 	canClick?: MaybeRefOrGetter<boolean>;
@@ -53,6 +51,7 @@ export interface Clickable extends VueFeature {
 
 /**
  * Lazily creates a clickable with the given options.
+ *
  * @param optionsFunc Clickable options.
  */
 export function createClickable<T extends ClickableOptions>(optionsFunc?: () => T) {
@@ -117,6 +116,7 @@ export function createClickable<T extends ClickableOptions>(optionsFunc?: () => 
 
 /**
  * Utility to auto click a clickable whenever it can be.
+ *
  * @param layer The layer the clickable is apart of
  * @param clickable The clicker to click automatically
  * @param autoActive Whether or not the clickable should currently be auto-clicking

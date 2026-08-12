@@ -46,7 +46,8 @@ watch(
 
 declare global {
 	/**
-	 * Augment the window object so the settings, and hard resetting the settings, can be accessed from the console.
+	 * Augment the window object so the settings, and hard resetting the settings, can be accessed
+	 * from the console.
 	 */
 	interface Window {
 		settings: Settings;
@@ -54,8 +55,8 @@ declare global {
 	}
 }
 /**
- * The player settings object. Stores data that persists across all saves.
- * Automatically saved to localStorage whenever changed.
+ * The player settings object. Stores data that persists across all saves. Automatically saved to
+ * localStorage whenever changed.
  */
 export default (window.settings = state as Settings);
 /** A function that erases all player settings, including all saves. */
@@ -76,10 +77,11 @@ export const hardResetSettings = (window.hardResetSettings = () => {
 });
 
 /**
- * Loads the player settings from localStorage.
- * Calls the {@link game/events.GlobalEvents.loadSettings} event for custom properties to be included.
- * Custom properties should be added by the file they relate to, so they won't be included if the file is tree shaken away.
- * Custom properties should also register the field to modify said setting using {@link registerSettingField}.
+ * Loads the player settings from localStorage. Calls the
+ * {@link game/events.GlobalEvents.loadSettings} event for custom properties to be included. Custom
+ * properties should be added by the file they relate to, so they won't be included if the file is
+ * tree shaken away. Custom properties should also register the field to modify said setting using
+ * {@link registerSettingField}.
  */
 export function loadSettings(): void {
 	try {

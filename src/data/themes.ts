@@ -26,7 +26,10 @@ export interface Theme {
 	variables: ThemeVars;
 	/** Whether or not tabs should "float" in the center of their container. */
 	floatingTabs: boolean;
-	/** Whether or not adjacent features should merge together - removing the margin between them, and only applying the border radius to the first and last elements in the row or column. */
+	/**
+	 * Whether or not adjacent features should merge together - removing the margin between them,
+	 * and only applying the border radius to the first and last elements in the row or column.
+	 */
 	mergeAdjacent: boolean;
 	/** Whether or not to show a pin icon on pinned tooltips. */
 	showPin: boolean;

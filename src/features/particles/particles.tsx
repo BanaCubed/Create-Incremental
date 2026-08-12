@@ -10,30 +10,37 @@ import { processGetter } from "util/computed";
 /** A symbol used to identify {@link Particles} features. */
 export const ParticlesType = Symbol("Particles");
 
-/**
- * An object that configures {@link Particles}.
- */
+/** An object that configures {@link Particles}. */
 export interface ParticlesOptions extends VueFeatureOptions {
 	/** A function that is called when the particles canvas is resized. */
 	onContainerResized?: (boundingRect: DOMRect) => void;
-	/** A function that is called whenever the particles element is reloaded during development. For restarting particle effects. */
+	/**
+	 * A function that is called whenever the particles element is reloaded during development. For
+	 * restarting particle effects.
+	 */
 	onHotReload?: VoidFunction;
 }
 
 /**
- * An object that represents a feature that display particle effects on the screen.
- * The config should typically be gotten by designing the effect using the [online particle effect editor](https://pixijs.io/pixi-particles-editor/) and passing it into the {@link upgradeConfig} from @pixi/particle-emitter.
+ * An object that represents a feature that display particle effects on the screen. The config
+ * should typically be gotten by designing the effect using the [online particle effect
+ * editor](https://pixijs.io/pixi-particles-editor/) and passing it into the {@link upgradeConfig}
+ * from @pixi/particle-emitter.
  */
 export interface Particles extends VueFeature {
 	/** A function that is called when the particles canvas is resized. */
 	onContainerResized?: (boundingRect: DOMRect) => void;
-	/** A function that is called whenever the particles element is reloaded during development. For restarting particle effects. */
+	/**
+	 * A function that is called whenever the particles element is reloaded during development. For
+	 * restarting particle effects.
+	 */
 	onHotReload?: VoidFunction;
 	/** The Pixi.JS Application powering this particles canvas. */
 	app: Ref<null | Application>;
 	/**
-	 * A function to asynchronously add an emitter to the canvas.
-	 * The returned emitter can then be positioned as appropriate and started.
+	 * A function to asynchronously add an emitter to the canvas. The returned emitter can then be
+	 * positioned as appropriate and started.
+	 *
 	 * @see {@link Particles}
 	 */
 	addEmitter: (config: EmitterConfigV3) => Promise<Emitter>;
@@ -43,6 +50,7 @@ export interface Particles extends VueFeature {
 
 /**
  * Lazily creates particles with the given options.
+ *
  * @param optionsFunc Particles options.
  */
 export function createParticles<T extends ParticlesOptions>(optionsFunc?: () => T) {

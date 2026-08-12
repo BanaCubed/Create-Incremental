@@ -160,14 +160,19 @@ export abstract class InternalFormula<T extends [FormulaSource] | FormulaSource[
 		return this.getIntegralFormula().isInvertible();
 	}
 
-	/** Whether or not this formula has a singular variable inside it, which can be accessed via {@link innermostVariable}. */
+	/**
+	 * Whether or not this formula has a singular variable inside it, which can be accessed via
+	 * {@link innermostVariable}.
+	 */
 	hasVariable(): boolean {
 		return this.internalVariables === 1;
 	}
 
 	/**
 	 * Evaluate the current result of the formula
-	 * @param variable Optionally override the value of the variable while evaluating. Ignored if there is not variable
+	 *
+	 * @param variable Optionally override the value of the variable while evaluating. Ignored if
+	 *   there is not variable
 	 */
 	evaluate(variable?: DecimalSource): DecimalSource {
 		return (
@@ -183,7 +188,9 @@ export abstract class InternalFormula<T extends [FormulaSource] | FormulaSource[
 	}
 
 	/**
-	 * Compares if two formulas are equivalent to each other. Note that function contexts can lead to false negatives.
+	 * Compares if two formulas are equivalent to each other. Note that function contexts can lead
+	 * to false negatives.
+	 *
 	 * @param other The formula to compare to this one.
 	 */
 	equals(other: GenericFormula): boolean {
@@ -205,6 +212,7 @@ export abstract class InternalFormula<T extends [FormulaSource] | FormulaSource[
 
 	/**
 	 * Creates a formula that evaluates to a constant value.
+	 *
 	 * @param value The constant value for this formula.
 	 */
 	public static constant(value: MaybeRef<DecimalSource>): InvertibleIntegralFormula {
@@ -212,7 +220,9 @@ export abstract class InternalFormula<T extends [FormulaSource] | FormulaSource[
 	}
 
 	/**
-	 * Creates a formula that is marked as the variable for an outer formula. Typically used for inverting and integrating.
+	 * Creates a formula that is marked as the variable for an outer formula. Typically used for
+	 * inverting and integrating.
+	 *
 	 * @param value The variable for this formula.
 	 */
 	public static variable(value: MaybeRef<DecimalSource>): InvertibleIntegralFormula {
@@ -221,6 +231,7 @@ export abstract class InternalFormula<T extends [FormulaSource] | FormulaSource[
 
 	/**
 	 * Stringifies the formula so it's more easy to read in the console
+	 *
 	 * @param formula The formula source to print, used for mapping inputs
 	 */
 	public static stringify(formula: FormulaSource): string {
@@ -241,10 +252,15 @@ export abstract class InternalFormula<T extends [FormulaSource] | FormulaSource[
 	// TODO add integration support to step-wise functions
 	/**
 	 * Creates a step-wise formula. After {@link start} the formula will have an additional modifier.
-	 * This function assumes the incoming {@link value} will be continuous and monotonically increasing.
+	 * This function assumes the incoming {@link value} will be continuous and monotonically
+	 * increasing.
+	 *
 	 * @param value The value before applying the step
 	 * @param start The value at which to start applying the step
-	 * @param formulaModifier How this step should modify the formula. The incoming value will be the unmodified formula value _minus the start value_. So for example if an incoming formula evaluates to 200 and has a step that starts at 150, the formulaModifier would be given 50 as the parameter
+	 * @param formulaModifier How this step should modify the formula. The incoming value will be
+	 *   the unmodified formula value _minus the start value_. So for example if an incoming formula
+	 *   evaluates to 200 and has a step that starts at 150, the formulaModifier would be given 50
+	 *   as the parameter
 	 */
 	public static step(
 		value: FormulaSource,
@@ -286,10 +302,12 @@ export abstract class InternalFormula<T extends [FormulaSource] | FormulaSource[
 
 	/**
 	 * Applies a modifier to a formula under a given condition.
+	 *
 	 * @param value The incoming formula value
 	 * @param condition Whether or not to apply the modifier
 	 * @param formulaModifier The modifier to apply to the incoming formula if the condition is true
-	 * @param elseFormulaModifier An optional modifier to apply to the incoming formula if the condition is false
+	 * @param elseFormulaModifier An optional modifier to apply to the incoming formula if the
+	 *   condition is false
 	 */
 	public static if(
 		value: FormulaSource,
@@ -1287,8 +1305,11 @@ export abstract class InternalFormula<T extends [FormulaSource] | FormulaSource[
 }
 
 /**
- * A class that can be used for cost/goal functions. It can be evaluated similar to a cost function, but also provides extra features for supported formulas. For example, a lot of math functions can be inverted.
- * Typically, the use of these extra features is to support cost/goal functions that have multiple levels purchased/completed at once efficiently.
+ * A class that can be used for cost/goal functions. It can be evaluated similar to a cost function,
+ * but also provides extra features for supported formulas. For example, a lot of math functions can
+ * be inverted. Typically, the use of these extra features is to support cost/goal functions that
+ * have multiple levels purchased/completed at once efficiently.
+ *
  * @see {@link calculateMaxAffordable}
  * @see {@link game/requirements.createCostRequirement}
  */
@@ -1298,7 +1319,10 @@ export default class Formula<
 	private integralFormula: GenericFormula | undefined;
 
 	/**
-	 * Takes a potential result of the formula, and calculates what value the variable inside the formula would have to be for that result to occur. Only works if there's a single variable and if the formula is invertible.
+	 * Takes a potential result of the formula, and calculates what value the variable inside the
+	 * formula would have to be for that result to occur. Only works if there's a single variable
+	 * and if the formula is invertible.
+	 *
 	 * @param value The result of the formula
 	 * @see {@link isInvertible}
 	 */
@@ -1313,7 +1337,10 @@ export default class Formula<
 	}
 
 	/**
-	 * Evaluate the result of the indefinite integral (sans the constant of integration). Only works if there's a single variable and the formula is integrable. The formula can only have one "complex" operation (anything besides +,-,*,/).
+	 * Evaluate the result of the indefinite integral (sans the constant of integration). Only works
+	 * if there's a single variable and the formula is integrable. The formula can only have one
+	 * "complex" operation (anything besides +,-,*,/).
+	 *
 	 * @param variable Optionally override the value of the variable while evaluating
 	 * @see {@link isIntegrable}
 	 */
@@ -1326,7 +1353,10 @@ export default class Formula<
 	}
 
 	/**
-	 * Given the potential result of the formula's integral (and the constant of integration), calculate what value the variable inside the formula would have to be for that result to occur. Only works if there's a single variable and if the formula's integral is invertible.
+	 * Given the potential result of the formula's integral (and the constant of integration),
+	 * calculate what value the variable inside the formula would have to be for that result to
+	 * occur. Only works if there's a single variable and if the formula's integral is invertible.
+	 *
 	 * @param value The result of the integral.
 	 * @see {@link isIntegralInvertible}
 	 */
@@ -1348,7 +1378,9 @@ export default class Formula<
 
 	/**
 	 * Get a formula that will evaluate to the integral of this formula. May also be invertible.
-	 * @param stack For nested formulas, a stack of operations that occur outside the complex operation.
+	 *
+	 * @param stack For nested formulas, a stack of operations that occur outside the complex
+	 *   operation.
 	 */
 	getIntegralFormula(stack?: SubstitutionStack): GenericFormula {
 		if (this.integralFormula != null && stack == null) {
@@ -1416,6 +1448,7 @@ export default class Formula<
 
 /**
  * Utility for recursively searching through a formula for the cause of non-invertibility.
+ *
  * @param formula The formula to search for a non-invertible formula within
  */
 export function findNonInvertible(formula: GenericFormula): GenericFormula | null {
@@ -1433,12 +1466,18 @@ export function findNonInvertible(formula: GenericFormula): GenericFormula | nul
 }
 
 /**
- * Utility for calculating the maximum amount of purchases possible with a given formula and resource. If {@link cumulativeCost} is changed to false, the calculation will be much faster with higher numbers.
+ * Utility for calculating the maximum amount of purchases possible with a given formula and
+ * resource. If {@link cumulativeCost} is changed to false, the calculation will be much faster with
+ * higher numbers.
+ *
  * @param formula The formula to use for calculating buy max from
  * @param resource The resource used when purchasing (is only read from)
- * @param cumulativeCost Whether or not to count spent resources on each purchase or not. If true, costs will be approximated for performance, skewing towards fewer purchases
- * @param directSum How many of the most expensive purchases should be manually summed for better accuracy. If unspecified uses 10 when spending resources and 0 when not
- * @param maxBulkAmount Cap on how many can be purchased at once. If equal to 1 or lte to {@link directSum} then the formula does not need to be invertible. Defaults to Infinity.
+ * @param cumulativeCost Whether or not to count spent resources on each purchase or not. If true,
+ *   costs will be approximated for performance, skewing towards fewer purchases
+ * @param directSum How many of the most expensive purchases should be manually summed for better
+ *   accuracy. If unspecified uses 10 when spending resources and 0 when not
+ * @param maxBulkAmount Cap on how many can be purchased at once. If equal to 1 or lte to
+ *   {@link directSum} then the formula does not need to be invertible. Defaults to Infinity.
  */
 export function calculateMaxAffordable(
 	formula: GenericFormula,
@@ -1513,11 +1552,16 @@ export function calculateMaxAffordable(
 }
 
 /**
- * Utility for calculating the cost of a formula for a given amount of purchases. If {@link cumulativeCost} is changed to false, the calculation will be much faster with higher numbers.
+ * Utility for calculating the cost of a formula for a given amount of purchases. If
+ * {@link cumulativeCost} is changed to false, the calculation will be much faster with higher
+ * numbers.
+ *
  * @param formula The formula to use for calculating buy max from
  * @param amountToBuy The amount of purchases to calculate the cost for
- * @param cumulativeCost Whether or not to count spent resources on each purchase or not. If true, costs will be approximated for performance, skewing towards higher cost
- * @param directSum How many purchases to manually sum for improved accuracy. If not specified, defaults to 10 when cost is cumulative and 0 when not
+ * @param cumulativeCost Whether or not to count spent resources on each purchase or not. If true,
+ *   costs will be approximated for performance, skewing towards higher cost
+ * @param directSum How many purchases to manually sum for improved accuracy. If not specified,
+ *   defaults to 10 when cost is cumulative and 0 when not
  */
 export function calculateCost(
 	formula: InvertibleFormula,

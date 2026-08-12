@@ -9,9 +9,7 @@ import { CSSProperties, MaybeRef, MaybeRefOrGetter } from "vue";
 /** A symbol used to identify {@link Infobox} features. */
 export const InfoboxType = Symbol("Infobox");
 
-/**
- * An object that configures an {@link Infobox}.
- */
+/** An object that configures an {@link Infobox}. */
 export interface InfoboxOptions extends VueFeatureOptions {
 	/** The background color of the Infobox. Defaults to the layer color. */
 	color?: MaybeRefOrGetter<string>;
@@ -45,6 +43,7 @@ export interface Infobox extends VueFeature {
 
 /**
  * Lazily creates an infobox with the given options.
+ *
  * @param optionsFunc Infobox options.
  */
 export function createInfobox<T extends InfoboxOptions>(optionsFunc: () => T) {

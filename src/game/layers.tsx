@@ -29,22 +29,26 @@ export interface FeatureNode {
 }
 
 /**
- * An injection key that a Context component will use to provide a function that registers a {@link FeatureNode} with the given id and HTML element.
+ * An injection key that a Context component will use to provide a function that registers a
+ * {@link FeatureNode} with the given id and HTML element.
  */
 export const RegisterNodeInjectionKey: InjectionKey<(id: string, element: HTMLElement) => void> =
 	Symbol("RegisterNode");
 /**
- * An injection key that a Context component will use to provide a function that unregisters a {@link FeatureNode} with the given id.
+ * An injection key that a Context component will use to provide a function that unregisters a
+ * {@link FeatureNode} with the given id.
  */
 export const UnregisterNodeInjectionKey: InjectionKey<(id: string) => void> =
 	Symbol("UnregisterNode");
 /**
- * An injection key that a Context component will use to provide a ref to a map of all currently registered {@link FeatureNode}s.
+ * An injection key that a Context component will use to provide a ref to a map of all currently
+ * registered {@link FeatureNode}s.
  */
 export const NodesInjectionKey: InjectionKey<Ref<Record<string, FeatureNode | undefined>>> =
 	Symbol("Nodes");
 /**
- * An injection key that a Context component will use to provide a ref to a bounding rect of the Context.
+ * An injection key that a Context component will use to provide a ref to a bounding rect of the
+ * Context.
  */
 export const BoundsInjectionKey: InjectionKey<Ref<DOMRect | undefined>> = Symbol("Bounds");
 
@@ -52,24 +56,27 @@ export const BoundsInjectionKey: InjectionKey<Ref<DOMRect | undefined>> = Symbol
 export interface LayerEvents {
 	/**
 	 * Sent every game tick, before the update event. Intended for "generation" type actions.
+	 *
 	 * @param diff The delta time since last tick, in ms.
 	 */
 	preUpdate: (diff: number) => void;
 	/**
 	 * Sent every game tick. Intended for "automation" type actions.
+	 *
 	 * @param diff The delta time since last tick, in ms.
 	 */
 	update: (diff: number) => void;
 	/**
 	 * Sent every game tick, after the update event. Intended for checking state.
+	 *
 	 * @param diff The delta time since last tick, in ms.
 	 */
 	postUpdate: (diff: number) => void;
 }
 
 /**
- * A reference to all the current layers.
- * It is shallow reactive so it will update when layers are added or removed, but not interfere with the existing refs within each layer.
+ * A reference to all the current layers. It is shallow reactive so it will update when layers are
+ * added or removed, but not interfere with the existing refs within each layer.
  */
 export const layers: Record<string, Readonly<Layer>> = shallowReactive({});
 
@@ -97,46 +104,40 @@ export interface Position {
 }
 
 /**
- * An object that configures a {@link Layer}.
- * Even moreso than features, the developer is expected to include extra properties in this object.
- * All {@link game/persistence.Persistent} refs must be included somewhere within the layer object.
+ * An object that configures a {@link Layer}. Even moreso than features, the developer is expected to
+ * include extra properties in this object. All {@link game/persistence.Persistent} refs must be
+ * included somewhere within the layer object.
  */
 export interface LayerOptions {
 	/** The color of the layer, used to theme the entire layer's display. */
 	color?: MaybeRefOrGetter<string>;
 	/**
-	 * The layout of this layer's features.
-	 * When the layer is open in {@link game/player.Player.tabs}, this is the content that is displayed.
+	 * The layout of this layer's features. When the layer is open in
+	 * {@link game/player.Player.tabs}, this is the content that is displayed.
 	 */
 	display: MaybeGetter<Renderable>;
 	/** An object of classes that should be applied to the display. */
 	classes?: MaybeRefOrGetter<Record<string, boolean>>;
 	/** Styles that should be applied to the display. */
 	style?: MaybeRefOrGetter<CSSProperties>;
-	/**
-	 * The name of the layer, used on minimized tabs.
-	 * Defaults to {@link BaseLayer.id}.
-	 */
+	/** The name of the layer, used on minimized tabs. Defaults to {@link BaseLayer.id}. */
 	name?: MaybeRefOrGetter<string>;
-	/**
-	 * Whether or not the layer can be minimized.
-	 * Defaults to true.
-	 */
+	/** Whether or not the layer can be minimized. Defaults to true. */
 	minimizable?: MaybeRefOrGetter<boolean>;
 	/**
-	 * The layout of this layer's features.
-	 * When the layer is open in {@link game/player.Player.tabs}, but the tab is {@link Layer.minimized} this is the content that is displayed.
+	 * The layout of this layer's features. When the layer is open in
+	 * {@link game/player.Player.tabs}, but the tab is {@link Layer.minimized} this is the content
+	 * that is displayed.
 	 */
 	minimizedDisplay?: MaybeGetter<Renderable>;
 	/**
-	 * Whether or not to force the go back button to be hidden.
-	 * If true, go back will be hidden regardless of allowGoBack value in the project settings.
+	 * Whether or not to force the go back button to be hidden. If true, go back will be hidden
+	 * regardless of allowGoBack value in the project settings.
 	 */
 	forceHideGoBack?: MaybeRefOrGetter<boolean>;
 	/**
-	 * A CSS min-width value that is applied to the layer.
-	 * Can be a number, in which case the unit is assumed to be px.
-	 * Defaults to 600px.
+	 * A CSS min-width value that is applied to the layer. Can be a number, in which case the unit
+	 * is assumed to be px. Defaults to 600px.
 	 */
 	minWidth?: MaybeRefOrGetter<number | string>;
 }
@@ -144,9 +145,8 @@ export interface LayerOptions {
 /** The properties that are added onto a processed {@link LayerOptions} to create a {@link Layer} */
 export interface BaseLayer {
 	/**
-	 * The ID of the layer.
-	 * Populated from the {@link createLayer} parameters.
-	 * Used for saving and tracking open tabs.
+	 * The ID of the layer. Populated from the {@link createLayer} parameters. Used for saving and
+	 * tracking open tabs.
 	 */
 	id: string;
 	/** A persistent ref tracking if the tab is minimized or not. */
@@ -166,52 +166,46 @@ export interface Layer extends BaseLayer {
 	/** The color of the layer, used to theme the entire layer's display. */
 	color?: MaybeRef<string>;
 	/**
-	 * The layout of this layer's features.
-	 * When the layer is open in {@link game/player.Player.tabs}, this is the content that is displayed.
+	 * The layout of this layer's features. When the layer is open in
+	 * {@link game/player.Player.tabs}, this is the content that is displayed.
 	 */
 	display: MaybeGetter<Renderable>;
 	/** An object of classes that should be applied to the display. */
 	classes?: MaybeRef<Record<string, boolean>>;
 	/** Styles that should be applied to the display. */
 	style?: MaybeRef<CSSProperties>;
-	/**
-	 * The name of the layer, used on minimized tabs.
-	 * Defaults to {@link BaseLayer.id}.
-	 */
+	/** The name of the layer, used on minimized tabs. Defaults to {@link BaseLayer.id}. */
 	name?: MaybeRef<string>;
-	/**
-	 * Whether or not the layer can be minimized.
-	 * Defaults to true.
-	 */
+	/** Whether or not the layer can be minimized. Defaults to true. */
 	minimizable?: MaybeRef<boolean>;
 	/**
-	 * The layout of this layer's features.
-	 * When the layer is open in {@link game/player.Player.tabs}, but the tab is {@link Layer.minimized} this is the content that is displayed.
+	 * The layout of this layer's features. When the layer is open in
+	 * {@link game/player.Player.tabs}, but the tab is {@link Layer.minimized} this is the content
+	 * that is displayed.
 	 */
 	minimizedDisplay?: MaybeGetter<Renderable>;
 	/**
-	 * Whether or not to force the go back button to be hidden.
-	 * If true, go back will be hidden regardless of allowGoBack value in the project settings.
+	 * Whether or not to force the go back button to be hidden. If true, go back will be hidden
+	 * regardless of allowGoBack value in the project settings.
 	 */
 	forceHideGoBack?: MaybeRef<boolean>;
 	/**
-	 * A CSS min-width value that is applied to the layer.
-	 * Can be a number, in which case the unit is assumed to be px.
-	 * Defaults to 600px.
+	 * A CSS min-width value that is applied to the layer. Can be a number, in which case the unit
+	 * is assumed to be px. Defaults to 600px.
 	 */
 	minWidth?: MaybeRef<number | string>;
 }
 
 /**
- * When creating layers, this object a map of layer ID to a set of any created persistent refs in order to check they're all included in the final layer object.
+ * When creating layers, this object a map of layer ID to a set of any created persistent refs in
+ * order to check they're all included in the final layer object.
  */
 export const persistentRefs: Record<string, Set<Persistent>> = {};
-/**
- * When creating layers, this array stores the layers currently being created, as a stack.
- */
+/** When creating layers, this array stores the layers currently being created, as a stack. */
 export const addingLayers: string[] = [];
 /**
  * Lazily creates a layer with the given options.
+ *
  * @param id The ID this layer will have. See {@link BaseLayer.id}.
  * @param optionsFunc Layer options.
  */
@@ -301,10 +295,12 @@ export function createLayer<T extends LayerOptions>(
 }
 
 /**
- * Enables a layer object, so it will be updated every tick.
- * Note that accessing a layer/its properties does NOT require it to be enabled.
- * For dynamic layers you can call this function and {@link removeLayer} as necessary. Just make sure {@link data/projEntry.getInitialLayers} will provide an accurate list of layers based on the player data object.
- * For static layers just make {@link data/projEntry.getInitialLayers} return all the layers.
+ * Enables a layer object, so it will be updated every tick. Note that accessing a layer/its
+ * properties does NOT require it to be enabled. For dynamic layers you can call this function and
+ * {@link removeLayer} as necessary. Just make sure {@link data/projEntry.getInitialLayers} will
+ * provide an accurate list of layers based on the player data object. For static layers just make
+ * {@link data/projEntry.getInitialLayers} return all the layers.
+ *
  * @param layer The layer to add.
  * @param player The player data object, which will have a data object for this layer.
  */
@@ -333,6 +329,7 @@ export function addLayer(
 
 /**
  * Convenience method for getting a layer by its ID with correct typing.
+ *
  * @param layerID The ID of the layer to get.
  */
 export function getLayer<T extends Layer>(layerID: string): T {
@@ -340,8 +337,9 @@ export function getLayer<T extends Layer>(layerID: string): T {
 }
 
 /**
- * Disables a layer, so it will no longer be updated every tick.
- * Note that accessing a layer/its properties does NOT require it to be enabled.
+ * Disables a layer, so it will no longer be updated every tick. Note that accessing a layer/its
+ * properties does NOT require it to be enabled.
+ *
  * @param layer The layer to remove.
  */
 export function removeLayer(layer: Layer): void {
@@ -352,8 +350,9 @@ export function removeLayer(layer: Layer): void {
 }
 
 /**
- * Convenience method for removing and immediately re-adding a layer.
- * This is useful for layers with dynamic content, to ensure persistent refs are correctly configured.
+ * Convenience method for removing and immediately re-adding a layer. This is useful for layers with
+ * dynamic content, to ensure persistent refs are correctly configured.
+ *
  * @param layer Layer to remove and then re-add
  */
 export function reloadLayer(layer: Layer): void {
@@ -364,8 +363,9 @@ export function reloadLayer(layer: Layer): void {
 }
 
 /**
- * Utility function for creating a modal that display's a {@link LayerOptions.display}.
- * Returns the modal itself, which can be rendered anywhere you need, as well as a function to open the modal.
+ * Utility function for creating a modal that display's a {@link LayerOptions.display}. Returns the
+ * modal itself, which can be rendered anywhere you need, as well as a function to open the modal.
+ *
  * @param layer The layer to display in the modal.
  */
 export function setupLayerModal(layer: Layer): {

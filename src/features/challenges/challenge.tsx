@@ -25,9 +25,7 @@ import Challenge from "./Challenge.vue";
 /** A symbol used to identify {@link Challenge} features. */
 export const ChallengeType = Symbol("Challenge");
 
-/**
- * An object that configures a {@link Challenge}.
- */
+/** An object that configures a {@link Challenge}. */
 export interface ChallengeOptions extends VueFeatureOptions {
 	/** Whether this challenge can be started. */
 	canStart?: MaybeRefOrGetter<boolean>;
@@ -45,7 +43,10 @@ export interface ChallengeOptions extends VueFeatureOptions {
 				title?: MaybeGetter<Renderable>;
 				/** The main text that appears in the display. */
 				description: MaybeGetter<Renderable>;
-				/** A description of the current goal for this challenge. If unspecified then the requirements will be displayed automatically based on {@link requirements}.  */
+				/**
+				 * A description of the current goal for this challenge. If unspecified then the
+				 * requirements will be displayed automatically based on {@link requirements}.
+				 */
 				goal?: MaybeGetter<Renderable>;
 				/** A description of what will change upon completing this challenge. */
 				reward?: MaybeGetter<Renderable>;
@@ -60,7 +61,10 @@ export interface ChallengeOptions extends VueFeatureOptions {
 	onEnter?: VoidFunction;
 }
 
-/** An object that represents a feature that can be entered and exited, and have one or more completions with scaling requirements. */
+/**
+ * An object that represents a feature that can be entered and exited, and have one or more
+ * completions with scaling requirements.
+ */
 export interface Challenge extends VueFeature {
 	/** The reset function for this challenge. */
 	reset?: Reset;
@@ -92,7 +96,9 @@ export interface Challenge extends VueFeature {
 	toggle: VoidFunction;
 	/**
 	 * A function to complete this challenge.
-	 * @param remainInChallenge - Optional parameter to specify if the challenge should remain active after completion.
+	 *
+	 * @param remainInChallenge - Optional parameter to specify if the challenge should remain
+	 *   active after completion.
 	 */
 	complete: (remainInChallenge?: boolean) => void;
 	/** A symbol that helps identify features of the same type. */
@@ -101,6 +107,7 @@ export interface Challenge extends VueFeature {
 
 /**
  * Lazily creates a challenge with the given options.
+ *
  * @param optionsFunc Challenge options.
  */
 export function createChallenge<T extends ChallengeOptions>(optionsFunc: () => T) {
@@ -248,6 +255,7 @@ export function createChallenge<T extends ChallengeOptions>(optionsFunc: () => T
 
 /**
  * This will automatically complete a challenge when it's requirements are met.
+ *
  * @param challenge The challenge to auto-complete
  * @param autoActive Whether or not auto-completing should currently occur
  * @param exitOnComplete Whether or not to exit the challenge after auto-completion
@@ -269,7 +277,9 @@ export function setupAutoComplete(
 }
 
 /**
- * Utility for taking an array of challenges where only one may be active at a time, and giving a ref to the one currently active (or null if none are active)
+ * Utility for taking an array of challenges where only one may be active at a time, and giving a
+ * ref to the one currently active (or null if none are active)
+ *
  * @param challenges The list of challenges that are mutually exclusive
  */
 export function createActiveChallenge(challenges: Challenge[]): Ref<Challenge | null> {
@@ -277,7 +287,9 @@ export function createActiveChallenge(challenges: Challenge[]): Ref<Challenge | 
 }
 
 /**
- * Utility for reporting if any challenge in a list is currently active. Intended for preventing entering a challenge if another is already active.
+ * Utility for reporting if any challenge in a list is currently active. Intended for preventing
+ * entering a challenge if another is already active.
+ *
  * @param challenges List of challenges that are mutually exclusive
  */
 export function isAnyChallengeActive(

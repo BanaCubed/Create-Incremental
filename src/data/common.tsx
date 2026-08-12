@@ -40,27 +40,32 @@ export interface ResetButtonOptions extends ClickableOptions {
 	/** Whether or not to show how much currency would be required to make the gain amount increase. */
 	showNextAt?: MaybeRefOrGetter<boolean>;
 	/**
-	 * The content to display on the button.
-	 * By default, this includes the reset description, and amount of currency to be gained.
+	 * The content to display on the button. By default, this includes the reset description, and
+	 * amount of currency to be gained.
 	 */
 	display?: MaybeGetter<Renderable>;
 	/**
-	 * Whether or not this button can currently be clicked.
-	 * Defaults to checking the current gain amount is greater than {@link minimumGain}
+	 * Whether or not this button can currently be clicked. Defaults to checking the current gain
+	 * amount is greater than {@link minimumGain}
 	 */
 	canClick?: MaybeRefOrGetter<boolean>;
 	/**
-	 * When {@link canClick} is left to its default, minimumGain is used to only enable the reset button when a sufficient amount of currency to gain is available.
+	 * When {@link canClick} is left to its default, minimumGain is used to only enable the reset
+	 * button when a sufficient amount of currency to gain is available.
 	 */
 	minimumGain?: MaybeRefOrGetter<DecimalSource>;
-	/** A persistent ref to track how much time has passed since the last time this tree node was reset. */
+	/**
+	 * A persistent ref to track how much time has passed since the last time this tree node was
+	 * reset.
+	 */
 	resetTime?: Persistent<DecimalSource>;
 }
 
 /**
- * A button that is used to control a conversion.
- * It will show how much can be converted currently, and can show when that amount will go up, as well as handle only being clickable when a sufficient amount of currency can be gained.
- * Assumes this button is associated with a specific node on a tree, and triggers that tree's reset propagation.
+ * A button that is used to control a conversion. It will show how much can be converted currently,
+ * and can show when that amount will go up, as well as handle only being clickable when a
+ * sufficient amount of currency can be gained. Assumes this button is associated with a specific
+ * node on a tree, and triggers that tree's reset propagation.
  */
 export interface ResetButton extends Clickable {
 	/** The conversion the button uses to calculate how much resources will be gained on click */
@@ -77,15 +82,20 @@ export interface ResetButton extends Clickable {
 	/** Whether or not to show how much currency would be required to make the gain amount increase. */
 	showNextAt?: MaybeRef<boolean>;
 	/**
-	 * When {@link canClick} is left to its default, minimumGain is used to only enable the reset button when a sufficient amount of currency to gain is available.
+	 * When {@link canClick} is left to its default, minimumGain is used to only enable the reset
+	 * button when a sufficient amount of currency to gain is available.
 	 */
 	minimumGain?: MaybeRef<DecimalSource>;
-	/** A persistent ref to track how much time has passed since the last time this tree node was reset. */
+	/**
+	 * A persistent ref to track how much time has passed since the last time this tree node was
+	 * reset.
+	 */
 	resetTime?: Persistent<DecimalSource>;
 }
 
 /**
  * Lazily creates a reset button with the given options.
+ *
  * @param optionsFunc A function that returns the options object for this reset button.
  */
 export function createResetButton<T extends ClickableOptions & ResetButtonOptions>(
@@ -179,9 +189,9 @@ export interface LayerTreeNodeOptions extends TreeNodeOptions {
 	layerID: string;
 	/** The color to display this tree node as */
 	color: MaybeRefOrGetter<string>; // marking as required
-	/** Whether or not to append the layer to the tabs list.
-	 * If set to false, then the tree node will instead always remove all tabs to its right and then add the layer tab.
-	 * Defaults to true.
+	/**
+	 * Whether or not to append the layer to the tabs list. If set to false, then the tree node will
+	 * instead always remove all tabs to its right and then add the layer tab. Defaults to true.
 	 */
 	append?: MaybeRefOrGetter<boolean>;
 }
@@ -190,15 +200,16 @@ export interface LayerTreeNodeOptions extends TreeNodeOptions {
 export interface LayerTreeNode extends TreeNode {
 	/** The ID of the layer this tree node is associated with */
 	layerID: string;
-	/** Whether or not to append the layer to the tabs list.
-	 * If set to false, then the tree node will instead always remove all tabs to its right and then add the layer tab.
-	 * Defaults to true.
+	/**
+	 * Whether or not to append the layer to the tabs list. If set to false, then the tree node will
+	 * instead always remove all tabs to its right and then add the layer tab. Defaults to true.
 	 */
 	append?: MaybeRef<boolean>;
 }
 
 /**
  * Lazily creates a tree node that's associated with a specific layer, with the given options.
+ *
  * @param optionsFunc A function that returns the options object for this tree node.
  */
 export function createLayerTreeNode<T extends LayerTreeNodeOptions>(optionsFunc: () => T) {
@@ -229,29 +240,31 @@ export function createLayerTreeNode<T extends LayerTreeNodeOptions>(optionsFunc:
 	return layerTreeNode;
 }
 
-/** An option object for a modifier display as a single section. **/
+/** An option object for a modifier display as a single section. * */
 export interface Section {
-	/** The header for this modifier. **/
+	/** The header for this modifier. * */
 	title: MaybeRefOrGetter<string>;
-	/** A subtitle for this modifier, e.g. to explain the context for the modifier. **/
+	/** A subtitle for this modifier, e.g. to explain the context for the modifier. * */
 	subtitle?: MaybeRefOrGetter<string>;
-	/** The modifier to be displaying in this section. **/
+	/** The modifier to be displaying in this section. * */
 	modifier: WithRequired<Modifier, "description">;
-	/** The base value being modified. **/
+	/** The base value being modified. * */
 	base?: MaybeRefOrGetter<DecimalSource>;
-	/** The unit of measurement for the base. **/
+	/** The unit of measurement for the base. * */
 	unit?: string;
-	/** The label to call the base amount. Defaults to "Base". **/
+	/** The label to call the base amount. Defaults to "Base". * */
 	baseText?: MaybeGetter<Renderable>;
-	/** Whether or not this section should be currently visible to the player. **/
+	/** Whether or not this section should be currently visible to the player. * */
 	visible?: MaybeRefOrGetter<boolean>;
 	/** Determines if numbers larger or smaller than the base should be displayed as red. */
 	smallerIsBetter?: boolean;
 }
 
 /**
- * Takes an array of modifier "sections", and creates a JSXFunction that can render all those sections, and allow each section to be collapsed.
- * Also returns a list of persistent refs that are used to control which sections are currently collapsed.
+ * Takes an array of modifier "sections", and creates a JSXFunction that can render all those
+ * sections, and allow each section to be collapsed. Also returns a list of persistent refs that are
+ * used to control which sections are currently collapsed.
+ *
  * @param sectionsFunc A function that returns the sections to display.
  */
 export function createCollapsibleModifierSections(
@@ -368,8 +381,10 @@ export function createCollapsibleModifierSections(
 
 /**
  * Creates an HTML string for a span that writes some given text in a given color.
+ *
  * @param textToColor The content to change the color of
- * @param color The color to change the content to look like. Defaults to the current theme's accent 2 variable.
+ * @param color The color to change the content to look like. Defaults to the current theme's accent
+ *   2 variable.
  */
 export function colorText(textToColor: string, color = "var(--accent2)"): JSX.Element {
 	return <span style={{ color }}>{textToColor}</span>;
@@ -377,7 +392,9 @@ export function colorText(textToColor: string, color = "var(--accent2)"): JSX.El
 
 /**
  * Creates a collapsible display of a list of achievements
- * @param achievements A dictionary of the achievements to display, inserted in the order from easiest to hardest
+ *
+ * @param achievements A dictionary of the achievements to display, inserted in the order from
+ *   easiest to hardest
  */
 export function createCollapsibleAchievements(achievements: Record<string, Achievement>) {
 	// Achievements are typically defined from easiest to hardest, and we want to show hardest first
@@ -416,7 +433,9 @@ export function createCollapsibleAchievements(achievements: Record<string, Achie
 }
 
 /**
- * Utility function for getting an ETA for when a target will be reached by a resource with a known (and assumed consistent) gain.
+ * Utility function for getting an ETA for when a target will be reached by a resource with a known
+ * (and assumed consistent) gain.
+ *
  * @param resource The resource that will be increasing over time.
  * @param rate The rate at which the resource is increasing.
  * @param target The target amount of the resource to estimate the duration until.
@@ -441,11 +460,13 @@ export function estimateTime(
 }
 
 /**
- * Utility function for displaying the result of a formula such that it will, when told to, preview how the formula's result will change.
- * Requires a formula with a single variable inside.
+ * Utility function for displaying the result of a formula such that it will, when told to, preview
+ * how the formula's result will change. Requires a formula with a single variable inside.
+ *
  * @param formula The formula to display the result of.
  * @param showPreview Whether or not to preview how the formula's result will change.
- * @param previewAmount The amount to _add_ to the current formula's variable amount to preview the change in result.
+ * @param previewAmount The amount to _add_ to the current formula's variable amount to preview the
+ *   change in result.
  */
 export function createFormulaPreview(
 	formula: GenericFormula,
@@ -483,15 +504,17 @@ export function createFormulaPreview(
 }
 
 /**
- * Utility function for getting a computed boolean for whether or not a given feature is currently rendered in the DOM.
- * Note it will have a true value even if the feature is off screen.
+ * Utility function for getting a computed boolean for whether or not a given feature is currently
+ * rendered in the DOM. Note it will have a true value even if the feature is off screen.
+ *
  * @param layer The layer the feature appears within
  * @param id The ID of the feature
  */
 export function isRendered(layer: BaseLayer, id: string): ComputedRef<boolean>;
 /**
- * Utility function for getting a computed boolean for whether or not a given feature is currently rendered in the DOM.
- * Note it will have a true value even if the feature is off screen.
+ * Utility function for getting a computed boolean for whether or not a given feature is currently
+ * rendered in the DOM. Note it will have a true value even if the feature is off screen.
+ *
  * @param layer The layer the feature appears within
  * @param feature The feature that may be rendered
  */
@@ -502,8 +525,10 @@ export function isRendered(layer: BaseLayer, idOrFeature: string | { id: string 
 }
 
 /**
- * Utility function for setting up a system where one of many things can be selected.
- * It's recommended to use an ID or index rather than the object itself, so that you can wrap the ref in a persistent without breaking anything.
+ * Utility function for setting up a system where one of many things can be selected. It's
+ * recommended to use an ID or index rather than the object itself, so that you can wrap the ref in
+ * a persistent without breaking anything.
+ *
  * @returns The ref containing the selection, as well as a select and deselect function
  */
 export function setupSelectable<T>() {

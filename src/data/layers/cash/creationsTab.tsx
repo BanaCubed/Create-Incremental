@@ -12,6 +12,8 @@ const creationsTab: Tab = createTab(() => ({
 			<br />
 			After pre-Rebirth is implemented I will make things more playable.
 			<br />
+			There is also currently no offline progression for playtesting reasons.
+			<br />
 			{renderRow(...Object.values(lCash.creations))}
 		</div>
 	)

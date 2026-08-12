@@ -14,9 +14,7 @@ declare module "@vue/runtime-dom" {
 	}
 }
 
-/**
- * An object that configures a {@link Tooltip}.
- */
+/** An object that configures a {@link Tooltip}. */
 export interface TooltipOptions extends VueFeatureOptions {
 	/** Whether or not this tooltip can be pinned, meaning it'll stay visible even when not hovered. */
 	pinnable?: boolean;
@@ -48,6 +46,7 @@ export interface Tooltip extends VueFeature {
 
 /**
  * Creates a tooltip on the given element with the given options.
+ *
  * @param element The renderable feature to display the tooltip on.
  * @param optionsFunc Tooltip options.
  */

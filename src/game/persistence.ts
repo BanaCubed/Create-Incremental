@@ -12,49 +12,54 @@ import state from "./state";
 
 /**
  * A symbol used in {@link Persistent} objects.
+ *
  * @see {@link Persistent[PersistentState]}
  */
 export const PersistentState = Symbol("PersistentState");
 /**
  * A symbol used in {@link Persistent} objects.
+ *
  * @see {@link Persistent[DefaultValue]}
  */
 export const DefaultValue = Symbol("DefaultValue");
 /**
  * A symbol used in {@link Persistent} objects.
+ *
  * @see {@link Persistent[StackTrace]}
  */
 export const StackTrace = Symbol("StackTrace");
 /**
  * A symbol used in {@link Persistent} objects.
+ *
  * @see {@link Persistent[Deleted]}
  */
 export const Deleted = Symbol("Deleted");
 /**
  * A symbol used in {@link Persistent} objects.
+ *
  * @see {@link Persistent[NonPersistent]}
  */
 export const NonPersistent = Symbol("NonPersistent");
 /**
  * A symbol used in {@link Persistent} objects.
+ *
  * @see {@link Persistent[SaveDataPath]}
  */
 export const SaveDataPath = Symbol("SaveDataPath");
 /**
  * A symbol used in {@link Persistent} objects.
+ *
  * @see {@link Persistent[CheckNaN]}
  */
 export const CheckNaN = Symbol("CheckNaN");
 
-/**
- * A symbol used to flag objects that should not be checked for persistent values.
- */
+/** A symbol used to flag objects that should not be checked for persistent values. */
 export const SkipPersistence = Symbol("SkipPersistence");
 
 /**
- * This is a union of things that should be safely stringifiable without needing special processes or knowing what to load them in as.
- * - Decimals aren't allowed because we'd need to know to parse them back.
- * - DecimalSources are allowed because the string is a valid value for them
+ * This is a union of things that should be safely stringifiable without needing special processes
+ * or knowing what to load them in as. - Decimals aren't allowed because we'd need to know to parse
+ * them back. - DecimalSources are allowed because the string is a valid value for them
  */
 export type State =
 	| string
@@ -67,31 +72,43 @@ export type State =
 	| { [key: number]: State };
 
 /**
- * A [Ref](https://vuejs.org/api/reactivity-core.html#ref) that has been augmented with properties to allow it to be saved and loaded within the player save data object.
+ * A [Ref](https://vuejs.org/api/reactivity-core.html#ref) that has been augmented with properties
+ * to allow it to be saved and loaded within the player save data object.
  */
 export type Persistent<T extends State = State> = Ref<T> & {
 	value: T;
 	/** A flag that this is a persistent property. Typically a circular reference. */
 	[PersistentState]: Ref<T>;
-	/** The value the ref should be set to in a fresh save, or when updating an old save to the current version. */
+	/**
+	 * The value the ref should be set to in a fresh save, or when updating an old save to the
+	 * current version.
+	 */
 	[DefaultValue]: T;
-	/** The stack trace of where the persistent ref was created. This is used for debugging purposes when a persistent ref is created but not placed in its layer object. */
+	/**
+	 * The stack trace of where the persistent ref was created. This is used for debugging purposes
+	 * when a persistent ref is created but not placed in its layer object.
+	 */
 	[StackTrace]: string;
 	/**
-	 * This is a flag that can be set once the option func is evaluated, to mark that a persistent ref should _not_ be saved to the player save data object.
+	 * This is a flag that can be set once the option func is evaluated, to mark that a persistent
+	 * ref should _not_ be saved to the player save data object.
+	 *
 	 * @see {@link deletePersistent} for marking a persistent ref as deleted.
 	 */
 	[Deleted]: boolean;
 	/**
-	 * A non-persistent ref that just reads and writes ot the persistent ref. Used for passing to other features without duplicating the persistent ref in the constructed save data object.
+	 * A non-persistent ref that just reads and writes ot the persistent ref. Used for passing to
+	 * other features without duplicating the persistent ref in the constructed save data object.
 	 */
 	[NonPersistent]: NonPersistent<T>;
 	/**
-	 * The path this persistent appears in within the save data object. Predominantly used to ensure it's only placed in there one time.
+	 * The path this persistent appears in within the save data object. Predominantly used to ensure
+	 * it's only placed in there one time.
 	 */
 	[SaveDataPath]: string[] | undefined;
 	/**
-	 * Whether or not to NaN-check this ref. Should only be true on values expected to always be DecimalSources.
+	 * Whether or not to NaN-check this ref. Should only be true on values expected to always be
+	 * DecimalSources.
 	 */
 	[CheckNaN]: boolean;
 };
@@ -123,10 +140,12 @@ function checkNaNAndWrite<T extends State>(persistent: Persistent<T>, value: T) 
 }
 
 /**
- * Create a persistent ref, which can be saved and loaded.
- * All (non-deleted) persistent refs must be included somewhere within the layer object returned by that layer's options func.
+ * Create a persistent ref, which can be saved and loaded. All (non-deleted) persistent refs must be
+ * included somewhere within the layer object returned by that layer's options func.
+ *
  * @param defaultValue The value the persistent ref should start at on fresh saves or when reset.
- * @param checkNaN Whether or not to check this ref for being NaN on set. Only use on refs that should always be DecimalSources.
+ * @param checkNaN Whether or not to check this ref for being NaN on set. Only use on refs that
+ *   should always be DecimalSources.
  */
 export function persistent<T extends State>(
 	defaultValue: T | Ref<T>,
@@ -190,6 +209,7 @@ export function persistent<T extends State>(
 
 /**
  * Type guard for whether an arbitrary value is a persistent ref
+ *
  * @param value The value that may or may not be a persistent ref
  */
 export function isPersistent(value: unknown): value is Persistent {
@@ -197,7 +217,9 @@ export function isPersistent(value: unknown): value is Persistent {
 }
 
 /**
- * Unwraps the non-persistent ref inside of persistent refs, to be passed to other features without duplicating values in the save data object.
+ * Unwraps the non-persistent ref inside of persistent refs, to be passed to other features without
+ * duplicating values in the save data object.
+ *
  * @param persistent The persistent ref to unwrap, or an object to ignore all persistent refs within
  */
 export function noPersist<T extends Persistent<S>, S extends State>(
@@ -237,10 +259,11 @@ export function noPersist<T extends Persistent<S>, S extends State>(persistent: 
 }
 
 /**
- * Mark a {@link Persistent} as deleted, so it won't be saved and loaded.
- * Since persistent refs must be created during a layer's options func, features can not create persistent refs after evaluating their own options funcs.
- * As a result, it must create any persistent refs it _might_ need.
- * This function can then be called after the options func is evaluated to mark the persistent ref to not be saved or loaded.
+ * Mark a {@link Persistent} as deleted, so it won't be saved and loaded. Since persistent refs must
+ * be created during a layer's options func, features can not create persistent refs after
+ * evaluating their own options funcs. As a result, it must create any persistent refs it _might_
+ * need. This function can then be called after the options func is evaluated to mark the persistent
+ * ref to not be saved or loaded.
  */
 export function deletePersistent(persistent: Persistent) {
 	if (addingLayers.length === 0) {

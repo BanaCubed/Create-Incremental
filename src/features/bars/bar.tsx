@@ -9,9 +9,7 @@ import { CSSProperties, MaybeRef, MaybeRefOrGetter } from "vue";
 /** A symbol used to identify {@link Bar} features. */
 export const BarType = Symbol("Bar");
 
-/**
- * An object that configures a {@link Bar}.
- */
+/** An object that configures a {@link Bar}. */
 export interface BarOptions extends VueFeatureOptions {
 	/** The width of the bar. */
 	width: MaybeRefOrGetter<number>;
@@ -33,7 +31,10 @@ export interface BarOptions extends VueFeatureOptions {
 	display?: MaybeGetter<Renderable>;
 }
 
-/** An object that represents a feature that displays some sort of progress or completion or resource with a cap. */
+/**
+ * An object that represents a feature that displays some sort of progress or completion or resource
+ * with a cap.
+ */
 export interface Bar extends VueFeature {
 	/** The width of the bar. */
 	width: MaybeRef<number>;
@@ -59,6 +60,7 @@ export interface Bar extends VueFeature {
 
 /**
  * Lazily creates a bar with the given options.
+ *
  * @param optionsFunc Bar options.
  */
 export function createBar<T extends BarOptions>(optionsFunc: () => T) {

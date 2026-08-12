@@ -16,127 +16,128 @@ export const ConversionType = Symbol("Conversion");
 /** An object that configures a {@link Conversion}. */
 export interface ConversionOptions {
 	/**
-	 * The formula used to determine how much {@link gainResource} should be earned by this converting.
-	 * The passed value will be a Formula representing the {@link baseResource} variable.
+	 * The formula used to determine how much {@link gainResource} should be earned by this
+	 * converting. The passed value will be a Formula representing the {@link baseResource} variable.
 	 */
 	formula: (variable: InvertibleIntegralFormula) => InvertibleFormula;
 	/**
-	 * How much of the output resource the conversion can currently convert for.
-	 * Typically this will be set for you in a conversion constructor.
+	 * How much of the output resource the conversion can currently convert for. Typically this will
+	 * be set for you in a conversion constructor.
 	 */
 	currentGain?: MaybeRefOrGetter<DecimalSource>;
 	/**
-	 * The absolute amount the output resource will be changed by.
-	 * Typically this will be set for you in a conversion constructor.
-	 * This will differ from {@link currentGain} in the cases where the conversion isn't just adding the converted amount to the output resource.
+	 * The absolute amount the output resource will be changed by. Typically this will be set for
+	 * you in a conversion constructor. This will differ from {@link currentGain} in the cases where
+	 * the conversion isn't just adding the converted amount to the output resource.
 	 */
 	actualGain?: MaybeRefOrGetter<DecimalSource>;
 	/**
-	 * The amount of the input resource currently being required in order to produce the {@link currentGain}.
-	 * That is, if it went below this value then {@link currentGain} would decrease.
-	 * Typically this will be set for you in a conversion constructor.
+	 * The amount of the input resource currently being required in order to produce the
+	 * {@link currentGain}. That is, if it went below this value then {@link currentGain} would
+	 * decrease. Typically this will be set for you in a conversion constructor.
 	 */
 	currentAt?: MaybeRefOrGetter<DecimalSource>;
 	/**
-	 * The amount of the input resource required to make {@link currentGain} increase.
-	 * Typically this will be set for you in a conversion constructor.
+	 * The amount of the input resource required to make {@link currentGain} increase. Typically this
+	 * will be set for you in a conversion constructor.
 	 */
 	nextAt?: MaybeRefOrGetter<DecimalSource>;
-	/**
-	 * The input {@link features/resources/resource.Resource} for this conversion.
-	 */
+	/** The input {@link features/resources/resource.Resource} for this conversion. */
 	baseResource: Resource;
 	/**
-	 * The output {@link features/resources/resource.Resource} for this conversion. i.e. the resource being generated.
+	 * The output {@link features/resources/resource.Resource} for this conversion. i.e. the resource
+	 * being generated.
 	 */
 	gainResource: Resource;
 	/**
-	 * Whether or not to cap the amount of the output resource gained by converting at 1.
-	 * Defaults to true.
+	 * Whether or not to cap the amount of the output resource gained by converting at 1. Defaults
+	 * to true.
 	 */
 	buyMax?: MaybeRefOrGetter<boolean>;
 	/**
-	 * The function that performs the actual conversion from {@link baseResource} to {@link gainResource}.
-	 * Typically this will be set for you in a conversion constructor.
+	 * The function that performs the actual conversion from {@link baseResource} to
+	 * {@link gainResource}. Typically this will be set for you in a conversion constructor.
 	 */
 	convert?: VoidFunction;
 	/**
-	 * The function that spends the {@link baseResource} as part of the conversion.
-	 * Defaults to setting the {@link baseResource} amount to 0.
+	 * The function that spends the {@link baseResource} as part of the conversion. Defaults to
+	 * setting the {@link baseResource} amount to 0.
 	 */
 	spend?: (amountGained: DecimalSource) => void;
 	/**
-	 * A callback that happens after a conversion has been completed.
-	 * Receives the amount gained via conversion.
-	 * This will not be called whenever using currentGain without calling convert (e.g. passive generation)
+	 * A callback that happens after a conversion has been completed. Receives the amount gained via
+	 * conversion. This will not be called whenever using currentGain without calling convert (e.g.
+	 * passive generation)
 	 */
 	onConvert?: (amountGained: DecimalSource) => void;
 }
 
 /**
- * The properties that are added onto a processed {@link ConversionOptions} to create a {@link Conversion}.
+ * The properties that are added onto a processed {@link ConversionOptions} to create a
+ * {@link Conversion}.
  */
 export interface Conversion {
 	/**
-	 * The formula used to determine how much {@link gainResource} should be earned by this converting.
+	 * The formula used to determine how much {@link gainResource} should be earned by this
+	 * converting.
 	 */
 	formula: InvertibleFormula;
 	/**
-	 * How much of the output resource the conversion can currently convert for.
-	 * Typically this will be set for you in a conversion constructor.
+	 * How much of the output resource the conversion can currently convert for. Typically this will
+	 * be set for you in a conversion constructor.
 	 */
 	currentGain: MaybeRef<DecimalSource>;
 	/**
-	 * The absolute amount the output resource will be changed by.
-	 * Typically this will be set for you in a conversion constructor.
-	 * This will differ from {@link currentGain} in the cases where the conversion isn't just adding the converted amount to the output resource.
+	 * The absolute amount the output resource will be changed by. Typically this will be set for
+	 * you in a conversion constructor. This will differ from {@link currentGain} in the cases where
+	 * the conversion isn't just adding the converted amount to the output resource.
 	 */
 	actualGain: MaybeRef<DecimalSource>;
 	/**
-	 * The amount of the input resource currently being required in order to produce the {@link currentGain}.
-	 * That is, if it went below this value then {@link currentGain} would decrease.
-	 * Typically this will be set for you in a conversion constructor.
+	 * The amount of the input resource currently being required in order to produce the
+	 * {@link currentGain}. That is, if it went below this value then {@link currentGain} would
+	 * decrease. Typically this will be set for you in a conversion constructor.
 	 */
 	currentAt: MaybeRef<DecimalSource>;
 	/**
-	 * The amount of the input resource required to make {@link currentGain} increase.
-	 * Typically this will be set for you in a conversion constructor.
+	 * The amount of the input resource required to make {@link currentGain} increase. Typically this
+	 * will be set for you in a conversion constructor.
 	 */
 	nextAt: MaybeRef<DecimalSource>;
-	/**
-	 * The input {@link features/resources/resource.Resource} for this conversion.
-	 */
+	/** The input {@link features/resources/resource.Resource} for this conversion. */
 	baseResource: Resource;
 	/**
-	 * The output {@link features/resources/resource.Resource} for this conversion. i.e. the resource being generated.
+	 * The output {@link features/resources/resource.Resource} for this conversion. i.e. the resource
+	 * being generated.
 	 */
 	gainResource: Resource;
 	/**
-	 * Whether or not to cap the amount of the output resource gained by converting at 1.
-	 * Defaults to true.
+	 * Whether or not to cap the amount of the output resource gained by converting at 1. Defaults
+	 * to true.
 	 */
 	buyMax: MaybeRef<boolean>;
 	/**
-	 * The function that performs the actual conversion from {@link baseResource} to {@link gainResource}.
-	 * Typically this will be set for you in a conversion constructor.
+	 * The function that performs the actual conversion from {@link baseResource} to
+	 * {@link gainResource}. Typically this will be set for you in a conversion constructor.
 	 */
 	convert: VoidFunction;
 	/**
-	 * The function that spends the {@link baseResource} as part of the conversion.
-	 * Defaults to setting the {@link baseResource} amount to 0.
+	 * The function that spends the {@link baseResource} as part of the conversion. Defaults to
+	 * setting the {@link baseResource} amount to 0.
 	 */
 	spend: (amountGained: DecimalSource) => void;
 	/**
-	 * A callback that happens after a conversion has been completed.
-	 * Receives the amount gained via conversion.
-	 * This will not be called whenever using currentGain without calling convert (e.g. passive generation)
+	 * A callback that happens after a conversion has been completed. Receives the amount gained via
+	 * conversion. This will not be called whenever using currentGain without calling convert (e.g.
+	 * passive generation)
 	 */
 	onConvert?: (amountGained: DecimalSource) => void;
 }
 
 /**
- * Lazily creates a conversion with the given options.
- * You typically shouldn't use this function directly. Instead use one of the other conversion constructors, which will then call this.
+ * Lazily creates a conversion with the given options. You typically shouldn't use this function
+ * directly. Instead use one of the other conversion constructors, which will then call this.
+ *
  * @param optionsFunc Conversion options.
  * @see {@link createCumulativeConversion}.
  * @see {@link createIndependentConversion}.
@@ -216,9 +217,10 @@ export function createConversion<T extends ConversionOptions>(optionsFunc: () =>
 }
 
 /**
- * Creates a conversion that simply adds to the gainResource amount upon converting.
- * This is similar to the behavior of "normal" layers in The Modding Tree.
- * This is equivalent to just calling createConversion directly.
+ * Creates a conversion that simply adds to the gainResource amount upon converting. This is similar
+ * to the behavior of "normal" layers in The Modding Tree. This is equivalent to just calling
+ * createConversion directly.
+ *
  * @param optionsFunc Conversion options.
  */
 export function createCumulativeConversion<T extends ConversionOptions>(optionsFunc: () => T) {
@@ -226,8 +228,9 @@ export function createCumulativeConversion<T extends ConversionOptions>(optionsF
 }
 
 /**
- * Creates a conversion that will replace the gainResource amount with the new amount upon converting.
- * This is similar to the behavior of "static" layers in The Modding Tree.
+ * Creates a conversion that will replace the gainResource amount with the new amount upon
+ * converting. This is similar to the behavior of "static" layers in The Modding Tree.
+ *
  * @param optionsFunc Converison options.
  */
 export function createIndependentConversion<T extends ConversionOptions>(optionsFunc: () => T) {
@@ -273,10 +276,13 @@ export function createIndependentConversion<T extends ConversionOptions>(options
 }
 
 /**
- * This will automatically increase the value of conversion.gainResource without lowering the value of the input resource.
- * It will by default perform 100% of a conversion's currentGain per second.
- * If you use a ref for the rate you can set it's value to 0 when passive generation should be disabled.
- * @param layer The layer this passive generation will be associated with. Typically `this` when calling this function from inside a layer's options function.
+ * This will automatically increase the value of conversion.gainResource without lowering the value
+ * of the input resource. It will by default perform 100% of a conversion's currentGain per second.
+ * If you use a ref for the rate you can set it's value to 0 when passive generation should be
+ * disabled.
+ *
+ * @param layer The layer this passive generation will be associated with. Typically `this` when
+ *   calling this function from inside a layer's options function.
  * @param conversion The conversion that will determine how much generation there is.
  * @param rate A multiplier to multiply against the conversion's currentGain.
  * @param cap A value that should not be passed via passive generation.
@@ -304,6 +310,7 @@ export function setupPassiveGeneration(
 
 /**
  * Creates requirement that is met when the conversion hits a specified gain amount
+ *
  * @param conversion The conversion to check the gain amount of
  * @param minGainAmount The minimum gain amount that must be met for the requirement to be met
  */

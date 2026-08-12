@@ -15,9 +15,7 @@ export const TabButtonType = Symbol("TabButton");
 /** A symbol used to identify {@link TabFamily} features. */
 export const TabFamilyType = Symbol("TabFamily");
 
-/**
- * An object that configures a {@link TabButton}.
- */
+/** An object that configures a {@link TabButton}. */
 export interface TabButtonOptions extends VueFeatureOptions {
 	/** The tab to display when this button is clicked. */
 	tab: Tab | MaybeGetter<Renderable>;
@@ -29,6 +27,7 @@ export interface TabButtonOptions extends VueFeatureOptions {
 
 /**
  * An object that represents a button that can be clicked to change tabs in a tabbed interface.
+ *
  * @see {@link TabFamily}
  */
 export interface TabButton extends VueFeature {
@@ -42,9 +41,7 @@ export interface TabButton extends VueFeature {
 	type: typeof TabButtonType;
 }
 
-/**
- * An object that configures a {@link TabFamily}.
- */
+/** An object that configures a {@link TabFamily}. */
 export interface TabFamilyOptions extends VueFeatureOptions {
 	/** A dictionary of CSS classes to apply to the list of buttons for changing tabs. */
 	buttonContainerClasses?: MaybeRefOrGetter<Record<string, boolean>>;
@@ -54,6 +51,7 @@ export interface TabFamilyOptions extends VueFeatureOptions {
 
 /**
  * An object that represents a tabbed interface.
+ *
  * @see {@link TabFamily}
  */
 export interface TabFamily extends VueFeature {
@@ -73,6 +71,7 @@ export interface TabFamily extends VueFeature {
 
 /**
  * Lazily creates a tab family with the given options.
+ *
  * @param optionsFunc Tab family options.
  */
 export function createTabFamily<T extends TabFamilyOptions>(

@@ -27,7 +27,10 @@ export interface VueFeatureOptions {
 }
 
 export interface VueFeature {
-	/** An auto-generated ID for identifying features that appear in the DOM. Will not persist between refreshes or updates. */
+	/**
+	 * An auto-generated ID for identifying features that appear in the DOM. Will not persist
+	 * between refreshes or updates.
+	 */
 	id: string;
 	/** Whether this feature should be visible. */
 	visibility?: MaybeRef<Visibility | boolean>;

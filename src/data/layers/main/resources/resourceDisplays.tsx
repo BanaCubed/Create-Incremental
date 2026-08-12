@@ -3,17 +3,13 @@ import { JSX } from "vue/jsx-runtime";
 import { computed, ComputedRef } from "vue";
 import SidebarResource from "./SidebarResource.vue";
 
-/**
- * Interface of a resource display entry.
- */
+/** Interface of a resource display entry. */
 export interface resourceDisplay {
 	display: () => JSX.Element;
 	unlocked: () => boolean;
 }
 
-/**
- * Array of all the resource displays used ingame.
- */
+/** Array of all the resource displays used ingame. */
 export const resourceDisplays: resourceDisplay[] = [
 	{
 		// Cash Display
@@ -33,9 +29,8 @@ export const resourceDisplays: resourceDisplay[] = [
 ];
 
 /**
- * Computed array of JSX elements that represents the components for the
- * resource displays that the player has access to. Locked resources are not
- * included.
+ * Computed array of JSX elements that represents the components for the resource displays that the
+ * player has access to. Locked resources are not included.
  */
 export const renderedDisplays: ComputedRef<JSX.Element[]> = computed(() => {
 	let outputs: JSX.Element[] = [];
