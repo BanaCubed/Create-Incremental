@@ -11,13 +11,14 @@ import {
 import Decimal, { DecimalSource } from "lib/break_eternity";
 import { cashGain } from "./resourceGain";
 import { createUpgrade, Upgrade } from "features/clickables/upgrade";
-import { CashRepeatableID, CashUpgradeID, CreationID } from "../enums";
+import { CashPylonID, CashRepeatableID, CashUpgradeID, CreationID } from "../enums";
 import { createBooleanRequirement, createCostRequirement } from "game/requirements";
 import { Ref } from "vue";
 import { createRepeatable, Repeatable } from "features/clickables/repeatable";
 import Formula from "game/formulas/formulas";
 import { format } from "util/bignum";
 import effects, { EffectID } from "../effects";
+import { createPylon, Pylon } from "features/clickables/pylon";
 
 export interface LayerCash extends Layer {
 	cash: Resource<DecimalSource>;
@@ -28,6 +29,7 @@ export interface LayerCash extends Layer {
 	creations: Record<CreationID, Upgrade>;
 	repeatables: Record<CashRepeatableID, Repeatable>;
 	upgrades: Record<CashUpgradeID, Upgrade>;
+	pylons: Record<CashPylonID, Pylon>;
 }
 
 const id = "cash";
@@ -39,11 +41,6 @@ const layer: LayerCash = createLayer(id, l => {
 	// Storing these values for a rainy day.
 	const bestCash = trackBest(cash);
 	const totalCash = trackTotal(cash);
-
-	const oomps = trackOOMPS(cash, cashGain);
-	l.on("update", diff => {
-		cash.value = Decimal.add(cash.value, Decimal.times(cashGain.value, diff));
-	});
 
 	const reset = createReset(() => ({
 		thingsToReset: (): Record<string, unknown>[] =>
@@ -151,6 +148,33 @@ const layer: LayerCash = createLayer(id, l => {
 		}))
 	};
 
+	const pylons: Record<CashPylonID, Pylon> = {
+		[CashPylonID.MoneyPrinter]: createPylon(() => ({
+			requirements: createCostRequirement(() => ({
+				cumulativeCost: false,
+				cost: Decimal.dInf,
+				resource: cash
+			})),
+			display: {
+				title: "Cash Printer",
+				description: () => (
+					<>
+						Produces {format(cashGain.value)}/s, per printer. Multipliers to cash gain
+						affect gain per printer rather than final gain.
+					</>
+				),
+				effectDisplay: () => (
+					<>{format(pylons[CashPylonID.MoneyPrinter].effectiveGain.value)}/s</>
+				)
+			},
+			target: cash,
+			initialAmount: 1, // Beats having base cost be 10 and some jank to allow the game to start.
+			gain: cashGain
+		}))
+	};
+
+	const oomps = trackOOMPS(cash, pylons[CashPylonID.MoneyPrinter].effectiveGain);
+
 	return {
 		name,
 		color,
@@ -162,7 +186,8 @@ const layer: LayerCash = createLayer(id, l => {
 		treeNode,
 		creations,
 		repeatables,
-		upgrades
+		upgrades,
+		pylons
 	};
 });
 

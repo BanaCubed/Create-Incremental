@@ -2,7 +2,7 @@ import { createTab, Tab } from "features/tabs/tab";
 import lCash from "./lCash";
 import { render, renderRow } from "util/vue";
 import { ComputedRef, computed } from "vue";
-import { CashRepeatableID, CashUpgradeID, CreationID } from "../enums";
+import { CashPylonID, CashRepeatableID, CashUpgradeID, CreationID } from "../enums";
 import Spacer from "components/layout/Spacer.vue";
 
 const machineTab: Tab = createTab(() => ({
@@ -26,6 +26,7 @@ const machineTab: Tab = createTab(() => ({
 						<>
 							<Spacer />
 							<h3>Cash Printers</h3>
+							{renderRow(lCash.pylons[CashPylonID.MoneyPrinter])}
 						</>
 					)}
 				</>

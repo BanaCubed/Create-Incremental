@@ -3,10 +3,19 @@ import Decimal, { DecimalSource } from "util/bignum";
 import lCash from "./cash/lCash";
 import { CashRepeatableID } from "./enums";
 
+/**
+ * Name-indexed enum of all effect IDs.
+ *
+ * @see {@link effects}
+ */
 export enum EffectID {
+	/** In reference to {@link CashRepeatableID.PrinterOverclock}. */
 	PrinterOverclock,
+	/** In reference to {@link CashRepeatableID.PrinterInk}. */
 	PrinterInk,
+	/** In reference to {@link CashRepeatableID.UselessWires}. */
 	UselessWiresBase,
+	/** In reference to {@link CashRepeatableID.UselessWires}. */
 	UselessWires
 }
 
