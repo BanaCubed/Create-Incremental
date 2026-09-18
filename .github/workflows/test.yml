@@ -17,6 +17,8 @@ jobs:
               with:
                 runtime: node@24.x
                 cache: true
+                install: false
+                version: ^@11.5.0
             - name: Use Node.js 21.x
               uses: actions/setup-node@v3
               with:
