@@ -1,7 +1,11 @@
 import lCash from "../../cash/lCash";
 import { JSX } from "vue/jsx-runtime";
-import { computed, ComputedRef } from "vue";
+import { computed, ComputedRef, ref } from "vue";
 import SidebarResource from "./SidebarResource.vue";
+import { powerAmount, powerColor, powerSlots } from "data/layers/machine/power";
+import { formatWhole } from "util/bignum";
+import { CreationID } from "data/layers/enums";
+import { Resource } from "features/resources/resource";
 
 /** Interface of a resource display entry. */
 export interface resourceDisplay {
@@ -22,9 +26,20 @@ export const resourceDisplays: resourceDisplay[] = [
 				/>
 			</>
 		),
-		unlocked() {
-			return true;
-		}
+		unlocked: () => lCash.creations[CreationID.CreationCash].bought.value
+	},
+	{
+		// Power Display
+		display: () => (
+			<>
+				<SidebarResource
+					color={powerColor as string}
+					resource={powerAmount as unknown as Resource}
+					oomps={computed(() => formatWhole(powerSlots.value) + " Slots")}
+				/>
+			</>
+		),
+		unlocked: () => lCash.creations[CreationID.CreationPower].bought.value
 	}
 ];
 

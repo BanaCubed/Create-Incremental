@@ -11,14 +11,17 @@ import {
 import Decimal, { DecimalSource } from "lib/break_eternity";
 import { cashGain } from "./resourceGain";
 import { createUpgrade, Upgrade } from "features/clickables/upgrade";
-import { CashPylonID, CashRepeatableID, CashUpgradeID, CreationID } from "../enums";
+import { MachinePowerID, CashPylonID, CashRepeatableID, CashUpgradeID, CreationID } from "../enums";
 import { createBooleanRequirement, createCostRequirement } from "game/requirements";
 import { Ref } from "vue";
 import { createRepeatable, Repeatable } from "features/clickables/repeatable";
 import Formula from "game/formulas/formulas";
-import { format } from "util/bignum";
+import { format, formatWhole } from "util/bignum";
 import effects, { EffectID } from "../effects";
 import { createPylon, Pylon } from "features/clickables/pylon";
+import { Visibility } from "features/feature";
+import { Clickable, createClickable } from "features/clickables/clickable";
+import { persistent, Persistent } from "game/persistence";
 
 export interface LayerCash extends Layer {
 	cash: Resource<DecimalSource>;
@@ -30,6 +33,7 @@ export interface LayerCash extends Layer {
 	repeatables: Record<CashRepeatableID, Repeatable>;
 	upgrades: Record<CashUpgradeID, Upgrade>;
 	pylons: Record<CashPylonID, Pylon>;
+	powers: Partial<Record<MachinePowerID, Persistent<DecimalSource>>>;
 }
 
 const id = "cash";
@@ -44,7 +48,7 @@ const layer: LayerCash = createLayer(id, l => {
 
 	const reset = createReset(() => ({
 		thingsToReset: (): Record<string, unknown>[] =>
-			[cash, bestCash, totalCash, upgrades, repeatables] as unknown as Record<
+			[cash, bestCash, totalCash, upgrades, repeatables, pylons] as unknown as Record<
 				string,
 				unknown
 			>[]
@@ -60,9 +64,8 @@ const layer: LayerCash = createLayer(id, l => {
 		[CreationID.CreationCash]: createUpgrade(() => ({
 			requirements: createBooleanRequirement(true, "None"),
 			display: {
-				title: "Create Cash",
-				description: "Unlock cash.",
-				effectDisplay: "+1/s"
+				title: "Creation 1",
+				description: "Unlock Cash."
 			}
 		})),
 		[CreationID.CreationMachine]: createUpgrade(() => ({
@@ -71,8 +74,43 @@ const layer: LayerCash = createLayer(id, l => {
 				resource: cash
 			})),
 			display: {
-				title: "Create Machinery",
-				description: "Unlock the Machine."
+				title: "Creation 2",
+				description: () =>
+					creations[CreationID.CreationCash].bought.value ? (
+						<>Unlock the Machine (new tab).</>
+					) : (
+						<>Unlock the ??????? (new tab)</>
+					)
+			}
+		})),
+		[CreationID.CreationPower]: createUpgrade(() => ({
+			requirements: createCostRequirement(() => ({
+				resource: cash,
+				cost: 10e6
+			})),
+			display: {
+				title: "Creation 3",
+				description: () =>
+					creations[CreationID.CreationMachine].bought.value ? (
+						<>Unlock Power.</>
+					) : (
+						<>Unlock ?????.</>
+					)
+			}
+		})),
+		[CreationID.CreationRebirth]: createUpgrade(() => ({
+			requirements: createCostRequirement(() => ({
+				resource: cash,
+				cost: Decimal.dInf
+			})),
+			display: {
+				title: "Creation 4",
+				description: () =>
+					creations[CreationID.CreationPower].bought.value ? (
+						<>Unlock Rebirth (new tab).</>
+					) : (
+						<>Unlock ??????? (new tab).</>
+					)
 			}
 		}))
 	};
@@ -126,6 +164,25 @@ const layer: LayerCash = createLayer(id, l => {
 				),
 				effectDisplay: () => <>&times;{format(effects[EffectID.UselessWires].value)}</>
 			}
+		})),
+		[CashRepeatableID.UsefulWires]: createRepeatable(() => ({
+			requirements: createCostRequirement(() => ({
+				resource: cash,
+				cost: Formula.variable(repeatables[CashRepeatableID.UsefulWires].amount)
+					.pow(1.5)
+					.pow_base(4)
+					.mul(2.5e6),
+				cumulativeCost: false
+			})),
+			display: {
+				title: "Useful Wires",
+				description: () => <>Add +1 to Power.</>,
+				effectDisplay: () => <>+{formatWhole(effects[EffectID.UsefulWires].value)}</>
+			},
+			visibility: () =>
+				creations[CreationID.CreationPower].bought.value
+					? Visibility.Visible
+					: Visibility.None
 		}))
 	};
 
@@ -133,7 +190,7 @@ const layer: LayerCash = createLayer(id, l => {
 		[CashUpgradeID.PylonShed]: createUpgrade(() => ({
 			requirements: createCostRequirement(() => ({
 				resource: cash,
-				cost: 100
+				cost: 1000
 			})),
 			display: {
 				title: "Printer Shed",
@@ -152,7 +209,10 @@ const layer: LayerCash = createLayer(id, l => {
 		[CashPylonID.MoneyPrinter]: createPylon(() => ({
 			requirements: createCostRequirement(() => ({
 				cumulativeCost: false,
-				cost: Decimal.dInf,
+				cost: Formula.variable(pylons[CashPylonID.MoneyPrinter].amount)
+					.pow(1.4)
+					.pow_base(2)
+					.mul(250),
 				resource: cash
 			})),
 			display: {
@@ -173,6 +233,11 @@ const layer: LayerCash = createLayer(id, l => {
 		}))
 	};
 
+	const powers: Partial<Record<MachinePowerID, Persistent<DecimalSource>>> = {
+		[MachinePowerID.CashBooster]: persistent(0),
+		[MachinePowerID.CashDiscount]: persistent(0)
+	};
+
 	const oomps = trackOOMPS(cash, pylons[CashPylonID.MoneyPrinter].effectiveGain);
 
 	return {
@@ -187,7 +252,8 @@ const layer: LayerCash = createLayer(id, l => {
 		creations,
 		repeatables,
 		upgrades,
-		pylons
+		pylons,
+		powers
 	};
 });
 

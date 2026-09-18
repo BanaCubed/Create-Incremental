@@ -2,6 +2,7 @@ import { computed, ComputedRef } from "vue";
 import Decimal, { DecimalSource } from "util/bignum";
 import lCash from "./cash/lCash";
 import { CashRepeatableID } from "./enums";
+import { powerAmount } from "./machine/power";
 
 /**
  * Name-indexed enum of all effect IDs.
@@ -16,7 +17,14 @@ export enum EffectID {
 	/** In reference to {@link CashRepeatableID.UselessWires}. */
 	UselessWiresBase,
 	/** In reference to {@link CashRepeatableID.UselessWires}. */
-	UselessWires
+	UselessWires,
+	/** In reference to {@link CashRepeatableID.UsefulWires}. */
+	UsefulWires,
+
+	/** In reference to {@link CashPowerID.CashDiscount}. */
+	CashDiscount,
+	/** In reference to {@link CashPowerID.CashBooster}. */
+	CashBooster
 }
 
 /**
@@ -24,6 +32,7 @@ export enum EffectID {
  * `ComputedRef`s for every dynamic number based on other values.
  */
 const effects: Record<EffectID, ComputedRef<DecimalSource>> = {
+	// CASH REATABLES
 	[EffectID.PrinterOverclock]: computed(() =>
 		Decimal.add(
 			1,
@@ -41,6 +50,17 @@ const effects: Record<EffectID, ComputedRef<DecimalSource>> = {
 			effects[EffectID.UselessWiresBase].value,
 			lCash.repeatables[CashRepeatableID.UselessWires].amount.value
 		)
+	),
+	[EffectID.UsefulWires]: computed(() =>
+		Decimal.mul(1, lCash.repeatables[CashRepeatableID.UsefulWires].amount.value)
+	),
+
+	// MACHINE POWERS
+	[EffectID.CashDiscount]: computed(() =>
+		Decimal.pow(1.4, Decimal.pow(Decimal.max(powerAmount.value, 1), 0.5))
+	),
+	[EffectID.CashBooster]: computed(() =>
+		Decimal.pow(1.25, Decimal.pow(Decimal.max(powerAmount.value, 1), 0.5))
 	)
 };
 

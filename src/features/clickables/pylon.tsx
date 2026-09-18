@@ -11,7 +11,7 @@ import Decimal, { DecimalSource, formatWhole } from "util/bignum";
 import { computed, ComputedRef, MaybeRef, MaybeRefOrGetter, Ref, unref } from "vue";
 import { MaybeGetter, processGetter } from "util/computed";
 import { isJSXElement, render, Renderable, VueFeature, vueFeatureMixin } from "util/vue";
-import { DefaultValue, persistent, Persistent, SkipPersistence } from "game/persistence";
+import { DefaultValue, noPersist, persistent, Persistent, SkipPersistence } from "game/persistence";
 import { createLazyProxy } from "util/proxies";
 import Clickable from "./Clickable.vue";
 import { findFeatures, Visibility } from "features/feature";
@@ -83,6 +83,7 @@ export function createPylon<T extends PylonOptions>(optionsFunc: () => T) {
 		const {
 			requirements: _requirements,
 			display: _display,
+			target: _target,
 			gain,
 			limit,
 			onClick,
@@ -170,6 +171,8 @@ export function createPylon<T extends PylonOptions>(optionsFunc: () => T) {
 		amount[DefaultValue] = initialAmount ?? 0;
 		produced[DefaultValue] = initialProduced ?? 0;
 
+		const target = noPersist(_target);
+
 		const pylon: Pylon = {
 			type: PylonType,
 			...(props as Omit<typeof props, keyof VueFeature | keyof RepeatableOptions>),
@@ -204,7 +207,8 @@ export function createPylon<T extends PylonOptions>(optionsFunc: () => T) {
 				amount.value = Decimal.add(unref(amount), purchaseAmount);
 				onClick?.(event);
 			},
-			display
+			display,
+			target
 		} satisfies Pylon;
 
 		return pylon;

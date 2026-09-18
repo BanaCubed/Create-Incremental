@@ -16,7 +16,7 @@ import creationsTab from "./layers/cash/creationsTab";
 import SidebarResource from "./layers/main/resources/SidebarResource.vue";
 import { renderedDisplays } from "./layers/main/resources/resourceDisplays";
 import Nav from "components/Nav.vue";
-import machineTab from "./layers/cash/machineTab";
+import machineTab from "./layers/machine/machineTab";
 
 /** @ignore */
 export const main = createLayer("main", () => {

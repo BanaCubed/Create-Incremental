@@ -21,7 +21,6 @@ import effects, { EffectID } from "../effects";
  * @see {@link cashModifiersMultiplicative}
  */
 export const cashGain = computed<Decimal>(() => {
-	// This *could* just be `gain: Decimal` but the world might collapse idk.
 	let gain: DecimalSource = Decimal.dZero;
 	gain = cashModifiersAdditive.apply(gain);
 	gain = cashModifiersMultiplicative.apply(gain);
